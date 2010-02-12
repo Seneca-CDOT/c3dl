@@ -1,0 +1,20 @@
+.gameblock{
+  float: left;
+  width: 650px;
+}
+.mainwindow{
+  float: left;
+  width: 500;
+}
+.sidebar{
+  float:left;
+  width: 150;
+}
+.hudwindow{
+  float:left;
+  width: 150;
+}
+.scorearea{
+  float:left;
+  width: 150;
+}
