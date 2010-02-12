@@ -1,0 +1,41 @@
+table, tr, td, th{
+  margin:auto;
+  padding:auto;
+  border:auto;
+
+}
+
+td, th{
+  padding:5px;
+  vertical-align:top;
+}
+
+th{
+  font-weight:bold;
+  background:#EEE;
+}
+
+tr{
+    border:1px solid #CCC;
+}
+
+input.text
+{}
+
+img{
+    border:1px solid #000;
+}
+
+table.td{
+}
+
+form{
+  border:1px solid #000;
+}
+
+textarea, select, input {
+  border:1px solid #000;
+  background-color:#CCC;
+  font-family:verdana;
+  font-size:9pt;
+}

@@ -1,0 +1,192 @@
+<html>
+    <head>
+		<title>C3DL test environment: particle system</title>
+		
+		<script type="application/javascript">var SCRIPT_PATH = '../../canvas3dapi/'</script> 
+		<script language="javascript" src="../../canvas3dapi/c3dapi.js"></script>	
+    <script language="javascript" src="psys.js"></script>
+    <link rel="stylesheet" href="style.css" type = "text/css" />
+    </head>
+
+    <body>
+			<table border="0">
+			<tr>
+				<td>
+					<table border="0">
+						<tr>
+							<td>
+								<canvas id="psys" width="400" height="400"></canvas>
+							</td>
+						</tr>
+					</table>
+				</td>
+
+			<td valign ="top">
+      	<form>
+				<table border="0">
+        
+        <tr>
+          <td>
+          Effect: 
+            <select name="effects" onchange="changedEffect();">
+								<option value="0" selected="selected">Debug</option>
+								<option value="1">Flame</option>
+								<option value="2">Bubbles</option>
+								<option value="3">Dazzle</option>
+								<option value="4">Water Fountain</option>
+								<option value="5">Gassy</option>
+								<option value="6">Starfield</option>
+								<option value="7">Weave</option>
+								<option value="8">Cotton Candy</option>
+								<option value="9">Large Flame</option>
+								<option value="10">Fast Bubbles</option>
+							</select>
+
+              <input type="button" onclick="abc();" name="createRandom" value="Random" /> 
+          </td>
+        </tr>
+        
+					<tr>
+						<td>
+							Emit rate or particles/second
+							<input type="text" name="emitrate" size="2" value="80" />
+						</td>
+					</tr>
+
+          <tr>
+						<td>
+						Texture<select name="texture">
+							<option value="star.jpg">star</option>
+							<option value="shine.gif">shine</option>
+							<option value="flare.gif" selected="selected">flare</option>
+							<option value="circle.gif">circle</option>
+						</select>
+            </td>
+          </tr>
+
+					<tr>
+						<td>
+						Min Color (RGBA)
+							<input type="text" name="mincolr" size="2" value="0.4"/>
+							<input type="text" name="mincolg" size="2" value="0"/>
+							<input type="text" name="mincolb" size="2" value="0"/>
+							<input type="text" name="mincola" size="2" value="0"/>
+						<td>
+					</tr>
+
+					<tr>
+						<td>
+						Max Color (RGBA)
+							<input type="text" name="maxcolr" size="2" value="1"/>
+							<input type="text" name="maxcolg" size="2" value="0.4"/>
+							<input type="text" name="maxcolb" size="2" value="0"/>
+							<input type="text" name="maxcola" size="2" value="1"/>
+              <hr />
+						<td>
+            
+					</tr>
+
+<!--
+					<tr>
+						<td>
+						Blend Source Factor
+							<select name="srcblend">
+								<option value="0">ZERO</option>
+								<option value="1" selected="selected">ONE</option>
+								<option value="0x0300">SRC_COLOR</option>
+								<option value="0x0301">ONE_MINUS_SRC_COLOR</option>
+								<option value="0x0302">SRC_ALPHA</option>
+								<option value="0x0303">ONE_MINUS_SRC_ALPHA</option>
+								<option value="0x0304">DST_ALPHA</option>
+								<option value="0x0305">ONE_MINUS_DST_ALPHA</option>
+								<option value="0x0306">DST_COLOR</option>
+								<option value="0x0307">ONE_MINUS_DST_COLOR</option>
+								<option value="0x0308">SRC_ALPHA_SATURATE</option>
+							</select><br />
+						Blend Destination Factor
+							<select name="dstblend">
+								<option value="0">ZERO</option>
+								<option value="1" selected="selected">ONE</option>
+								<option value="0x0300">SRC_COLOR</option>
+								<option value="0x0301">ONE_MINUS_SRC_COLOR</option>
+								<option value="0x0302">SRC_ALPHA</option>
+								<option value="0x0303">ONE_MINUS_SRC_ALPHA</option>
+								<option value="0x0304">DST_ALPHA</option>
+								<option value="0x0305">ONE_MINUS_DST_ALPHA</option>
+								<option value="0x0306">DST_COLOR</option>
+								<option value="0x0307">ONE_MINUS_DST_COLOR</option>
+								<option value="0x0308">SRC_ALPHA_SATURATE</option>
+							</select>
+						<td>
+					</tr>
+          -->
+
+
+					<tr>
+						<td>
+						Min Velocity (XYZ)
+							<input type="text" name="minvelx" size="2" value="-2"/>
+							<input type="text" name="minvely" size="2" value="15"/>
+							<input type="text" name="minvelz" size="2" value="-2"/>
+						<td>
+					</tr>
+
+					<tr>
+						<td>
+						Max Velocity (XYZ)
+							<input type="text" name="maxvelx" size="2" value="2"/>
+							<input type="text" name="maxvely" size="2" value="25"/>
+							<input type="text" name="maxvelz" size="2" value="2"/>
+              <hr />
+						<td>
+					</tr>
+
+					<tr>
+						<td>
+						Acceleration (XYZ)
+							<input type="text" name="accelx" size="2" value="0"/>
+							<input type="text" name="accely" size="2" value="0"/>
+							<input type="text" name="accelz" size="2" value="0"/>
+						<td>
+					</tr>
+
+					<tr>
+						<td>
+						Min/Max Size
+							<input type="text" name="minsize" size="2" value="1"/>
+							<input type="text" name="maxsize" size="2" value="1"/>
+						<td>
+					</tr>
+
+					<tr>
+						<td>
+						Min/Max Lifetime
+							<input type="text" name="minlife" size="2" value="0.3"/>
+							<input type="text" name="maxlife" size="2" value="0.7"/>
+						<td>
+					</tr>
+					<tr>
+						<td>
+							<input type="button" value="apply" onclick="applychanges();"/>
+              <br />
+              <br />
+              FPS: <span id="fps"></span>
+						</td>
+					</tr>
+					<tr>
+						<td>
+						</td>
+					</tr>
+				</table>
+        </form>
+			</td>
+		</table>
+			
+		
+	
+		<font face="verdana">
+			<span id="debug"> </span>
+		</font>
+
+    </body>
+</html>
