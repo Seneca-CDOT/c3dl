@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>C3DL Collada Loading Tests</title>
+    <script language="javascript" src="../../../canvas3dapi/c3dapi.js"></script>
+    <script language="javascript" src="test.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+  
+    <h1><a href="http://www.c3dl.org">C3DL</a> Collada Loading Test</h1>
+    
+    <p>
+    This pages tests to make sure the C3DL collada importer works correctly.<br />
+    The page creates multiple canvases and loads a collada model in each one.<br />
+    You should therefore see a spinning model in each canvas.
+    </p>
+
+    <p>
+      <table>
+        <tr>
+          <td>
+            <canvas id="gun"></canvas><br />
+            <div>Test: No texture</div>
+          </td>
+          <td>
+            <canvas id="teapot"></canvas><br />   
+            <div>source: 3dsMax</div>
+          </td>
+          <td>
+            <canvas id="gingerbread_house"></canvas><br />   
+            <div><a href="http://sketchup.google.com/3dwarehouse/details?mid=539a3e1c5487720d45f5590ac69325a5&prevstart=0">source</a> Sketchup</div>
+          </td>
+          <td>
+            <canvas id="cube"></canvas><br />   
+            <div><a href="http://sketchup.google.com/3dwarehouse/details?mid=4c71b2758968236992b3a559188c73e8&prevstart=60">source</a> Sketchup, missing textures</div>
+          </td>
+          <td>
+            <canvas id="duck"></canvas><br />   
+            <div><a href="https://collada.org/owl/browse.php?sess=0&parent=126&expand=1&order=name&curview=0&sortname=ASC">source</a></div>
+          </td>
+        </tr>
+
+        <tr>
+          <td>
+            <canvas id="old_cottage"></canvas><br />
+            <div><a href="http://sketchup.google.com/3dwarehouse/details?mid=254f0c1f2e28fb61b666659105cc9717&prevstart=0">source</a> Test: Sketchup model</div>
+          </td>
+          <td>
+            <canvas id="transform_test"></canvas><br />
+            <div><a href="https://collada.org/owl/browse.php?sess=0&parent=92&expand=1&order=name&curview=0&sortname=ASC">source</a> Test: transformations, colors</div>
+          </td>
+        </tr>
+      </table>
+    </p>
+
+  </body>
+</html>
