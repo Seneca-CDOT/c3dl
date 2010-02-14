@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>C3DL Effect Tests</title>
+    <script language="javascript" src="../../../../canvas3dapi/c3dapi.js"></script>
+    <script language="javascript" src="test.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+  </head>
+
+  <body>
+
+    <h1><a href="http://www.c3dl.org">C3DL</a> Effect Tests</h1>
+
+    <p>
+    This pages tests to make sure the C3DL effects code works correctly.<br />
+    The page creates a canvas and loads several models and sets their <br />
+    effects.<br />
+    </p>
+    
+    <p>
+      <table>
+        <tr>
+          <td>
+            <canvas id="effect_test" width="500" height="500"></canvas>
+          </td>
+        
+          <td valign="top">
+            <form>
+
+              <u>Toggle Outlines</u><br />
+              <input type="checkbox" name="drawoutlines" checked="checked" onclick="toggleOutlines();"/>Draw Outlines<br />
+              <br />
+
+              <u>Toggle Lights</u><br />
+              <input type="checkbox" name="light1" onclick="toggleLight(1);"/>Light1 &nbsp;&nbsp;&nbsp;
+              <input type="checkbox" name="light2" onclick="toggleLight(2);"/>Light2<br />
+              <br />
+
+              <u>Orbit Object</u><br />
+              <table border="0" style="margin:0px;">
+                <tr>
+                  <td style="border:0px;">
+                    <input type="radio" name="orbitObject" value="greyscale" checked="true" onclick="changeOrbit(1);" />Greyscale<br />
+                    <input type="radio" name="orbitObject" value="cartoon" onclick="changeOrbit(3);"/>Cartoon<br />
+                    <input type="radio" name="orbitObject" value="cartoon" onclick="changeOrbit(5);"/>Cartoon 2<br />
+                    <input type="radio" name="orbitObject" value="standard" onclick="changeOrbit(7);"/>Standard<br />                  
+                  </td>
+                  <td style="border:0px;">
+                    <input type="radio" name="orbitObject" value="sepia" onclick="changeOrbit(2);"/>Sepia<br />
+                    <input type="radio" name="orbitObject" value="simple" onclick="changeOrbit(4);"/>Simple<br />
+                    <input type="radio" name="orbitObject" value="gooch" onclick="changeOrbit(6);"/>Gooch<br />
+                    <input type="radio" name="orbitObject" value="variable" onclick="changeOrbit(8);"/>Variable<br />
+                  </td>
+                </tr>
+              </table>
+              <br />
+
+              <u>Mouse Controls</u><br />
+              Scroll wheel - Zoom in and out<br />
+              Click+Drag - Orbit object<br />
+              <br />
+
+              <span id='debug'></span>
+              <br />
+
+            </form>
+          </td>
+        </tr>
+      </table>
+   </p>
+
+  </body>
+</html>
