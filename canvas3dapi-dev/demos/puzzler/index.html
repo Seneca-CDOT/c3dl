@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>Puzzler</title>
+    <script type="application/javascript" src="../../../canvas3dapi/c3dapi.js" ></script>
+    <script type="application/javascript" src="main.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <h1>
+      <a href="http://www.c3dl.org">C3DL</a> - Puzzler
+    </h1>
+    
+    <p>
+      Use the WASD keys to make the duck push the rocks onto the red markers.<br />
+    </p>
+    
+    <p>
+      <table>
+        <tr >
+          <td colspan="3">
+            <canvas id="puzzler" width="500" height="500"></canvas>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <input type="radio" value="0" name="view" checked="checked" onclick="setViewStyle(0);" />Isometric
+          </td>
+          <td>
+            <input type="radio" value="1" name="view" onclick="setViewStyle(1);"/>Bird's Eye
+          </td>
+          <td align="right">
+            <span id="fps">FPS: 00</span>
+          </td>
+        </tr>
+      </table>
+    </p>
+
+  </body>
+</html>
