@@ -105,27 +105,16 @@ c3dl.gooch_callback = function (renderingObj) {
   for (var coll = 0; coll < geometry.getPrimitiveSets().length; coll++) {
     var currColl = geometry.getPrimitiveSets()[coll];
 
-
-   var normalAttribLoc = gl.getAttribLocation(programObjID, "dummyAttrib");
-
-    // if the object acutally has normals and the normal attribute was found
-    //
-    if (currColl.getNormals()) {
-      // the top matrix is the modelview matrix.
-      //var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
-     // NormalMatrix = c3dl.transposeMatrix(NormalMatrix);
-      //renderer.setUniformMatrix(programObjID, "normalMatrix", NormalMatrix);
-
+    var dummyAttribLoc = gl.getAttribLocation(programObjID, "dummyAttrib");
+    if (dummyAttribLoc !== -1 && currColl.getNormals()) {
       renderer.setVertexAttribArray(programObjID, "dummyAttrib", 3, currColl.getVBONormals());
     }
-
-
 
     var normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
 
     // if the object acutally has normals and the normal attribute was found
     //
-    if (currColl.getNormals()) {
+    if (normalAttribLoc !== -1 && currColl.getNormals()) {
       // the top matrix is the modelview matrix.
       var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
       NormalMatrix = c3dl.transposeMatrix(NormalMatrix);
