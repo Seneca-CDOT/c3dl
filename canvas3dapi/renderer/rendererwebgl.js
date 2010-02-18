@@ -461,6 +461,7 @@ c3dl.WebGL = function()
 			try
 			{
 				glCanvas3D = cvs.getContext('experimental-webgl');
+        glCanvas3D.viewport(0, 0, cvs.width, cvs.height);
 			}
 			catch(err){}
         }
