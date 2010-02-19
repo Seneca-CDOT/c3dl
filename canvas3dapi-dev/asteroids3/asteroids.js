@@ -12,7 +12,7 @@ var score=0;
 var timesincelastrock=0;
 var threshold=9000;
 var objs;
-var basevelocity=-0.04;
+var basevelocity=-0.055;
 var basescale=0.6;
 var cam;
 var spot;
@@ -167,6 +167,12 @@ function update(time){
     if(yaw != 0) {
       cam.yaw(yaw*time/1000);
       netyaw=netyaw+(yaw*time/1000);
+      if(netyaw > Math.PI*2){
+         netyaw = netyaw - Math.PI*2;
+      }
+      else if (netyaw < Math.PI*2){
+	netyaw=netyaw + Math.PI*2;
+      }
     }
     //now move the headlight to match
     var pos = cam.getPosition();
@@ -176,7 +182,7 @@ function update(time){
     timesincelastrock+=time;
     if(timesincelastrock > threshold){
       if(threshold > 5000)
-        threshold = threshold-50;
+        threshold = threshold-200;
       thing = new c3dl.Collada();
       thing.init("asteroid2.dae");
       thing.setTexture("asteroid2.png");
@@ -201,7 +207,7 @@ function update(time){
       if(objs[i][1]!=-1){
         var p=objs[i][0].getPosition();
         if(c3dl.vectorLength(p) < 5){
-          health=health-100;
+          health=health-Math.floor(20*objs[i][1]);
           objs[i][0].setVisible(false);
           objs[i][0].setPickable(false);
           scn.removeObjectFromScene(objs[i][0]);
@@ -300,17 +306,17 @@ function handler(result){
               for(var r = 0; r < rand; r++){
                 var pr = new Array();
                 var r2 = Math.floor(Math.random() * 2);
-                pr[0]=(Math.floor(Math.random() * 6)+1);
+                pr[0]=(Math.floor(Math.random() * 8)+1);
                 if(r2 == 1){
                   pr[0]=pr[0]*-1;
                 }
                 r2 = Math.floor(Math.random() * 2);
-                pr[1]=(Math.floor(Math.random() * 3)+1);
+                pr[1]=(Math.floor(Math.random() * 4)+1);
                 if(r2 == 1){
                   pr[1]=pr[1]*-1;
                 }
                 r2 = Math.floor(Math.random() * 2);
-                pr[2]=(Math.floor(Math.random() * 6) + 1);
+                pr[2]=(Math.floor(Math.random() * 8) + 1);
                 if(r2 == 1){
                   pr[2]=pr[2]*-1;
                 }
@@ -365,9 +371,9 @@ function up(event){
 		yaw = 0;
 	}
 
-	if(event.keyCode == 66){
+/*	if(event.keyCode == 66){
 		          health=health-100;
-	}
+	}*/
 	
 	//right
 	if(event.keyCode == 68){
