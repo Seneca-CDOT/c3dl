@@ -1,0 +1,733 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>JsDoc Reference - c3dl.Renderer</title>
+
+		<style type="text/css">
+			/* default.css */
+
+
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: inline;
+//	padding: 8px;
+//	border: 1px dashed #ccc;
+	background-color: #4AA02C;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+	<img src="logo.jpg" alt="c3DL logo" />
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/c3dl.html">c3dl</a></li>
+	
+	<li><a href="../symbols/c3dl.Actor.html">c3dl.Actor</a></li>
+	
+	<li><a href="../symbols/c3dl.Camera.html">c3dl.Camera</a></li>
+	
+	<li><a href="../symbols/c3dl.Collada.html">c3dl.Collada</a></li>
+	
+	<li><a href="../symbols/c3dl.debug.html">c3dl.debug</a></li>
+	
+	<li><a href="../symbols/c3dl.DirectionalLight.html">c3dl.DirectionalLight</a></li>
+	
+	<li><a href="../symbols/c3dl.Effect.html">c3dl.Effect</a></li>
+	
+	<li><a href="../symbols/c3dl.effects.html">c3dl.effects</a></li>
+	
+	<li><a href="../symbols/c3dl.EffectTemplate.html">c3dl.EffectTemplate</a></li>
+	
+	<li><a href="../symbols/c3dl.FreeCamera.html">c3dl.FreeCamera</a></li>
+	
+	<li><a href="../symbols/c3dl.Geometry.html">c3dl.Geometry</a></li>
+	
+	<li><a href="../symbols/c3dl.Light.html">c3dl.Light</a></li>
+	
+	<li><a href="../symbols/c3dl.Line.html">c3dl.Line</a></li>
+	
+	<li><a href="../symbols/c3dl.Material.html">c3dl.Material</a></li>
+	
+	<li><a href="../symbols/c3dl.OrbitCamera.html">c3dl.OrbitCamera</a></li>
+	
+	<li><a href="../symbols/c3dl.ParticleSystem.html">c3dl.ParticleSystem</a></li>
+	
+	<li><a href="../symbols/c3dl.PickingResult.html">c3dl.PickingResult</a></li>
+	
+	<li><a href="../symbols/c3dl.Point.html">c3dl.Point</a></li>
+	
+	<li><a href="../symbols/c3dl.PositionalLight.html">c3dl.PositionalLight</a></li>
+	
+	<li><a href="../symbols/c3dl.Primitive.html">c3dl.Primitive</a></li>
+	
+	<li><a href="../symbols/c3dl.PrimitiveSet.html">c3dl.PrimitiveSet</a></li>
+	
+	<li><a href="../symbols/c3dl.Renderer.html">c3dl.Renderer</a></li>
+	
+	<li><a href="../symbols/c3dl.RenderingObject.html">c3dl.RenderingObject</a></li>
+	
+	<li><a href="../symbols/c3dl.Scene.html">c3dl.Scene</a></li>
+	
+	<li><a href="../symbols/c3dl.SpotLight.html">c3dl.SpotLight</a></li>
+	
+	<li><a href="../symbols/c3dl.WebGL.html">c3dl.WebGL</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class c3dl.Renderer
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+			
+				base class for OpenGLES20.
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/canvas3dapi_renderer_renderer.js.html">renderer.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class c3dl.Renderer.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/c3dl.Renderer.html">c3dl.Renderer</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class c3dl.Renderer.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getContextHeight">getContextHeight</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getContextWidth">getContextWidth</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getFillMode">getFillMode</a></b>()
+								</div>
+								<div class="description">Are objects filled in or are they rendered using wireframe?</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getLighting">getLighting</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getMaxLineWidth">getMaxLineWidth</a></b>()
+								</div>
+								<div class="description">Get the maximum line width supported which is implementation dependent.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getVersion">getVersion</a></b>()
+								</div>
+								<div class="description">Get the version of the renderer as a number.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#getVersionString">getVersionString</a></b>()
+								</div>
+								<div class="description">Get the OpenGL ES Version string.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#setFillMode">setFillMode</a></b>(mode)
+								</div>
+								<div class="description">Set how objects will be rendered, either filled in or using wireframe.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Renderer.html#setLighting">setLighting</a></b>(isOn)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>c3dl.Renderer</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="getContextHeight"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getContextHeight</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getContextWidth"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getContextWidth</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getFillMode"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{int}</span>
+					<b>getFillMode</b>()
+					
+					</div>
+					<div class="description">
+						Are objects filled in or are they rendered using wireframe?
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{int}</span> either c3dl.FILL or c3dl.WIRE_FRAME.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getLighting"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getLighting</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="getMaxLineWidth"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{int}</span>
+					<b>getMaxLineWidth</b>()
+					
+					</div>
+					<div class="description">
+						Get the maximum line width supported which is implementation dependent.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{int}</span> maximum line width supported.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getVersion"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{0.0 | 2.0}</span>
+					<b>getVersion</b>()
+					
+					</div>
+					<div class="description">
+						Get the version of the renderer as a number.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{0.0 | 2.0}</span> A value of 0.0 is returned if the class was instantiated incorrectly.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getVersionString"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{"Renderer interface" | "OpenGL ES 2.0"}</span>
+					<b>getVersionString</b>()
+					
+					</div>
+					<div class="description">
+						Get the OpenGL ES Version string.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{"Renderer interface" | "OpenGL ES 2.0"}</span> "Renderer interface" is returned if the Renderer was not instantiated correctly.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="setFillMode"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setFillMode</b>(mode)
+					
+					</div>
+					<div class="description">
+						Set how objects will be rendered, either filled in or using wireframe.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{<a href="../symbols/c3dl.html#.FILL">c3dl.FILL</a> | c3dl.WIRE_FRAME}</span> <b>mode</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setLighting"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setLighting</b>(isOn)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>isOn</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+			
+			Documentation generated by <a href="http://www.jsdoctoolkit.org/" target="_blank">JsDoc Toolkit</a> 2.1.0 on Fri Feb 19 2010 16:57:37 GMT-0500 (EST)
+		</div>
+	</body>
+</html>

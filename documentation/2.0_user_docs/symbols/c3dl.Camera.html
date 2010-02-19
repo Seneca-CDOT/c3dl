@@ -1,0 +1,854 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="generator" content="JsDoc Toolkit" />
+		
+		<title>JsDoc Reference - c3dl.Camera</title>
+
+		<style type="text/css">
+			/* default.css */
+
+
+body
+{
+	font: 12px "Lucida Grande", Tahoma, Arial, Helvetica, sans-serif;
+	width: 800px;
+}
+
+.header
+{
+	clear: both;
+	background-color: #ccc;
+	padding: 8px;
+}
+
+h1
+{
+	font-size: 150%;
+	font-weight: bold;
+	padding: 0;
+	margin: 1em 0 0 .3em;
+}
+
+hr
+{
+	border: none 0;
+	border-top: 1px solid #7F8FB1;
+	height: 1px;
+}
+
+pre.code
+{
+	display: inline;
+//	padding: 8px;
+//	border: 1px dashed #ccc;
+	background-color: #4AA02C;
+}
+
+#index
+{
+	margin-top: 24px;
+	float: left;
+	width: 160px;
+	position: absolute;
+	left: 8px;
+	background-color: #F3F3F3;
+	padding: 8px;
+}
+
+#content
+{
+	margin-left: 190px;
+	width: 600px;
+}
+
+.classList
+{
+	list-style-type: none;
+	padding: 0;
+	margin: 0 0 0 8px;
+	font-family: arial, sans-serif;
+	font-size: 1em;
+	overflow: auto;
+}
+
+.classList li
+{
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+.summaryTable { width: 100%; }
+
+h1.classTitle
+{
+	font-size:170%;
+	line-height:130%;
+}
+
+h2 { font-size: 110%; }
+caption, div.sectionTitle
+{
+	background-color: #7F8FB1;
+	color: #fff;
+	font-size:130%;
+	text-align: left;
+	padding: 2px 6px 2px 6px;
+	border: 1px #7F8FB1 solid;
+}
+
+div.sectionTitle { margin-bottom: 8px; }
+.summaryTable thead { display: none; }
+
+.summaryTable td
+{
+	vertical-align: top;
+	padding: 4px;
+	border-bottom: 1px #7F8FB1 solid;
+	border-right: 1px #7F8FB1 solid;
+}
+
+/*col#summaryAttributes {}*/
+.summaryTable td.attributes
+{
+	border-left: 1px #7F8FB1 solid;
+	width: 140px;
+	text-align: right;
+}
+
+td.attributes, .fixedFont
+{
+	line-height: 15px;
+	color: #002EBE;
+	font-family: "Courier New",Courier,monospace;
+	font-size: 13px;
+}
+
+.summaryTable td.nameDescription
+{
+	text-align: left;
+	font-size: 13px;
+	line-height: 15px;
+}
+
+.summaryTable td.nameDescription, .description
+{
+	line-height: 15px;
+	padding: 4px;
+	padding-left: 4px;
+}
+
+.summaryTable { margin-bottom: 8px; }
+
+ul.inheritsList
+{
+	list-style: square;
+	margin-left: 20px;
+	padding-left: 0;
+}
+
+.detailList {
+	margin-left: 20px; 
+	line-height: 15px;
+}
+.detailList dt { margin-left: 20px; }
+
+.detailList .heading
+{
+	font-weight: bold;
+	padding-bottom: 6px;
+	margin-left: 0;
+}
+
+.light, td.attributes, .light a:link, .light a:visited
+{
+	color: #777;
+	font-style: italic;
+}
+
+.fineprint
+{
+	text-align: right;
+	font-size: 10px;
+}
+		</style>
+	</head>
+
+	<body>
+<!-- ============================== header ================================= -->	
+		<!-- begin static/header.html -->
+		<div id="header">
+	<img src="logo.jpg" alt="c3DL logo" />
+</div>
+		<!-- end static/header.html -->
+
+<!-- ============================== classes index ============================ -->
+		<div id="index">
+			<!-- begin publish.classesIndex -->
+			<div align="center"><a href="../index.html">Class Index</a>
+| <a href="../files.html">File Index</a></div>
+<hr />
+<h2>Classes</h2>
+<ul class="classList">
+	
+	<li><i><a href="../symbols/_global_.html">_global_</a></i></li>
+	
+	<li><a href="../symbols/c3dl.html">c3dl</a></li>
+	
+	<li><a href="../symbols/c3dl.Actor.html">c3dl.Actor</a></li>
+	
+	<li><a href="../symbols/c3dl.Camera.html">c3dl.Camera</a></li>
+	
+	<li><a href="../symbols/c3dl.Collada.html">c3dl.Collada</a></li>
+	
+	<li><a href="../symbols/c3dl.debug.html">c3dl.debug</a></li>
+	
+	<li><a href="../symbols/c3dl.DirectionalLight.html">c3dl.DirectionalLight</a></li>
+	
+	<li><a href="../symbols/c3dl.Effect.html">c3dl.Effect</a></li>
+	
+	<li><a href="../symbols/c3dl.effects.html">c3dl.effects</a></li>
+	
+	<li><a href="../symbols/c3dl.EffectTemplate.html">c3dl.EffectTemplate</a></li>
+	
+	<li><a href="../symbols/c3dl.FreeCamera.html">c3dl.FreeCamera</a></li>
+	
+	<li><a href="../symbols/c3dl.Geometry.html">c3dl.Geometry</a></li>
+	
+	<li><a href="../symbols/c3dl.Light.html">c3dl.Light</a></li>
+	
+	<li><a href="../symbols/c3dl.Line.html">c3dl.Line</a></li>
+	
+	<li><a href="../symbols/c3dl.Material.html">c3dl.Material</a></li>
+	
+	<li><a href="../symbols/c3dl.OrbitCamera.html">c3dl.OrbitCamera</a></li>
+	
+	<li><a href="../symbols/c3dl.ParticleSystem.html">c3dl.ParticleSystem</a></li>
+	
+	<li><a href="../symbols/c3dl.PickingResult.html">c3dl.PickingResult</a></li>
+	
+	<li><a href="../symbols/c3dl.Point.html">c3dl.Point</a></li>
+	
+	<li><a href="../symbols/c3dl.PositionalLight.html">c3dl.PositionalLight</a></li>
+	
+	<li><a href="../symbols/c3dl.Primitive.html">c3dl.Primitive</a></li>
+	
+	<li><a href="../symbols/c3dl.PrimitiveSet.html">c3dl.PrimitiveSet</a></li>
+	
+	<li><a href="../symbols/c3dl.Renderer.html">c3dl.Renderer</a></li>
+	
+	<li><a href="../symbols/c3dl.RenderingObject.html">c3dl.RenderingObject</a></li>
+	
+	<li><a href="../symbols/c3dl.Scene.html">c3dl.Scene</a></li>
+	
+	<li><a href="../symbols/c3dl.SpotLight.html">c3dl.SpotLight</a></li>
+	
+	<li><a href="../symbols/c3dl.WebGL.html">c3dl.WebGL</a></li>
+	
+</ul>
+<hr />
+			<!-- end publish.classesIndex -->
+		</div>
+		
+		<div id="content">
+<!-- ============================== class title ============================ -->
+			<h1 class="classTitle">
+				
+				Class c3dl.Camera
+			</h1>
+
+<!-- ============================== class summary ========================== -->			
+			<p class="description">
+				
+			
+				c3dl.Camera is a base class for c3dl.OrbitCamera and c3dl.FreeCamera.
+				
+				
+					<br /><i>Defined in: </i> <a href="../symbols/src/canvas3dapi_camera_camera.js.html">camera.js</a>.
+				
+			</p>
+
+<!-- ============================== constructor summary ==================== -->			
+			
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class c3dl.Camera.">
+				<caption>Class Summary</caption>
+				<thead>
+					<tr>
+						<th scope="col">Constructor Attributes</th>
+						<th scope="col">Constructor Name and Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="attributes">&nbsp;</td>
+						<td class="nameDescription" >
+							<div class="fixedFont">
+								<b><a href="../symbols/c3dl.Camera.html">c3dl.Camera</a></b>()
+							</div>
+							<div class="description"></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+
+<!-- ============================== properties summary ===================== -->
+			
+
+<!-- ============================== methods summary ======================== -->
+			
+				
+				
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class c3dl.Camera.">
+					<caption>Method Summary</caption>
+					<thead>
+						<tr>
+							<th scope="col">Method Attributes</th>
+							<th scope="col">Method Name and Description</th>
+						</tr>
+					</thead>
+					<tbody>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getDir">getDir</a></b>()
+								</div>
+								<div class="description">Get the direction of the camera.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getFarClippingPlane">getFarClippingPlane</a></b>()
+								</div>
+								<div class="description">Get the far clipping plane.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getFieldOfView">getFieldOfView</a></b>()
+								</div>
+								<div class="description">Get the vertical field of view for this camera in degrees.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getLeft">getLeft</a></b>()
+								</div>
+								<div class="description">Get the left vector of the camera.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getNearClippingPlane">getNearClippingPlane</a></b>()
+								</div>
+								<div class="description">Get the near clipping plane.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getPosition">getPosition</a></b>()
+								</div>
+								<div class="description">Get the position of the camera.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#getUp">getUp</a></b>()
+								</div>
+								<div class="description">Get the up vector of the camera.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#setFarClippingPlane">setFarClippingPlane</a></b>(fcp)
+								</div>
+								<div class="description">The far clipping plane should not be set to an extremely large value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#setFieldOfView">setFieldOfView</a></b>(fov)
+								</div>
+								<div class="description">Set the field of view for this camera in degrees.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#setNearClippingPlane">setNearClippingPlane</a></b>(ncp)
+								</div>
+								<div class="description">The near clipping plane must be set to a positive value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/c3dl.Camera.html#toString">toString</a></b>(delimiter)
+								</div>
+								<div class="description">Get a string representation of this camera.</div>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				
+				
+			
+<!-- ============================== events summary ======================== -->
+			
+
+<!-- ============================== constructor details ==================== -->		
+			
+			<div class="details"><a name="constructor"> </a>
+				<div class="sectionTitle">
+					Class Detail
+				</div>
+				
+				<div class="fixedFont">
+						<b>c3dl.Camera</b>()
+				</div>
+				
+				<div class="description">
+					
+					
+				</div>
+				
+				
+				
+				
+					
+					
+					
+					
+					
+					
+					
+
+			</div>
+			
+
+<!-- ============================== field details ========================== -->		
+			
+
+<!-- ============================== method details ========================= -->		
+			
+				<div class="sectionTitle">
+					Method Detail
+				</div>
+				
+					<a name="getDir"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array}</span>
+					<b>getDir</b>()
+					
+					</div>
+					<div class="description">
+						Get the direction of the camera.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array}</span> vector</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getFarClippingPlane"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{float}</span>
+					<b>getFarClippingPlane</b>()
+					
+					</div>
+					<div class="description">
+						Get the far clipping plane.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{float}</span> far clipping plane value.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getFieldOfView"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{float}</span>
+					<b>getFieldOfView</b>()
+					
+					</div>
+					<div class="description">
+						Get the vertical field of view for this camera in degrees.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{float}</span> field of view is greater than 0 and less than 180.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getLeft"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array}</span>
+					<b>getLeft</b>()
+					
+					</div>
+					<div class="description">
+						Get the left vector of the camera.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array}</span> vector</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getNearClippingPlane"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{float}</span>
+					<b>getNearClippingPlane</b>()
+					
+					</div>
+					<div class="description">
+						Get the near clipping plane.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{float}</span> near clipping plane value.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getPosition"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array}</span>
+					<b>getPosition</b>()
+					
+					</div>
+					<div class="description">
+						Get the position of the camera.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array}</span> A three element array which contains the position of the camera.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getUp"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{Array}</span>
+					<b>getUp</b>()
+					
+					</div>
+					<div class="description">
+						Get the up vector of the camera.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{Array}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="setFarClippingPlane"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setFarClippingPlane</b>(fcp)
+					
+					</div>
+					<div class="description">
+						The far clipping plane should not be set to an extremely large value. This
+	can create depth buffer precision problems such as z-fighting. see
+	http://www.opengl.org/resources/faq/technical/depthbuffer.htm for more information.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{float}</span> <b>fcp</b>
+									
+								</dt>
+								<dd>Must be larger than 0.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setFieldOfView"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setFieldOfView</b>(fov)
+					
+					</div>
+					<div class="description">
+						Set the field of view for this camera in degrees.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{float}</span> <b>fov</b>
+									
+								</dt>
+								<dd>Specified in degrees. Must be greater than 0 and less than 180.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="setNearClippingPlane"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>setNearClippingPlane</b>(ncp)
+					
+					</div>
+					<div class="description">
+						The near clipping plane must be set to a positive value.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{float}</span> <b>ncp</b>
+									
+								</dt>
+								<dd>Must be larger than 0.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="toString"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{String}</span>
+					<b>toString</b>(delimiter)
+					
+					</div>
+					<div class="description">
+						Get a string representation of this camera.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>delimiter</b>
+									<i>Optional, Default: ","</i>
+								</dt>
+								<dd>A string used to separate the member
+	variables of the object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{String}</span> a string representation of this class.</dd>
+							
+							</dl>
+						
+						
+						
+
+					
+				
+			
+			
+<!-- ============================== event details ========================= -->		
+			
+			
+			<hr />
+		</div>
+
+		
+<!-- ============================== footer ================================= -->
+		<div class="fineprint" style="clear:both">
+			
+			Documentation generated by <a href="http://www.jsdoctoolkit.org/" target="_blank">JsDoc Toolkit</a> 2.1.0 on Fri Feb 19 2010 16:57:36 GMT-0500 (EST)
+		</div>
+	</body>
+</html>

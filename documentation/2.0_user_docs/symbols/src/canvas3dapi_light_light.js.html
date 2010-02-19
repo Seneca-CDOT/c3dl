@@ -1,0 +1,217 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> 
+<span class='line'>  7</span> </span><span class="COMM">/**
+<span class='line'>  8</span> 	@class
+<span class='line'>  9</span> 	This is an 'abstract' class which should not be instantiaed.  Doing so will result in a 
+<span class='line'> 10</span> 	light which will not work and have no effect on the scene.  This class exists to serve as 
+<span class='line'> 11</span> 	a base class for c3dl.PositionalLight and c3dl.DirectionalLight. To place a light into a 
+<span class='line'> 12</span> 	scene use a class which derives from this one.
+<span class='line'> 13</span> */</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="NAME">c3dl.Light</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">	</span><span class="COMM">// Derived classes will overide this member so when scene calls getType() it will</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">	</span><span class="COMM">// know its type.</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">	</span><span class="NAME">this.type</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.ABSTRACT_LIGHT</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">	
+<span class='line'> 20</span> 	</span><span class="COMM">// assign names to lights as to make removing them easy.</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">	</span><span class="NAME">this.name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"unnamed"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="WHIT">	</span><span class="COMM">// OpenGL assigns default values to lights.  For example light0 already has some</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="WHIT">	</span><span class="COMM">// properties which will light the scene.  the other lights are off by default. It</span><span class="WHIT">
+<span class='line'> 25</span> </span><span class="WHIT">	</span><span class="COMM">// was decided to zero out all the components for all the lights 0-7 to prevent</span><span class="WHIT">
+<span class='line'> 26</span> </span><span class="WHIT">	</span><span class="COMM">// any confusion.</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="WHIT">	</span><span class="NAME">this.ambient</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="WHIT">	</span><span class="NAME">this.diffuse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="WHIT">	</span><span class="NAME">this.specular</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="WHIT">	</span><span class="COMM">//this.on = 0;</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">	</span><span class="NAME">this.on</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">	
+<span class='line'> 33</span> 	</span><span class="COMM">/**
+<span class='line'> 34</span> 		Get the name of this light.
+<span class='line'> 35</span> 		
+<span class='line'> 36</span> 		The name can be assigned with SetName() and should be unique.  When getting or 
+<span class='line'> 37</span> 		removing a light from the scene, the name must be used as an identifier.
+<span class='line'> 38</span> 		
+<span class='line'> 39</span> 		@returns {string} the name of the light.
+<span class='line'> 40</span> 	*/</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">	</span><span class="NAME">this.getName</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.name</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 45</span> 
+<span class='line'> 46</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 47</span> 		Get the ambient component of this light.
+<span class='line'> 48</span> 
+<span class='line'> 49</span> 		Ambient light does not have a direction or position, but seems to come from 
+<span class='line'> 50</span> 		everywhere. If only using ambient light, all objects in the scene would be lit 
+<span class='line'> 51</span> 		evenly. Assigning an ambient component to a light can seem strange since lights 
+<span class='line'> 52</span> 		typically tend to attenuate. The functionality is simply provided because OpenGL 
+<span class='line'> 53</span> 		supports it. Generally, you should use scene.setAmbientLight(array) to place 
+<span class='line'> 54</span> 		ambient light in the scene.
+<span class='line'> 55</span> 
+<span class='line'> 56</span> 		Regardless of the position of the light in the scene, the ambient component 
+<span class='line'> 57</span> 		will light the entire surface of all objects in the scene.  Also, if only using
+<span class='line'> 58</span> 		ambient light, object will tend to appear flat, therefore set the diffuse color
+<span class='line'> 59</span> 		component to give 'shape' to objects.
+<span class='line'> 60</span> 		
+<span class='line'> 61</span> 		@returns {Array} Array of three values in the order RGB.
+<span class='line'> 62</span> 	*/</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="WHIT">	</span><span class="NAME">this.getAmbient</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">this.ambient</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 67</span> 
+<span class='line'> 68</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 69</span> 		Get the difuse component of this light.
+<span class='line'> 70</span> 		
+<span class='line'> 71</span> 		Diffuse light is what most people associate with what light is. Diffuse gives 
+<span class='line'> 72</span> 		shape to the object, making it appear 3D. Diffuse lighting is dependent on the 
+<span class='line'> 73</span> 		light’s position relative to the object.  For example,  if you were looking 
+<span class='line'> 74</span> 		at the object directly and the light was behind it, you would likely not see much of
+<span class='line'> 75</span> 		the light's effect. If you were at the position of the light looking at the object,
+<span class='line'> 76</span> 		you would see the object light and likely its contour would be less lit.
+<span class='line'> 77</span> 		
+<span class='line'> 78</span> 		@returns {Array} Array of three values in the order RGB.
+<span class='line'> 79</span> 	*/</span><span class="WHIT">
+<span class='line'> 80</span> </span><span class="WHIT">	</span><span class="NAME">this.getDiffuse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 81</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">this.diffuse</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="WHIT">	
+<span class='line'> 85</span> 	</span><span class="COMM">/**
+<span class='line'> 86</span> 		Get the specular component of the light.  
+<span class='line'> 87</span> 
+<span class='line'> 88</span> 		Specular lighting is used to create shiny highlights. Highlights are typically 
+<span class='line'> 89</span> 		seen on objects such as glass, metal or plastic and are usually white.
+<span class='line'> 90</span> 		Unlike ambient and diffuse light, specular light takes not only the object's 
+<span class='line'> 91</span> 		position into account, but also the viewer’s position. The highlights tend to
+<span class='line'> 92</span> 		'follow' where the camera is looking.
+<span class='line'> 93</span> 
+<span class='line'> 94</span> 		@returns {Array} Array of three values in the order RGB.
+<span class='line'> 95</span> 	*/</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="WHIT">	</span><span class="NAME">this.getSpecular</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">this.specular</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>102</span> 		Get the type of light this is.
+<span class='line'>103</span> 
+<span class='line'>104</span> 		@returns {int} the type of light this is.
+<span class='line'>105</span> 	*/</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">	</span><span class="NAME">this.getType</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.type</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>110</span> 
+<span class='line'>111</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>112</span> 		If the light is on, it will affect the colors of the object it hits.
+<span class='line'>113</span> 		
+<span class='line'>114</span> 		When creating a light, its initial state will be off.
+<span class='line'>115</span> 		
+<span class='line'>116</span> 		@returns {boolean} true if the light is on, otherwise false.
+<span class='line'>117</span> 	*/</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="WHIT">	</span><span class="NAME">this.isOn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">		</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.on</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">	
+<span class='line'>123</span> 	</span><span class="COMM">/**
+<span class='line'>124</span> 		Turn the light on or off.
+<span class='line'>125</span> 	
+<span class='line'>126</span> 		@param {boolean} isOn true to turn the light on, false to turn it off.
+<span class='line'>127</span> 	*/</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">	</span><span class="NAME">this.setOn</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">isOn</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">		</span><span class="NAME">this.on</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">isOn</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>132</span> 
+<span class='line'>133</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>134</span> 		Set the name of the light.
+<span class='line'>135</span> 		
+<span class='line'>136</span> 		The scene can later be queried for the light by this name so the light can be 
+<span class='line'>137</span> 		updated or removed.  The default name is "unnamed".
+<span class='line'>138</span> 	
+<span class='line'>139</span> 		@param {String} name The new name of the light.
+<span class='line'>140</span> 	*/</span><span class="WHIT">	
+<span class='line'>141</span> 	</span><span class="NAME">this.setName</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">name</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">		</span><span class="NAME">this.name</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">name</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>145</span> 
+<span class='line'>146</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>147</span> 		Set the ambient color component of this light.
+<span class='line'>148</span> 
+<span class='line'>149</span> 		Ambient light does not have a direction or position, but seems to come from 
+<span class='line'>150</span> 		everywhere. If only using ambient light, all objects in the scene would be lit 
+<span class='line'>151</span> 		evenly. Assigning an ambient component to a light can seem strange since lights 
+<span class='line'>152</span> 		typically tend to attenuate. The functionality is simply provided because OpenGL 
+<span class='line'>153</span> 		supports it. Generally, you should use scene.setAmbientLight(array) to place 
+<span class='line'>154</span> 		ambient light in the scene.
+<span class='line'>155</span> 		
+<span class='line'>156</span> 		Regardless of the position of the light in the scene, the ambient component 
+<span class='line'>157</span> 		will light the entire surface of all objects in the scene. Also, if only using
+<span class='line'>158</span> 		ambient light, object will tend to appear flat, therefore set the diffuse color
+<span class='line'>159</span> 		component to give 'shape' to objects.
+<span class='line'>160</span> 
+<span class='line'>161</span> 		@param {Array} color Array of three values in the order RGB.
+<span class='line'>162</span> 	*/</span><span class="WHIT">	
+<span class='line'>163</span> 	</span><span class="NAME">this.setAmbient</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">color</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">color.length</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">3</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">			</span><span class="NAME">this.ambient</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">color.slice</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>170</span> 
+<span class='line'>171</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'>172</span> 		Set the diffuse color component of this light.
+<span class='line'>173</span> 
+<span class='line'>174</span> 		Diffuse light is what most people associate with what light is. Diffuse gives 
+<span class='line'>175</span> 		shape to the object, making it appear 3D. Diffuse lighting is dependent on the 
+<span class='line'>176</span> 		light’s position relative to the object.  For example,  if you were looking 
+<span class='line'>177</span> 		at the object directly and the light was behind it, you would likely not see much of
+<span class='line'>178</span> 		the light's effect. If you were at the position of the light looking at the object,
+<span class='line'>179</span> 		you would see the object light and likely its contour would be less lit.		
+<span class='line'>180</span> 
+<span class='line'>181</span> 		@param {Array} color Array of three values in the order RGB.
+<span class='line'>182</span> 	*/</span><span class="WHIT">	
+<span class='line'>183</span> 	</span><span class="NAME">this.setDiffuse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">color</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">color.length</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">3</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">			</span><span class="NAME">this.diffuse</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">color.slice</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>189</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">	
+<span class='line'>191</span> 	</span><span class="COMM">/**
+<span class='line'>192</span> 		Set the specular component of the light.  
+<span class='line'>193</span> 
+<span class='line'>194</span> 		Specular lighting is used to create shiny highlights. Highlights are typically 
+<span class='line'>195</span> 		seen on objects such as glass, metal or plastic and are usually white.
+<span class='line'>196</span> 		Unlike ambient and diffuse light, specular light takes not only the object's 
+<span class='line'>197</span> 		position into account, but also the viewer’s position. The highlights tend to
+<span class='line'>198</span> 		'follow' where the camera is looking.
+<span class='line'>199</span> 
+<span class='line'>200</span> 		@param {Array} color Array of three values in the order RGB.
+<span class='line'>201</span> 	*/</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="WHIT">	</span><span class="NAME">this.setSpecular</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">color</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">color.length</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">3</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>206</span> </span><span class="WHIT">			</span><span class="NAME">this.specular</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">color.slice</span><span class="PUNC">(</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">3</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>210</span> </span></pre></body></html>

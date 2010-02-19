@@ -1,0 +1,429 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> </span><span class="COMM">/**
+<span class='line'>  7</span>   @namespace values within this namespace are guarantted not be be changed
+<span class='line'>  8</span>   by the library. The const part of the values such as c3dl.FAR_CLIPPING_PLANE 
+<span class='line'>  9</span>   indicate the library never changes the value and neither should the user.  
+<span class='line'> 10</span> */</span><span class="WHIT">
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="COMM">/**
+<span class='line'> 13</span>   c3dl.TOLERANCE = 0.00001&lt;br />
+<span class='line'> 14</span>   This is used as a buffer when doing some calculations with 
+<span class='line'> 15</span>   floating point numbers.  Due to floating point innacuracy, we cannot 
+<span class='line'> 16</span>   use == on floating point numbers for comparison.  Two floats which 
+<span class='line'> 17</span>   we believe to be equal may in fact not be equal, they may vary a 
+<span class='line'> 18</span>   small amount. Therefore a constant is defined here which will later 
+<span class='line'> 19</span>   be used to compare against the difference on vector component 
+<span class='line'> 20</span>   allowing some tolerance.
+<span class='line'> 21</span>   @constant  
+<span class='line'> 22</span> */</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="NAME">c3dl.TOLERANCE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.00001</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 24</span> 
+<span class='line'> 25</span> </span><span class="COMM">/**
+<span class='line'> 26</span>   @private
+<span class='line'> 27</span>   We need to define this ourselves since it is not present in canvas 3d 0.4.3
+<span class='line'> 28</span> */</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="NAME">c3dl.VERTEX_PROGRAM_POINT_SIZE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x8642</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 30</span> 
+<span class='line'> 31</span> </span><span class="COMM">/**
+<span class='line'> 32</span>   @private
+<span class='line'> 33</span>   
+<span class='line'> 34</span> */</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="NAME">c3dl.POINT_SMOOTH</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0B10</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 36</span> 
+<span class='line'> 37</span> </span><span class="COMM">/**  
+<span class='line'> 38</span>   To render c3dl.Point objects using the built-in OpenGL
+<span class='line'> 39</span>   points rendering ( using circles ), pass this value to
+<span class='line'> 40</span>   the Scene's setPointRenderingMode() method.
+<span class='line'> 41</span>   
+<span class='line'> 42</span>   Note that using this method of rendering c3dl.Point objects may crash
+<span class='line'> 43</span>   the browser or OS. 
+<span class='line'> 44</span>   @constant
+<span class='line'> 45</span> */</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="NAME">c3dl.POINT_MODE_POINT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> </span><span class="COMM">/**
+<span class='line'> 49</span>   To render c3dl.Point objects using spheres, pass this
+<span class='line'> 50</span>   value to the Scene's setPointRenderingMode() method.
+<span class='line'> 51</span>   
+<span class='line'> 52</span>   This is the default method to render c3dl.Point objects.
+<span class='line'> 53</span>   @constant
+<span class='line'> 54</span> */</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="NAME">c3dl.POINT_MODE_SPHERE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> 
+<span class='line'> 57</span> </span><span class="COMM">/**
+<span class='line'> 58</span>   @private
+<span class='line'> 59</span>   c3dl.NEAR_CLIPPING_PLANE = 0.1&lt;br />
+<span class='line'> 60</span>   The distance from the viewpoint to the camera's near 
+<span class='line'> 61</span>   clipping plane.  This should always be positive.
+<span class='line'> 62</span>   @constant
+<span class='line'> 63</span> */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="NAME">c3dl.DEFAULT_NEAR_CLIPPING_PLANE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 65</span> 
+<span class='line'> 66</span> </span><span class="COMM">/**
+<span class='line'> 67</span>   @private
+<span class='line'> 68</span>   c3dl.DEFAULT_FAR_CLIPPING_PLANE = 8000.0&lt;br />
+<span class='line'> 69</span>   The distance from the viewpoint to the camera's far 
+<span class='line'> 70</span>   clipping plane.  This should always be positive.
+<span class='line'> 71</span>   @constant
+<span class='line'> 72</span> */</span><span class="WHIT">
+<span class='line'> 73</span> </span><span class="NAME">c3dl.DEFAULT_FAR_CLIPPING_PLANE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">8000.0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 74</span> 
+<span class='line'> 75</span> </span><span class="COMM">/**
+<span class='line'> 76</span>   @private
+<span class='line'> 77</span>   c3dl.FIELD_OF_VIEW = 45.0&lt;br />
+<span class='line'> 78</span>   Angle in degree of the camera's field of view. Must
+<span class='line'> 79</span>   range from 0 to 180.
+<span class='line'> 80</span>   @constant
+<span class='line'> 81</span> */</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="NAME">c3dl.DEFAULT_FIELD_OF_VIEW</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">45.0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> 
+<span class='line'> 84</span> </span><span class="COMM">/**
+<span class='line'> 85</span>   @private
+<span class='line'> 86</span>   c3dl.GLES_CONTEXT_20 = 2.0&lt;br />
+<span class='line'> 87</span>   @constant
+<span class='line'> 88</span> */</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="NAME">c3dl.GLES_CONTEXT_20</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2.0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> 
+<span class='line'> 92</span> </span><span class="COMM">/**
+<span class='line'> 93</span>   @private
+<span class='line'> 94</span>   c3dl.MAX_LIGHTS = 7&lt;br />
+<span class='line'> 95</span>   @constant
+<span class='line'> 96</span> */</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="NAME">c3dl.MAX_LIGHTS</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">7</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 98</span> 
+<span class='line'> 99</span> </span><span class="COMM">/**
+<span class='line'>100</span>   @private
+<span class='line'>101</span>   If c3dl.Light is ever instantiated, which it shouldn't, it will have the the light
+<span class='line'>102</span>   type of abstract. In that case we tell the user they have an error in their script.
+<span class='line'>103</span>   @constant
+<span class='line'>104</span>   @see c3dl.Light
+<span class='line'>105</span> */</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="NAME">c3dl.ABSTRACT_LIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>107</span> 
+<span class='line'>108</span> </span><span class="COMM">/**
+<span class='line'>109</span>   @private
+<span class='line'>110</span>   A directional light is a light which does not have a position, but only 
+<span class='line'>111</span>   a direction. The light is understood to be infinitely far away.
+<span class='line'>112</span>   @constant
+<span class='line'>113</span>   @see c3dl.DirectionalLight
+<span class='line'>114</span> */</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="NAME">c3dl.DIRECTIONAL_LIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>116</span> 
+<span class='line'>117</span> </span><span class="COMM">/**
+<span class='line'>118</span>   @private
+<span class='line'>119</span>   A positional light is a light with a position property.
+<span class='line'>120</span>   @constant
+<span class='line'>121</span>   @see c3dl.PositionalLight
+<span class='line'>122</span> */</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="NAME">c3dl.POSITIONAL_LIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> 
+<span class='line'>125</span> </span><span class="COMM">/**
+<span class='line'>126</span>   @private
+<span class='line'>127</span>   A spotlight is a positional light with a cutoff component, so light is
+<span class='line'>128</span>   restricted to a cone shape.
+<span class='line'>129</span>   @constant
+<span class='line'>130</span>   @see c3dl.SpotLight
+<span class='line'>131</span> */</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="NAME">c3dl.SPOT_LIGHT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">3</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>133</span> 
+<span class='line'>134</span> 
+<span class='line'>135</span> </span><span class="COMM">/**
+<span class='line'>136</span>   @private
+<span class='line'>137</span>   Symbol which must be passed into matrixMode() method to change the 
+<span class='line'>138</span>   matrix mode to projection.
+<span class='line'>139</span>   @constant
+<span class='line'>140</span> */</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="NAME">c3dl.PROJECTION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> 
+<span class='line'>143</span> </span><span class="COMM">/**
+<span class='line'>144</span>   @private
+<span class='line'>145</span>   Symbol which must be passed into matrixMode() method to change the 
+<span class='line'>146</span>   matrix mode to model view.
+<span class='line'>147</span>   @constant
+<span class='line'>148</span> */</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="NAME">c3dl.MODELVIEW</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>150</span> 
+<span class='line'>151</span> </span><span class="COMM">/**
+<span class='line'>152</span> */</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="NAME">c3dl.COLLADA</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>154</span> 
+<span class='line'>155</span> </span><span class="COMM">/**
+<span class='line'>156</span> */</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="NAME">c3dl.LINE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>158</span> 
+<span class='line'>159</span> </span><span class="COMM">/**
+<span class='line'>160</span> */</span><span class="WHIT">
+<span class='line'>161</span> </span><span class="NAME">c3dl.POINT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>162</span> 
+<span class='line'>163</span> </span><span class="COMM">/**
+<span class='line'>164</span> */</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="NAME">c3dl.PARTICLE_SYSTEM</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">3</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> 
+<span class='line'>167</span> </span><span class="COMM">////////////////////// SCENE /////////////////////////</span><span class="WHIT">
+<span class='line'>168</span> 
+<span class='line'>169</span> </span><span class="COMM">/**
+<span class='line'>170</span>   @constant
+<span class='line'>171</span> */</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="NAME">c3dl.DEFAULT_BG_RED</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.4</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>173</span> 
+<span class='line'>174</span> 
+<span class='line'>175</span> </span><span class="COMM">/**
+<span class='line'>176</span>   @constant
+<span class='line'>177</span> */</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="NAME">c3dl.DEFAULT_BG_GREEN</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.4</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>179</span> 
+<span class='line'>180</span> 
+<span class='line'>181</span> </span><span class="COMM">/**
+<span class='line'>182</span>   @constant
+<span class='line'>183</span> */</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="NAME">c3dl.DEFAULT_BG_BLUE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0.6</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>185</span> 
+<span class='line'>186</span> 
+<span class='line'>187</span> </span><span class="WHIT"> </span><span class="COMM">/**
+<span class='line'>188</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>189</span>   @constant
+<span class='line'>190</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>191</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>192</span>  */</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="NAME">c3dl.ZERO</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>194</span> 
+<span class='line'>195</span> </span><span class="COMM">/**
+<span class='line'>196</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>197</span>   @constant
+<span class='line'>198</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>199</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>200</span> */</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="NAME">c3dl.ONE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>202</span> 
+<span class='line'>203</span> </span><span class="COMM">/**
+<span class='line'>204</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>205</span>   @constant
+<span class='line'>206</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>207</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>208</span> */</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="NAME">c3dl.SRC_COLOR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0300</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>210</span> 
+<span class='line'>211</span> </span><span class="COMM">/**
+<span class='line'>212</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>213</span>   @constant
+<span class='line'>214</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>215</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>216</span> */</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="NAME">c3dl.ONE_MINUS_SRC_COLOR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0301</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> 
+<span class='line'>219</span> </span><span class="COMM">/**
+<span class='line'>220</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>221</span>   @constant
+<span class='line'>222</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>223</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>224</span> */</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="NAME">c3dl.SRC_ALPHA</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0302</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>226</span> 
+<span class='line'>227</span> </span><span class="COMM">/**
+<span class='line'>228</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>229</span>   @constant
+<span class='line'>230</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>231</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>232</span> */</span><span class="WHIT">
+<span class='line'>233</span> </span><span class="NAME">c3dl.ONE_MINUS_SRC_ALPHA</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0303</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>234</span> 
+<span class='line'>235</span> </span><span class="COMM">/**
+<span class='line'>236</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>237</span>   @constant
+<span class='line'>238</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>239</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>240</span> */</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="NAME">c3dl.DST_ALPHA</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0304</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>242</span> 
+<span class='line'>243</span> </span><span class="COMM">/**
+<span class='line'>244</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>245</span>   @constant
+<span class='line'>246</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>247</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>248</span> */</span><span class="WHIT">
+<span class='line'>249</span> </span><span class="NAME">c3dl.ONE_MINUS_DST_ALPHA</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0305</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>250</span> 
+<span class='line'>251</span> </span><span class="COMM">/**
+<span class='line'>252</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>253</span>   @constant
+<span class='line'>254</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>255</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>256</span> */</span><span class="WHIT">
+<span class='line'>257</span> </span><span class="NAME">c3dl.DST_COLOR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0306</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>258</span> 
+<span class='line'>259</span> </span><span class="COMM">/**
+<span class='line'>260</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>261</span>   @constant
+<span class='line'>262</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>263</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>264</span> */</span><span class="WHIT">
+<span class='line'>265</span> </span><span class="NAME">c3dl.ONE_MINUS_DST_COLOR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0307</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>266</span> 
+<span class='line'>267</span> </span><span class="COMM">/**
+<span class='line'>268</span>   Used to set blending factors in c3dl.ParticleSystem.
+<span class='line'>269</span>   @constant
+<span class='line'>270</span>   @see c3dl.ParticleSystem#setDstBlend
+<span class='line'>271</span>   @see c3dl.ParticleSystem#setSrcBlend
+<span class='line'>272</span> */</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="NAME">c3dl.SRC_ALPHA_SATURATE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0308</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>274</span> 
+<span class='line'>275</span> 
+<span class='line'>276</span> </span><span class="COMM">/**
+<span class='line'>277</span>   Used to set the blending equation in c3dl.ParticleSystem.
+<span class='line'>278</span>   @constant
+<span class='line'>279</span>   @see c3dl.ParticleSystem#setBlendEquation
+<span class='line'>280</span> */</span><span class="WHIT">
+<span class='line'>281</span> </span><span class="NAME">c3dl.FUNC_ADD</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x8006</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>282</span> 
+<span class='line'>283</span> </span><span class="COMM">/**
+<span class='line'>284</span>   Used to set the blending equation in c3dl.ParticleSystem.
+<span class='line'>285</span>   @constant
+<span class='line'>286</span>   @see c3dl.ParticleSystem#setBlendEquation
+<span class='line'>287</span> */</span><span class="WHIT">
+<span class='line'>288</span> </span><span class="NAME">c3dl.FUNC_SUBTRACT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x800A</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>289</span> 
+<span class='line'>290</span> </span><span class="COMM">/**
+<span class='line'>291</span>   Used to set the blending equation in c3dl.ParticleSystem.
+<span class='line'>292</span>   @constant
+<span class='line'>293</span>   @see c3dl.ParticleSystem#setBlendEquation
+<span class='line'>294</span> */</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="NAME">c3dl.FUNC_REVERSE_SUBTRACT</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x800B</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> 
+<span class='line'>297</span> 
+<span class='line'>298</span> 
+<span class='line'>299</span> 
+<span class='line'>300</span> </span><span class="COMM">////////////////////////// SHADERS  /////////////////////////</span><span class="WHIT">
+<span class='line'>301</span> 
+<span class='line'>302</span> </span><span class="COMM">/**
+<span class='line'>303</span>   @private
+<span class='line'>304</span>   When we try to get a location of a variable from a shader program,
+<span class='line'>305</span>   it may not exist.  If that is the case, opengles will return -1 to
+<span class='line'>306</span>   indicate that.
+<span class='line'>307</span>   @constant
+<span class='line'>308</span> */</span><span class="WHIT">
+<span class='line'>309</span> </span><span class="NAME">c3dl.SHADER_VAR_NOT_FOUND</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>310</span> 
+<span class='line'>311</span> 
+<span class='line'>312</span> </span><span class="COMM">/**
+<span class='line'>313</span>   This is used internally by c3DL.
+<span class='line'>314</span>   @constant
+<span class='line'>315</span>   @private
+<span class='line'>316</span> */</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="NAME">c3dl.VERTEX_SHADER</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"x-vertex"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>318</span> 
+<span class='line'>319</span> </span><span class="COMM">/**
+<span class='line'>320</span>   This is used internally by c3DL.
+<span class='line'>321</span>   @constant
+<span class='line'>322</span>   @private
+<span class='line'>323</span> */</span><span class="WHIT">
+<span class='line'>324</span> </span><span class="NAME">c3dl.FRAGMENT_SHADER</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"x-fragment"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>325</span> 
+<span class='line'>326</span> 
+<span class='line'>327</span> 
+<span class='line'>328</span> 
+<span class='line'>329</span> 
+<span class='line'>330</span> </span><span class="COMM">// 0x0001 is the value assigned to glCanvas3D.LINES. Similarly,</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="COMM">// 0x0004 is the value assigned to glCanvas3D.TRIANGLES.  We have to</span><span class="WHIT">
+<span class='line'>332</span> </span><span class="COMM">// use the numerical values here since we do not yet have a context.</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="COMM">// Within the renderer is a variable which hold one of these values.</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="COMM">// When drawArrays() is called, it will be given this value, thus filled</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="COMM">// trianges or lines will be rendered.</span><span class="WHIT">
+<span class='line'>336</span> 
+<span class='line'>337</span> </span><span class="COMM">// This was done to avoid having:</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="COMM">// if(fillMode == c3dl.WIRE_FRAME)</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="COMM">//    drawArrays(glCanvas3D.LINES, ...);</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="COMM">//  else</span><span class="WHIT">
+<span class='line'>341</span> </span><span class="COMM">//    drawArrays(glCanvas3D.TRIANGLES,...);</span><span class="WHIT">
+<span class='line'>342</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="COMM">// instead of the above code, we only need one line of code.</span><span class="WHIT">
+<span class='line'>344</span> 
+<span class='line'>345</span> </span><span class="COMM">/**
+<span class='line'>346</span>   Pass this to renderer's setFillMode() if you want models to be
+<span class='line'>347</span>   drawn with lines. Note that using this may result in rendering of
+<span class='line'>348</span>   extra lines.  This should mostly used for debugging scripts such as
+<span class='line'>349</span>   when drawing bounding volumes.
+<span class='line'>350</span>   @constant
+<span class='line'>351</span>   @see c3dl.Renderer#setFillMode
+<span class='line'>352</span> */</span><span class="WHIT">
+<span class='line'>353</span> </span><span class="NAME">c3dl.WIRE_FRAME</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0001</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>354</span> 
+<span class='line'>355</span> </span><span class="COMM">/**
+<span class='line'>356</span>   Pass this to a renderer's setFillMode() if you want models to be
+<span class='line'>357</span>   drawn 'filled in'. Renderers will use fill mode by default.
+<span class='line'>358</span>   
+<span class='line'>359</span>   @constant
+<span class='line'>360</span>   @see c3dl.Renderer#setFillMode
+<span class='line'>361</span> */</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="NAME">c3dl.FILL</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0x0004</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>363</span> 
+<span class='line'>364</span> 
+<span class='line'>365</span> 
+<span class='line'>366</span> </span><span class="COMM">//////////////////////// DEBUG  ////////////////////////////////</span><span class="WHIT">
+<span class='line'>367</span> 
+<span class='line'>368</span> </span><span class="COMM">/**
+<span class='line'>369</span>   This is used internally in c3DL by the debug class.
+<span class='line'>370</span>   @private
+<span class='line'>371</span>   @constant
+<span class='line'>372</span> */</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="NAME">c3dl.DEBUG_INFO</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"Info"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>374</span> 
+<span class='line'>375</span> </span><span class="COMM">/**
+<span class='line'>376</span>   This is used internally in c3DL by the debug class.
+<span class='line'>377</span>   @private
+<span class='line'>378</span>   @constant
+<span class='line'>379</span> */</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="NAME">c3dl.DEBUG_ERROR</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"Error"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>381</span> 
+<span class='line'>382</span> </span><span class="COMM">/**
+<span class='line'>383</span>   This is used internally in c3DL by the debug class.
+<span class='line'>384</span>   @private
+<span class='line'>385</span>   @constant
+<span class='line'>386</span> */</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="NAME">c3dl.DEBUG_WARNING</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"Warning"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>388</span> 
+<span class='line'>389</span> </span><span class="COMM">/**
+<span class='line'>390</span>   This is used internally in c3DL by the debug class.
+<span class='line'>391</span>   @private
+<span class='line'>392</span>   @constant
+<span class='line'>393</span> */</span><span class="WHIT">
+<span class='line'>394</span> </span><span class="NAME">c3dl.DEBUG_EXCEPTION</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">"Exception"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>395</span> 
+<span class='line'>396</span> 
+<span class='line'>397</span> </span><span class="COMM">////////////////////////////// PICKING ///////////////////////////</span><span class="WHIT">
+<span class='line'>398</span> 
+<span class='line'>399</span> </span><span class="COMM">/**
+<span class='line'>400</span>   This constant can be passed into the setPickingPrecision() of scene
+<span class='line'>401</span>   if accuracy is not important for your script and/or you require the
+<span class='line'>402</span>   picking algorithm to work as fast as possible.  If using this value, when
+<span class='line'>403</span>   a user clicks on the canvas, all objects which can be picked will only 
+<span class='line'>404</span>   be tested against their bounding volume.
+<span class='line'>405</span>   
+<span class='line'>406</span>   @constant
+<span class='line'>407</span> */</span><span class="WHIT">
+<span class='line'>408</span> </span><span class="NAME">c3dl.PICK_PRECISION_BOUNDING_VOLUME</span><span class="WHIT">  </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>409</span> 
+<span class='line'>410</span> </span><span class="COMM">/**
+<span class='line'>411</span>   This is currently the most accurate test available.  If this is passed
+<span class='line'>412</span>   into the setPickingPrecision() function of scene, everytime the user clicks,
+<span class='line'>413</span>   the ray generated will be tested against the triangles of each model which
+<span class='line'>414</span>   pass the bounding volume test.  Use this constant if accuracy is important
+<span class='line'>415</span>   for your script using C3DL.&lt;br />
+<span class='line'>416</span>   &lt;br />
+<span class='line'>417</span>   This is the default precision of each scene created.
+<span class='line'>418</span>   
+<span class='line'>419</span>   @constant
+<span class='line'>420</span> */</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="NAME">c3dl.PICK_PRECISION_TRIANGLE</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">2</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>422</span> </span></pre></body></html>

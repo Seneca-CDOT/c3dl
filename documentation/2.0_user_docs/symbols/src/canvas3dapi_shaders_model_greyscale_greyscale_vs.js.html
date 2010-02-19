@@ -1,0 +1,102 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> </span><span class="NAME">c3dl.greyscale_vs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">   
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="STRN">"attribute vec3 Vertex;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>  9</span> </span><span class="STRN">"attribute vec3 Normal;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 10</span> </span><span class="STRN">"attribute vec3 Texture;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="COMM">// for every model we multiply the projection, view and model matrices</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="COMM">// once to prevent having to do it for every vertex, however we still need</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="COMM">// the view matrix to calculate lighting.</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="STRN">"uniform mat4 modelViewMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 16</span> 
+<span class='line'> 17</span> </span><span class="COMM">// we can calculate this once per model to speed up processing done on the js side.</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="STRN">"uniform mat4 modelViewProjMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 19</span> 
+<span class='line'> 20</span> </span><span class="COMM">// matrix to transform the vertex normals</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="STRN">"uniform mat4 normalMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 22</span> 
+<span class='line'> 23</span> 
+<span class='line'> 24</span> </span><span class="STRN">"void main(void){"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 25</span> 
+<span class='line'> 26</span> 	</span><span class="COMM">// create a normal matrix 3x3 out of 4x4</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="STRN">"	mat3 normalMatrix3x3 = mat3(normalMatrix[0][0],normalMatrix[0][1],normalMatrix[0][2],"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="STRN">"								normalMatrix[1][0],normalMatrix[1][1],normalMatrix[1][2],"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="STRN">"								normalMatrix[2][0],normalMatrix[2][1],normalMatrix[2][2]);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 30</span> </span><span class="STRN">"	vec3 transformNormal = normalize(normalMatrix3x3 * Normal);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 31</span> 
+<span class='line'> 32</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="STRN">"	vec3 ambient  = vec3(0.0, 0.0, 0.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 34</span> </span><span class="STRN">"	vec3 diffuse  = vec3(0.0, 0.0, 0.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 35</span> </span><span class="STRN">"	vec3 specular = vec3(0.0, 0.0, 0.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 36</span> 
+<span class='line'> 37</span> </span><span class="WHIT">	</span><span class="COMM">// place the current vertex into view space</span><span class="WHIT">
+<span class='line'> 38</span> </span><span class="WHIT">	</span><span class="COMM">// ecPos = eye coordinate position.</span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="STRN">"	vec4 ecPos4 = modelViewMatrix * vec4(Vertex,1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 40</span> 
+<span class='line'> 41</span> </span><span class="WHIT">	</span><span class="COMM">// the current vertex in eye coordinate space</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">	</span><span class="COMM">// perspective divide</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="STRN">"	vec3 ecPos = (vec3(ecPos4))/ecPos4.w;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 44</span> 
+<span class='line'> 45</span> </span><span class="STRN">"	vec3 eye = vec3(0.0, 0.0, 1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="COMM">//"	eye = -normalize(ecPos);" +</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> 
+<span class='line'> 49</span> </span><span class="STRN">"	float shine = 1.0;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="STRN">"	if(usingMaterial)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="STRN">"	{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="STRN">"		shine = material.shininess;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 54</span> 
+<span class='line'> 55</span> </span><span class="STRN">"	if(lightingOn == true)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="STRN">"	{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 57</span> </span><span class="WHIT">		</span><span class="COMM">// iterate over all the lights, and keep incrementing color values</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">		</span><span class="COMM">// the color values are passed by reference and modified.</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="STRN">"		for(int i = 0; i &lt; C3DL_MAX_LIGHTS; i++)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 60</span> </span><span class="STRN">"		{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 61</span> </span><span class="STRN">"			if(lights[i].isOn) "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 62</span> </span><span class="STRN">"			{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 63</span> </span><span class="STRN">"				if(lights[i].type == 1)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="STRN">"				{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="STRN">"					c3dl_DirectionalLight(lights[i], transformNormal, ambient, diffuse, specular, shine);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="STRN">"				}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 67</span> 
+<span class='line'> 68</span> </span><span class="STRN">"				else if(lights[i].type == 2) "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 69</span> </span><span class="STRN">"				{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="STRN">"					c3dl_PointLight(lights[i], transformNormal, eye, ecPos, ambient, diffuse, specular, shine);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 71</span> </span><span class="STRN">"				}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 72</span> 
+<span class='line'> 73</span> </span><span class="STRN">"				else if(lights[i].type == 3)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="STRN">"				{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="STRN">"					c3dl_SpotLight(lights[i], transformNormal, eye, ecPos, ambient, diffuse, specular,shine);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="STRN">"				}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="STRN">"			}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="STRN">"		}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 80</span> 
+<span class='line'> 81</span> </span><span class="STRN">"	if( usingMaterial ){"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="STRN">"		gl_FrontColor =	vec4(material.emission +				"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="STRN">"							ambientLightColor +					"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="STRN">"							ambient * material.ambient +		"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 85</span> </span><span class="STRN">"							diffuse * material.diffuse +		"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="STRN">"							specular * material.specular,1.0);	"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="STRN">"	else{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="STRN">"		gl_FrontColor = vec4(ambientLightColor + ambient + diffuse + specular,1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 91</span> 
+<span class='line'> 92</span> </span><span class="STRN">"	gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="STRN">"	gl_TexCoord[0] = vec4(Texture,1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 94</span> </span><span class="STRN">"}"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 95</span> </span></pre></body></html>

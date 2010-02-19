@@ -1,0 +1,465 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> </span><span class="COMM">/**
+<span class='line'>  7</span> 	@class c3dl.OrbitCamera is a camera which is restricted to orbiting 
+<span class='line'>  8</span> 	a point in space.  The camera orbits the point by moving along an imaginary 
+<span class='line'>  9</span> 	sphere which is centered on the point.&lt;br />&lt;br />
+<span class='line'> 10</span> 	
+<span class='line'> 11</span> 	OrbitCamera is generally used to orbit meshes, but isn't limited to doing so 
+<span class='line'> 12</span> 	since any point in space can be orbitted. However, since orbitting a mesh is 
+<span class='line'> 13</span> 	so common, distance limits can be assigned to the camera, which prevent it from
+<span class='line'> 14</span> 	entering or going to far from the mesh.&lt;br />&lt;br />
+<span class='line'> 15</span> 
+<span class='line'> 16</span> 	If an object is being orbitted and the object moves, the camera must be set to 
+<span class='line'> 17</span> 	orbit the new object's position. This can be done by calling setOrbitPoint() and
+<span class='line'> 18</span> 	passing in the new object's position.&lt;br />&lt;br />
+<span class='line'> 19</span> 	
+<span class='line'> 20</span> 	When an OrbitCamera is created, it will be have the position and orbit point 
+<span class='line'> 21</span> 	at [0,0,0]. It will be looking down the -Z axis and have a closest and farthest 
+<span class='line'> 22</span> 	distance of 0.&lt;br />&lt;br />
+<span class='line'> 23</span> 	
+<span class='line'> 24</span> 	If the OrbitCamera's closest distance is set to a value which is greater than its 
+<span class='line'> 25</span> 	current distance, the camera will be 'backed up' so it has a distance equal to the 
+<span class='line'> 26</span> 	closest distance.  Similarly, setting the farthest distance to a smaller value may 
+<span class='line'> 27</span> 	also move the camera closer to the orbit point.
+<span class='line'> 28</span> 	
+<span class='line'> 29</span> 	@augments c3dl.Camera
+<span class='line'> 30</span> */</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="NAME">c3dl.OrbitCamera</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.inherit</span><span class="PUNC">(</span><span class="NAME">c3dl.Camera</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="WHIT">	</span><span class="NAME">c3dl._superc</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="WHIT">	
+<span class='line'> 35</span> 	</span><span class="COMM">// this value cannot be set to less than 0.</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="WHIT">	</span><span class="NAME">this.closestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="WHIT">	</span><span class="COMM">// typically larger than the closest distance, but set to </span><span class="WHIT">
+<span class='line'> 39</span> </span><span class="WHIT">	</span><span class="COMM">// 0 here since the user will likely overwrite it anyway.</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">	</span><span class="COMM">// this value will always be greater or equal to the closest</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="WHIT">	</span><span class="COMM">// distance.</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">	</span><span class="NAME">this.farthestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">	
+<span class='line'> 44</span> 	</span><span class="COMM">// the point in space the camera will 'orbit'.</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="WHIT">	</span><span class="NAME">this.orbitPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> 
+<span class='line'> 48</span> </span><span class="COMM">/**
+<span class='line'> 49</span> 	Get the closest distance the camera can reside from the orbit point.
+<span class='line'> 50</span> 
+<span class='line'> 51</span> 	@returns {float} The closest distance camera can reside from the orbit point.
+<span class='line'> 52</span> */</span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.getClosestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.closestDistance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 57</span> 
+<span class='line'> 58</span> 
+<span class='line'> 59</span> </span><span class="COMM">/**
+<span class='line'> 60</span> 	Get the distance from the camera to the orbit point.
+<span class='line'> 61</span> 	
+<span class='line'> 62</span> 	@returns {float} distance from the camera to the orbit point.
+<span class='line'> 63</span> */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.getDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorLength</span><span class="PUNC">(</span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 68</span> 
+<span class='line'> 69</span> 
+<span class='line'> 70</span> </span><span class="COMM">/**
+<span class='line'> 71</span> 	Get the farthest ditance the camera can reside from the orbit point.
+<span class='line'> 72</span> 	
+<span class='line'> 73</span> 	@returns {float} The farthest distance the camera can reside from the orbit point.
+<span class='line'> 74</span> */</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.getFarthestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 77</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.farthestDistance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 78</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 79</span> 
+<span class='line'> 80</span> 
+<span class='line'> 81</span> </span><span class="COMM">/**
+<span class='line'> 82</span> 	Get the point the camera is orbiting.
+<span class='line'> 83</span> 	
+<span class='line'> 84</span> 	@returns {Array} The point which the camera is orbiting.
+<span class='line'> 85</span> */</span><span class="WHIT">
+<span class='line'> 86</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.getOrbitPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 87</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 88</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> 
+<span class='line'> 92</span> </span><span class="COMM">/**
+<span class='line'> 93</span> 	Move the camera 'distance' towards the orbit point relative to where
+<span class='line'> 94</span> 	the camera is positioned. The camera will not move if attempted to move
+<span class='line'> 95</span> 	closer than the closest allowed distance.
+<span class='line'> 96</span> 	
+<span class='line'> 97</span> 	@param {float} distance Must be greater than 0.
+<span class='line'> 98</span> */</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.goCloser</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>101</span> </span><span class="WHIT">	</span><span class="COMM">// A negative value for goCloser() could be allowed and would</span><span class="WHIT">
+<span class='line'>102</span> </span><span class="WHIT">	</span><span class="COMM">// mean moving farther using a positive value, but this could</span><span class="WHIT">
+<span class='line'>103</span> </span><span class="WHIT">	</span><span class="COMM">// create some confusion and is therefore not permitted.</span><span class="WHIT">
+<span class='line'>104</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>105</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>106</span> </span><span class="WHIT">		</span><span class="COMM">// scale it</span><span class="WHIT">
+<span class='line'>107</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">shiftAmt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>108</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">renameMe</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="WHIT">		
+<span class='line'>110</span> 		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">maxMoveCloser</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorLength</span><span class="PUNC">(</span><span class="NAME">renameMe</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">								
+<span class='line'>112</span> 		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorLength</span><span class="PUNC">(</span><span class="NAME">shiftAmt</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">maxMoveCloser</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">			</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.addVectors</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">shiftAmt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>118</span> 
+<span class='line'>119</span> 
+<span class='line'>120</span> </span><span class="COMM">/**
+<span class='line'>121</span> 	Move the camera 'distance' away from the orbit point relative to where
+<span class='line'>122</span> 	the camera is positioned. The camera will not move if attempted to move
+<span class='line'>123</span> 	farther than the farthest distance.
+<span class='line'>124</span> 	
+<span class='line'>125</span> 	@param {float} distance Must be greater than 0.
+<span class='line'>126</span> */</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.goFarther</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">	</span><span class="COMM">// A negative value for goFarther() could be allowed and would</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">	</span><span class="COMM">// mean moving closer using a positive value, but this could</span><span class="WHIT">
+<span class='line'>131</span> </span><span class="WHIT">	</span><span class="COMM">// create some confusion and is therefore not permitted.</span><span class="WHIT">
+<span class='line'>132</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>133</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>134</span> </span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>135</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">shiftAmt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyVector</span><span class="PUNC">(</span><span class="NAME">c3dl.multiplyVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="PUNC">-</span><span class="NUMB">1</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>136</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newpos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.addVectors</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">shiftAmt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>137</span> 
+<span class='line'>138</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorLength</span><span class="PUNC">(</span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">newpos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="WHIT">		
+<span class='line'>140</span> 		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">			</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">newpos</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>146</span> 
+<span class='line'>147</span> 
+<span class='line'>148</span> </span><span class="COMM">/**
+<span class='line'>149</span> 	Pitch the camera about the orbit point.
+<span class='line'>150</span> 
+<span class='line'>151</span> 	@param {float} angle in radians.
+<span class='line'>152</span> */</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.pitch</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">angle</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>155</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">c3dl.isVectorEqual</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>156</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">		
+<span class='line'>157</span> 		</span><span class="COMM">// Create a proper Quaternion based on location and angle.</span><span class="WHIT">
+<span class='line'>158</span> </span><span class="WHIT">		</span><span class="COMM">// we will rotate about the global up axis.</span><span class="WHIT">
+<span class='line'>159</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">rotMat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.quatToMatrix</span><span class="PUNC">(</span><span class="NAME">c3dl.axisAngleToQuat</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">angle</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>160</span> 
+<span class='line'>161</span> </span><span class="WHIT">		</span><span class="COMM">// </span><span class="WHIT">
+<span class='line'>162</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>164</span> 
+<span class='line'>165</span> </span><span class="WHIT">		</span><span class="COMM">// update up vector</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">		
+<span class='line'>169</span> 		</span><span class="COMM">// left does not change.</span><span class="WHIT">
+<span class='line'>170</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="WHIT">	</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>172</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>173</span> </span><span class="WHIT">		</span><span class="COMM">// get position relative to orbit point</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="WHIT">		</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>175</span> </span><span class="WHIT">		
+<span class='line'>176</span> 		</span><span class="COMM">// Create a Quaternion based on left vector and angle</span><span class="WHIT">
+<span class='line'>177</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">quat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.axisAngleToQuat</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">angle</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>178</span> </span><span class="WHIT">		
+<span class='line'>179</span> 		</span><span class="COMM">// Create a rotation Matrix out of this quaternion and apply </span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">		</span><span class="COMM">// the rotation matrix to position</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">rotMat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.quatToMatrix</span><span class="PUNC">(</span><span class="NAME">quat</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newpos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">		</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.addVectors</span><span class="PUNC">(</span><span class="NAME">newpos</span><span class="PUNC">,</span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> 
+<span class='line'>185</span> </span><span class="WHIT">		</span><span class="COMM">// </span><span class="WHIT">
+<span class='line'>186</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>188</span> 
+<span class='line'>189</span> </span><span class="WHIT">		</span><span class="COMM">// update up vector</span><span class="WHIT">
+<span class='line'>190</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">		
+<span class='line'>193</span> 		</span><span class="COMM">// update left</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>198</span> 
+<span class='line'>199</span> 
+<span class='line'>200</span> </span><span class="COMM">/**
+<span class='line'>201</span> 	Set the closest distance the camera can be from the orbit point.
+<span class='line'>202</span> 	
+<span class='line'>203</span> 	If 'distance' is greater than the current distance the camera is from
+<span class='line'>204</span> 	the orbit point, the camera will be 'backed up' to the new closest
+<span class='line'>205</span> 	distance.
+<span class='line'>206</span> 	
+<span class='line'>207</span> 	@param {float} distance Must be greater than zero and less than or 
+<span class='line'>208</span> 	equal to getFarthestDistance().
+<span class='line'>209</span> */</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.setClosestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">		</span><span class="NAME">this.closestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> 
+<span class='line'>216</span> </span><span class="WHIT">		</span><span class="COMM">// the camera may now be too close, so back it up if necessary.</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">		
+<span class='line'>219</span> 		</span><span class="COMM">// check if the camera's position has been invalidated.</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">&lt;</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">			</span><span class="COMM">// back the camera up to the new closest distance.</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">			</span><span class="COMM">// find how much to back up the camera</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">amt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>225</span> 
+<span class='line'>226</span> </span><span class="WHIT">			</span><span class="COMM">// back it up</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">			</span><span class="NAME">this.goFarther</span><span class="PUNC">(</span><span class="NAME">amt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>230</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>231</span> 
+<span class='line'>232</span> 
+<span class='line'>233</span> </span><span class="COMM">/**
+<span class='line'>234</span> 	Set the camera 'distance' away from the orbit point. The distance
+<span class='line'>235</span> 	must be a value between the getClosestDistance() and getFarthestDistance().
+<span class='line'>236</span> 
+<span class='line'>237</span> 	@param {float} distance
+<span class='line'>238</span> */</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.setDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>240</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>241</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>242</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>243</span> </span><span class="WHIT">		</span><span class="COMM">// place the camera at the orbit point, then goFarther</span><span class="WHIT">
+<span class='line'>244</span> </span><span class="WHIT">		</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>245</span> </span><span class="WHIT">		
+<span class='line'>246</span> 		</span><span class="NAME">this.goFarther</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>247</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>248</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>249</span> 
+<span class='line'>250</span> 
+<span class='line'>251</span> </span><span class="COMM">/**
+<span class='line'>252</span> 	Set the farthest distance the camera can move away from the orbit point.
+<span class='line'>253</span> 	
+<span class='line'>254</span> 	If 'distance' is less than the current distance the camera is from
+<span class='line'>255</span> 	the orbit point, the camera will be pulled in to the new closest
+<span class='line'>256</span> 	distance.
+<span class='line'>257</span> 	
+<span class='line'>258</span> 	@param {float} distance Must be less than or equal to getClosestDistance().
+<span class='line'>259</span> */</span><span class="WHIT">
+<span class='line'>260</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.setFarthestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>261</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>262</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">distance</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>263</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>264</span> </span><span class="WHIT">		</span><span class="NAME">this.farthestDistance</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">distance</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>265</span> 
+<span class='line'>266</span> </span><span class="WHIT">		</span><span class="COMM">// the camera may be too far from the orbit point, so bring it closer.</span><span class="WHIT">
+<span class='line'>267</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">this.getDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>268</span> </span><span class="WHIT">		
+<span class='line'>269</span> 		</span><span class="COMM">// check if the camera's position has been invalidated.</span><span class="WHIT">
+<span class='line'>270</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">></span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>271</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>272</span> </span><span class="WHIT">			</span><span class="COMM">// back the camera up to the new closest distance.</span><span class="WHIT">
+<span class='line'>273</span> </span><span class="WHIT">			</span><span class="COMM">// find how much to back up the camera</span><span class="WHIT">
+<span class='line'>274</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">amt</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">distanceBetweenCamAndOP</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>275</span> 
+<span class='line'>276</span> </span><span class="WHIT">			</span><span class="COMM">// bring it closer.</span><span class="WHIT">
+<span class='line'>277</span> </span><span class="WHIT">			</span><span class="NAME">this.goCloser</span><span class="PUNC">(</span><span class="NAME">amt</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>278</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>279</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>280</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>281</span> 
+<span class='line'>282</span> 
+<span class='line'>283</span> </span><span class="COMM">/**
+<span class='line'>284</span> 	Set the point which the camera will orbit and look at.
+<span class='line'>285</span> 	
+<span class='line'>286</span> 	The direction will remain unchanged.
+<span class='line'>287</span> 
+<span class='line'>288</span> 	@param {Array} orbitPoint The new vector the camera will orbit and look at.
+<span class='line'>289</span> */</span><span class="WHIT">
+<span class='line'>290</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.setOrbitPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">orbitPoint</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>291</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>292</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">c3dl.isValidVector</span><span class="PUNC">(</span><span class="NAME">orbitPoint</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>293</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>294</span> </span><span class="WHIT">		</span><span class="COMM">// get the distance the camera was from the orbit point.</span><span class="WHIT">
+<span class='line'>295</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">orbitPointToCam</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">-</span><span class="NAME">this.getDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>296</span> </span><span class="WHIT">		
+<span class='line'>297</span> 		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>298</span> </span><span class="WHIT">		</span><span class="NAME">this.orbitPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">orbitPoint</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>299</span> </span><span class="WHIT">		
+<span class='line'>300</span> 		</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.addVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">orbitPointToCam</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>301</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>302</span> </span><span class="WHIT">	</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>303</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>304</span> </span><span class="WHIT">		</span><span class="NAME">c3dl.debug.logWarning</span><span class="PUNC">(</span><span class="STRN">"OrbitCamera::setOrbitPoint() called with a parameter that's not a vector"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>305</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>306</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>307</span> 
+<span class='line'>308</span> 
+<span class='line'>309</span> </span><span class="COMM">/**
+<span class='line'>310</span> 	Yaw about the orbit point. The camera will remain looking at the
+<span class='line'>311</span> 	orbit point and its position will rotate about the point parallel to
+<span class='line'>312</span> 	the global up axis and intersecting with the orbit point.
+<span class='line'>313</span> 	
+<span class='line'>314</span> 	@param {float} angle in radians.
+<span class='line'>315</span> */</span><span class="WHIT">
+<span class='line'>316</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.yaw</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">angle</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>317</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>318</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">c3dl.isVectorEqual</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>319</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>320</span> </span><span class="WHIT">		</span><span class="COMM">// Create a proper Quaternion based on location and angle.</span><span class="WHIT">
+<span class='line'>321</span> </span><span class="WHIT">		</span><span class="COMM">// we will rotate about the global up axis.</span><span class="WHIT">
+<span class='line'>322</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">rotMat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.quatToMatrix</span><span class="PUNC">(</span><span class="NAME">c3dl.axisAngleToQuat</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">angle</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>323</span> 
+<span class='line'>324</span> </span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>325</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>326</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>327</span> 
+<span class='line'>328</span> </span><span class="WHIT">		</span><span class="COMM">// update up</span><span class="WHIT">
+<span class='line'>329</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>330</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>331</span> </span><span class="WHIT">		
+<span class='line'>332</span> 		</span><span class="COMM">// update left, can either do a cross product or matrix-vector mult.</span><span class="WHIT">
+<span class='line'>333</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>334</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>335</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>336</span> </span><span class="WHIT">	
+<span class='line'>337</span> 	</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>338</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>339</span> </span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>340</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">camPosOrbit</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.pos</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>341</span> 
+<span class='line'>342</span> </span><span class="WHIT">		</span><span class="COMM">// Create a rotation matrix based on location and angle.</span><span class="WHIT">
+<span class='line'>343</span> </span><span class="WHIT">		</span><span class="COMM">// we will rotate about the global up axis.</span><span class="WHIT">
+<span class='line'>344</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">rotMat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.quatToMatrix</span><span class="PUNC">(</span><span class="NAME">c3dl.axisAngleToQuat</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">angle</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>345</span> 
+<span class='line'>346</span> </span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>347</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">newpos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">camPosOrbit</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>348</span> </span><span class="WHIT">		</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.addVectors</span><span class="PUNC">(</span><span class="NAME">newpos</span><span class="PUNC">,</span><span class="NAME">this.orbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>349</span> </span><span class="WHIT">		
+<span class='line'>350</span> 		</span><span class="COMM">// update direction</span><span class="WHIT">
+<span class='line'>351</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>352</span> </span><span class="WHIT">		</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>353</span> 
+<span class='line'>354</span> </span><span class="WHIT">		</span><span class="COMM">// update up</span><span class="WHIT">
+<span class='line'>355</span> </span><span class="WHIT">		</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>356</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.multiplyMatrixByVector</span><span class="PUNC">(</span><span class="NAME">rotMat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>357</span> </span><span class="WHIT">		</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>358</span> </span><span class="WHIT">		
+<span class='line'>359</span> 		</span><span class="COMM">// update left</span><span class="WHIT">
+<span class='line'>360</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.up</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>361</span> </span><span class="WHIT">		</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>362</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>363</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>364</span> 
+<span class='line'>365</span> 
+<span class='line'>366</span> </span><span class="COMM">/**
+<span class='line'>367</span> 	Set the camera to a new position. The position must be between the closest
+<span class='line'>368</span> 	and farthest distances.
+<span class='line'>369</span> 	
+<span class='line'>370</span> 	@param {Array} position The new position of the camera.
+<span class='line'>371</span> */</span><span class="WHIT">
+<span class='line'>372</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.setPosition</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">position</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>373</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>374</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">c3dl.isValidVector</span><span class="PUNC">(</span><span class="NAME">position</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>375</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>376</span> </span><span class="WHIT">		</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">distFromNewPosToOP</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorLength</span><span class="PUNC">(</span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">position</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>377</span> </span><span class="WHIT">		
+<span class='line'>378</span> 		</span><span class="COMM">// make sure the new position of the cam is between the min </span><span class="WHIT">
+<span class='line'>379</span> </span><span class="WHIT">		</span><span class="COMM">// and max allowed constraints.	</span><span class="WHIT">
+<span class='line'>380</span> </span><span class="WHIT">		</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT">	</span><span class="NAME">distFromNewPosToOP</span><span class="WHIT"> </span><span class="PUNC">>=</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">&&</span><span class="WHIT"> 
+<span class='line'>381</span> 			</span><span class="NAME">distFromNewPosToOP</span><span class="WHIT"> </span><span class="PUNC">&lt;=</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>382</span> </span><span class="WHIT">		</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>383</span> </span><span class="WHIT">			</span><span class="NAME">this.pos</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.copyObj</span><span class="PUNC">(</span><span class="NAME">position</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>384</span> 
+<span class='line'>385</span> </span><span class="WHIT">			</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="WHIT">			</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">camPosToOrbitPoint</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>387</span> </span><span class="WHIT">					
+<span class='line'>388</span> 			</span><span class="COMM">// if the position was set such that the direction vector is parallel to the global</span><span class="WHIT">
+<span class='line'>389</span> </span><span class="WHIT">			</span><span class="COMM">// up axis, the cross product won't work. In that case, leave the left vector as it was.</span><span class="WHIT">
+<span class='line'>390</span> </span><span class="WHIT">			</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="NAME">c3dl.isVectorEqual</span><span class="PUNC">(</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">camPosToOrbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>391</span> </span><span class="WHIT">			</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>392</span> </span><span class="WHIT">				</span><span class="COMM">// set the direction</span><span class="WHIT">
+<span class='line'>393</span> </span><span class="WHIT">				</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">camPosToOrbitPoint</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>394</span> </span><span class="WHIT">				
+<span class='line'>395</span> 				</span><span class="COMM">// the left vector will be perpendicular to the global up</span><span class="WHIT">
+<span class='line'>396</span> </span><span class="WHIT">				</span><span class="COMM">// axis and direction.</span><span class="WHIT">
+<span class='line'>397</span> </span><span class="WHIT">				</span><span class="COMM">//this.left = c3dl.vectorCrossProduct([0,1,0], this.dir);</span><span class="WHIT">
+<span class='line'>398</span> </span><span class="WHIT">				
+<span class='line'>399</span> 				</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>400</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>401</span> </span><span class="WHIT">			</span><span class="KEYW">else</span><span class="WHIT">
+<span class='line'>402</span> </span><span class="WHIT">			</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>403</span> </span><span class="WHIT">				
+<span class='line'>404</span> 				</span><span class="COMM">// set the direction</span><span class="WHIT">
+<span class='line'>405</span> </span><span class="WHIT">				</span><span class="COMM">//this.setOrbitPoint(this.orbitPoint);</span><span class="WHIT">
+<span class='line'>406</span> </span><span class="WHIT">				</span><span class="NAME">this.dir</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.normalizeVector</span><span class="PUNC">(</span><span class="NAME">c3dl.subtractVectors</span><span class="PUNC">(</span><span class="NAME">this.orbitPoint</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.pos</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>407</span> </span><span class="WHIT">				
+<span class='line'>408</span> 				</span><span class="COMM">// the left vector will be perpendicular to the global up</span><span class="WHIT">
+<span class='line'>409</span> </span><span class="WHIT">				</span><span class="COMM">// axis and direction.</span><span class="WHIT">
+<span class='line'>410</span> </span><span class="WHIT">				</span><span class="NAME">this.left</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="PUNC">[</span><span class="NUMB">0</span><span class="PUNC">,</span><span class="NUMB">1</span><span class="PUNC">,</span><span class="NUMB">0</span><span class="PUNC">]</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.dir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>411</span> </span><span class="WHIT">				
+<span class='line'>412</span> 				</span><span class="NAME">this.up</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl.vectorCrossProduct</span><span class="PUNC">(</span><span class="NAME">this.dir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">this.left</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="WHIT">			</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">		</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>415</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>416</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>417</span> 
+<span class='line'>418</span> 
+<span class='line'>419</span> </span><span class="COMM">/**
+<span class='line'>420</span> 	Get a string representation of this camera.
+<span class='line'>421</span> 	
+<span class='line'>422</span> 	@param {String} [delimiter=","]  A string which will separate values.
+<span class='line'>423</span> 
+<span class='line'>424</span> 	@returns {String} a string representation of this camera.
+<span class='line'>425</span> */</span><span class="WHIT">
+<span class='line'>426</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.toString</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">delimiter</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>428</span> </span><span class="WHIT">	</span><span class="COMM">// make sure user passed up a string if they actually decided</span><span class="WHIT">
+<span class='line'>429</span> </span><span class="WHIT">	</span><span class="COMM">// to specify a delimiter.</span><span class="WHIT">
+<span class='line'>430</span> </span><span class="WHIT">	</span><span class="KEYW">if</span><span class="PUNC">(</span><span class="PUNC">!</span><span class="NAME">delimiter</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">typeof</span><span class="PUNC">(</span><span class="NAME">delimiter</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">!=</span><span class="WHIT"> </span><span class="STRN">"string"</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>431</span> </span><span class="WHIT">	</span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>432</span> </span><span class="WHIT">		</span><span class="NAME">delimiter</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">","</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>433</span> </span><span class="WHIT">	</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>434</span> 
+<span class='line'>435</span> </span><span class="WHIT">	</span><span class="COMM">// get the c3dl.Camera's toString()</span><span class="WHIT">
+<span class='line'>436</span> </span><span class="WHIT">	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">cameraToStr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">c3dl._super</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">arguments</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">"toString"</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>437</span> </span><span class="WHIT">	
+<span class='line'>438</span> 	</span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">OrbitCameraToStr</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">	</span><span class="STRN">"c3dl.OrbitCamera: "</span><span class="WHIT">	</span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">delimiter</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">		
+<span class='line'>439</span> 							</span><span class="STRN">"orbit point = "</span><span class="WHIT">		</span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.getOrbitPoint</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">delimiter</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>440</span> </span><span class="WHIT">							</span><span class="STRN">"closest distance = "</span><span class="WHIT">	</span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.getClosestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">delimiter</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>441</span> </span><span class="WHIT">							</span><span class="STRN">"farthest distance = "</span><span class="WHIT">	</span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">this.getFarthestDistance</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>442</span> 
+<span class='line'>443</span> </span><span class="WHIT">	</span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">cameraToStr</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">OrbitCameraToStr</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>444</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>445</span> 
+<span class='line'>446</span> 
+<span class='line'>447</span> </span><span class="COMM">/**
+<span class='line'>448</span> 	@private
+<span class='line'>449</span> 	
+<span class='line'>450</span> 	yaw and pitch can be given velocities later, but for now, this is
+<span class='line'>451</span> 	not implemented.
+<span class='line'>452</span> 
+<span class='line'>453</span> 	Update Animation of the camera.
+<span class='line'>454</span> 
+<span class='line'>455</span> 	@param {float} timeStep
+<span class='line'>456</span> */</span><span class="WHIT">
+<span class='line'>457</span> </span><span class="NAME">c3dl.OrbitCamera.prototype.update</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">timeStep</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>458</span> </span></pre></body></html>

@@ -1,0 +1,61 @@
+# C3DL
+#
+# This script will generate the c3DL documentation for the developers working with the library directly.
+# These documents should not be used by users of the library who are simply making use of the libary by 
+# creating games,demos, etc. Users should instead download the user documentation from www.c3dl.org 
+#
+#
+# It was decided not to use the -a(all) flag when running the tool to prevent accidental inclusion
+# of js files which should not be included to be documented.  If a new file is added to the 
+# library, its respective line must be added here.
+# 
+# The following arguments are used when generating the documentation.
+#
+# -p (private) = Include symbols tagged as private, underscored and inner symbols. Since we are documenting 
+#      the entire library, we want all code
+#
+# -v (verbose) = Displays what the tool is doing on the console.
+#
+# -t (template) = The template used.
+#
+# -d (destination) = The directory where the generated files should be placed.
+#
+
+java -jar jsrun.jar app/run.js -p -v -t=templates/jsdoc -d=../dev_docs/\
+ ../../canvas3dapi/c3dapi.js\
+ ../../canvas3dapi/c3dlnamespace.js\
+ ../../canvas3dapi/camera/freecamera.js\
+ ../../canvas3dapi/collada.js\
+ ../../canvas3dapi/colladaloader.js\
+ ../../canvas3dapi/colladaqueue.js\
+ ../../canvas3dapi/constants.js\
+ ../../canvas3dapi/debug.js\
+ ../../canvas3dapi/enclosure/boundingsphere.js\
+ ../../canvas3dapi/init.js\
+ ../../canvas3dapi/interaction/picking.js\
+ ../../canvas3dapi/light/light.js\
+ ../../canvas3dapi/light/directionallight.js\
+ ../../canvas3dapi/light/positionallight.js\
+ ../../canvas3dapi/light/spotlight.js\
+ ../../canvas3dapi/math/mathhelper.js\
+ ../../canvas3dapi/math/matrix.js\
+ ../../canvas3dapi/math/quaternion.js\
+ ../../canvas3dapi/math/vector.js\
+ ../../canvas3dapi/matrixstack.js\
+ ../../canvas3dapi/model.js\
+ ../../canvas3dapi/modelmanager.js\
+ ../../canvas3dapi/particle_system/particle.js\
+ ../../canvas3dapi/particle_system/particlesystem.js\
+ ../../canvas3dapi/primitive.js\
+ ../../canvas3dapi/renderer/renderer.js\
+ ../../canvas3dapi/renderer/rendereropengles11.js\
+ ../../canvas3dapi/renderer/rendereropengles20.js\
+ ../../canvas3dapi/resource_management/colladamanager.js\
+ ../../canvas3dapi/resource_management/instancegeometry.js\
+ ../../canvas3dapi/resource_management/texturemanager.js\
+ ../../canvas3dapi/scene.js\
+ ../../canvas3dapi/scenegraph/geometryleaf.js\
+ ../../canvas3dapi/scenegraph/scenegraph.js\
+ ../../canvas3dapi/scenegraph/transformnode.js\
+ ../../canvas3dapi/texture.js\
+ ../../canvas3dapi/utilities.js

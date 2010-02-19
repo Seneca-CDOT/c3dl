@@ -1,0 +1,67 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> 
+<span class='line'>  7</span> </span><span class="COMM">/**
+<span class='line'>  8</span> 	@class c3dl.RenderingObject is an object which is created dynamically 
+<span class='line'>  9</span> 	and passed to the callback function defined within an effect when 
+<span class='line'> 10</span> 	rendering objects.
+<span class='line'> 11</span> */</span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="NAME">c3dl.RenderingObject</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="WHIT">	</span><span class="COMM">// NOTE</span><span class="WHIT">
+<span class='line'> 15</span> </span><span class="WHIT">	</span><span class="COMM">// These methods are empty because we only want jsdoc toolkit creating </span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="WHIT">	</span><span class="COMM">// the doc files.  Within the renderer code, we create an instance of </span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="WHIT">	</span><span class="COMM">// this class and override these functions and provide the function</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="WHIT">	</span><span class="COMM">// definition. </span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="WHIT">	
+<span class='line'> 20</span> 	</span><span class="COMM">// This is done because adding </span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="WHIT">	</span><span class="COMM">// setter functions would make this object not read-only.</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 24</span> 		Get the rendering context. Within the callback function, the context
+<span class='line'> 25</span> 		is used to do many things, some of which includes issuing commands to
+<span class='line'> 26</span> 		set the uniform variables, set rendering states and render the 
+<span class='line'> 27</span> 		geometry.
+<span class='line'> 28</span> 		
+<span class='line'> 29</span> 		@returns the rendering context.
+<span class='line'> 30</span> 	*/</span><span class="WHIT">
+<span class='line'> 31</span> </span><span class="WHIT">	</span><span class="NAME">this.getContext</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">		
+<span class='line'> 33</span> 	</span><span class="COMM">/**
+<span class='line'> 34</span> 		Get the geometric object to render. The geometric object is composed
+<span class='line'> 35</span> 		of primitive sets, so the list of primitive sets must be queried and
+<span class='line'> 36</span> 		rendered.
+<span class='line'> 37</span> 
+<span class='line'> 38</span> 		@returns {c3dl.Geometry} the geometric object to render.
+<span class='line'> 39</span> 	*/</span><span class="WHIT">
+<span class='line'> 40</span> </span><span class="WHIT">	</span><span class="NAME">this.getGeometry</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 41</span> 
+<span class='line'> 42</span> </span><span class="WHIT">	</span><span class="COMM">/**
+<span class='line'> 43</span> 		Get the ID of the program object which is to be used to render the
+<span class='line'> 44</span> 		geometry. Pass this value to the context's useProgram() function to
+<span class='line'> 45</span> 		change the current rendering program.
+<span class='line'> 46</span> 
+<span class='line'> 47</span> 		@returns {int} the program object ID.
+<span class='line'> 48</span> 	*/</span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">	</span><span class="NAME">this.getProgramObjectID</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">	
+<span class='line'> 51</span> 	</span><span class="COMM">/**
+<span class='line'> 52</span> 		Get the renderer used to render the geometry. The renderer will have 
+<span class='line'> 53</span> 		useful state information as well as helper functions to easily set
+<span class='line'> 54</span> 		uniform and vertex attribute variables.
+<span class='line'> 55</span> 		
+<span class='line'> 56</span> 		@returns {c3dl.OpenGLES20} the renderer used to render the geometry.
+<span class='line'> 57</span> 	*/</span><span class="WHIT">
+<span class='line'> 58</span> </span><span class="WHIT">	</span><span class="NAME">this.getRenderer</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">{</span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 59</span> </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'> 60</span> </span></pre></body></html>

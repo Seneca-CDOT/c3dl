@@ -1,0 +1,48 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> </span><span class="NAME">c3dl.cartoon_vs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT">   
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="STRN">"attribute vec3 Vertex;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>  9</span> </span><span class="STRN">"attribute vec3 Normal;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 10</span> </span><span class="STRN">"attribute vec3 Texture;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 11</span> 
+<span class='line'> 12</span> </span><span class="STRN">"varying vec3 norm;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="STRN">"varying vec3 pos;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 14</span> 
+<span class='line'> 15</span> </span><span class="COMM">// for every model we multiply the projection, view and model matrices</span><span class="WHIT">
+<span class='line'> 16</span> </span><span class="COMM">// once to prevent having to do it for every vertex, however we still need</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="COMM">// the model and view matrices to calculate lighting.</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="STRN">"uniform mat4 modelViewMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 19</span> 
+<span class='line'> 20</span> </span><span class="COMM">// we can calculate this once per model to speed up processing done on the js side.</span><span class="WHIT">
+<span class='line'> 21</span> </span><span class="STRN">"uniform mat4 modelViewProjMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 22</span> 
+<span class='line'> 23</span> </span><span class="COMM">// matrix to transform the vertex normals</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="STRN">"uniform mat4 normalMatrix;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 25</span> 
+<span class='line'> 26</span> </span><span class="COMM">/*
+<span class='line'> 27</span> 
+<span class='line'> 28</span> */</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="STRN">"void main(void)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 30</span> </span><span class="STRN">"{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 31</span> 
+<span class='line'> 32</span> 	</span><span class="COMM">// create a normal matrix 3x3 out of 4x4</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="STRN">"  mat3 normalMatrix3x3 = mat3(normalMatrix[0][0],normalMatrix[0][1],normalMatrix[0][2],normalMatrix[1][0],normalMatrix[1][1],normalMatrix[1][2],normalMatrix[2][0],normalMatrix[2][1],normalMatrix[2][2]);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 34</span> </span><span class="STRN">"  norm = normalize(normalMatrix3x3 * Normal);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 35</span> 
+<span class='line'> 36</span> </span><span class="STRN">"  gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 37</span> </span><span class="STRN">"  pos = vec3( modelViewMatrix * vec4(Vertex,1.0));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 38</span> 
+<span class='line'> 39</span> </span><span class="STRN">"  gl_TexCoord[0] = vec4(Texture,1.0);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 40</span> </span><span class="STRN">"}"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 41</span> </span></pre></body></html>

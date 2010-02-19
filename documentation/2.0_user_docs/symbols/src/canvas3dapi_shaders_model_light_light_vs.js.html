@@ -1,0 +1,218 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*
+<span class='line'>  2</span>   Copyright (c) 2008 Seneca College
+<span class='line'>  3</span>   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+<span class='line'>  4</span> */</span><span class="WHIT">
+<span class='line'>  5</span> 
+<span class='line'>  6</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>  7</span> </span><span class="NAME">c3dl.light_vs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> 
+<span class='line'>  8</span> 
+<span class='line'>  9</span> 
+<span class='line'> 10</span> 
+<span class='line'> 11</span> </span><span class="COMM">// We need to create our own light structure since we can't access </span><span class="WHIT">
+<span class='line'> 12</span> </span><span class="COMM">// the light() function in the 2.0 context.</span><span class="WHIT">
+<span class='line'> 13</span> </span><span class="STRN">"struct Light"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 14</span> </span><span class="STRN">"{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 15</span> 
+<span class='line'> 16</span> </span><span class="COMM">// figure out culling/light bug</span><span class="WHIT">
+<span class='line'> 17</span> </span><span class="COMM">//"	int isOn;" +</span><span class="WHIT">
+<span class='line'> 18</span> </span><span class="STRN">"	bool isOn;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 19</span> </span><span class="STRN">"	int type;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 20</span> 
+<span class='line'> 21</span> </span><span class="STRN">"	vec3 ambient;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 22</span> </span><span class="STRN">"	vec3 diffuse;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 23</span> </span><span class="STRN">"	vec3 specular;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 24</span> </span><span class="STRN">"	vec4 position;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 25</span> 
+<span class='line'> 26</span> </span><span class="WHIT">	</span><span class="COMM">// Used if the light is a spotlight</span><span class="WHIT">
+<span class='line'> 27</span> </span><span class="STRN">"	vec3 spotDirection;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 28</span> </span><span class="STRN">"	float spotExponent;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 29</span> </span><span class="STRN">"	float spotCutoff;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 30</span> 
+<span class='line'> 31</span> </span><span class="WHIT">	</span><span class="COMM">// Not used in calculations if the light is directional, since directional</span><span class="WHIT">
+<span class='line'> 32</span> </span><span class="WHIT">	</span><span class="COMM">// lights do not attenuate.</span><span class="WHIT">
+<span class='line'> 33</span> </span><span class="STRN">"	float attenuation1;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 34</span> </span><span class="STRN">"	float attenuation2;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 35</span> </span><span class="STRN">"	float attenuation3;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 36</span> </span><span class="STRN">"};"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 37</span> 
+<span class='line'> 38</span> </span><span class="STRN">"uniform vec3 ambientLightColor;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 39</span> 
+<span class='line'> 40</span> </span><span class="COMM">// global lighting state, if this is off, no light calculations </span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="COMM">// are computed.</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="STRN">"uniform bool lightingOn;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 43</span> 
+<span class='line'> 44</span> </span><span class="COMM">//</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="STRN">"const int C3DL_MAX_LIGHTS = 7;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 46</span> 
+<span class='line'> 47</span> </span><span class="COMM">// custom light structures needed, we can't access opengl light states.</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="STRN">"uniform Light lights[C3DL_MAX_LIGHTS];"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 49</span> 
+<span class='line'> 50</span> 
+<span class='line'> 51</span> </span><span class="COMM">/*
+<span class='line'> 52</span> 	A Spotlight is a positional light with a constraint which prevents light from radiating from
+<span class='line'> 53</span> 	all directions from the point light.  Instead a cone of light is created which lights up objects.
+<span class='line'> 54</span> 
+<span class='line'> 55</span> 	Light light - the light in viewspace
+<span class='line'> 56</span> 	vec3 normal - transformed normal
+<span class='line'> 57</span> 	vec3 eye - 
+<span class='line'> 58</span> 	vec3 ecPos - vertex in eye coordinate space. 
+<span class='line'> 59</span> 	vec3 ambient - 
+<span class='line'> 60</span> 	vec3 diffuse - 
+<span class='line'> 61</span> 	vec3 specular - 	
+<span class='line'> 62</span> 	float shininess - 
+<span class='line'> 63</span> */</span><span class="WHIT">
+<span class='line'> 64</span> </span><span class="STRN">"void c3dl_SpotLight(	in Light light, in vec3 normal, in vec3 eye, in vec3 ecPos, "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 65</span> </span><span class="STRN">"						inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="STRN">"						float shininess)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="STRN">"{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 68</span> </span><span class="STRN">"	float nDotVP; "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 69</span> </span><span class="STRN">"	float nDotHV; "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 70</span> </span><span class="STRN">"	float spotDot; "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 71</span> </span><span class="STRN">"	float spotAttenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 72</span> </span><span class="STRN">"	float attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 73</span> </span><span class="STRN">"	float d;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="STRN">"	vec3 VP;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="STRN">"	float pf;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 76</span> </span><span class="STRN">"	vec3 halfVector;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 77</span> 
+<span class='line'> 78</span> </span><span class="WHIT">	</span><span class="COMM">// calculate the vector from the current vertex to the light.</span><span class="WHIT">
+<span class='line'> 79</span> </span><span class="STRN">"	VP = vec3(light.position) - ecPos; "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 80</span> 
+<span class='line'> 81</span> </span><span class="STRN">"	vec3 ldir = normalize(light.spotDirection);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 82</span> 
+<span class='line'> 83</span> </span><span class="STRN">"	d = length(VP);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 84</span> </span><span class="STRN">"	VP = normalize(VP);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'> 85</span> 
+<span class='line'> 86</span> </span><span class="STRN">"	attenuation = 1.0 / (light.attenuation1 + (light.attenuation2 * d) + (light.attenuation3 * d * d));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 87</span> 
+<span class='line'> 88</span> </span><span class="WHIT">	</span><span class="COMM">// dot product of the vector from vertex to light and light direction.</span><span class="WHIT">
+<span class='line'> 89</span> </span><span class="STRN">"	spotDot = dot(-VP, ldir);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 90</span> 
+<span class='line'> 91</span> </span><span class="WHIT">	</span><span class="COMM">// if the vertex falls inside the cone</span><span class="WHIT">
+<span class='line'> 92</span> </span><span class="STRN">"	if(spotDot > cos(radians(light.spotCutoff)))"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 93</span> </span><span class="STRN">"	{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 94</span> </span><span class="STRN">"		spotAttenuation = pow(spotDot, light.spotExponent);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 95</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 96</span> </span><span class="STRN">"	else{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 97</span> </span><span class="STRN">"		spotAttenuation = 0.0;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 98</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'> 99</span> 
+<span class='line'>100</span> 
+<span class='line'>101</span> </span><span class="STRN">"	attenuation *= spotAttenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>102</span> 
+<span class='line'>103</span> </span><span class="STRN">"	halfVector = normalize(VP + eye);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>104</span> 
+<span class='line'>105</span> </span><span class="STRN">"	nDotVP = max(0.0, dot(normal, VP));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>106</span> </span><span class="STRN">"	nDotHV = max(0.0, dot(normal, halfVector));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>107</span> 
+<span class='line'>108</span> </span><span class="WHIT">	</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>109</span> </span><span class="STRN">"	if(nDotVP == 0.0){"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>110</span> </span><span class="STRN">"		pf = 0.0;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="STRN">"	else{"</span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="STRN">"		pf = pow(nDotHV, shininess);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>115</span> 
+<span class='line'>116</span> </span><span class="STRN">"	ambient += light.ambient * attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="STRN">"	diffuse += light.diffuse * nDotVP * attenuation; "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="STRN">"	specular += light.specular * pf * attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="STRN">"}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>120</span> 
+<span class='line'>121</span> 
+<span class='line'>122</span> 
+<span class='line'>123</span> </span><span class="WHIT"> 
+<span class='line'>124</span>  </span><span class="COMM">/*
+<span class='line'>125</span> 	A point light is similar to a lightbulb in that light rays radiate out in all directions.
+<span class='line'>126</span> 	Unlike directional lights, point lights attenuate with distance.
+<span class='line'>127</span> 
+<span class='line'>128</span> 	Light light - the light in view space
+<span class='line'>129</span> 	vec3 normal - 
+<span class='line'>130</span> 	vec3 eye - 
+<span class='line'>131</span> 	vec3 ecPos - 
+<span class='line'>132</span> 	vec3 ambient - 
+<span class='line'>133</span> 	vec3 diffuse -
+<span class='line'>134</span> 	vec3 specular -  
+<span class='line'>135</span> 	float shininess - 
+<span class='line'>136</span>  */</span><span class="WHIT">
+<span class='line'>137</span> </span><span class="STRN">"void c3dl_PointLight(	in Light light, in vec3 normal, in vec3 eye, in vec3 ecPos, "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>138</span> </span><span class="STRN">"						inout vec3 ambient, inout vec3 diffuse, inout vec3 specular, "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>139</span> </span><span class="STRN">"						float shininess)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="STRN">"{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">	</span><span class="COMM">// get the vector from the current vertex to the light's position.</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="STRN">"	vec3 VP = vec3(light.position) - ecPos;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>143</span> 
+<span class='line'>144</span> </span><span class="WHIT">	</span><span class="COMM">// amount of shininess</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="STRN">"	float pf;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">	
+<span class='line'>146</span> 
+<span class='line'>147</span> 	</span><span class="COMM">// vector midway between VP and eye</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="STRN">"	vec3 halfVector = normalize(VP + eye);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>149</span> 
+<span class='line'>150</span> </span><span class="WHIT">	</span><span class="COMM">// get the distance from the current vector to the light position</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="STRN">"	float d = length(VP); "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>152</span> 
+<span class='line'>153</span> 	</span><span class="COMM">// normalize the light so it can be used in the dot product operation.</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="STRN">"	VP = normalize(VP);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>155</span> 
+<span class='line'>156</span> 	</span><span class="COMM">// calculate the attenuation</span><span class="WHIT">
+<span class='line'>157</span> </span><span class="STRN">"	float attenuation = 1.0 / (light.attenuation1 + (light.attenuation2 * d) + (light.attenuation3 * d * d));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>158</span> 
+<span class='line'>159</span> </span><span class="STRN">"	float nDotVP = max(0.0, dot(normal, VP));"</span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>160</span> </span><span class="STRN">"	float nDotHV = max(0.0, dot(normal, halfVector));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>161</span> 
+<span class='line'>162</span> </span><span class="WHIT">	</span><span class="COMM">//</span><span class="WHIT">
+<span class='line'>163</span> </span><span class="STRN">"	if(nDotVP == 0.0){"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="STRN">"		pf = 0.0;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="STRN">"	else{"</span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="STRN">"		pf = pow(nDotHV, shininess);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>169</span> 
+<span class='line'>170</span> </span><span class="WHIT">	</span><span class="COMM">// similar to the directional light, except we apply attenuation.</span><span class="WHIT">
+<span class='line'>171</span> </span><span class="STRN">"	ambient += light.ambient * attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>172</span> </span><span class="STRN">"	diffuse += light.diffuse * nDotVP * attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>173</span> </span><span class="STRN">"	specular += light.specular * pf * attenuation;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>174</span> </span><span class="STRN">"}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>175</span> 
+<span class='line'>176</span> 
+<span class='line'>177</span> </span><span class="COMM">/*
+<span class='line'>178</span> 	Light light - the light in view space
+<span class='line'>179</span> 	vec3 normal - 
+<span class='line'>180</span> 	vec3 ambient - 
+<span class='line'>181</span> 	vec3 diffuse - 
+<span class='line'>182</span> 	vec3 specular - 
+<span class='line'>183</span> 	float shininess - 
+<span class='line'>184</span> */</span><span class="WHIT">
+<span class='line'>185</span> </span><span class="STRN">"void c3dl_DirectionalLight(in Light light, in vec3 normal, "</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>186</span> </span><span class="STRN">"							inout vec3 ambient, inout vec3 diffuse, inout vec3 specular,"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>187</span> </span><span class="STRN">"							float shininess)"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>188</span> </span><span class="STRN">"{"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>189</span> 
+<span class='line'>190</span> </span><span class="WHIT">	</span><span class="COMM">// we have to flip the direction because the script tells the shader </span><span class="WHIT">
+<span class='line'>191</span> </span><span class="WHIT">	</span><span class="COMM">// where the light is coming FROM. We have to specify what direction the light</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">	</span><span class="COMM">// is infinately towards.</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="STRN">"	vec3 VP = normalize(vec3(-light.position));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>194</span> 
+<span class='line'>195</span> </span><span class="STRN">"	float powerfactor;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>196</span> 
+<span class='line'>197</span> </span><span class="STRN">"	float nDotVP = max(0.0, dot(normal, VP));"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>198</span> </span><span class="STRN">"	float nDotHV = nDotVP;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>199</span> 
+<span class='line'>200</span> </span><span class="STRN">"	if(nDotVP == 0.0){"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>201</span> </span><span class="STRN">"		powerfactor = 0.0;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>202</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>203</span> </span><span class="STRN">"	else{"</span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>204</span> </span><span class="STRN">"		powerfactor = pow(nDotHV, shininess);"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>205</span> </span><span class="STRN">"	}"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>206</span> 
+<span class='line'>207</span> </span><span class="STRN">"	ambient += light.ambient;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> 
+<span class='line'>208</span> </span><span class="STRN">"	diffuse += light.diffuse * nDotVP;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="STRN">"	specular += light.specular * powerfactor;"</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT">
+<span class='line'>210</span> </span><span class="STRN">"} "</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>211</span> </span></pre></body></html>
