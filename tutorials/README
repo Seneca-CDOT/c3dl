@@ -1,0 +1,4 @@
+NOTE: the code in the tutorials are not 100% identical to that on the website.
+It is designed to work with the canvas3dapi folder being 2 folders up and not one
+folder out.  If you had gotten the repository, you should be able to run the
+the tutorials directory by loading the index.html file in each subdirecotry.
