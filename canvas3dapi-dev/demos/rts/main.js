@@ -13,7 +13,6 @@ var creatingBuilding = false;
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
 
-
 const NONE_SELECTED = -1;
 lastSelectedObjID = -1;
 
@@ -26,6 +25,11 @@ var keyD = false;
 c3dl.addModel(BARRACKS_PATH);
 c3dl.addModel(FARM_PATH);
 c3dl.addModel(PLANE);
+
+// How many lines make up the circle around the
+// buildings. The higher the value, the more lines.
+const OUTLINE_DETAIL = 4;
+var outline1;
 
 c3dl.addMainCallBack(canvasMain, 'rts');
 
@@ -74,6 +78,7 @@ var idGenerator = (function IDGen() {
   };
 })();
 
+
 var selection = (
 
 function Selection() {
@@ -101,13 +106,92 @@ function Selection() {
     },
     setVisible: function (isVisible) {
       for (var i = 0; i < 4; i++) {
-        lines[i].setVisible(isVisible);
+        //lines[i].setVisible(isVisible);
         //        lines[i].setCoordinates[[0,0,0],
       }
     }
   };
 })();
 
+/*
+  detail -  How many lines make up the shape around the object
+            the higher the value, the smoother it will be
+  color -   array of 3 values
+  radius -  Radius
+*/
+function outline(detail, color, radius) {
+  var detail = detail;
+  var color = color;
+  var radius = radius;
+  var lines = [];
+  var position = [0,0,0];
+  
+  function init() {
+    var lineVerts = [];
+    var x = 0;
+    var y = 1 * radius;
+    var num_lines = Math.PI * 2 / OUTLINE_DETAIL;
+
+    for(var i = 0; i <= Math.PI * 2; i+= num_lines)
+    {
+      lineVerts.push([x, 1, y]);
+      x = Math.sin(i) * radius;
+      y = Math.cos(i) * radius;
+      lineVerts.push([x, 1, y]);
+    }
+
+    for (var i = 0; i < lineVerts.length; i+=2) {
+      var line = new c3dl.Line();
+      line.setCoordinates(lineVerts[i], lineVerts[i + 1]);
+      line.setColors(color, color);
+      scn.addObjectToScene(line);
+      lines.push(line);
+    }
+
+    // close off the shape
+    var line = new c3dl.Line();
+    line.setCoordinates(lineVerts[lineVerts.length - 1], lineVerts[0]);
+    line.setColors(color, color);
+    scn.addObjectToScene(line);
+    lines.push(line);
+  }
+  init();
+
+  return {
+    /*
+      Assign a new position to the outline
+    */
+    setPosition: function(newPos) {
+      for(var i = 0; i < lines.length; i++) {
+        
+        var lc = lines[i].getCoordinates();
+
+        var l1 = [lc[0],lc[1],lc[2]];
+        var l2 = [lc[3],lc[4],lc[5]];
+        
+        var posToVert1 = c3dl.subtractVectors(l1, position);
+        var posToVert2 = c3dl.subtractVectors(l2, position);
+        lines[i].setCoordinates(c3dl.addVectors(posToVert1,newPos), c3dl.addVectors(posToVert2,newPos));
+      }
+    },
+    setColor: function(color) {
+      for(var i = 0; i < lines.length; i++) {
+        lines[i].setColors(color,color);
+      }
+    },
+    getColor: function() {
+      return color;
+    },
+    getPosition: function() {
+      return position;
+    },
+    setVisible: function(visible) {
+      for(var i = 0; i < lines.length; i++) {
+        lines[i].setVisible(visible);
+      }
+    }
+  };
+}
 
 
 function isPointInSquare(p, line1, line2, line3, line4) {
@@ -144,47 +228,20 @@ function canvasMain(canvasName) {
   selection.setBounds(0, 0, 50, 50);
   selection.setVisible(false);
 
-  var lv = [];
-  var rad = 0;
-  var circleSize = 10;
-
-  var xx = 0;
-  var yy = 1 * circleSize;
-  var detail = 0.2;
-
-  for (var i = detail; i <= 3.15 * 2; i += detail) {
-    lv.push([xx, .25, yy]);
-    xx = Math.sin(i) * circleSize;
-    yy = Math.cos(i) * circleSize;
-
-    lv.push([xx, .25, yy]);
-  }
-
-  for (var i = 0; i < lv.length - 1; i++) {
-    var l = new c3dl.Line();
-    l.setCoordinates(lv[i], lv[i + 1]);
-    l.setColors([1, 0, 0], [1, 0, 0]);
-    scn.addObjectToScene(l);
-  }
-
-  // close off the circle
-  var l = new c3dl.Line();
-  l.setCoordinates(lv[lv.length - 1], lv[0]);
-  l.setColors([1, 0, 0], [1, 0, 0]);
-  scn.addObjectToScene(l);
-
-
   var col = new c3dl.Collada();
   col.init(BARRACKS_PATH);
   col.pitch(-3.14 / 2);
-  // col.translate([25,0,25]);
-  //  col.setEffect(onFire);
+  col.translate([25,0,25]);
   scn.addObjectToScene(col);
+
+  outline1 = new outline(OUTLINE_DETAIL,[0,0,1],8);
+  outline1.setVisible(true);
+  outline1.setPosition([25,0,25]);
 
   psys = new c3dl.ParticleSystem();
   psys.setMinVelocity([-.5, 3, -.5]);
   psys.setMaxVelocity([.2, 5, .5]);
-
+  
   psys.setMinLifetime(1);
   psys.setMaxLifetime(3);
 
@@ -201,7 +258,7 @@ function canvasMain(canvasName) {
   psys.setAcceleration([0, 0, 0]);
   psys.setEmitRate(90);
   psys.init(150);
-  psys.setPosition([1, 0, 0.2]);
+  psys.setPosition([25,0,25]);
   scn.addObjectToScene(psys);
 
   var r = -1;
@@ -275,7 +332,7 @@ function mouseUp() {
   md = false;
 }
 
-function mouseDown() {
+function mouseDown(event) {
   md = true;
 
   var c = getWorldCoords(event.pageX, event.pageY);
@@ -343,13 +400,13 @@ function createObject(objID) {
   case 0:
     collada = new c3dl.Collada();
     collada.init(BARRACKS_PATH);
-    collada.pitch(-3.14 / 2);
+    collada.pitch(-Math.PI / 2);
     test = collada;
     break;
   case 1:
     collada = new c3dl.Collada();
     collada.init(FARM_PATH);
-    collada.pitch(-3.14 / 2);
+    collada.pitch(Math.PI / 2);
     test = collada;
     break;
 
@@ -400,7 +457,7 @@ function mouseMove(event) {
     var testl = c3dl.vectorLength(aa);
     var b = Math.sqrt(l * l - testl * testl);
 
-    var lines = selection.getLines();
+    var f = selection.getLines();
 
     var topRightX;
     var topRightY;
@@ -423,6 +480,7 @@ function mouseMove(event) {
       bottomLeftY = mz - camLeft[2] * b;
     }
 
+    var lines = selection.getLines();
     lines[0].setCoordinates([startSx, selHeight, startSy], [topRightX, selHeight, topRightY]);
     lines[1].setCoordinates([topRightX, selHeight, topRightY], [mx, selHeight, mz]);
     lines[2].setCoordinates([mx, selHeight, mz], [bottomLeftX, selHeight, bottomLeftY]);
@@ -522,6 +580,16 @@ function update(deltaTime) {
   c3dl.multiplyMatrixByVector(mat, pos, pos);
 
   light.setDirection(pos);
+  
+  
+  // testing
+  
+  var color = outline1.getColor();
+  if(color[0] < 1){
+  color[0] += 0.01;
+  color[2] -= 0.01;
+  outline1.setColor(color);
+  }
 }
 
 function picking(pickingObj) {
