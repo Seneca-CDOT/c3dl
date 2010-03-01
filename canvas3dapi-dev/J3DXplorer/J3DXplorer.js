@@ -31,11 +31,11 @@ function J3DXplorer_main(canvasName)
 	scn.setRenderer(renderer);
 	scn.init(canvasName);
 	if(!renderer.isReady()){
+		var imgtag=document.getElementById("screenshot"); 
+		imgtag.style.display="block";
 		var canvas=document.getElementById(canvasName);
-		var ctx=canvas.getContext('2d');
-		var img=new Image();
-		img.src="frontpagess.png";
-		ctx.drawImage(img,0,0);
+		canvas.style.display="none";
+
 	}
 	else{
 	var j=0;	
