@@ -58,7 +58,7 @@ then
   exit 1
 fi
 
-# creat 'compressed' (normal) zip
+# create 'compressed' (normal) zip
 for NAME in `find $SRCNAME`
 do
   if echo $NAME | grep -E ".js$" > /dev/null
