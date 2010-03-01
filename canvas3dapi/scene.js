@@ -1219,13 +1219,6 @@ c3dl.Scene = function()
 			}
 			
 		}
-		
-//		glCanvas3D.frontFace(glCanvas3D.CW);
-		for(var i = 0; i < particleSystems.length; i++)
-		{
-			particleSystems[i].render(glCanvas3D, this);
-		}
-
 
 		// POINTS
 		
@@ -1289,6 +1282,14 @@ c3dl.Scene = function()
 			}
 		}
 		renderer.renderLines(lines);
+    
+    // Render the particle systems last because they 
+    // have blending
+    // glCanvas3D.frontFace(glCanvas3D.CW);
+		for(var i = 0; i < particleSystems.length; i++)
+		{
+			particleSystems[i].render(glCanvas3D, this);
+		}
 	}
 	
 	/**

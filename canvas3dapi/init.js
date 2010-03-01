@@ -33,7 +33,7 @@ c3dl.addProgressBars = function()
 		var yOffset = pos[1];
 
 		var progressBar = document.createElement("img");
-		progressBar.src = basePath + "loading.gif";
+		progressBar.src = basePath + "/loading.gif";
 		progressBar.style.position = 'absolute';
 
 		// place the center of the gif in the center of the canvas
