@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>Andor</author>
+      <authoring_tool>3dsMax 8 - Feeling ColladaMax v3.05B.</authoring_tool>
+      <comments>ColladaMax Export Options: ExportNormals=1;ExportEPolyAsTriangles=1;ExportXRefs=1;ExportSelected=0;ExportTangents=0;ExportAnimations=0;SampleAnim=0;ExportAnimClip=0;BakeMatrices=0;ExportRelativePaths=0;AnimStart=0;AnimEnd=3.33333;</comments>
+    </contributor>
+    <created>2008-11-02T18:41:02Z</created>
+    <modified>2008-11-02T18:41:08Z</modified>
+    <unit meter="0.0254" name="inch"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+
+  <!--
+	In this case, we only have one image in the library of images.
+  -->
+  <library_images>
+    <!--
+	<init_from> means to initialize the image.
+    -->
+    <image id="brick.jpg" name="brick_jpg">
+      <init_from>texture.jpg</init_from>
+    </image>
+  </library_images>
+
+  <!--
+	Library of materials
+  -->
+  <library_materials>
+    <material id="Material__25" name="Material__25">
+      <instance_effect url="#Material__25-fx"/>
+    </material>
+  </library_materials>
+
+  <!--
+	Library of effects
+  -->
+  <library_effects>
+    <effect id="Material__25-fx" name="Material__25">
+      <profile_COMMON>
+        <newparam sid="brick_jpg-surface">
+          <surface type="2D">
+            <init_from>brick.jpg</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </newparam>
+        <newparam sid="brick_jpg-sampler">
+          <sampler2D>
+            <source>brick_jpg-surface</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>NONE</minfilter>
+            <magfilter>NONE</magfilter>
+            <mipfilter>NONE</mipfilter>
+          </sampler2D>
+        </newparam>
+        <technique sid="common">
+          <blinn>
+            <ambient>
+              <color>0.1588 0.588 0.588 1</color>
+            </ambient>
+            <diffuse>
+              <texture texture="brick_jpg-sampler" texcoord="CHANNEL1">
+                <extra>
+                  <technique profile="MAYA">
+                    <mirrorU>0</mirrorU>
+                    <mirrorV>0</mirrorV>
+                    <wrapU>1</wrapU>
+                    <wrapV>1</wrapV>
+                    <repeatU>1</repeatU>
+                    <repeatV>1</repeatV>
+                    <offsetU>0</offsetU>
+                    <offsetV>0</offsetV>
+                    <rotateUV>0</rotateUV>
+                  </technique>
+                  <technique profile="MAX3D">
+                    <amount>1</amount>
+                  </technique>
+                </extra>
+              </texture>
+            </diffuse>
+            <specular>
+              <color>0.9 0.9 0.9 1</color>
+            </specular>
+            <shininess>
+              <float>0.415939</float>
+            </shininess>
+            <reflective>
+              <color>0 0 0 1</color>
+            </reflective>
+            <reflectivity>
+              <float>1</float>
+            </reflectivity>
+            <transparent opaque="A_ONE">
+              <color>1 1 1 1</color>
+            </transparent>
+            <transparency>
+              <float>1</float>
+            </transparency>
+          </blinn>
+          <extra>
+            <technique profile="FCOLLADA">
+              <spec_level>
+                <float>0</float>
+              </spec_level>
+              <emission_level>
+                <float>0</float>
+              </emission_level>
+            </technique>
+          </extra>
+        </technique>
+      </profile_COMMON>
+      <extra>
+        <technique profile="MAX3D">
+          <faceted>0</faceted>
+          <double_sided>0</double_sided>
+          <wireframe>0</wireframe>
+          <face_map>0</face_map>
+        </technique>
+      </extra>
+    </effect>
+  </library_effects>
+  
+
+  <!--
+	Library of geometries. This would normally contain many different geometries such as chair, table or book.
+  -->
+  <library_geometries>
+    <geometry id="Box01-mesh" name="Box01">
+      <mesh>
+        <!--
+		Source contains address of where the data is.  Source also tells us how the data should be accessed.
+		
+		The first tag within source tells us we are dealing with floating point numbers and also tells us the number of 
+		elements.  This can be helpful if we need to allocate the exact amount of space prior to reading the list.
+        -->
+        <source id="Box01-mesh-positions">
+          
+          <!--
+		Here is the actual data
+		xyz = -5 -5 0  element 0
+		xyz =  5 -5 0  element 1
+		xyz = -5  5 0  element 2
+		...
+		...
+          -->
+          <float_array id="Box01-mesh-positions-array" count="24">-5 -5 0 5 -5 0 -5 5 0 5 5 0 -5 -5 10 5 -5 10 -5 5 10 5 5 10</float_array>
+
+          <!--
+          -->
+          <technique_common>
+            <!--
+		count - How many times do we access the data?
+		stride - How many values do we read with each access?
+		source - where is the data? in most cases it is a few elements 'up'.
+
+		other attributes not listed are
+		offset - the index of the first value to start reading from
+		
+		we access the array 8 times, every time reading 3 values.
+		Note the count is 8 which is also the number of point needed to represent a cube.
+
+		The number and order of the parameters define how the data is output.
+
+		*Note that a <param> without a name indicates that parameter is not part of the data.
+            -->
+            <accessor source="#Box01-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+
+
+
+
+	<!--
+		In this case, each point is being 'used' by 3 triangles, therefore each of those have different normals.
+		8 points * 3 normals = 24 normals total
+	-->
+        <source id="Box01-mesh-normals">
+          <float_array id="Box01-mesh-normals-array" count="72">0 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 -1 0 0 -1 0 0 -1 0 0 -1 0 0</float_array>
+          <technique_common>
+            <accessor source="#Box01-mesh-normals-array" count="24" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+
+
+
+
+	<!--
+		Since the stride is 3, if we read in 3 at time, we can drop the last one, P.
+	-->
+        <source id="Box01-mesh-map-channel1">
+          <float_array id="Box01-mesh-map-channel1-array" count="36">0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 0 0 0 1 0 1 1 0</float_array>
+          <technique_common>
+            <accessor source="#Box01-mesh-map-channel1-array" count="12" stride="3">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+              <param name="P" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+
+
+	<!--
+		The input here has the source which refers to the source tag above.
+	-->
+        <vertices id="Box01-mesh-vertices">
+          <input semantic="POSITION" source="#Box01-mesh-positions"/>
+        </vertices>
+
+	<!--
+		Here we have the listing of triangles. The values in the <p> or primitive tag
+		are array index values which index into source tags.
+
+		<p> - 'p' stands for primitive.  The values in this tags are indices which index into
+		values in parent, or mesh the source tags. Indices in a 'p' refer to the different inputs
+		which depend on the order.  The first refers to all inputs with offset of 0. In this example there are
+		108 values in <p>
+		
+		108 total values
+		36 values for verts, normals and texcoords
+		triangles has 3 points, therefore the <p> element here has 36/3 = 12 triangles. 2 for each cube's side.
+
+		<triangles> tell us in the count attribute there are 12 triangles listed.
+		
+		0 - v
+		0 - n
+		9 - t
+
+		2 - v
+		1 - n
+		11 - t
+
+		Note that the winding order of vertices is counterclockwise.
+	-->
+        <triangles material="Material__25" count="12">
+          <input semantic="VERTEX" source="#Box01-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Box01-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Box01-mesh-map-channel1" offset="2" set="1"/>
+          <p>0 0 9 2 1 11 3 2 10 3 2 10 1 3 8 0 0 9 4 4 8 5 5 9 7 6 11 7 6 11 6 7 10 4 4 8 0 8 4 1 9 5 5 10 7 5 10 7 4 11 6 0 8 4 1 12 0 3 13 1 7 14 3 7 14 3 5 15 2 1 12 0 3 16 4 2 17 5 6 18 7 6 18 7 7 19 6 3 16 4 2 20 0 0 21 1 4 22 3 4 22 3 6 23 2 2 20 0</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+
+  <!--
+	The library of all the visual scenes.  There may be many visual_scenes within the document, however when
+	the document is being loaded only one visual scene will actually be loaded.  In this case we only have one visual_scene
+	within our library.
+  -->
+  <library_visual_scenes>
+
+    <!-- 
+	The start of the visual scene. We could have more but we only have one in this library.
+    -->
+    <visual_scene id="unnamed_scene" name="unnamed_scene">
+      <node id="Box01-node" name="Box01" type="NODE">
+        <translate>0 0 0</translate>
+        <node id="Box01-node_PIVOT" name="Box01_PIVOT" type="NODE">
+          <matrix>1 0 0 0 0 1 0 0 0 0 1 -5 0 0 0 1</matrix>
+          
+         <!-- 
+		Create an instance of a geometry from the library of geometries.
+		bind Material__25 to the geometry.
+         -->
+         <instance_geometry url="#Box01-mesh">
+
+            <bind_material>
+              <technique_common>
+                <instance_material symbol="Material__25" target="#Material__25">
+                  <bind_vertex_input semantic="CHANNEL1" input_semantic="TEXCOORD" input_set="1"/>
+                </instance_material>
+              </technique_common>
+            </bind_material>
+
+          </instance_geometry>
+        </node>
+      </node>
+
+      <!--
+	extra stuff, ignore
+      -->
+      <extra>
+        <technique profile="FCOLLADA">
+          <start_time>0</start_time>
+          <end_time>3.33333</end_time>
+        </technique>
+      </extra>
+      <extra>
+        <technique profile="MAX3D">
+          <frame_rate>30</frame_rate>
+        </technique>
+      </extra>
+    </visual_scene>
+  </library_visual_scenes>
+
+
+  <!--
+	The Collada tag can contain at most ONE <scene> element. The scene tag declares the base
+	of the scene graph. A scene graph is simply a tree data structure which contains nodes such
+	as transformation nodes and geometry nodes. Scene graphs are useful structure when creating
+	a hierarchy of objects.
+
+	The scenegraph is defined in the instance_visual_scene tag.
+  -->  
+  <scene>
+    <instance_visual_scene url="#unnamed_scene"/>
+  </scene>
+
+</COLLADA>

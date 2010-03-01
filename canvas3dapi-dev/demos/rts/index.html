@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>C3DL - RTS</title>
+    <script language="javascript" src="../../../canvas3dapi/c3dapi.js"></script>
+    <script language="javascript" src="main.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <!--<h1><a href="">C3DL</a> - RTS</h1>
+    <p>
+      <canvas id="rts" width="500" height="500"></canvas>
+    </p>
+-->
+      <table>
+        <tr>
+          <td>
+            <canvas id="rts" width="500" height="500"></canvas>
+          </td>
+        
+          <td valign="top">
+            <u>Controls</u><br />
+            <ul>
+            <li>Mouse Wheel = Zoom in/out</li><br />
+            <li>Mouse Wheel + Y = Yaw</li><br />
+            <li>Mouse Click (Canvas Edge) = Move camera</li><br />
+            <li>"Double Click" = Center camera on object</li><br />
+            </ul>
+            <br />
+            Note, you cannot create buildings too close to one another.
+            <br />
+            <br />
+            <br />
+            <span id='debug'></span>
+            <br />
+          </td>
+        </tr>
+      </table>
+      
+    <p>
+      <img src="images/barracks.jpg" id="barracks" width="80" onclick="createObject(0)"/>
+      <img src="images/farm.jpg" id="farm" width="80" onclick="createObject(1)"/>
+    </p>
+    <font face="verdana"><span id="fps"> </span></font>
+  </body>
+</html>
