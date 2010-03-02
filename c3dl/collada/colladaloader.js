@@ -15,6 +15,7 @@ c3dl.ColladaLoader = function()
 	var xmlhttp = null;
 	this.done = false;
 	this.name = "";
+  this.upAxis = "";
 	this.rootNode = new c3dl.SceneNode();
 
 	/**
@@ -273,6 +274,11 @@ c3dl.ColladaLoader = function()
 				var init_from = imageElements[imageElementIter].getElementsByTagName("init_from")[0];
 			}
 		}
+
+    // get the up axis so we can orient the object without making
+    // the user do it explicitly.
+    var upAxisTag = root.getElementsByTagName("up_axis")[0];
+    this.upAxis = upAxisTag.childNodes[0].nodeValue;
 
 		// we start at the scene tag. A document instance 
 		// can contain zero or 1 <scene> tags, therefore we
