@@ -106,7 +106,7 @@ function Selection() {
     },
     setVisible: function (isVisible) {
       for (var i = 0; i < 4; i++) {
-        lines[i].setVisible(isVisible);
+       // lines[i].setVisible(isVisible);
         lines[i].setCoordinates([0,0,0],[0,0,0]);
       }
     }
@@ -321,7 +321,9 @@ function mouseUp() {
     }
   }
 
-  if (tooClose === false) {
+  if (tooClose === false && test) {
+    var o = new outline(OUTLINE_DETAIL, [0,0,1], 8);
+    o.setPosition(test.getPosition());
     test = null;
     creatingBuilding = false;
   }
