@@ -406,7 +406,7 @@ function createObject(objID) {
   case 1:
     collada = new c3dl.Collada();
     collada.init(FARM_PATH);
-    collada.pitch(Math.PI / 2);
+    collada.pitch(-Math.PI / 2);
     test = collada;
     break;
 
