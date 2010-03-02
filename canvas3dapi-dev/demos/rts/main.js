@@ -28,7 +28,7 @@ c3dl.addModel(PLANE);
 
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
-const OUTLINE_DETAIL = 4;
+const OUTLINE_DETAIL = 7;
 var outline1;
 
 c3dl.addMainCallBack(canvasMain, 'rts');
@@ -106,8 +106,8 @@ function Selection() {
     },
     setVisible: function (isVisible) {
       for (var i = 0; i < 4; i++) {
-        //lines[i].setVisible(isVisible);
-        //        lines[i].setCoordinates[[0,0,0],
+        lines[i].setVisible(isVisible);
+        lines[i].setCoordinates([0,0,0],[0,0,0]);
       }
     }
   };
