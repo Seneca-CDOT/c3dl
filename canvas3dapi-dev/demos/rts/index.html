@@ -7,40 +7,25 @@
   </head>
 
   <body>
-    <!--<h1><a href="">C3DL</a> - RTS</h1>
+    <!--
+    Removed to prevent a vertical scrollbar which
+    interferes with zooming in canvas.
+    <h1><a href="">C3DL</a> - RTS</h1>
     <p>
       <canvas id="rts" width="500" height="500"></canvas>
     </p>
--->
-      <table>
-        <tr>
-          <td>
-            <canvas id="rts" width="500" height="500"></canvas>
-          </td>
-        
-          <td valign="top">
-            <u>Controls</u><br />
-            <ul>
-            <li>Mouse Wheel = Zoom in/out</li><br />
-            <li>Mouse Wheel + Y = Yaw</li><br />
-            <li>Mouse Click (Canvas Edge) = Move camera</li><br />
-            <li>"Double Click" = Center camera on object</li><br />
-            </ul>
-            <br />
-            Note, you cannot create buildings too close to one another.
-            <br />
-            <br />
-            <br />
-            <span id='debug'></span>
-            <br />
-          </td>
-        </tr>
-      </table>
-      
-    <p>
-      <img src="images/barracks.jpg" id="barracks" width="80" onclick="createObject(0)"/>
-      <img src="images/farm.jpg" id="farm" width="80" onclick="createObject(1)"/>
-    </p>
-    <font face="verdana"><span id="fps"> </span></font>
+    -->
+    
+      <div align="center">
+        C3DL RTS Game
+        <font face="verdana"><span id="fps"></span></font><br />
+        <canvas id="rts" width="500" height="500"></canvas><br />
+        <br />
+        <img src="images/barracks.jpg" id="barracks" width="80" onclick="createObject(0);"/>
+        <img src="images/farm.jpg" id="farm" width="80" onclick="createObject(1);"/>
+      </div>
+
+    <span id='debug'></span>
+
   </body>
 </html>

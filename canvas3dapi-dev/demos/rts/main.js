@@ -337,13 +337,14 @@ function mouseUp() {
 function mouseDown(event) {
   md = true;
 
-  var c = getWorldCoords(event.pageX, event.pageY);
+  var viewportCoords = getClickedCoords(event);
+  var c = getWorldCoords(viewportCoords[0], viewportCoords[1]);
 
   startSx = c[0];
   startSy = c[2];
 
-  screenStartX = event.pageX;
-  screenStartY = event.pageY;
+  screenStartX = viewportCoords[0];
+  screenStartY = viewportCoords[1];
 
 
   //selection.setVisible(true);
@@ -396,20 +397,14 @@ function onKeyDown(event) {
 }
 
 function createObject(objID) {
-  var collada = null;
+  var collada = new c3dl.Collada();
 
   switch (objID) {
   case 0:
-    collada = new c3dl.Collada();
     collada.init(BARRACKS_PATH);
-    collada.pitch(-Math.PI / 2);
-    test = collada;
     break;
   case 1:
-    collada = new c3dl.Collada();
     collada.init(FARM_PATH);
-    collada.pitch(-Math.PI / 2);
-    test = collada;
     break;
 
   default:
@@ -417,6 +412,8 @@ function createObject(objID) {
   }
 
   if (collada) {
+    collada.pitch(-Math.PI / 2);
+    test = collada;
     collada.ID = idGenerator.getNextID();
     usersBuildings.push(collada);
     scn.addObjectToScene(collada);
@@ -424,12 +421,33 @@ function createObject(objID) {
   }
 }
 
+/*
+  Returns the viewport coordinates where the user clicked
+*/
+function getClickedCoords( event )
+{
+  var canvas = scn.getCanvas();
+  var canvasPosition = c3dl.getObjectPosition(scn.getCanvas());
+
+  // event.clientX and event.clientY contain where the user clicked 
+  // on the client area of the browser
+  // canvasPosition holds the coordinate of the top left corner where the canvas resides
+  // on the client area.
+  // window.pageXOffset, window.pageYOffset hold how much the user has scrolled.
+  var X = event.clientX - canvasPosition[0] + window.pageXOffset - 1;
+  var Y = event.clientY - canvasPosition[1] + window.pageYOffset - 1;
+
+  return [X,Y];
+}
+
+
 function mouseMove(event) {
   // get mouse coords relative to window
-  var mmx = event.pageX - 1;
-  var mmy = event.pageY - 1;
+  var viewportCoords = getClickedCoords(event);
+  var mmx = viewportCoords[0];
+  var mmy = viewportCoords[1];
 
-  var screenCurrentX = event.pageX;
+  var screenCurrentX = mmx;
 
   isCamMovingLeft = (mmx < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingRight = (mmx > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
