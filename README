@@ -1,8 +1,8 @@
 This is the organization of the files you will find in this repo
 
-/canvas3dapi:  This folder contains the library itself.
+/c3dl:  This folder contains the library itself.
 
-/canvas3dapi-dev:  This folder contains demos and tests for the library.
+/c3dl-dev:  This folder contains demos and tests for the library.
 If you download the entire repo and keep the directory structure as is, you
 will be able to run any of these by opening the html files in these directories
 
