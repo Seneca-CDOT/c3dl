@@ -5,8 +5,9 @@
 
 // model paths
 const BARRACKS_PATH = "models/barracks/barracks.dae";
-const PLANE = "models/cube.dae";
-const FARM_PATH = "models/farm/farm.dae";
+const CUBE          = "models/cube.dae";
+const FARM_PATH     = "models/farm/farm.dae";
+const TREE_PATH     = "models/tree/tree.dae";
 
 var creatingBuilding = false;
 
@@ -24,7 +25,8 @@ var keyD = false;
 
 c3dl.addModel(BARRACKS_PATH);
 c3dl.addModel(FARM_PATH);
-c3dl.addModel(PLANE);
+c3dl.addModel(CUBE);
+c3dl.addModel(TREE_PATH);
 
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
@@ -35,14 +37,20 @@ c3dl.addMainCallBack(canvasMain, 'rts');
 
 var scn;
 var test;
-var mx, my, mz;
 var psys;
 var cam;
 var light;
-var md = false;
+var mouseIsDown = false;
 
-var startSx = 0,
-  startSy = 0;
+
+// selection vars
+var selStartXWorldCoords = 0
+var selStartYWorldCoords = 0;
+var selEndXWorldCoords = 0;
+var selEndYWorldCoords = 0;
+var my;
+var topLeft;
+var topRight;
 
 var clickTimeDiff = 0;
 var numClicks = 0;
@@ -57,17 +65,16 @@ var selTopLine, selBottomLine, selLeftLine, selRightLine;
 
 // the material the selected object will have
 var selectedMat = null;
-var selHeight = 0.2;
+var SEL_HEIGHT = 0.2;
 var isCamMovingLeft = false;
 var isCamMovingRight = false;
 var isCamMovingUp = false;
 var isCamMovingDown = false;
 
-var screenStartX = 0;
-var screenStartY = 0;
-var screenCurrentX = 0;
-var screenCurrentY = 0;
+var worldCurrentX = 0;
 
+/*
+*/
 var idGenerator = (function IDGen() {
   var id = 0;
 
@@ -79,6 +86,8 @@ var idGenerator = (function IDGen() {
 })();
 
 
+/*
+*/
 var selection = (
 
 function Selection() {
@@ -234,6 +243,13 @@ function canvasMain(canvasName) {
   col.translate([25,0,25]);
   scn.addObjectToScene(col);
 
+  var tree = new c3dl.Collada();
+  tree.init(TREE_PATH);
+  tree.pitch(-3.14 / 2);
+  tree.scale([5,5,5]);
+  tree.translate([45,0,25]);
+//  scn.addObjectToScene(tree);
+  
   outline1 = new outline(OUTLINE_DETAIL,[0,0,1],8);
   outline1.setVisible(true);
   outline1.setPosition([25,0,25]);
@@ -260,7 +276,7 @@ function canvasMain(canvasName) {
   psys.init(150);
   psys.setPosition([25,0,25]);
   scn.addObjectToScene(psys);
-
+/*
   var r = -1;
   var c = -1;
   for (var i = 0; i < 9; i++, c++) {
@@ -268,21 +284,31 @@ function canvasMain(canvasName) {
       r++;
       c = -1
     }
-
+*/
     var earth = new c3dl.Collada();
-    earth.init(PLANE);
+    earth.init(CUBE);
     earth.setTexture("textures/grass.jpg");
-    earth.scale([10, .01, 10]);
-    earth.translate([c * 100, 0, r * 100]);
+    earth.scale([0.1, .01, 100]);
+//    earth.translate([c * 100, 0, r * 100]);
     earth.id = 0;
     scn.addObjectToScene(earth);
-  }
+
+    var earth2 = new c3dl.Collada();
+    earth2.init(CUBE);
+    earth2.setTexture("textures/grass.jpg");
+    earth2.scale([100, .1, .1]);
+//    earth.translate([c * 100, 0, r * 100]);
+    earth2.id = 9;
+    scn.addObjectToScene(earth2);
+
+ // }
 
   cam = new c3dl.OrbitCamera();
   cam.setFarthestDistance(200);
   cam.setClosestDistance(20);
   cam.setDistance(100);
   cam.pitch(1);
+ // cam.yaw(Math.PI);
 
   scn.setCamera(cam);
   scn.startScene();
@@ -331,21 +357,25 @@ function mouseUp() {
 
   selection.setVisible(false);
 
-  md = false;
+  mouseIsDown = false;
 }
 
+/*
+*/
 function mouseDown(event) {
-  md = true;
+
+  mouseIsDown = true;
 
   var viewportCoords = getClickedCoords(event);
-  var c = getWorldCoords(viewportCoords[0], viewportCoords[1]);
+  var worldCoords = getWorldCoords(viewportCoords[0], viewportCoords[1]);
 
-  startSx = c[0];
-  startSy = c[2];
+  selStartXWorldCoords = worldCoords[0];
+  selStartYWorldCoords = worldCoords[2];
+  
+  topLeft = [worldCoords[0],0,worldCoords[2]];
 
-  screenStartX = viewportCoords[0];
-  screenStartY = viewportCoords[1];
-
+  //screenStartX = viewportCoords[0];
+  //screenStartY = viewportCoords[1];
 
   //selection.setVisible(true);
   //selection.setBounds(startSx,startSy,startSx,startSy);
@@ -447,37 +477,51 @@ function mouseMove(event) {
   var mmx = viewportCoords[0];
   var mmy = viewportCoords[1];
 
-  var screenCurrentX = mmx;
-
   isCamMovingLeft = (mmx < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingRight = (mmx > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingUp = (mmy < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingDown = (mmy > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
 
-  if (md) {
+  // if the mouse buttom is down, we want to draw the 
+  // selection marquee.
+  if (mouseIsDown) {
     selection.setVisible(true);
   }
 
-  var c = getWorldCoords(mmx, mmy);
-  if (c) {
-    mx = c[0];
-    my = c[1];
-    mz = c[2];
+  var worldCoords = getWorldCoords(mmx, mmy);
+
+  if (worldCoords) {
+    selEndXWorldCoords = worldCoords[0];
+    my = worldCoords[1];
+    selEndYWorldCoords = worldCoords[2];
   }
-  if (md) {
+  //
+  if (mouseIsDown) {
     var camLeft = cam.getLeft();
+    worldCurrentX = worldCoords[0];
 
-    var a = [startSx - mx, 0, startSy - mz];
-    var l = c3dl.vectorLength(a);
+    // From the end of where the user is currently dragging to
+    // where they first clicked.
+    var toStart = [selStartXWorldCoords - selEndXWorldCoords, 0, selStartYWorldCoords - selEndYWorldCoords];
+    var toStartLength = c3dl.vectorLength(toStart);
 
-    var forw = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
-    forw = c3dl.multiplyVector(forw, 1000);
+    // get the camera's direction without the y value
+    // The camera is looking forward and down, but 
+    // we need to ignore the 'down' portion.
+    var camDir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
+    // Scale the vector so any vector which is long
+    // will result in the correct value.
+    camDir = c3dl.multiplyVector(camDir, 1000);
 
-    var aa = c3dl.vectorProject(a, forw);
-    var testl = c3dl.vectorLength(aa);
-    var b = Math.sqrt(l * l - testl * testl);
+    //
+    var startProjForward = c3dl.vectorProject(toStart, camDir);
+    var startToEndLengthP = c3dl.vectorLength(startProjForward);
 
-    var f = selection.getLines();
+    // we have the length of the vector from the end to the start
+    // we have the length of the vector from the origin to start
+    // now we can figure out the length of the vector
+    // we have the type and adjacent, now we need opp.
+    var opp = Math.sqrt(toStartLength * toStartLength - startToEndLengthP * startToEndLengthP);
 
     var topRightX;
     var topRightY;
@@ -485,26 +529,35 @@ function mouseMove(event) {
     var bottomLeftY;
 
     // if the user is dragging to the right
-    if (screenStartX < screenCurrentX) {
-      topRightX = startSx - camLeft[0] * b;
+//    if (screenStartX < screenCurrentX) {
+    if (selStartXWorldCoords > worldCurrentX) {
+      topRightX = selStartXWorldCoords - (camLeft[0] * opp);
+      topRightY = selStartYWorldCoords - (camLeft[2] * opp);
 
-      bottomLeftX = mx + camLeft[0] * b;
-      bottomLeftY = mz + camLeft[2] * b;
-
-      topRightY = startSy - camLeft[2] * b;
+      bottomLeftX = selEndXWorldCoords + (camLeft[0] * opp);
+      bottomLeftY = selEndYWorldCoords + (camLeft[2] * opp);
     } else {
-      topRightX = startSx + camLeft[0] * b;
-      topRightY = startSy + camLeft[2] * b;
+      topRightX = selStartXWorldCoords + (camLeft[0] * opp);
+      topRightY = selStartYWorldCoords + (camLeft[2] * opp);
 
-      bottomLeftX = mx - camLeft[0] * b;
-      bottomLeftY = mz - camLeft[2] * b;
+      bottomLeftX = selEndXWorldCoords - (camLeft[0] * opp);
+      bottomLeftY = selEndYWorldCoords - (camLeft[2] * opp);
     }
 
+    document.getElementById('debug').innerHTML = "topLeft = " + topLeft + "<br />" + "topRight = " + topRight;
+      
     var lines = selection.getLines();
-    lines[0].setCoordinates([startSx, selHeight, startSy], [topRightX, selHeight, topRightY]);
-    lines[1].setCoordinates([topRightX, selHeight, topRightY], [mx, selHeight, mz]);
-    lines[2].setCoordinates([mx, selHeight, mz], [bottomLeftX, selHeight, bottomLeftY]);
-    lines[3].setCoordinates([bottomLeftX, selHeight, bottomLeftY], [startSx, selHeight, startSy]);
+    lines[0].setCoordinates([selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords], 
+                            [topRightX, SEL_HEIGHT, topRightY]);
+
+    lines[1].setCoordinates([topRightX, SEL_HEIGHT, topRightY], 
+                            [selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords]);
+
+    lines[2].setCoordinates([selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords], 
+                            [bottomLeftX, SEL_HEIGHT, bottomLeftY]);
+
+    lines[3].setCoordinates([bottomLeftX, SEL_HEIGHT, bottomLeftY], 
+                            [selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords]);
   }
 }
 
@@ -557,36 +610,35 @@ function getWorldCoords(mmx, mmy) {
 
       var hyp = camHeight / Math.cos(angle);
 
-      mx = hyp * rayDir[0] + rayInitialPoint[0];
+      selEndXWorldCoords = hyp * rayDir[0] + rayInitialPoint[0];
       my = hyp * rayDir[1];
-      mz = hyp * rayDir[2] + rayInitialPoint[2];
-      return [mx, my, mz];
+      selEndYWorldCoords = hyp * rayDir[2] + rayInitialPoint[2];
+      return [selEndXWorldCoords, my, selEndYWorldCoords];
     }
   }
 }
 
 function update(deltaTime) {
   document.getElementById("fps").innerHTML = "<br />FPS:" + Math.floor(scn.getFPS());
-  //  document.getElementById("debug").innerHTML = mx + " " + my + " " + mz;
-  if (mx && test) {
-    test.setPosition([mx, 0, mz]);
+  if (selEndXWorldCoords && test) {
+    test.setPosition([selEndXWorldCoords, 0, selEndYWorldCoords]);
   }
 
   var s = CAM_MOVE_SPEED * deltaTime / 100;
 
-  if (isCamMovingLeft && md) {
+  if (isCamMovingLeft && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingRight && md) {
+  } else if (isCamMovingRight && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
   }
 
-  if (isCamMovingUp && md) {
+  if (isCamMovingUp && mouseIsDown) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingDown && md) {
+  } else if (isCamMovingDown && mouseIsDown) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
