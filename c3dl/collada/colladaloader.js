@@ -273,10 +273,6 @@ c3dl.ColladaLoader = function()
 				var init_from = imageElements[imageElementIter].getElementsByTagName("init_from")[0];
 			}
 		}
-    
-    // 
-    var asset = root.getElementsByTagName("up_axis")[0];
-    alert(asset.childNodes[0].nodeValue);
 
 		// we start at the scene tag. A document instance 
 		// can contain zero or 1 <scene> tags, therefore we
@@ -364,6 +360,10 @@ c3dl.ColladaLoader = function()
 		delete xmlObject;
 		delete xmlhttp;
 	}
+
+	/**
+	*/
+	
 
 	/**
 		@private
@@ -1255,7 +1255,7 @@ c3dl.ColladaLoader = function()
 					returnValue += value.childNodes[currNode].nodeValue;	
 				}
 				returnValue = returnValue.split(" ");
-        returnValue = [parseFloat(returnValue[0]),parseFloat(returnValue[1]),parseFloat(returnValue[2])];			
+                returnValue = [parseFloat(returnValue[0]),parseFloat(returnValue[1]),parseFloat(returnValue[2])];			
 				returnValue = returnValue.slice(0,3);
 			}
 			//

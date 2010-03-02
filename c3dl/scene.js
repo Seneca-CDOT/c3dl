@@ -1028,17 +1028,15 @@ c3dl.Scene = function()
 		Render Loop
 	*/
 	this.render = function()
-	{ 
-    var now = Date.now();
-    
+	{	
 		// calculate FPS. 
 		// we update the FPS after a second or more has elapsed.
-		if (now - FPS_LastTimeTaken >= 1000)
+		if (Date.now() - FPS_LastTimeTaken >= 1000)
 		{
 			// frames / seconds
-			FPS = FPS_Counter / (now - FPS_LastTimeTaken) * 1000;
+			FPS = FPS_Counter / (Date.now() - FPS_LastTimeTaken) * 1000;
 			FPS_Counter = 0;
-			FPS_LastTimeTaken = now;
+			FPS_LastTimeTaken = Date.now();
 		}
 
 		// If a user wants to stop rendering, this is where it happens
@@ -1053,9 +1051,9 @@ c3dl.Scene = function()
 		}
 		
 		// update the camera and objects
-		camera.update(now - lastTimeTaken);
-		thisScn.updateObjects(now - lastTimeTaken);
-		lastTimeTaken = now;
+		camera.update(Date.now() - lastTimeTaken);
+		thisScn.updateObjects(Date.now() - lastTimeTaken);
+		lastTimeTaken = Date.now();
 		
 		// The user may have added a texture to the scene in 
 		// which case, the renderer needs to create them.
