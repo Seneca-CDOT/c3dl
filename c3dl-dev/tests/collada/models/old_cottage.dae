@@ -11,7 +11,7 @@
    </asset>
    <library_images>
       <image id="material0-image" name="material0-image">
-         <init_from>images/old_cottage.JPG</init_from>
+         <init_from>images/old_cottage/old_cottage.png</init_from>
       </image>
    </library_images>
    <library_materials>

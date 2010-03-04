@@ -9,7 +9,7 @@
     <created>2009-02-10T00:53:45Z</created>
     <modified>2009-02-10T00:53:50Z</modified>
     <unit meter="0.0254" name="inch"/>
-    <up_axis>Z_UP</up_axis>
+    <up_axis>Y_UP</up_axis>
   </asset>
   <library_materials>
     <material id="ColorMaterial_58C7E100" name="ColorMaterial_58C7E100">

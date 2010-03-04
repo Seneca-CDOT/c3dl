@@ -11,10 +11,10 @@
    </asset>
    <library_images>
       <image id="material_0_1_0-image" name="material_0_1_0-image">
-         <init_from>images/texture0.png</init_from>
+         <init_from>images/gingerbread/gingerbread.png</init_from>
       </image>
       <image id="material_0_1_8-image" name="material_0_1_8-image">
-         <init_from>images/texture0.png</init_from>
+         <init_from>images/gingerbread/gingerbread.png</init_from>
       </image>
    </library_images>
    <library_materials>
@@ -1311,7 +1311,7 @@
                -0.473752 0.000000 0.072268 216.438299
                0.000000 0.000000 0.000000 1.000000
             </matrix>
-          <instance_node url="#RightRoof"/> 
+            <instance_node url="#RightRoof"/>
          </node>
          <node id="Back1" name="Back1">
             <matrix>

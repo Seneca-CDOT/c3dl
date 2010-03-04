@@ -11,58 +11,58 @@
    </asset>
    <library_images>
       <image id="material0-image" name="material0-image">
-         <init_from>../images/texture0.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture0.jpg</init_from>
       </image>
       <image id="material1-image" name="material1-image">
-         <init_from>../images/texture1.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture1.jpg</init_from>
       </image>
       <image id="material2-image" name="material2-image">
-         <init_from>../images/texture2.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture2.jpg</init_from>
       </image>
       <image id="material3-image" name="material3-image">
-         <init_from>../images/texture3.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture3.jpg</init_from>
       </image>
       <image id="material4-image" name="material4-image">
-         <init_from>../images/texture4.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture4.jpg</init_from>
       </image>
       <image id="material5-image" name="material5-image">
-         <init_from>../images/texture5.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture5.jpg</init_from>
       </image>
       <image id="material6-image" name="material6-image">
-         <init_from>../images/texture6.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture6.jpg</init_from>
       </image>
       <image id="material7-image" name="material7-image">
-         <init_from>../images/texture7.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture7.jpg</init_from>
       </image>
       <image id="material8-image" name="material8-image">
-         <init_from>../images/texture8.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture8.jpg</init_from>
       </image>
       <image id="material10-image" name="material10-image">
-         <init_from>../images/texture9.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture9.jpg</init_from>
       </image>
       <image id="material11-image" name="material11-image">
-         <init_from>../images/texture10.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture10.jpg</init_from>
       </image>
       <image id="material12-image" name="material12-image">
-         <init_from>../images/texture11.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture11.jpg</init_from>
       </image>
       <image id="material13-image" name="material13-image">
-         <init_from>../images/texture12.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture12.jpg</init_from>
       </image>
       <image id="material14-image" name="material14-image">
-         <init_from>../images/texture13.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture13.jpg</init_from>
       </image>
       <image id="material15-image" name="material15-image">
-         <init_from>../images/texture14.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture14.jpg</init_from>
       </image>
       <image id="material16-image" name="material16-image">
-         <init_from>../images/texture15.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture15.jpg</init_from>
       </image>
       <image id="material17-image" name="material17-image">
-         <init_from>../images/texture16.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture16.jpg</init_from>
       </image>
       <image id="material18-image" name="material18-image">
-         <init_from>../images/texture17.jpg</init_from>
+         <init_from>images/swiss_army_knife/texture17.jpg</init_from>
       </image>
    </library_images>
    <library_materials>
