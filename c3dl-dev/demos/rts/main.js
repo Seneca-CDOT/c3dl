@@ -13,6 +13,11 @@ const HOUSE         = "models/house/house.dae";
 const LUMBER_YARD   = "models/lumber_yard/lumber_yard.dae";
 const PERSON        = "models/person/person.dae";
 
+const BOTTOM_LEFT_TO_TOP_RIGHT = 4;
+const BOTTOM_RIGHT_TO_TOP_LEFT = 3;
+const TOP_RIGHT_TO_BOTTOM_LEFT = 2;
+const TOP_LEFT_TO_BOTTOM_RIGHT = 1;
+
 var creatingBuilding = false;
 
 var nosel = false;
@@ -78,7 +83,7 @@ var usersBuildings = [];
 var selTopLine, selBottomLine, selLeftLine, selRightLine;
 
 // the material the selected object will have
-var selectedMat = null;
+var selectedEffect = null;
 var SEL_HEIGHT = 0.2;
 var isCamMovingLeft = false;
 var isCamMovingRight = false;
@@ -107,7 +112,9 @@ var selection = (
 function Selection() {
   var lines = [null, null, null, null];
   var coords;
-  var vis = false
+  var vis = false;
+  var color = [1,1,1];
+  var direction = 0;
 
   return {
     init: function () {
@@ -127,6 +134,30 @@ function Selection() {
     },
     getLines: function () {
       return lines;
+    },
+    getCoordinates: function() {
+      var c = [];
+      for(var i=0; i< 4; i++) {
+        for(var j = 0; j < 6; j++) {
+          c.push(lines[i].getCoordinates()[j]);
+        }
+      }
+      return c;
+    },
+    setDirection: function(d) {
+      direction = d;
+    },
+    getDirection: function() {
+      return direction;
+    },
+    setColor: function(c) {
+     for (var i = 0; i < 4; i++) {
+      lines[i].setColors(c, c);
+     }
+     color = c;
+    },
+    getColor: function() {
+      return color;
     },
     getVisible: function() {
       return vis;
@@ -230,9 +261,9 @@ function canvasMain(canvasName) {
 
   scn.setAmbientLight([.2, .2, .2]);
 
-  selectedMat = new c3dl.Effect();
-  selectedMat.init(c3dl.effects.SEPIA);
-  selectedMat.setParameter("color", [0.3, 0.6, 0.9]);
+  selectedEffect = new c3dl.Effect();
+  selectedEffect.init(c3dl.effects.SEPIA);
+  selectedEffect.setParameter("color", [0.3, 0.6, 0.9]);
 
   light = new c3dl.DirectionalLight();
   light.setDiffuse([1, 1, 1]);
@@ -324,34 +355,48 @@ function canvasMain(canvasName) {
   scn.setPickingCallback(picking);
 }
 
-
-function pointInPolygon(x,y) {
+/*
+  TODO: fix signature to take polygon coords
+*/
+function pointInPolygon(point) {
 
   var isInside = true;
   var lines = selection.getLines();
   var c1 = lines[0].getCoordinates();
   var c2 = lines[1].getCoordinates();
 
-if(c3dl.vectorLength(c3dl.subtractVectors([c1[0],c1[1],c1[2]],[c2[3],c2[4],c2[5]])) > 10){
-  for(var i = 0; i < 4; i++)
-  {
-    var c = lines[i].getCoordinates();
+  var startCoords = [c1[0],c1[1],c1[2]];
+  var endCoords = [c2[3],c2[4],c2[5]];
 
-    var line = c3dl.normalizeVector(c3dl.subtractVectors( [c[3],c[4],c[5] ], [c[0],c[1],c[2] ]));
-    var lineNormal = c3dl.normalizeVector(c3dl.vectorCrossProduct(line,[0,1,0]));
-
-    var endOfLineToPoint = c3dl.subtractVectors([x,c[1],y],[c[0],c[1],c[2]]);
-    //document.getElementById('debug').innerHTML = endOfLineToPoint;
-    var a = c3dl.getAngleBetweenVectors(lineNormal, c3dl.normalizeVector(endOfLineToPoint));
-    if(a > 90)
+  // only test if the polygon isn't to small, otherwise we get strange errors.
+  if(c3dl.vectorLength(c3dl.subtractVectors(startCoords, endCoords)) > 10){
+    for(var i = 0; i < 4; i++)
     {
-      isInside = false;
-    }
+      var c = lines[i].getCoordinates();
+  
+      var line;
+
+      if( selection.getDirection() == TOP_RIGHT_TO_BOTTOM_LEFT ||
+          selection.getDirection() == BOTTOM_LEFT_TO_TOP_RIGHT) {
+        line = c3dl.normalizeVector(c3dl.subtractVectors( [c[0],c[1],c[2]],  [c[3],c[4],c[5] ]));
+      }
+      else {
+        line = c3dl.normalizeVector(c3dl.subtractVectors( [c[3],c[4],c[5] ], [c[0],c[1],c[2] ]));
+      }
+            
+      var lineNormal = c3dl.normalizeVector(c3dl.vectorCrossProduct(line,[0,1,0]));
+      var endOfLineToPoint = c3dl.subtractVectors([point[0],c[1],point[1]],[c[0],c[1],c[2]]);
+
+      var angle = c3dl.getAngleBetweenVectors(lineNormal, c3dl.normalizeVector(endOfLineToPoint));
+      if(angle > 90)
+      {
+        isInside = false;
+      }
+    } 
   }
- 
+  else{
+    isInside = false;
   }
- else{isInside = false;}
-  //document.getElementById('debug').innerHTML = a < 90;
   return isInside;
 }
   
@@ -371,14 +416,14 @@ function mouseUp() {
     for( var i = 0; i < usersBuildings.length; i++) {
       var ux = usersBuildings[i].getPosition()[0];
       var uy = usersBuildings[i].getPosition()[2];
-
-      if(pointInPolygon(ux,uy))
+      
+      if(pointInPolygon([ux,uy]))
       {
-        usersBuildings[i].setAngularVel([0.0,0.001, 0.0]);
+        usersBuildings[i].setEffect(selectedEffect);
       }
       else
       {
-        usersBuildings[i].setAngularVel([0,0,0]);
+        usersBuildings[i].setEffect(null);
       }
     }
   }
@@ -394,7 +439,6 @@ function mouseUp() {
 
         if (c3dl.vectorLength(s) < 20) {
           tooClose = true;
-          //c3dl.debug.logInfo('too close to adjacent building!');
           break;
         }
       }
@@ -465,7 +509,9 @@ function mouseWheel(event) {
       // towards user
       if (-delta * ZOOM_SENSITIVITY < 0) {
         if(cam.goFarther(-1 * -delta * ZOOM_SENSITIVITY)) {
-          cam.pitch(0.1);
+          if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) < 90){
+            cam.pitch(0.1);
+          }
         }
       }
 
@@ -473,7 +519,9 @@ function mouseWheel(event) {
       else {
         if(cam.goCloser(-delta * ZOOM_SENSITIVITY))
         {
-          cam.pitch(-0.1);
+          if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) > 20){
+            cam.pitch(-0.1);
+          }
         }
       }
     }
@@ -530,6 +578,8 @@ function getClickedCoords( event )
   return [X,Y];
 }
 
+/*
+*/
 function updateSelection(mouseX,mouseY) {
   
   selEndScreenCoords = [mouseX,mouseY];
@@ -541,7 +591,6 @@ function updateSelection(mouseX,mouseY) {
     selection.setVisible(true);
   
     selEndXWorldCoords = worldCoords[0];
-    my = worldCoords[1];
     selEndYWorldCoords = worldCoords[2];
 
     var camLeft = cam.getLeft();
@@ -583,6 +632,15 @@ function updateSelection(mouseX,mouseY) {
     if(c3dl.vectorLength(fromStartToEnd) > 0)
     {
       var angle = c3dl.getAngleBetweenVectors(c3dl.normalizeVector(fromStartToEnd), cam.getLeft());
+      
+      
+      var forw = c3dl.vectorCrossProduct(c3dl.multiplyVector(cam.getLeft(),-1), [0, 1, 0]);
+      // the angle between the forward vector and the one from the start of
+      // the selection to the end. 
+      var angle2 = 
+      c3dl.getAngleBetweenVectors(c3dl.normalizeVector(forw), fromStartToEnd);
+      
+      //document.getElementById('debug').innerHTML = forw;
 
       // if the user is dragging to the right
       // if (selStartScreenCoords[0] < selEndScreenCoords[0]) {
@@ -601,18 +659,35 @@ function updateSelection(mouseX,mouseY) {
         bottomLeftY = selEndYWorldCoords - (camLeft[2] * opp);
       }
 
+      if(angle < 90 && angle2 < 90)
+      {
+        selection.setDirection(BOTTOM_LEFT_TO_TOP_RIGHT);
+      }
+      else if(angle < 90 && angle2 > 90)
+      {
+        selection.setDirection(TOP_LEFT_TO_BOTTOM_RIGHT);
+      }
+      else if(angle > 90 && angle2 > 90)
+      {
+        selection.setDirection(TOP_RIGHT_TO_BOTTOM_LEFT);
+      }
+      else if(angle > 90 && angle2 < 90)
+      {
+        selection.setDirection(BOTTOM_RIGHT_TO_TOP_LEFT);
+      }
+      
       var lines = selection.getLines();
       lines[0].setCoordinates([selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords], 
-                            [topRightX, SEL_HEIGHT, topRightY]);
+                              [topRightX, SEL_HEIGHT, topRightY]);
 
       lines[1].setCoordinates([topRightX, SEL_HEIGHT, topRightY], 
-                            [selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords]);
+                              [selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords]);
 
       lines[2].setCoordinates([selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords], 
-                            [bottomLeftX, SEL_HEIGHT, bottomLeftY]);
+                              [bottomLeftX, SEL_HEIGHT, bottomLeftY]);
 
       lines[3].setCoordinates([bottomLeftX, SEL_HEIGHT, bottomLeftY], 
-                            [selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords]);
+                              [selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords]);
     }
   }
 }
@@ -764,7 +839,7 @@ function picking(pickingObj) {
             objectSelected.setEffect(c3dl.effects.STANDARD);
           }
 
-          objectsHit[i].setEffect(selectedMat);
+          objectsHit[i].setEffect(selectedEffect);
           objectSelected = objectsHit[i];
 
           if (objectSelected.ID === lastSelectedObjID) {
