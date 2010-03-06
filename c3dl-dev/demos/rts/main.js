@@ -4,45 +4,67 @@
 */
 
 // model paths
+const BANK          = "models/bank/bank.dae";
 const BARRACKS_PATH = "models/barracks/barracks.dae";
-const PLANE = "models/cube.dae";
-const FARM_PATH = "models/farm/farm.dae";
+const CUBE          = "models/cube.dae";
+const FARM_PATH     = "models/farm/farm.dae";
+const FIREHALL      = "models/firehall/firehall.dae";
+const HOUSE         = "models/house/house.dae";
+const LUMBER_YARD   = "models/lumber_yard/lumber_yard.dae";
+const PERSON        = "models/person/person.dae";
 
 var creatingBuilding = false;
 
+var nosel = false;
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
 
 const NONE_SELECTED = -1;
 lastSelectedObjID = -1;
 
+var mouseX = 0;
+var mouseY = 0;
+
 const ZOOM_SENSITIVITY = 1;
 
-const CAM_MOVE_SPEED = 2;
+const CAM_MOVE_SPEED = 5;
 const CAM_MOVE_BUFFER_SIZE = 20;
 var keyD = false;
 
+c3dl.addModel(BANK);
 c3dl.addModel(BARRACKS_PATH);
+c3dl.addModel(CUBE);
 c3dl.addModel(FARM_PATH);
-c3dl.addModel(PLANE);
+c3dl.addModel(FIREHALL);
+c3dl.addModel(HOUSE);
+c3dl.addModel(LUMBER_YARD);
+c3dl.addModel(PERSON);
 
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
-const OUTLINE_DETAIL = 7;
+const OUTLINE_DETAIL = 15;
 var outline1;
 
 c3dl.addMainCallBack(canvasMain, 'rts');
 
 var scn;
 var test;
-var mx, my, mz;
 var psys;
 var cam;
 var light;
-var md = false;
+var mouseIsDown = false;
 
-var startSx = 0,
-  startSy = 0;
+
+// selection vars
+var selStartXWorldCoords = 0
+var selStartYWorldCoords = 0;
+var selEndXWorldCoords = 0;
+var selEndYWorldCoords = 0;
+var my;
+var topLeft;
+var topRight;
+var selStartScreenCoords = [0,0];
+var selEndScreenCoords = [0,0];
 
 var clickTimeDiff = 0;
 var numClicks = 0;
@@ -57,17 +79,16 @@ var selTopLine, selBottomLine, selLeftLine, selRightLine;
 
 // the material the selected object will have
 var selectedMat = null;
-var selHeight = 0.2;
+var SEL_HEIGHT = 0.2;
 var isCamMovingLeft = false;
 var isCamMovingRight = false;
 var isCamMovingUp = false;
 var isCamMovingDown = false;
 
-var screenStartX = 0;
-var screenStartY = 0;
-var screenCurrentX = 0;
-var screenCurrentY = 0;
+var worldCurrentX = 0;
 
+/*
+*/
 var idGenerator = (function IDGen() {
   var id = 0;
 
@@ -79,11 +100,14 @@ var idGenerator = (function IDGen() {
 })();
 
 
+/*
+*/
 var selection = (
 
 function Selection() {
   var lines = [null, null, null, null];
   var coords;
+  var vis = false
 
   return {
     init: function () {
@@ -104,11 +128,15 @@ function Selection() {
     getLines: function () {
       return lines;
     },
+    getVisible: function() {
+      return vis;
+    },
     setVisible: function (isVisible) {
       for (var i = 0; i < 4; i++) {
        // lines[i].setVisible(isVisible);
         lines[i].setCoordinates([0,0,0],[0,0,0]);
       }
+      vis = isVisible;
     }
   };
 })();
@@ -193,11 +221,6 @@ function outline(detail, color, radius) {
   };
 }
 
-
-function isPointInSquare(p, line1, line2, line3, line4) {
-
-}
-
 function canvasMain(canvasName) {
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
@@ -228,16 +251,25 @@ function canvasMain(canvasName) {
   selection.setBounds(0, 0, 50, 50);
   selection.setVisible(false);
 
-  var col = new c3dl.Collada();
+/*  var col = new c3dl.Collada();
   col.init(BARRACKS_PATH);
   col.translate([25,0,25]);
-  scn.addObjectToScene(col);
+  usersBuildings.push(col);
+  scn.addObjectToScene(col);*/
+  
 
-  outline1 = new outline(OUTLINE_DETAIL,[0,0,1],8);
-  outline1.setVisible(true);
-  outline1.setPosition([25,0,25]);
+/*  var tree = new c3dl.Collada();
+  tree.init(TREE_PATH);
+  tree.pitch(-3.14 / 2);
+  tree.scale([5,5,5]);
+  tree.translate([45,0,25]);
+//  scn.addObjectToScene(tree);
+  */
+  //outline1 = new outline(OUTLINE_DETAIL,[0,0,1],8);
+  //outline1.setVisible(true);
+  //outline1.setPosition([25,0,25]);
 
-  psys = new c3dl.ParticleSystem();
+  /*psys = new c3dl.ParticleSystem();
   psys.setMinVelocity([-.5, 3, -.5]);
   psys.setMaxVelocity([.2, 5, .5]);
   
@@ -258,7 +290,7 @@ function canvasMain(canvasName) {
   psys.setEmitRate(90);
   psys.init(150);
   psys.setPosition([25,0,25]);
-  scn.addObjectToScene(psys);
+  scn.addObjectToScene(psys);*/
 
   var r = -1;
   var c = -1;
@@ -269,10 +301,10 @@ function canvasMain(canvasName) {
     }
 
     var earth = new c3dl.Collada();
-    earth.init(PLANE);
+    earth.init(CUBE);
     earth.setTexture("textures/grass.jpg");
-    earth.scale([10, .01, 10]);
-    earth.translate([c * 100, 0, r * 100]);
+    earth.scale([10,.01,10]);
+    earth.translate([c * 100, -1, r * 100]);
     earth.id = 0;
     scn.addObjectToScene(earth);
   }
@@ -282,6 +314,7 @@ function canvasMain(canvasName) {
   cam.setClosestDistance(20);
   cam.setDistance(100);
   cam.pitch(1);
+  cam.yaw(Math.PI);
 
   scn.setCamera(cam);
   scn.startScene();
@@ -291,6 +324,38 @@ function canvasMain(canvasName) {
   scn.setPickingCallback(picking);
 }
 
+
+function pointInPolygon(x,y) {
+
+  var isInside = true;
+  var lines = selection.getLines();
+  var c1 = lines[0].getCoordinates();
+  var c2 = lines[1].getCoordinates();
+
+if(c3dl.vectorLength(c3dl.subtractVectors([c1[0],c1[1],c1[2]],[c2[3],c2[4],c2[5]])) > 10){
+  for(var i = 0; i < 4; i++)
+  {
+    var c = lines[i].getCoordinates();
+
+    var line = c3dl.normalizeVector(c3dl.subtractVectors( [c[3],c[4],c[5] ], [c[0],c[1],c[2] ]));
+    var lineNormal = c3dl.normalizeVector(c3dl.vectorCrossProduct(line,[0,1,0]));
+
+    var endOfLineToPoint = c3dl.subtractVectors([x,c[1],y],[c[0],c[1],c[2]]);
+    //document.getElementById('debug').innerHTML = endOfLineToPoint;
+    var a = c3dl.getAngleBetweenVectors(lineNormal, c3dl.normalizeVector(endOfLineToPoint));
+    if(a > 90)
+    {
+      isInside = false;
+    }
+  }
+ 
+  }
+ else{isInside = false;}
+  //document.getElementById('debug').innerHTML = a < 90;
+  return isInside;
+}
+  
+  
 function onKeyUp(event) {
   if (event.keyCode == 89) {
     keyD = false;
@@ -302,6 +367,22 @@ function onKeyUp(event) {
 function mouseUp() {
   var tooClose = false;
 
+  if(!test){
+    for( var i = 0; i < usersBuildings.length; i++) {
+      var ux = usersBuildings[i].getPosition()[0];
+      var uy = usersBuildings[i].getPosition()[2];
+
+      if(pointInPolygon(ux,uy))
+      {
+        usersBuildings[i].setAngularVel([0.0,0.001, 0.0]);
+      }
+      else
+      {
+        usersBuildings[i].setAngularVel([0,0,0]);
+      }
+    }
+  }
+  
   if (usersBuildings.length > 0) {
     for (var i = 0; i < usersBuildings.length; i++) {
       if (test === usersBuildings[i]) {
@@ -329,23 +410,32 @@ function mouseUp() {
 
 
   selection.setVisible(false);
-
-  md = false;
+  mouseIsDown = false;
 }
 
+/*
+*/
 function mouseDown(event) {
-  md = true;
+
+  mouseIsDown = true;
+  nosel = false;
 
   var viewportCoords = getClickedCoords(event);
-  var c = getWorldCoords(viewportCoords[0], viewportCoords[1]);
+  var worldCoords = getWorldCoords(viewportCoords[0], viewportCoords[1]);
 
-  startSx = c[0];
-  startSy = c[2];
-
-  screenStartX = viewportCoords[0];
-  screenStartY = viewportCoords[1];
-
-
+  selStartXWorldCoords = worldCoords[0];
+  selStartYWorldCoords = worldCoords[2];
+  
+  selStartScreenCoords = [viewportCoords[0], viewportCoords[1]];
+  
+  topLeft = [worldCoords[0],0,worldCoords[2]];
+  
+  isCamMovingLeft = (mouseX < CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingRight = (mouseX > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingUp = (mouseY < CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingDown = (mouseY > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
+  
+  if(isCamMovingLeft || isCamMovingRight || isCamMovingUp || isCamMovingDown){ nosel = true;}
   //selection.setVisible(true);
   //selection.setBounds(startSx,startSy,startSx,startSy);
 }
@@ -364,7 +454,7 @@ function mouseWheel(event) {
 
   if (test) //creatingBuilding)
   {
-    test.roll(delta / 200);
+    test.yaw(delta / 200);
   }
 
   else {
@@ -374,12 +464,17 @@ function mouseWheel(event) {
 
       // towards user
       if (-delta * ZOOM_SENSITIVITY < 0) {
-        cam.goFarther(-1 * -delta * ZOOM_SENSITIVITY);
+        if(cam.goFarther(-1 * -delta * ZOOM_SENSITIVITY)) {
+          cam.pitch(0.1);
+        }
       }
 
       // towards screen
       else {
-        cam.goCloser(-delta * ZOOM_SENSITIVITY);
+        if(cam.goCloser(-delta * ZOOM_SENSITIVITY))
+        {
+          cam.pitch(-0.1);
+        }
       }
     }
   }
@@ -399,15 +494,12 @@ function createObject(objID) {
   var collada = new c3dl.Collada();
 
   switch (objID) {
-  case 0:
-    collada.init(BARRACKS_PATH);
-    break;
-  case 1:
-    collada.init(FARM_PATH);
-    break;
-
-  default:
-    break;
+    case 0:collada.init(BARRACKS_PATH);break;
+    case 1:collada.init(FARM_PATH);break;
+    case 2:collada.init(HOUSE);break;
+    case 3:collada.init(FIREHALL);break;
+    case 4:collada.init(BANK);break;
+    default:break;
   }
 
   if (collada) {
@@ -438,83 +530,118 @@ function getClickedCoords( event )
   return [X,Y];
 }
 
+function updateSelection(mouseX,mouseY) {
+  
+  selEndScreenCoords = [mouseX,mouseY];
+  
+  var worldCoords = getWorldCoords(mouseX, mouseY);
 
-function mouseMove(event) {
-  // get mouse coords relative to window
-  var viewportCoords = getClickedCoords(event);
-  var mmx = viewportCoords[0];
-  var mmy = viewportCoords[1];
-
-  var screenCurrentX = mmx;
-
-  isCamMovingLeft = (mmx < CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingRight = (mmx > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingUp = (mmy < CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingDown = (mmy > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
-
-  if (md) {
+  if (worldCoords && mouseIsDown && nosel == false) {
+    
     selection.setVisible(true);
-  }
+  
+    selEndXWorldCoords = worldCoords[0];
+    my = worldCoords[1];
+    selEndYWorldCoords = worldCoords[2];
 
-  var c = getWorldCoords(mmx, mmy);
-  if (c) {
-    mx = c[0];
-    my = c[1];
-    mz = c[2];
-  }
-  if (md) {
     var camLeft = cam.getLeft();
+    worldCurrentX = worldCoords[0];
 
-    var a = [startSx - mx, 0, startSy - mz];
-    var l = c3dl.vectorLength(a);
+    // From the end of where the user is currently dragging to
+    // where they first clicked.
+    var toStart = [selStartXWorldCoords - selEndXWorldCoords, 0, selStartYWorldCoords - selEndYWorldCoords];
+    var toStartLength = c3dl.vectorLength(toStart);
 
-    var forw = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
-    forw = c3dl.multiplyVector(forw, 1000);
+    // get the camera's direction without the y value
+    // The camera is looking forward and down, but 
+    // we need to ignore the 'down' portion.
+    var camDir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
+    // Scale the vector so any vector which is long
+    // will result in the correct value.
+    camDir = c3dl.multiplyVector(camDir, 1000);
 
-    var aa = c3dl.vectorProject(a, forw);
-    var testl = c3dl.vectorLength(aa);
-    var b = Math.sqrt(l * l - testl * testl);
+    //
+    var startProjForward = c3dl.vectorProject(toStart, camDir);
+    var startToEndLengthP = c3dl.vectorLength(startProjForward);
 
-    var f = selection.getLines();
+    // we have the length of the vector from the end to the start
+    // we have the length of the vector from the origin to start
+    // now we can figure out the length of the vector
+    // we have the type and adjacent, now we need opp.
+    var opp = Math.sqrt(toStartLength * toStartLength - startToEndLengthP * startToEndLengthP);
 
     var topRightX;
     var topRightY;
     var bottomLeftX;
     var bottomLeftY;
 
-    // if the user is dragging to the right
-    if (screenStartX < screenCurrentX) {
-      topRightX = startSx - camLeft[0] * b;
+    // A vector from the start world coords to the end world coords
+    //
+    //
+    var fromStartToEnd = [selStartXWorldCoords-selEndXWorldCoords,0,
+                        selStartYWorldCoords-selEndYWorldCoords];
+    if(c3dl.vectorLength(fromStartToEnd) > 0)
+    {
+      var angle = c3dl.getAngleBetweenVectors(c3dl.normalizeVector(fromStartToEnd), cam.getLeft());
 
-      bottomLeftX = mx + camLeft[0] * b;
-      bottomLeftY = mz + camLeft[2] * b;
+      // if the user is dragging to the right
+      // if (selStartScreenCoords[0] < selEndScreenCoords[0]) {
+      // if (selStartXWorldCoords > worldCurrentX) {
+      if(angle < 90){
+        topRightX = selStartXWorldCoords - (camLeft[0] * opp);
+        topRightY = selStartYWorldCoords - (camLeft[2] * opp);
 
-      topRightY = startSy - camLeft[2] * b;
-    } else {
-      topRightX = startSx + camLeft[0] * b;
-      topRightY = startSy + camLeft[2] * b;
+        bottomLeftX = selEndXWorldCoords + (camLeft[0] * opp);
+        bottomLeftY = selEndYWorldCoords + (camLeft[2] * opp);
+      } else {
+        topRightX = selStartXWorldCoords + (camLeft[0] * opp);
+        topRightY = selStartYWorldCoords + (camLeft[2] * opp);
 
-      bottomLeftX = mx - camLeft[0] * b;
-      bottomLeftY = mz - camLeft[2] * b;
+        bottomLeftX = selEndXWorldCoords - (camLeft[0] * opp);
+        bottomLeftY = selEndYWorldCoords - (camLeft[2] * opp);
+      }
+
+      var lines = selection.getLines();
+      lines[0].setCoordinates([selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords], 
+                            [topRightX, SEL_HEIGHT, topRightY]);
+
+      lines[1].setCoordinates([topRightX, SEL_HEIGHT, topRightY], 
+                            [selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords]);
+
+      lines[2].setCoordinates([selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords], 
+                            [bottomLeftX, SEL_HEIGHT, bottomLeftY]);
+
+      lines[3].setCoordinates([bottomLeftX, SEL_HEIGHT, bottomLeftY], 
+                            [selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords]);
     }
-
-    var lines = selection.getLines();
-    lines[0].setCoordinates([startSx, selHeight, startSy], [topRightX, selHeight, topRightY]);
-    lines[1].setCoordinates([topRightX, selHeight, topRightY], [mx, selHeight, mz]);
-    lines[2].setCoordinates([mx, selHeight, mz], [bottomLeftX, selHeight, bottomLeftY]);
-    lines[3].setCoordinates([bottomLeftX, selHeight, bottomLeftY], [startSx, selHeight, startSy]);
   }
+}
+    
+
+function mouseMove(event) {
+  // get mouse coords relative to window
+  var viewportCoords = getClickedCoords(event);
+  mouseX = viewportCoords[0];
+  mouseY = viewportCoords[1];
+
+  isCamMovingLeft = (mouseX < CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingRight = (mouseX > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingUp = (mouseY < CAM_MOVE_BUFFER_SIZE) ? true : false;
+  isCamMovingDown = (mouseY > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
+
+  updateSelection(mouseX, mouseY);
 }
 
 function getWorldCoords(mmx, mmy) {
   // get mouse coords relative to window
   //	var mmx = event.pageX - 1;
   //	var mmy = event.pageY - 1;
+  /*
   isCamMovingLeft = (mmx < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingRight = (mmx > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingUp = (mmy < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingDown = (mmy > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
-
+*/
   if (mmx != null && mmy != null) {
     // NDC
     var normalizedDeviceCoords = [(2 * mmx / CANVAS_WIDTH) - 1, -((2 * mmy / CANVAS_HEIGHT) - 1), 1, 1];
@@ -555,36 +682,38 @@ function getWorldCoords(mmx, mmy) {
 
       var hyp = camHeight / Math.cos(angle);
 
-      mx = hyp * rayDir[0] + rayInitialPoint[0];
+      selEndXWorldCoords = hyp * rayDir[0] + rayInitialPoint[0];
       my = hyp * rayDir[1];
-      mz = hyp * rayDir[2] + rayInitialPoint[2];
-      return [mx, my, mz];
+      selEndYWorldCoords = hyp * rayDir[2] + rayInitialPoint[2];
+      return [selEndXWorldCoords, my, selEndYWorldCoords];
     }
   }
 }
 
 function update(deltaTime) {
   document.getElementById("fps").innerHTML = "<br />FPS:" + Math.floor(scn.getFPS());
-  //  document.getElementById("debug").innerHTML = mx + " " + my + " " + mz;
-  if (mx && test) {
-    test.setPosition([mx, 0, mz]);
+
+  updateSelection(mouseX, mouseY);
+  
+  if (selEndXWorldCoords && test) {
+    test.setPosition([selEndXWorldCoords, 0, selEndYWorldCoords]);
   }
 
   var s = CAM_MOVE_SPEED * deltaTime / 100;
 
-  if (isCamMovingLeft && md) {
+  if (isCamMovingLeft && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingRight && md) {
+  } else if (isCamMovingRight && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
   }
 
-  if (isCamMovingUp && md) {
+  if (isCamMovingUp && mouseIsDown) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingDown && md) {
+  } else if (isCamMovingDown && mouseIsDown) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
@@ -602,12 +731,12 @@ function update(deltaTime) {
   
   // testing
   
-  var color = outline1.getColor();
+/*  var color = outline1.getColor();
   if(color[0] < 1){
   color[0] += 0.01;
   color[2] -= 0.01;
   outline1.setColor(color);
-  }
+  }*/
 }
 
 function picking(pickingObj) {

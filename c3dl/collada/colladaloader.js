@@ -139,11 +139,11 @@ c3dl.ColladaLoader = function () {
       if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
         var temp = floatValues[1];
         floatValues[1] = floatValues[2];
-        floatValues[2] = -temp;
+        floatValues[2] = temp;
       }
       if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
         var temp = floatValues[0];
-        floatValues[0] = -floatValues[1];
+        floatValues[0] = floatValues[1];
         floatValues[1] = temp;
       }
 
