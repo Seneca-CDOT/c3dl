@@ -10,6 +10,9 @@ c3dl.addMainCallBack(gingerbread_house, "gingerbread_house");
 c3dl.addModel("models/swiss_army_usb.dae");
 c3dl.addMainCallBack(swiss_army_usb, "swiss_army_usb");
 
+c3dl.addModel("models/firehall.dae");
+c3dl.addMainCallBack(firehall, "firehall");
+
 c3dl.addModel("models/duck.dae");
 c3dl.addMainCallBack(duck, "duck");
 
@@ -44,12 +47,39 @@ function gun(canvasName)
 	scn.setAmbientLight([.3,.3,.3]);
 
   var cam = new c3dl.FreeCamera();
-	cam.setPosition([0,0,-2]);
+	cam.setPosition([0,0,-5]);
 
 	scn.setCamera(cam);
 	scn.startScene();
 }
 
+function firehall(canvasName)
+{
+	var scn = new c3dl.Scene();
+	scn.setCanvasTag(canvasName);
+	var renderer = new c3dl.WebGL();
+	scn.setRenderer(renderer);
+	scn.init();
+	
+	var dir = new c3dl.DirectionalLight();
+	dir.setDirection([0,0,1]);
+	dir.setDiffuse([.3,.3,.3]);
+	dir.setOn(true);
+	scn.addLight(dir);
+	
+	var obj = new c3dl.Collada();
+	obj.init("models/firehall.dae");
+	obj.setAngularVel([0,0.001,0]);
+
+	scn.addObjectToScene(obj);
+	scn.setAmbientLight([.3,.3,.3]);
+
+  var cam = new c3dl.FreeCamera();
+	cam.setPosition([0,5,-20]);
+
+	scn.setCamera(cam);
+	scn.startScene();
+}
 
 function teapot(canvasName)
 {

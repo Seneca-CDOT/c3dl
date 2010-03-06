@@ -232,10 +232,10 @@
   </library_lights>
   <library_images>
     <image id="firehall_png">
-      <init_from>./images/firehall.png</init_from>
+      <init_from>./images/firehall/firehall.png</init_from>
     </image>
     <image id="firehall_plane_png">
-      <init_from>./images/firehall_plane.png</init_from>
+      <init_from>./images/firehall/firehall_plane.png</init_from>
     </image>
   </library_images>
   <library_visual_scenes>
