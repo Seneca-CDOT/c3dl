@@ -718,6 +718,22 @@ c3dl.ColladaLoader = function () {
           var data = this.getData(xmlObject, "source", "id", this.normalSource);
           normalsStride = parseInt(data.stride);
           // length * stride instead of literal?
+          
+          if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride) {
+              var temp = data.values[vertIter + 1];
+              data.values[vertIter + 1] = data.values[vertIter + 2];
+              data.values[vertIter + 2] = -temp;
+            }
+          }
+          else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride) {
+              var temp = data.values[vertIter];
+              data.values[vertIter] = -data.values[vertIter + 1];
+              data.values[vertIter + 1] = temp;
+            }
+          }
+
           normalsArray = this.groupScalarsIntoArray(data.values, 3, normalsStride);
         }
 
