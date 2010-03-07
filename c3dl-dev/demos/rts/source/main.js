@@ -67,18 +67,20 @@ const CAM_FARTHEST_DISTANCE = 100;
 const SIDEWAYS = 0;
 const FORWARD = 1;
 
-var creatingBuilding = false;
 
 //
 var scn;
-var test;
 var sun;
 
 // Users things
 var usersMoney = 2000;
 var usersLumber = 1000;
-// array of all of the users buildings
+// array of all of the user's buildings
 var usersBuildings = [];
+
+// reference to the building that is currently being
+// 'held' by the user
+var holdingBuilding;
 
 // When the user starts to make a selection, keep
 // track of the world coords where they clicked so
@@ -436,7 +438,7 @@ function pointInPolygon(point) {
 function mouseUp(event) {
   var tooClose = false;
 
-  if(!test){
+  if(holdingBuilding == null){
     for( var i = 0; i < usersBuildings.length; i++) {
       var ux = usersBuildings[i].getPosition()[0];
       var uy = usersBuildings[i].getPosition()[2];
@@ -454,12 +456,13 @@ function mouseUp(event) {
   
   if (usersBuildings.length > 0) {
     for (var i = 0; i < usersBuildings.length; i++) {
-      if (test === usersBuildings[i]) {
+      // skip self check
+      if (holdingBuilding === usersBuildings[i]) {
         continue;
       }
-      if (test != null) {
+      if (holdingBuilding != null) {
         var s = c3dl.subtractVectors(
-        test.getPosition(), usersBuildings[i].getPosition());
+        holdingBuilding.getPosition(), usersBuildings[i].getPosition());
 
         if (c3dl.vectorLength(s) < OUTLINE_RADIUS * 2) {
           tooClose = true;
@@ -471,11 +474,10 @@ function mouseUp(event) {
 
   // If the user requested to build the object not too 
   // close to other objects
-  if (tooClose === false && test) {
+  if (tooClose === false && holdingBuilding) {
     var o = new outline(OUTLINE_DETAIL, [0,0,1], OUTLINE_RADIUS);
-    o.setPosition(test.getPosition());
-    test = null;
-    creatingBuilding = false;
+    o.setPosition(holdingBuilding.getPosition());
+    holdingBuilding = null;
     showCancelBuildingImg(false);
     usersMoney -= 500;
   }
@@ -545,9 +547,8 @@ function mouseWheel(event) {
     delta = event.detail * 4;
   }
 
-  if (test) //creatingBuilding)
-  {
-    test.yaw(delta / 200);
+  if (holdingBuilding) {
+    holdingBuilding.yaw(delta / 200);
   }
 
   else {
@@ -633,10 +634,10 @@ function showCancelBuildingImg(show) {
   User decided not to create the building
 */
 function cancelCreateObject() {
-  if(test) {
-    scn.removeObjectFromScene(test);
+  if(holdingBuilding) {
+    scn.removeObjectFromScene(holdingBuilding);
     usersBuildings.pop();
-    test = null;
+    holdingBuilding = null;
     showCancelBuildingImg(false);
   }
 }
@@ -647,7 +648,7 @@ function createObject(objID) {
 
   // don't allow creation of buildings if the user is
   // currently creating one
-  if(!test && usersMoney - 500 >= 0) {
+  if(!holdingBuilding && usersMoney - 500 >= 0) {
     var collada = new c3dl.Collada();
     var isValid = true;
     
@@ -661,11 +662,10 @@ function createObject(objID) {
 
     if (isValid) {
       showCancelBuildingImg(true);
-      test = collada;
+      holdingBuilding = collada;
       collada.ID = idGenerator.getNextID();
       usersBuildings.push(collada);
       scn.addObjectToScene(collada);
-      creatingBuilding = true;
     }
   }
 }
@@ -893,8 +893,8 @@ function update(deltaTime) {
 
   updateSelection(mouseX, mouseY);
   
-  if (selEndWorldCoords[0] && test) {
-    test.setPosition([selEndWorldCoords[0], 0, selEndWorldCoords[1]]);
+  if (selEndWorldCoords[0] && holdingBuilding) {
+    holdingBuilding.setPosition([selEndWorldCoords[0], 0, selEndWorldCoords[1]]);
   }
 
   var moveAmount = CAM_MOVE_SPEED * deltaTime / 100;
@@ -924,7 +924,7 @@ function update(deltaTime) {
 */
 function picking(pickingObj) {
 
-  if (creatingBuilding === false) {
+    if(holdingBuilding == null) {
     var objectsHit = pickingObj.getObjects();
     var centerOnObj = false;
 
