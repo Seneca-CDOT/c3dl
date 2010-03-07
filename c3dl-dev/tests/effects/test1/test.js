@@ -171,7 +171,7 @@ function changeKeyState(event, keyState)
 
 function update(event)
 {	
-  document.getElementById('debug').innerHTML = "FPS:" + Math.floor(scene.getFPS());
+  document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scene.getFPS());
 }
 
 function onKeyUp(event)

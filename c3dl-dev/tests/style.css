@@ -10,17 +10,6 @@ table{
   border: auto;
 }
 
-span, div{
-  font-size: 12px;
-  border:1px solid #333;
-}
-
-canvas{
-  width: 200px;
-  height: 200px;
-  border:1px solid #333;
-}
-
 h1 {
   background: #385C85;
   color: #FFF;

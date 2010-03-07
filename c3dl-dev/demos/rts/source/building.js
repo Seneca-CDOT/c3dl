@@ -1,3 +1,7 @@
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
 
 function Building(maxOccupants, maxHealth, path,type, repairTime){
 	//homes only

@@ -177,7 +177,7 @@ function duck(canvasName)
 	scn.init();
 	
 	var light = new c3dl.DirectionalLight();
-	light.setDirection([0,0,1]);
+	light.setDirection([0,0,-1]);
 	light.setDiffuse([.3,.3,.3]);
 	light.setOn(true);
 	scn.addLight(light);
@@ -185,14 +185,15 @@ function duck(canvasName)
 	var obj = new c3dl.Collada();
 	obj.init("models/duck.dae");
   obj.scale([.2,.2,.2]);
-  obj.translate([0,-15,0]);
-//	obj.setAngularVel([0,0.001,0]);
+  obj.translate([0,-25,-25]);
+	obj.setAngularVel([0,0.001,0]);
 
 	scn.addObjectToScene(obj);
 	scn.setAmbientLight([.3,.3,.3]);
 
   var cam = new c3dl.FreeCamera();
-	cam.setPosition([0,0,-50]);
+	cam.setPosition([0,0,50]);
+	cam.setLookAtPoint([0,0,0]);
 
 	scn.setCamera(cam);
 	scn.startScene();
@@ -221,7 +222,8 @@ function old_cottage(canvasName)
 	scn.setAmbientLight([.3,.3,.3]);
 
   var cam = new c3dl.FreeCamera();
-	cam.setPosition([0,0,-12]);
+	cam.setPosition([0,0,12]);
+  cam.setLookAtPoint([0,0,0]);
 
 	scn.setCamera(cam);
 	scn.startScene();
