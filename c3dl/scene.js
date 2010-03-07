@@ -1272,7 +1272,7 @@ c3dl.Scene = function()
 
 		// collect all the lines from the scene, place them into this array
 		// and pass the lines to the renderer.
-		var lines = new Array();
+		var lines = [];
 
 		for(var j = 0; j < objList.length; j++)
 		{

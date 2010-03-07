@@ -868,28 +868,17 @@ c3dl.WebGL = function()
 			var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix );
 			this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix);
 
-
 			// we need to render each line individually since each can have 
 			// a different width.
-				glCanvas3D.lineWidth(4);
+      for(var l=0; l < lines.length; l++) {
+				glCanvas3D.lineWidth(lines[l].getWidth());
 
 				var coords = [];
 				var cols = [];
-				for(var i=0; i < lines.length; i++)
+				for(var i=0; i < 6; i++)
 				{
-					coords.push(lines[i].getCoordinates()[0]);
-					coords.push(lines[i].getCoordinates()[1]);
-					coords.push(lines[i].getCoordinates()[2]);
-					coords.push(lines[i].getCoordinates()[3]);
-					coords.push(lines[i].getCoordinates()[4]);
-					coords.push(lines[i].getCoordinates()[5]);
-					
-					cols.push(lines[i].getColors()[0]);
-					cols.push(lines[i].getColors()[1]);
-					cols.push(lines[i].getColors()[2]);
-					cols.push(lines[i].getColors()[3]);
-					cols.push(lines[i].getColors()[4]);
-					cols.push(lines[i].getColors()[5]);
+					coords.push(lines[l].getCoordinates()[i]);				
+					cols.push(lines[l].getColors()[i]);
 				}
 
 				if(this.lineVertBuffer == null)
@@ -913,6 +902,7 @@ c3dl.WebGL = function()
 				this.setVertexAttribArray(shader, "Color", 3, this.lineColBuffer.position );
 
 				glCanvas3D.drawArrays(glCanvas3D.LINES, 0, coords.length/3);
+      }
 		}
 	}
 

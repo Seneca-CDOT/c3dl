@@ -51,9 +51,10 @@ const CANVAS_HEIGHT = 500;
 
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
-const OUTLINE_DETAIL = 15;
-const OUTLINE_RADIUS = 7;
-const OUTLINE_HEIGHT = 0;
+const OUTLINE_DETAIL      = 25;
+const OUTLINE_RADIUS      = 7;
+const OUTLINE_HEIGHT      = 0;
+const OUTLINE_LINE_WIDTH  = 1;
 
 const NONE_SELECTED = -1;
 
@@ -218,6 +219,7 @@ function outline(detail, color, radius) {
 
     for (var i = 0; i < lineVerts.length; i+=2) {
       var line = new c3dl.Line();
+      line.setWidth(OUTLINE_LINE_WIDTH);
       line.setCoordinates(lineVerts[i], lineVerts[i + 1]);
       line.setColors(color, color);
       scn.addObjectToScene(line);
@@ -226,6 +228,7 @@ function outline(detail, color, radius) {
 
     // close off the shape
     var line = new c3dl.Line();
+    line.setWidth(OUTLINE_LINE_WIDTH);
     line.setCoordinates(lineVerts[lineVerts.length - 1], lineVerts[0]);
     line.setColors(color, color);
     scn.addObjectToScene(line);
