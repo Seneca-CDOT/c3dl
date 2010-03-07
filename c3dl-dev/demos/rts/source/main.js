@@ -4,75 +4,79 @@
 */
 
 // model paths
-const BANK          = "models/bank/bank.dae";
-const BARRACKS_PATH = "models/barracks/barracks.dae";
-const CUBE          = "models/cube.dae";
-const FARM_PATH     = "models/farm/farm.dae";
-const FIREHALL      = "models/firehall/firehall.dae";
-const HOUSE         = "models/house/house.dae";
-const LUMBER_YARD   = "models/lumber_yard/lumber_yard.dae";
-const PERSON        = "models/person/person.dae";
-const PLANE         = "models/plane/plane.dae";
+const BANK_PATH         = "models/bank/bank.dae";
+const BARRACKS_PATH     = "models/barracks/barracks.dae";
+const CUBE_PATH         = "models/cube/cube.dae";
+const FARM_PATH         = "models/farm/farm.dae";
+const FIREHALL_PATH     = "models/firehall/firehall.dae";
+const HOUSE_PATH        = "models/house/house.dae";
+const LUMBER_YARD_PATH  = "models/lumber_yard/lumber_yard.dae";
+const PERSON_PATH       = "models/person/person.dae";
+const PLANE_PATH        = "models/plane/plane.dae";
+
+c3dl.addModel(BANK_PATH);
+c3dl.addModel(BARRACKS_PATH);
+c3dl.addModel(CUBE_PATH);
+c3dl.addModel(FARM_PATH);
+c3dl.addModel(FIREHALL_PATH);
+c3dl.addModel(HOUSE_PATH);
+c3dl.addModel(LUMBER_YARD_PATH);
+c3dl.addModel(PERSON_PATH);
+c3dl.addModel(PLANE_PATH);
+
+//
+c3dl.addMainCallBack(canvasMain, 'rts');
 
 // seletion
 const BOTTOM_LEFT_TO_TOP_RIGHT = 4;
 const BOTTOM_RIGHT_TO_TOP_LEFT = 3;
 const TOP_RIGHT_TO_BOTTOM_LEFT = 2;
 const TOP_LEFT_TO_BOTTOM_RIGHT = 1;
+const SEL_HEIGHT = 0.2;
 
-var creatingBuilding = false;
-
-var nosel = false;
+// Canvas
 const CANVAS_WIDTH = 500;
 const CANVAS_HEIGHT = 500;
-
-const NONE_SELECTED = -1;
-lastSelectedObjID = -1;
-
-var mouseX = 0;
-var mouseY = 0;
-
-const ZOOM_SENSITIVITY = 1;
-
-const CAM_MOVE_SPEED = 5;
-const CAM_MOVE_BUFFER_SIZE = 20;
-var keyD = false;
-
-c3dl.addModel(BANK);
-c3dl.addModel(BARRACKS_PATH);
-c3dl.addModel(CUBE);
-c3dl.addModel(FARM_PATH);
-c3dl.addModel(FIREHALL);
-c3dl.addModel(HOUSE);
-c3dl.addModel(LUMBER_YARD);
-c3dl.addModel(PERSON);
-c3dl.addModel(PLANE);
 
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
 const OUTLINE_DETAIL = 15;
-var outline1;
 
-c3dl.addMainCallBack(canvasMain, 'rts');
+const NONE_SELECTED = -1;
 
-var scn;
-var test;
-var psys;
-var cam;
-var light;
+// Camera
+const ZOOM_SENSITIVITY = 1;
+const CAM_MOVE_SPEED = 5;
+const CAM_MOVE_BUFFER_SIZE = 20;
+
+var creatingBuilding = false;
+
+// mouse screen coords
+var mouseX = 0;
+var mouseY = 0;
 var mouseIsDown = false;
 
 
-// selection vars
-var selStartXWorldCoords = 0
-var selStartYWorldCoords = 0;
-var selEndXWorldCoords = 0;
-var selEndYWorldCoords = 0;
-var my;
-var topLeft;
-var topRight;
-var selStartScreenCoords = [0,0];
-var selEndScreenCoords = [0,0];
+var keyD = false;
+
+//
+var scn;
+var cam;
+
+var test;
+var sun;
+
+// When the user starts to make a selection, keep
+// track of the world coords where they clicked so
+// we can later figure out what objects where in 
+// the bounds of the selection.
+var selStartWorldCoords = [0,0];
+var selEndWorldCoords = [0,0];
+
+// the material the selected object will have
+var selectedEffect = null;
+var nosel = false;
+lastSelectedObjID = -1;
 
 var clickTimeDiff = 0;
 var numClicks = 0;
@@ -83,17 +87,10 @@ var selectedObjectID = NONE_SELECTED;
 // array of all of the users buildings
 var usersBuildings = [];
 
-var selTopLine, selBottomLine, selLeftLine, selRightLine;
-
-// the material the selected object will have
-var selectedEffect = null;
-var SEL_HEIGHT = 0.2;
 var isCamMovingLeft = false;
 var isCamMovingRight = false;
 var isCamMovingUp = false;
 var isCamMovingDown = false;
-
-var worldCurrentX = 0;
 
 /*
 */
@@ -256,76 +253,50 @@ function outline(detail, color, radius) {
 }
 
 function canvasMain(canvasName) {
+
+  // standard C3DL initialization
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
   var renderer = new c3dl.WebGL();
   scn.setRenderer(renderer);
   scn.init();
+  
+  // Make the camera look down -z with yaw
+  cam = new c3dl.OrbitCamera();
+  cam.setFarthestDistance(200);
+  cam.setClosestDistance(20);
+  cam.setDistance(100);
+  cam.pitch(1);
+  cam.yaw(Math.PI);
 
-  scn.setAmbientLight([.2, .2, .2]);
 
+
+  // Effect used when game objects are selected
   selectedEffect = new c3dl.Effect();
   selectedEffect.init(c3dl.effects.SEPIA);
   selectedEffect.setParameter("color", [0.3, 0.6, 0.9]);
 
-  light = new c3dl.DirectionalLight();
-  light.setDiffuse([1, 1, 1]);
-  light.setDirection([0, -1, 0]);
-  light.setOn(true);
-  scn.addLight(light);
+  //var onFire = new c3dl.Effect();
+ // onFire.init(c3dl.effects.SEPIA);
+  //onFire.setParameter("color", [0.6, 0.3, 0.2]);
 
-  var onFire = new c3dl.Effect();
-  onFire.init(c3dl.effects.SEPIA);
-  onFire.setParameter("color", [0.6, 0.3, 0.2]);
+  // sunlight goes from east to west 
+  sun = new c3dl.DirectionalLight();
+  sun.setDiffuse([1, 1, 1]);
+  sun.setDirection([-1, 0, 0]);
+  sun.setOn(true);
+  scn.addLight(sun);
 
-  selTopLine = new c3dl.Line();
-  selBottomLine = new c3dl.Line();
+  // Add some ambient light so the scene isn't so dark.  
+  scn.setAmbientLight([.2, .2, .2]);
 
+  // create the selection object which is used to select
+  // buildings and game objects.
   selection.init();
   selection.setBounds(0, 0, 50, 50);
   selection.setVisible(false);
 
-/*  var col = new c3dl.Collada();
-  col.init(BARRACKS_PATH);
-  col.translate([25,0,25]);
-  usersBuildings.push(col);
-  scn.addObjectToScene(col);*/
-  
-
-/*  var tree = new c3dl.Collada();
-  tree.init(TREE_PATH);
-  tree.pitch(-3.14 / 2);
-  tree.scale([5,5,5]);
-  tree.translate([45,0,25]);
-//  scn.addObjectToScene(tree);
-  */
-  //outline1 = new outline(OUTLINE_DETAIL,[0,0,1],8);
-  //outline1.setVisible(true);
-  //outline1.setPosition([25,0,25]);
-
-  /*psys = new c3dl.ParticleSystem();
-  psys.setMinVelocity([-.5, 3, -.5]);
-  psys.setMaxVelocity([.2, 5, .5]);
-  
-  psys.setMinLifetime(1);
-  psys.setMaxLifetime(3);
-
-  psys.setMinColor([0.5, 0, 0, 0]);
-  psys.setMaxColor([1, 0.5, 0, 1]);
-
-  psys.setSrcBlend(c3dl.ONE);
-  psys.setDstBlend(c3dl.ONE);
-
-  psys.setMinSize(0.4);
-  psys.setMaxSize(0.8);
-
-  psys.setTexture("textures/flare.gif");
-  psys.setAcceleration([0, 0, 0]);
-  psys.setEmitRate(90);
-  psys.init(150);
-  psys.setPosition([25,0,25]);
-  scn.addObjectToScene(psys);*/
-
+  // Create the game board
   var r = -1;
   var c = -1;
   for (var i = 0; i < 25; i++, c++) {
@@ -335,7 +306,7 @@ function canvasMain(canvasName) {
     }
 
     var earth = new c3dl.Collada();
-    earth.init(PLANE);
+    earth.init(PLANE_PATH);
     // move down y to prevent z-fighting with planes
     // under models
     earth.translate([r*10,-0.5,c*10]);
@@ -343,13 +314,6 @@ function canvasMain(canvasName) {
     earth.id = i;
     scn.addObjectToScene(earth);
   }
-
-  cam = new c3dl.OrbitCamera();
-  cam.setFarthestDistance(200);
-  cam.setClosestDistance(20);
-  cam.setDistance(100);
-  cam.pitch(1);
-  cam.yaw(Math.PI);
 
   scn.setCamera(cam);
   scn.startScene();
@@ -404,15 +368,16 @@ function pointInPolygon(point) {
   return isInside;
 }
   
-  
+/*
+*/
 function onKeyUp(event) {
   if (event.keyCode == 89) {
     keyD = false;
   }
 }
 
-
-
+/*
+*/
 function mouseUp() {
   var tooClose = false;
 
@@ -471,19 +436,21 @@ function mouseDown(event) {
   var viewportCoords = getClickedCoords(event);
   var worldCoords = getWorldCoords(viewportCoords[0], viewportCoords[1]);
 
-  selStartXWorldCoords = worldCoords[0];
-  selStartYWorldCoords = worldCoords[2];
+  selStartWorldCoords = [worldCoords[0],worldCoords[2]];
+//  selStartWorldCoords = worldCoords[2];
   
-  selStartScreenCoords = [viewportCoords[0], viewportCoords[1]];
+  //selStartScreenCoords = [viewportCoords[0], viewportCoords[1]];
   
-  topLeft = [worldCoords[0],0,worldCoords[2]];
+  //topLeft = [worldCoords[0],0,worldCoords[2]];
   
   isCamMovingLeft = (mouseX < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingRight = (mouseX > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingUp = (mouseY < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingDown = (mouseY > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
   
-  if(isCamMovingLeft || isCamMovingRight || isCamMovingUp || isCamMovingDown){ nosel = true;}
+  if(isCamMovingLeft || isCamMovingRight || isCamMovingUp || isCamMovingDown) {
+    nosel = true;
+  }
   //selection.setVisible(true);
   //selection.setBounds(startSx,startSy,startSx,startSy);
 }
@@ -548,9 +515,9 @@ function createObject(objID) {
   switch (objID) {
     case 0:collada.init(BARRACKS_PATH);break;
     case 1:collada.init(FARM_PATH);break;
-    case 2:collada.init(HOUSE);break;
-    case 3:collada.init(FIREHALL);break;
-    case 4:collada.init(BANK);break;
+    case 2:collada.init(HOUSE_PATH);break;
+    case 3:collada.init(FIREHALL_PATH);break;
+    case 4:collada.init(BANK_PATH);break;
     default:break;
   }
 
@@ -586,7 +553,7 @@ function getClickedCoords( event )
 */
 function updateSelection(mouseX,mouseY) {
   
-  selEndScreenCoords = [mouseX,mouseY];
+  //selEndScreenCoords = [mouseX,mouseY];
   
   var worldCoords = getWorldCoords(mouseX, mouseY);
 
@@ -594,15 +561,14 @@ function updateSelection(mouseX,mouseY) {
     
     selection.setVisible(true);
   
-    selEndXWorldCoords = worldCoords[0];
-    selEndYWorldCoords = worldCoords[2];
+    selEndXWorldCoords = [worldCoords[0],worldCoords[2]];
+    //selEndYWorldCoords = worldCoords[2];
 
     var camLeft = cam.getLeft();
-    worldCurrentX = worldCoords[0];
 
     // From the end of where the user is currently dragging to
     // where they first clicked.
-    var toStart = [selStartXWorldCoords - selEndXWorldCoords, 0, selStartYWorldCoords - selEndYWorldCoords];
+    var toStart = [selStartWorldCoords[0] - selEndWorldCoords[0], 0, selStartWorldCoords[1] - selEndWorldCoords[1]];
     var toStartLength = c3dl.vectorLength(toStart);
 
     // get the camera's direction without the y value
@@ -631,8 +597,8 @@ function updateSelection(mouseX,mouseY) {
     // A vector from the start world coords to the end world coords
     //
     //
-    var fromStartToEnd = [selStartXWorldCoords-selEndXWorldCoords,0,
-                        selStartYWorldCoords-selEndYWorldCoords];
+    var fromStartToEnd = [selStartWorldCoords[0] - selEndWorldCoords[0] ,0,
+                        selStartWorldCoords[1] - selEndWorldCoords[1]];
     if(c3dl.vectorLength(fromStartToEnd) > 0)
     {
       var angle = c3dl.getAngleBetweenVectors(c3dl.normalizeVector(fromStartToEnd), cam.getLeft());
@@ -644,23 +610,19 @@ function updateSelection(mouseX,mouseY) {
       var angle2 = 
       c3dl.getAngleBetweenVectors(c3dl.normalizeVector(forw), fromStartToEnd);
       
-      //document.getElementById('debug').innerHTML = forw;
-
       // if the user is dragging to the right
-      // if (selStartScreenCoords[0] < selEndScreenCoords[0]) {
-      // if (selStartXWorldCoords > worldCurrentX) {
       if(angle < 90){
-        topRightX = selStartXWorldCoords - (camLeft[0] * opp);
-        topRightY = selStartYWorldCoords - (camLeft[2] * opp);
+        topRightX = selStartWorldCoords[0] - (camLeft[0] * opp);
+        topRightY = selStartWorldCoords[1] - (camLeft[2] * opp);
 
-        bottomLeftX = selEndXWorldCoords + (camLeft[0] * opp);
-        bottomLeftY = selEndYWorldCoords + (camLeft[2] * opp);
+        bottomLeftX = selEndWorldCoords[0] + (camLeft[0] * opp);
+        bottomLeftY = selEndWorldCoords[1] + (camLeft[2] * opp);
       } else {
-        topRightX = selStartXWorldCoords + (camLeft[0] * opp);
-        topRightY = selStartYWorldCoords + (camLeft[2] * opp);
+        topRightX = selStartWorldCoords[0] + (camLeft[0] * opp);
+        topRightY = selStartWorldCoords[1] + (camLeft[2] * opp);
 
-        bottomLeftX = selEndXWorldCoords - (camLeft[0] * opp);
-        bottomLeftY = selEndYWorldCoords - (camLeft[2] * opp);
+        bottomLeftX = selEndWorldCoords[0] - (camLeft[0] * opp);
+        bottomLeftY = selEndWorldCoords[1] - (camLeft[2] * opp);
       }
 
       if(angle < 90 && angle2 < 90)
@@ -681,17 +643,17 @@ function updateSelection(mouseX,mouseY) {
       }
       
       var lines = selection.getLines();
-      lines[0].setCoordinates([selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords], 
+      lines[0].setCoordinates([selStartWorldCoords[0], SEL_HEIGHT, selStartWorldCoords[1]], 
                               [topRightX, SEL_HEIGHT, topRightY]);
 
       lines[1].setCoordinates([topRightX, SEL_HEIGHT, topRightY], 
-                              [selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords]);
+                              [selEndWorldCoords[0], SEL_HEIGHT, selEndWorldCoords[1]]);
 
-      lines[2].setCoordinates([selEndXWorldCoords, SEL_HEIGHT, selEndYWorldCoords], 
+      lines[2].setCoordinates([selEndWorldCoords[0], SEL_HEIGHT, selEndWorldCoords[1]], 
                               [bottomLeftX, SEL_HEIGHT, bottomLeftY]);
 
       lines[3].setCoordinates([bottomLeftX, SEL_HEIGHT, bottomLeftY], 
-                              [selStartXWorldCoords, SEL_HEIGHT, selStartYWorldCoords]);
+                              [selStartWorldCoords[0], SEL_HEIGHT, selStartWorldCoords[1]]);
     }
   }
 }
@@ -761,20 +723,21 @@ function getWorldCoords(mmx, mmy) {
 
       var hyp = camHeight / Math.cos(angle);
 
-      selEndXWorldCoords = hyp * rayDir[0] + rayInitialPoint[0];
-      my = hyp * rayDir[1];
-      selEndYWorldCoords = hyp * rayDir[2] + rayInitialPoint[2];
-      return [selEndXWorldCoords, my, selEndYWorldCoords];
+      selEndWorldCoords[0] = hyp * rayDir[0] + rayInitialPoint[0];
+      selEndWorldCoords[1] = hyp * rayDir[2] + rayInitialPoint[2];
+      return [selEndWorldCoords[0], hyp * rayDir[1], selEndWorldCoords[1]];
     }
   }
 }
 
+/*
+*/
 function update(deltaTime) {
 
   updateSelection(mouseX, mouseY);
   
-  if (selEndXWorldCoords && test) {
-    test.setPosition([selEndXWorldCoords, 0, selEndYWorldCoords]);
+  if (selEndWorldCoords[0] && test) {
+    test.setPosition([selEndWorldCoords[0], 0, selEndWorldCoords[1]]);
   }
 
   var s = CAM_MOVE_SPEED * deltaTime / 100;
@@ -798,25 +761,15 @@ function update(deltaTime) {
   }
 
   // move the sun
-  var pos = light.getDirection();
-
-  var quat = c3dl.axisAngleToQuat([0, 0, 1], deltaTime / 25000);
+  var pos = sun.getDirection();
+  var quat = c3dl.axisAngleToQuat([0, 0, -1], deltaTime / 25000);
   var mat = c3dl.quatToMatrix(quat);
   c3dl.multiplyMatrixByVector(mat, pos, pos);
-
-  light.setDirection(pos);
-  
-  
-  // testing
-  
-/*  var color = outline1.getColor();
-  if(color[0] < 1){
-  color[0] += 0.01;
-  color[2] -= 0.01;
-  outline1.setColor(color);
-  }*/
+  sun.setDirection(pos);
 }
 
+/*
+*/
 function picking(pickingObj) {
 
   if (creatingBuilding === false) {
