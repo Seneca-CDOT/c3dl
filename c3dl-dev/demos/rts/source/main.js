@@ -64,15 +64,10 @@ const CAM_MOVE_SPEED = 5;
 const CAM_MOVE_BUFFER_SIZE = 20;
 const CAM_CLOSEST_DISTANCE = 20;
 const CAM_FARTHEST_DISTANCE = 100;
+const SIDEWAYS = 0;
+const FORWARD = 1;
 
 var creatingBuilding = false;
-
-// mouse screen coords
-var mouseX = 0;
-var mouseY = 0;
-var mouseIsDown = false;
-
-var keyD = false;
 
 //
 var scn;
@@ -120,7 +115,6 @@ var idGenerator = (function IDGen() {
     }
   };
 })();
-
 
 /*
 */
@@ -272,11 +266,49 @@ function outline(detail, color, radius) {
   };
 }
 
+// mouse screen coords and button states
+var mouseX = 0;
+var mouseY = 0;
+
+var mouseButtonsDown = (
+  function MouseButtonsDown(){
+    var BTN1 = false,
+        BTN2 = false,
+        BTN3 = false;
+    return {"BTN1":BTN1,
+            "BTN2":BTN2,
+            "BTN3":BTN3
+    };
+  }
+)();
+
+var keysDown = (
+  function KeysDown(){
+    var key_a = false,
+        key_up = false,
+        key_down = false,
+        key_up = false,
+        key_left = false,
+        key_right = false;
+    return {"KEY_A":key_a,
+            "KEY_UP":key_up,
+            "KEY_DOWN":key_down,
+            "KEY_LEFT":key_left,
+            "KEY_RIGHT":key_right
+    };
+  }
+)();
+
+
 /*
   First function which gets called
 */
 function canvasMain(canvasName) {
 
+ // alert(keysDown.KEY_A);
+ // keysDown.KEY_A = true;
+ // alert(keysDown.KEY_A);
+  
   // standard C3DL initialization
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
@@ -398,18 +430,10 @@ function pointInPolygon(point) {
   }
   return isInside;
 }
-  
-/*
-*/
-function onKeyUp(event) {
-  if (event.keyCode == KEY_Y) {
-    keyD = false;
-  }
-}
 
 /*
 */
-function mouseUp() {
+function mouseUp(event) {
   var tooClose = false;
 
   if(!test){
@@ -457,19 +481,41 @@ function mouseUp() {
   }
 
   selection.setVisible(false);
-  mouseIsDown = false;
+  
+  switch(event.button) {
+    case 0: mouseButtonsDown.BTN1 = false;break;
+    case 1: mouseButtonsDown.BTN2 = false;break;
+    case 2: mouseButtonsDown.BTN3 = false;break;
+    default:break;
+  }
 }
 
 /*
+  TODO: prevent cam from going too far from island
 */
-function moveCamera() {
+function moveCamera(direction, amount) {
+  if(direction === SIDEWAYS) {
+    var dir = c3dl.multiplyVector(cam.getLeft(), amount);
+    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  }
+  else if(direction === FORWARD ) {
+    var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
+    dir = c3dl.multiplyVector(dir, amount);
+    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  }
 }
 
 /*
 */
 function mouseDown(event) {
+  
+  switch(event.button) {
+    case 0:   mouseButtonsDown.BTN1 = true;break;
+    case 1:   mouseButtonsDown.BTN2 = true;break;
+    case 2:   mouseButtonsDown.BTN3 = true;break;
+    default:break;
+  }
 
-  mouseIsDown = true;
   nosel = false;
 
   var viewportCoords = getClickedCoords(event);
@@ -485,8 +531,6 @@ function mouseDown(event) {
   if(isCamMovingLeft || isCamMovingRight || isCamMovingUp || isCamMovingDown) {
     nosel = true;
   }
-  //selection.setVisible(true);
-  //selection.setBounds(startSx,startSy,startSx,startSy);
 }
 
 function mouseWheel(event) {
@@ -507,7 +551,7 @@ function mouseWheel(event) {
   }
 
   else {
-    if (keyD) {
+    if (keysDown.KEY_Y) {
       cam.yaw(delta * ZOOM_SENSITIVITY / 100);
     } else {
 
@@ -538,16 +582,35 @@ function mouseWheel(event) {
 */
 function onKeyDown(event) {
 
-  switch(event.keyCode) {
-    // return the user home with default camera orientation
-    case KEY_H:   setDefaultCamView();break;
-  
-    // Allow cheating for debugging purposes  
-    case KEY_M:   usersMoney += 500;break;
-  
+  switch(event.keyCode) {  
     // Allow the user to cancel creating a building
-    case KEY_Y:   keyD = true;
-    case KEY_ESC: cancelCreateObject();break;
+    case KEY_ESC:   cancelCreateObject();break;
+
+    // return the user home with default camera orientation
+    case KEY_H:     setDefaultCamView();break;
+
+    // Allow cheating for debugging purposes  
+    case KEY_M:     usersMoney += 500;break;
+    case KEY_Y:     keysDown.KEY_Y = true;break;
+
+    case KEY_UP:    keysDown.KEY_UP = true;break;
+    case KEY_DOWN:  keysDown.KEY_DOWN = true;break;
+    case KEY_RIGHT: keysDown.KEY_RIGHT = true;break;
+    case KEY_LEFT:  keysDown.KEY_LEFT = true;break;
+    default:break;
+  }
+}
+
+/*
+*/
+function onKeyUp(event) {
+
+  switch(event.keyCode) {
+    case KEY_Y:     keysDown.KEY_Y = false;break;
+    case KEY_UP:    keysDown.KEY_UP = false;break;
+    case KEY_DOWN:  keysDown.KEY_DOWN = false;break;
+    case KEY_RIGHT: keysDown.KEY_RIGHT = false;break;
+    case KEY_LEFT:  keysDown.KEY_LEFT = false;break;
     default:break;
   }
 }
@@ -630,17 +693,12 @@ function getClickedCoords( event )
 */
 function updateSelection(mouseX,mouseY) {
   
-  //selEndScreenCoords = [mouseX,mouseY];
-  
   var worldCoords = getWorldCoords(mouseX, mouseY);
 
-  if (worldCoords && mouseIsDown && nosel == false) {
+  if (worldCoords && mouseButtonsDown.BTN1 && nosel == false) {
     
     selection.setVisible(true);
   
-    selEndXWorldCoords = [worldCoords[0],worldCoords[2]];
-    //selEndYWorldCoords = worldCoords[2];
-
     var camLeft = cam.getLeft();
 
     // From the end of where the user is currently dragging to
@@ -750,16 +808,10 @@ function mouseMove(event) {
   updateSelection(mouseX, mouseY);
 }
 
-function getWorldCoords(mmx, mmy) {
-  // get mouse coords relative to window
-  //	var mmx = event.pageX - 1;
-  //	var mmy = event.pageY - 1;
-  /*
-  isCamMovingLeft = (mmx < CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingRight = (mmx > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingUp = (mmy < CAM_MOVE_BUFFER_SIZE) ? true : false;
-  isCamMovingDown = (mmy > CANVAS_HEIGHT - CAM_MOVE_BUFFER_SIZE) ? true : false;
+/*
 */
+function getWorldCoords(mmx, mmy) {
+
   if (mmx != null && mmy != null) {
     // NDC
     var normalizedDeviceCoords = [(2 * mmx / CANVAS_WIDTH) - 1, -((2 * mmy / CANVAS_HEIGHT) - 1), 1, 1];
@@ -845,26 +897,19 @@ function update(deltaTime) {
     test.setPosition([selEndWorldCoords[0], 0, selEndWorldCoords[1]]);
   }
 
-  var s = CAM_MOVE_SPEED * deltaTime / 100;
+  var moveAmount = CAM_MOVE_SPEED * deltaTime / 100;
 
-  if (isCamMovingLeft && mouseIsDown) {
-    var dir = c3dl.multiplyVector(cam.getLeft(), s);
-    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  if (isCamMovingLeft && mouseButtonsDown.BTN1 || keysDown.KEY_LEFT) {
+    moveCamera(SIDEWAYS, moveAmount);
   }
-  else if (isCamMovingRight && mouseIsDown) {
-    var dir = c3dl.multiplyVector(cam.getLeft(), -s);
-    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  else if (isCamMovingRight && mouseButtonsDown.BTN1 || keysDown.KEY_RIGHT) {
+    moveCamera(SIDEWAYS, -moveAmount);
   }
-
-  if (isCamMovingUp && mouseIsDown) {
-    var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
-    dir = c3dl.multiplyVector(dir, s);
-    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  if (isCamMovingUp && mouseButtonsDown.BTN1 || keysDown.KEY_UP) {
+    moveCamera(FORWARD, moveAmount); 
   }
-  else if (isCamMovingDown && mouseIsDown) {
-    var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
-    dir = c3dl.multiplyVector(dir, -s);
-    cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
+  else if (isCamMovingDown && mouseButtonsDown.BTN1 || keysDown.KEY_DOWN) {
+    moveCamera(FORWARD, -moveAmount);
   }
 
   // move the sun
