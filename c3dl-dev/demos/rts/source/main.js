@@ -24,6 +24,13 @@ c3dl.addModel(LUMBER_YARD_PATH);
 c3dl.addModel(PERSON_PATH);
 c3dl.addModel(PLANE_PATH);
 
+// keys
+const KEY_ESC = 27;
+const KEY_H   = 72;
+const KEY_M   = 77;
+const KEY_Y   = 89;
+
+
 //
 c3dl.addMainCallBack(canvasMain, 'rts');
 
@@ -41,6 +48,7 @@ const CANVAS_HEIGHT = 500;
 // How many lines make up the circle around the
 // buildings. The higher the value, the more lines.
 const OUTLINE_DETAIL = 15;
+const OUTLINE_RADIUS = 7;
 
 const NONE_SELECTED = -1;
 
@@ -48,6 +56,8 @@ const NONE_SELECTED = -1;
 const ZOOM_SENSITIVITY = 1;
 const CAM_MOVE_SPEED = 5;
 const CAM_MOVE_BUFFER_SIZE = 20;
+const CAM_CLOSEST_DISTANCE = 20;
+const CAM_FARTHEST_DISTANCE = 100;
 
 var creatingBuilding = false;
 
@@ -65,6 +75,8 @@ var cam;
 
 var test;
 var sun;
+var usersMoney = 2000;
+var usersLumber = 1000;
 
 // When the user starts to make a selection, keep
 // track of the world coords where they clicked so
@@ -93,6 +105,7 @@ var isCamMovingUp = false;
 var isCamMovingDown = false;
 
 /*
+  Provides unique IDs to distinguish between objects.
 */
 var idGenerator = (function IDGen() {
   var id = 0;
@@ -109,68 +122,69 @@ var idGenerator = (function IDGen() {
 */
 var selection = (
 
-function Selection() {
-  var lines = [null, null, null, null];
-  var coords;
-  var vis = false;
-  var color = [1,1,1];
-  var direction = 0;
+  function Selection() {
+    var lines = [null, null, null, null];
+    var coords;
+    var vis = false;
+    var color = [1,1,1];
+    var direction = 0;
 
-  return {
-    init: function () {
-      for (var i = 0; i < 4; i++) {
-        lines[i] = new c3dl.Line();
-        lines[i].setColors([.33, .66, .99], [.33, .66, .99]);
-        lines[i].setVisible(true);
-        scn.addObjectToScene(lines[i]);
-      }
-    },
-    setBounds: function (x1, y1, x2, y2, x3, y3, x4, y4) {
-      coords = [x1, y1, x2, y2, x3, y3, x4, y4];
-      //lines[0].setCoordinates([x, 2, z], [x2, 2, z2]);
-      // lines[1].setCoordinates([x2, 2, z], [x2, 2, z2]);
-      // lines[2].setCoordinates([x2, 2, z2], [x, 2, z2]);
-      // lines[3].setCoordinates([x, 2, z2], [x, 2, z]);
-    },
-    getLines: function () {
-      return lines;
-    },
-    getCoordinates: function() {
-      var c = [];
-      for(var i=0; i< 4; i++) {
-        for(var j = 0; j < 6; j++) {
-          c.push(lines[i].getCoordinates()[j]);
+    return {
+      init: function () {
+        for (var i = 0; i < 4; i++) {
+          lines[i] = new c3dl.Line();
+          lines[i].setColors([.33, .66, .99], [.33, .66, .99]);
+          lines[i].setVisible(true);
+          scn.addObjectToScene(lines[i]);
         }
+      },
+      setBounds: function (x1, y1, x2, y2, x3, y3, x4, y4) {
+        coords = [x1, y1, x2, y2, x3, y3, x4, y4];
+        //lines[0].setCoordinates([x, 2, z], [x2, 2, z2]);
+        // lines[1].setCoordinates([x2, 2, z], [x2, 2, z2]);
+        // lines[2].setCoordinates([x2, 2, z2], [x, 2, z2]);
+        // lines[3].setCoordinates([x, 2, z2], [x, 2, z]);
+      },
+      getLines: function () {
+        return lines;
+      },
+      getCoordinates: function() {
+        var c = [];
+        for(var i=0; i< 4; i++) {
+          for(var j = 0; j < 6; j++) {
+            c.push(lines[i].getCoordinates()[j]);
+          }
+        }
+        return c;
+      },
+      setDirection: function(d) {
+        direction = d;
+      },
+      getDirection: function() {
+        return direction;
+      },
+      setColor: function(c) {
+       for (var i = 0; i < 4; i++) {
+        lines[i].setColors(c, c);
+       }
+       color = c;
+      },
+      getColor: function() {
+        return color;
+      },
+      getVisible: function() {
+        return vis;
+      },
+      setVisible: function (isVisible) {
+        for (var i = 0; i < 4; i++) {
+         // lines[i].setVisible(isVisible);
+          lines[i].setCoordinates([0,0,0],[0,0,0]);
+        }
+        vis = isVisible;
       }
-      return c;
-    },
-    setDirection: function(d) {
-      direction = d;
-    },
-    getDirection: function() {
-      return direction;
-    },
-    setColor: function(c) {
-     for (var i = 0; i < 4; i++) {
-      lines[i].setColors(c, c);
-     }
-     color = c;
-    },
-    getColor: function() {
-      return color;
-    },
-    getVisible: function() {
-      return vis;
-    },
-    setVisible: function (isVisible) {
-      for (var i = 0; i < 4; i++) {
-       // lines[i].setVisible(isVisible);
-        lines[i].setCoordinates([0,0,0],[0,0,0]);
-      }
-      vis = isVisible;
-    }
-  };
-})();
+    };
+  }
+)();
 
 /*
   detail -  How many lines make up the shape around the object
@@ -252,6 +266,9 @@ function outline(detail, color, radius) {
   };
 }
 
+/*
+  First function which gets called
+*/
 function canvasMain(canvasName) {
 
   // standard C3DL initialization
@@ -263,12 +280,9 @@ function canvasMain(canvasName) {
   
   // Make the camera look down -z with yaw
   cam = new c3dl.OrbitCamera();
-  cam.setFarthestDistance(200);
-  cam.setClosestDistance(20);
-  cam.setDistance(100);
-  cam.pitch(1);
-  cam.yaw(Math.PI);
-
+  cam.setFarthestDistance(CAM_FARTHEST_DISTANCE);
+  cam.setClosestDistance(CAM_CLOSEST_DISTANCE);
+  setDefaultCamView();
 
 
   // Effect used when game objects are selected
@@ -315,12 +329,24 @@ function canvasMain(canvasName) {
     scn.addObjectToScene(earth);
   }
 
+  updateDOM();
+
   scn.setCamera(cam);
   scn.startScene();
   scn.setKeyboardCallback(onKeyUp, onKeyDown);
   scn.setMouseCallback(mouseUp, mouseDown, mouseMove, mouseWheel);
   scn.setUpdateCallback(update);
   scn.setPickingCallback(picking);
+}
+
+/*
+  
+*/
+function setDefaultCamView() {
+  cam.setOrbitPoint([0,0,0]);
+  //cam.setPosition([0,CAM_FARTHEST_DISTANCE,0]);
+  //cam.pitch(1);
+  //cam.yaw(Math.PI);
 }
 
 /*
@@ -371,7 +397,7 @@ function pointInPolygon(point) {
 /*
 */
 function onKeyUp(event) {
-  if (event.keyCode == 89) {
+  if (event.keyCode == KEY_Y) {
     keyD = false;
   }
 }
@@ -406,7 +432,7 @@ function mouseUp() {
         var s = c3dl.subtractVectors(
         test.getPosition(), usersBuildings[i].getPosition());
 
-        if (c3dl.vectorLength(s) < 20) {
+        if (c3dl.vectorLength(s) < OUTLINE_RADIUS * 2) {
           tooClose = true;
           break;
         }
@@ -414,13 +440,16 @@ function mouseUp() {
     }
   }
 
+  // If the user requested to build the object not too 
+  // close to other objects
   if (tooClose === false && test) {
-    var o = new outline(OUTLINE_DETAIL, [0,0,1], 8);
+    var o = new outline(OUTLINE_DETAIL, [0,0,1], OUTLINE_RADIUS);
     o.setPosition(test.getPosition());
     test = null;
     creatingBuilding = false;
+    showCancelBuildingImg(false);
+    usersMoney -= 500;
   }
-
 
   selection.setVisible(false);
   mouseIsDown = false;
@@ -437,11 +466,6 @@ function mouseDown(event) {
   var worldCoords = getWorldCoords(viewportCoords[0], viewportCoords[1]);
 
   selStartWorldCoords = [worldCoords[0],worldCoords[2]];
-//  selStartWorldCoords = worldCoords[2];
-  
-  //selStartScreenCoords = [viewportCoords[0], viewportCoords[1]];
-  
-  //topLeft = [worldCoords[0],0,worldCoords[2]];
   
   isCamMovingLeft = (mouseX < CAM_MOVE_BUFFER_SIZE) ? true : false;
   isCamMovingRight = (mouseX > CANVAS_WIDTH - CAM_MOVE_BUFFER_SIZE) ? true : false;
@@ -501,32 +525,73 @@ function mouseWheel(event) {
 
 
 function onKeyDown(event) {
-  if (event.keyCode == 65) {
-    cam.setOrbitPoint([0, 0, 0]);
-  }
-  if (event.keyCode == 89) {
-    keyD = true;
+
+  switch(event.keyCode) {
+    // return the user home with default camera orientation
+    case KEY_H:   setDefaultCamView();break;
+  
+    // Allow cheating for debugging purposes  
+    case KEY_M:   usersMoney += 500;break;
+  
+    // Allow the user to cancel creating a building
+    case KEY_Y:   keyD = true;
+    case KEY_ESC: cancelCreateObject();break;
+    default:break;
   }
 }
 
-function createObject(objID) {
-  var collada = new c3dl.Collada();
-
-  switch (objID) {
-    case 0:collada.init(BARRACKS_PATH);break;
-    case 1:collada.init(FARM_PATH);break;
-    case 2:collada.init(HOUSE_PATH);break;
-    case 3:collada.init(FIREHALL_PATH);break;
-    case 4:collada.init(BANK_PATH);break;
-    default:break;
+/*
+  show or hide the 'cancel building' image which allows the user to
+  cancel building selection. They can also press escape to do this.
+*/
+function showCancelBuildingImg(show) {
+  var img = document.getElementById('cancel_building');
+  if(show) {
+    img.src = "images/cancel_building.png";
   }
+  else{
+    img.src = "images/blank.png";
+  }
+}
 
-  if (collada) {
-    test = collada;
-    collada.ID = idGenerator.getNextID();
-    usersBuildings.push(collada);
-    scn.addObjectToScene(collada);
-    creatingBuilding = true;
+/*
+  User decided not to create the building
+*/
+function cancelCreateObject() {
+  if(test) {
+    scn.removeObjectFromScene(test);
+    usersBuildings.pop();
+    test = null;
+    showCancelBuildingImg(false);
+  }
+}
+
+/*
+*/
+function createObject(objID) {
+
+  // don't allow creation of buildings if the user is
+  // currently creating one
+  if(!test && usersMoney - 500 >= 0) {
+    var collada = new c3dl.Collada();
+    var isValid = true;
+    
+    switch (objID) {
+      case 0: collada.init(HOUSE_PATH);break;
+      case 1: collada.init(FIREHALL_PATH);break;
+      case 2: collada.init(BANK_PATH);break;
+      case 3: collada.init(LUMBER_YARD_PATH);break;
+      default: isValid = false;break;
+    }
+
+    if (isValid) {
+      showCancelBuildingImg(true);
+      test = collada;
+      collada.ID = idGenerator.getNextID();
+      usersBuildings.push(collada);
+      scn.addObjectToScene(collada);
+      creatingBuilding = true;
+    }
   }
 }
 
@@ -732,7 +797,35 @@ function getWorldCoords(mmx, mmy) {
 
 /*
 */
+function updateDOM() {
+  var house = document.getElementById('house');
+  var firehall = document.getElementById('firehall');
+  var lumberYard = document.getElementById('lumber_yard');
+  var bank = document.getElementById('bank');
+
+  if(usersMoney < 500) {
+    house.src = "images/house/house_icon_gray.png";
+    firehall.src = "images/firehall/firehall_icon_gray.png";
+    lumberYard.src = "images/lumber_yard/lumber_yard_icon_gray.png";
+    bank.src = "images/bank/bank_icon_gray.png";
+  }
+  else {
+    house.src = "images/house/house_icon_up.png";
+    firehall.src = "images/firehall/firehall_icon_up.png";
+    lumberYard.src = "images/lumber_yard/lumber_yard_icon_up.png";
+    bank.src = "images/bank/bank_icon_up.png";
+  }
+  
+  document.getElementById('usersMoney').innerHTML = usersMoney;
+}
+
+/*
+*/
 function update(deltaTime) {
+
+  // updates money, lumber and grays out building icons if
+  // user does not have sufficient resources.
+  updateDOM();
 
   updateSelection(mouseX, mouseY);
   

@@ -8,13 +8,40 @@
   </head>
 
   <body background="#FFFFFF">
+
     <div align="center">
-      <h2><img src="images/seneca_island.png" /></h2>
-      <canvas id="rts" width="500" height="500"></canvas><br />
-      <br />
-      <img src="images/house_icon_up.png" id="house" onclick="createObject(2);"/>
-      <img src="images/firehall_icon_up.png" id="firehall" onclick="createObject(3);"/>
-      <img src="images/bank_icon_up.png" id="bank"onclick="createObject(4);"/>
+      <img src="images/seneca_island.png" />
     </div>
+      
+    <table border="0" align="center">
+      <tr>
+        <td width="50%">
+          <img src="images/money.gif" align="absmiddle" /><span style="font-size:24pt;" id="usersMoney">2000</span><br />
+        </td>
+        <td align="left" width="50%">
+          <img src="images/lumber.gif" align="absmiddle" /><span style="font-size:24pt;" id="usersLumber">1000</span><br />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <canvas id="rts" width="500" height="500"></canvas>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <img src="images/house/house_icon_up.png" id="house" onclick="createObject(0);"/>
+          <img src="images/firehall/firehall_icon_up.png" id="firehall" onclick="createObject(1);"/>
+          <img src="images/bank/bank_icon_up.png" id="bank" onclick="createObject(2);"/>
+          <img src="images/lumber_yard/lumber_yard_icon_up.png" id="lumber_yard" onclick="createObject(3);"/>
+
+          <img src="images/blank.png" id="spacer" />
+          <img src="images/blank.png" id="cancel_building" onclick="cancelCreateObject();"/>
+        </td>
+      </tr>
+    </table>
+    ESC -> cancel building <br />
+    M -> +500 money (debugging) <br />
+    Y + wheel -> Yaw camera<br />
+    H -> camera home
   </body>
 </html>
