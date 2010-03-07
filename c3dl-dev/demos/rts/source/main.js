@@ -25,11 +25,15 @@ c3dl.addModel(PERSON_PATH);
 c3dl.addModel(PLANE_PATH);
 
 // keys
-const KEY_ESC = 27;
-const KEY_H   = 72;
-const KEY_M   = 77;
-const KEY_Y   = 89;
+const KEY_ESC   = 27;
+const KEY_H     = 72;
+const KEY_M     = 77;
+const KEY_Y     = 89;
 
+const KEY_LEFT  = 37;
+const KEY_UP    = 38;
+const KEY_RIGHT = 39;
+const KEY_DOWN  = 40; 
 
 //
 c3dl.addMainCallBack(canvasMain, 'rts');
@@ -49,6 +53,7 @@ const CANVAS_HEIGHT = 500;
 // buildings. The higher the value, the more lines.
 const OUTLINE_DETAIL = 15;
 const OUTLINE_RADIUS = 7;
+const OUTLINE_HEIGHT = 0;
 
 const NONE_SELECTED = -1;
 
@@ -66,17 +71,18 @@ var mouseX = 0;
 var mouseY = 0;
 var mouseIsDown = false;
 
-
 var keyD = false;
 
 //
 var scn;
-var cam;
-
 var test;
 var sun;
+
+// Users things
 var usersMoney = 2000;
 var usersLumber = 1000;
+// array of all of the users buildings
+var usersBuildings = [];
 
 // When the user starts to make a selection, keep
 // track of the world coords where they clicked so
@@ -88,17 +94,14 @@ var selEndWorldCoords = [0,0];
 // the material the selected object will have
 var selectedEffect = null;
 var nosel = false;
-lastSelectedObjID = -1;
-
+var lastSelectedObjID = -1;
+var objectSelected = null;
+var selectedObjectID = NONE_SELECTED;
 var clickTimeDiff = 0;
 var numClicks = 0;
 
-var objectSelected = null;
-var selectedObjectID = NONE_SELECTED;
-
-// array of all of the users buildings
-var usersBuildings = [];
-
+// Camera
+var cam;
 var isCamMovingLeft = false;
 var isCamMovingRight = false;
 var isCamMovingUp = false;
@@ -202,15 +205,15 @@ function outline(detail, color, radius) {
   function init() {
     var lineVerts = [];
     var x = 0;
-    var y = 1 * radius;
+    var y = radius;
     var num_lines = Math.PI * 2 / OUTLINE_DETAIL;
 
-    for(var i = 0; i <= Math.PI * 2; i+= num_lines)
+    for(var i = 0; i <= Math.PI * 2; i += num_lines)
     {
-      lineVerts.push([x, 1, y]);
+      lineVerts.push([x, OUTLINE_HEIGHT, y]);
       x = Math.sin(i) * radius;
       y = Math.cos(i) * radius;
-      lineVerts.push([x, 1, y]);
+      lineVerts.push([x, OUTLINE_HEIGHT, y]);
     }
 
     for (var i = 0; i < lineVerts.length; i+=2) {
@@ -344,9 +347,8 @@ function canvasMain(canvasName) {
 */
 function setDefaultCamView() {
   cam.setOrbitPoint([0,0,0]);
-  //cam.setPosition([0,CAM_FARTHEST_DISTANCE,0]);
-  //cam.pitch(1);
-  //cam.yaw(Math.PI);
+  cam.setPosition([0,0,CAM_FARTHEST_DISTANCE]);
+  cam.pitch(Math.PI/4);
 }
 
 /*
@@ -457,6 +459,11 @@ function mouseUp() {
 
 /*
 */
+function moveCamera() {
+}
+
+/*
+*/
 function mouseDown(event) {
 
   mouseIsDown = true;
@@ -505,7 +512,7 @@ function mouseWheel(event) {
       if (-delta * ZOOM_SENSITIVITY < 0) {
         if(cam.goFarther(-1 * -delta * ZOOM_SENSITIVITY)) {
           if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) < 90){
-            cam.pitch(0.1);
+            cam.pitch(0.15);
           }
         }
       }
@@ -515,7 +522,8 @@ function mouseWheel(event) {
         if(cam.goCloser(-delta * ZOOM_SENSITIVITY))
         {
           if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) > 20){
-            cam.pitch(-0.1);
+            cam.pitch(-0.15);
+           // c3dl.debug.logInfo(cam.getPosition());
           }
         }
       }
@@ -523,7 +531,8 @@ function mouseWheel(event) {
   }
 }
 
-
+/*
+*/
 function onKeyDown(event) {
 
   switch(event.keyCode) {
@@ -838,7 +847,8 @@ function update(deltaTime) {
   if (isCamMovingLeft && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingRight && mouseIsDown) {
+  }
+  else if (isCamMovingRight && mouseIsDown) {
     var dir = c3dl.multiplyVector(cam.getLeft(), -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
   }
@@ -847,7 +857,8 @@ function update(deltaTime) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
-  } else if (isCamMovingDown && mouseIsDown) {
+  }
+  else if (isCamMovingDown && mouseIsDown) {
     var dir = c3dl.vectorCrossProduct(cam.getLeft(), [0, 1, 0]);
     dir = c3dl.multiplyVector(dir, -s);
     cam.setOrbitPoint(c3dl.addVectors(cam.getOrbitPoint(), dir));
