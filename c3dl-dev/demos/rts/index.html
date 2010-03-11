@@ -4,7 +4,6 @@
     <script language="javascript" src="../../../c3dl/c3dapi.js"></script>
     <script language="javascript" src="source/main.js"></script>
     <script language="javascript" src="source/building.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
 
   <body background="#FFFFFF">
@@ -15,15 +14,15 @@
       
     <table border="0" align="center">
       <tr>
-        <td width="50%">
-          <img src="images/money.gif" align="absmiddle" /><span style="font-size:24pt;" id="usersMoney">2000</span><br />
+        <td width="250">
+          <img src="images/money.gif" align="absmiddle" /><span style="font-size:24pt;font-family:verdana;" id="usersMoney">2000</span><br />
         </td>
-        <td align="left" width="50%">
-          <img src="images/lumber.gif" align="absmiddle" /><span style="font-size:24pt;" id="usersLumber">1000</span><br />
+        <td align="left" width="250">
+          <img src="images/lumber.gif" align="absmiddle" /><span style="font-size:24pt;font-family:verdana;" id="usersLumber">1000</span><br />
         </td>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="2" align="center">
           <canvas id="rts" width="500" height="500"></canvas>
         </td>
       </tr>
@@ -39,10 +38,10 @@
         </td>
       </tr>
     </table>
-    ESC -> cancel building <br />
-    M -> +500 money (debugging) <br />
-    Y + wheel -> Yaw camera<br />
-    H -> camera home
-    Arrow keys -> move camera<br />
+    <br />
+    <br />
+    
+    <a href="#" id="help_link" style="font-family:verdana;" onclick="displayHelp();">Help [+]</a><br />
+    <span id="help_desc"></span>
   </body>
 </html>
