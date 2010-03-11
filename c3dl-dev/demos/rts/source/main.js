@@ -13,6 +13,7 @@ const HOUSE_PATH        = "models/house/house.dae";
 const LUMBER_YARD_PATH  = "models/lumber_yard/lumber_yard.dae";
 const PERSON_PATH       = "models/person/person.dae";
 const PLANE_PATH        = "models/plane/plane.dae";
+const SPHERE_PATH       = "models/skysphere.dae"
 
 c3dl.addModel(BANK_PATH);
 c3dl.addModel(BARRACKS_PATH);
@@ -23,6 +24,63 @@ c3dl.addModel(HOUSE_PATH);
 c3dl.addModel(LUMBER_YARD_PATH);
 c3dl.addModel(PERSON_PATH);
 c3dl.addModel(PLANE_PATH);
+c3dl.addModel(SPHERE_PATH);
+
+// consts 
+const TOWN_HALL = 1;
+
+
+var board1 = [
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,0,0,0,0,0,0,0,0,0],
+];
+
+/*
+*/
+function loadLevel(board) {
+  for (var z = 0; z < board.length; z++) {
+    for (var x = 0; x < board[z].length; x++) {
+      switch (board[z][x]) {
+        case 0:
+        {
+          var earth = new c3dl.Collada();
+          earth.init(PLANE_PATH);
+          // move down y to prevent z-fighting with planes
+          // under models
+          earth.scale([5,1,5]);
+          earth.translate([z*50,-0.5,x*50]);
+          //set the id for later use during picking
+          earth.id = i;
+          scn.addObjectToScene(earth);
+        }break;
+        case 1:
+        {
+          var townHall = new c3dl.Collada();
+          townHall.init(BARRACKS_PATH);
+          townHall.translate([z*10,0,x*10]);
+          scn.addObjectToScene(townHall);
+          
+           var earth = new c3dl.Collada();
+          earth.init(PLANE_PATH);
+          // move down y to prevent z-fighting with planes
+          // under models
+          earth.translate([z*10,-0.5,x*10]);
+          //set the id for later use during picking
+          earth.id = i;
+          scn.addObjectToScene(earth);
+        }break;
+      }
+    }
+  }
+}
 
 // keys
 const KEY_ESC   = 27;
@@ -349,7 +407,7 @@ function canvasMain(canvasName) {
   selection.init();
   selection.setBounds(0, 0, 50, 50);
   selection.setVisible(false);
-
+/*
   // Create the game board
   var r = -1;
   var c = -1;
@@ -359,19 +417,37 @@ function canvasMain(canvasName) {
       c = -1
     }
 
+/*
     var earth = new c3dl.Collada();
     earth.init(PLANE_PATH);
     // move down y to prevent z-fighting with planes
     // under models
-    earth.translate([r*10,-0.5,c*10]);
+    earth.translate([r*11,-0.5,c*11]);
     //set the id for later use during picking
     earth.id = i;
     scn.addObjectToScene(earth);
   }
 
+  var water = new c3dl.Collada();
+  water.init(PLANE_PATH);
+  water.setTexture("http://www.filterforge.com/filters/4141.jpg");
+  water.translate([0,-3,0]);
+  water.scale([50,1,50]);
+  scn.addObjectToScene(water);*/
+    
+  loadLevel(board1);
+    
+   var s = new c3dl.Collada();
+  s.init(SPHERE_PATH);
+  s.yaw(Math.PI/2);
+  s.pitch(1);
+  scn.setSkyModel(s);
+  
   updateDOM();
 
   scn.setCamera(cam);
+  setDefaultCamView();
+  
   scn.startScene();
   scn.setKeyboardCallback(onKeyUp, onKeyDown);
   scn.setMouseCallback(mouseUp, mouseDown, mouseMove, mouseWheel);
@@ -385,7 +461,8 @@ function canvasMain(canvasName) {
 function setDefaultCamView() {
   cam.setOrbitPoint([0,0,0]);
   cam.setPosition([0,0,CAM_FARTHEST_DISTANCE]);
-  cam.pitch(Math.PI/4);
+  cam.setPosition([0,CAM_FARTHEST_DISTANCE,0]);
+  cam.pitch(-Math.PI/5);
 }
 
 /*
@@ -569,9 +646,12 @@ function mouseWheel(event) {
       else {
         if(cam.goCloser(-delta * ZOOM_SENSITIVITY))
         {
-          if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) > 20){
+          if(c3dl.getAngleBetweenVectors(cam.getUp(), [0,1,0]) > 10){
             cam.pitch(-0.15);
-           // c3dl.debug.logInfo(cam.getPosition());
+          }
+          // back out
+          else{
+            cam.goFarther(-delta*ZOOM_SENSITIVITY);
           }
         }
       }
@@ -963,5 +1043,24 @@ function picking(pickingObj) {
         }
       }
     }
+  }
+}
+
+function displayHelp() {
+  var help_link = document.getElementById('help_link');
+  var help_desc = document.getElementById('help_desc');
+  
+  if(help_link.innerHTML === "Help [+]") {
+    help_desc.innerHTML = "Mouse Wheel - Zoom<br />";
+    help_desc.innerHTML += "Mouse Wheel + 'Y' - Yaw<br />";
+    help_desc.innerHTML += "'M' - more money!<br />";
+    help_desc.innerHTML += "'H' - Return camera 'Home'<br />";
+    help_desc.innerHTML += "'Esc' - Cancel building construction<br />";
+
+    help_link.innerHTML = "Help [-]";
+  }
+  else {
+    help_link.innerHTML = "Help [+]";
+    help_desc.innerHTML = "";
   }
 }
