@@ -55,8 +55,8 @@ function loadLevel(board) {
           earth.init(PLANE_PATH);
           // move down y to prevent z-fighting with planes
           // under models
-          earth.scale([5,1,5]);
-          earth.translate([z*50,-0.5,x*50]);
+          earth.scale([3,1,3]);
+          earth.translate([z*30,-0.5,x*30]);
           //set the id for later use during picking
           earth.id = i;
           scn.addObjectToScene(earth);
@@ -364,10 +364,6 @@ var keysDown = (
   First function which gets called
 */
 function canvasMain(canvasName) {
-
- // alert(keysDown.KEY_A);
- // keysDown.KEY_A = true;
- // alert(keysDown.KEY_A);
   
   // standard C3DL initialization
   scn = new c3dl.Scene();
@@ -381,7 +377,6 @@ function canvasMain(canvasName) {
   cam.setFarthestDistance(CAM_FARTHEST_DISTANCE);
   cam.setClosestDistance(CAM_CLOSEST_DISTANCE);
   setDefaultCamView();
-
 
   // Effect used when game objects are selected
   selectedEffect = new c3dl.Effect();
@@ -416,8 +411,6 @@ function canvasMain(canvasName) {
       r++;
       c = -1
     }
-
-/*
     var earth = new c3dl.Collada();
     earth.init(PLANE_PATH);
     // move down y to prevent z-fighting with planes
@@ -426,14 +419,7 @@ function canvasMain(canvasName) {
     //set the id for later use during picking
     earth.id = i;
     scn.addObjectToScene(earth);
-  }
-
-  var water = new c3dl.Collada();
-  water.init(PLANE_PATH);
-  water.setTexture("http://www.filterforge.com/filters/4141.jpg");
-  water.translate([0,-3,0]);
-  water.scale([50,1,50]);
-  scn.addObjectToScene(water);*/
+  }*/
     
   loadLevel(board1);
     
@@ -459,10 +445,15 @@ function canvasMain(canvasName) {
   
 */
 function setDefaultCamView() {
-  cam.setOrbitPoint([0,0,0]);
-  cam.setPosition([0,0,CAM_FARTHEST_DISTANCE]);
-  cam.setPosition([0,CAM_FARTHEST_DISTANCE,0]);
-  cam.pitch(-Math.PI/5);
+  // All this code tells me we have to add a few helper functions to the 
+  // orbit camera
+  cam.setOrbitPoint([80,0,80]);
+  cam.setClosestDistance(0);
+  cam.setPosition([80,0,81]);
+  cam.setDistance(100);
+  cam.pitch(Math.PI/5);
+ 
+ cam.setClosestDistance(CAM_CLOSEST_DISTANCE);
 }
 
 /*
@@ -1050,12 +1041,20 @@ function displayHelp() {
   var help_link = document.getElementById('help_link');
   var help_desc = document.getElementById('help_desc');
   
-  if(help_link.innerHTML === "Help [+]") {
-    help_desc.innerHTML = "Mouse Wheel - Zoom<br />";
+  var help = help_link.innerHTML;
+  
+  // Minefield is forcing me to have the innerHTMLs everywhere...why?
+  if(help == "Help [+]") {
+    help_desc.innerHTML = "Click + Drag  - Create selection<br />";
+    help_desc.innerHTML += "Double-Click - Center on clicked object<br />";
+    help_desc.innerHTML += "Click on border - Move camera<br />";
+    help_desc.innerHTML += "Mouse Wheel - Zoom<br />";
     help_desc.innerHTML += "Mouse Wheel + 'Y' - Yaw<br />";
+    help_desc.innerHTML += "<br />";
     help_desc.innerHTML += "'M' - more money!<br />";
     help_desc.innerHTML += "'H' - Return camera 'Home'<br />";
     help_desc.innerHTML += "'Esc' - Cancel building construction<br />";
+    help_desc.innerHTML += "'Arrow Keys' - Move camera<br />";
 
     help_link.innerHTML = "Help [-]";
   }
