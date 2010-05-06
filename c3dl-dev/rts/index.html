@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>C3DL - RTS</title>
+    <script language="javascript" src="../../c3dl/c3dapi.js"></script>
+    <script language="javascript" src="senecamain.js"></script>
+		<script language="javascript" src="building.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="gamescreen">
+      <div class="mainmap">
+        <canvas id="Seneca Island" width="650" height="500"></canvas>
+      </div>
+      <div class="sidebar">
+        <div id="status" class="statusarea">
+          <p>status
+        </div>
+        <div id="message" class="messagearea">
+          <p>message
+        </div>
+      </div>
+    </div> 
+      <div class="buttons">						
+        <img src="images/firehall.png" id="firehall" onclick="createObject(0)"/>
+        <img src="images/lumber.png" id="lumber"  onclick="createObject(1)"/>
+        <img src="images/house.png" id="house"  onclick="createObject(2)"/>
+        <img src="images/bank.png" id="bank"  onclick="createObject(3)"/>
+      </div>
+  </body>
+</html>
