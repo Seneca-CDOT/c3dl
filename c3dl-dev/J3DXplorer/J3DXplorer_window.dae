@@ -10,7 +10,7 @@
     <created>2008-12-18T07:32:14Z</created>
     <modified>2008-12-18T07:32:15Z</modified>
     <unit meter="0.0254" name="inch"/>
-    <up_axis>Z_UP</up_axis>
+    <up_axis>Y_UP</up_axis>
   </asset>
   <library_images>
     <image id="WindowTexture.jpg" name="WindowTexture_jpg">
