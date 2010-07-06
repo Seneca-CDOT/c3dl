@@ -402,18 +402,18 @@ c3dl.Actor.prototype.update = function(timeStep)
 	// if update took longer than 1/2 a second, it was
 	// probably the GC, so don't apply angular velocities
 	// since that will change the directions.
-	if(timeStep < 500)
-	{
 		// Add a velocity to the position
-		var velVec = this.linVel;
-		c3dl.multiplyVector(velVec, timeStep);
+		var velVec = [];
+		//c3dl.multiplyVector(velVec, timeStep);
+		velVec[0] = this.linVel[0] *timeStep;
+		velVec[1] = this.linVel[1] *timeStep;
+		velVec[2] = this.linVel[2] *timeStep;
 		c3dl.addVectors(this.pos, velVec, this.pos);
 
 		// Apply some rotations to the orientation from the angular velocity
 		this.pitch(this.angVel[0] * timeStep);
 		this.yaw(this.angVel[1] * timeStep);
 		this.roll(this.angVel[2] * timeStep);
-	}
 }
 
 /**
