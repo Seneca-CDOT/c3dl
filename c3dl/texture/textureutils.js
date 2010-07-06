@@ -1,9 +1,9 @@
 /**
  @private
  
- Check if a texture has the correct dimensions for OpenGL.  The texture 
- must not be too small, that is must be greater than 1x1. and must have
- a size of a power of 2: 2x2, 4x4, 8x8, 16x16, etc.
+ Check if a texture has the correct dimensions for WebGL.  The texture 
+ must not be too small, that is, it must be greater than 1x1. And it must be 
+ a power of 2: 2x2, 4x4, 8x8, 16x16, etc.
  
  @param texture
  

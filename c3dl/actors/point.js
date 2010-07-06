@@ -5,7 +5,7 @@
 
 /**
  @class c3dl.Point is an object with a position and color which will be
- rendered using OpenGL's built-in point rendering (either as a circle or
+ rendered using WebGL's built-in point rendering (either as a circle or
  square depending on smoothing) or rendered as sphere meshes.<br />
  <br />
  The default rendering mode for any scene renders the points as sphere

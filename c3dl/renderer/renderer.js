@@ -4,7 +4,7 @@
 */
 
 /**
- @class base class for OpenGLES20.
+ @class base class for WebGL.
  */
 c3dl.Renderer = function ()
 {
@@ -51,9 +51,9 @@ c3dl.Renderer = function ()
   }
 
   /**
-   Get the OpenGL ES Version string.
+   Get the WebGL version string.
    
-   @returns {"Renderer interface" | "OpenGL ES 2.0"} "Renderer interface" is returned if the Renderer was not instantiated correctly.
+   @returns {"Renderer interface" | "WebGL"} "Renderer interface" is returned if the Renderer was not instantiated correctly.
    */
   this.getVersionString = function ()
   {

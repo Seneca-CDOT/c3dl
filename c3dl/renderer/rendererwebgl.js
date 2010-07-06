@@ -116,7 +116,7 @@ c3dl.WebGL = function ()
   }
 
   /**
-   Get the OpenGL context.
+   Get the WebGL context.
    
    @returns {Context} The GL Context.
    */
@@ -140,14 +140,14 @@ c3dl.WebGL = function ()
    */
   this.createProgram = function (vertexShader, fragmentShader)
   {
-    // We don't check the parameters because the openGL functions will already
+    // We don't check the parameters because the WebGL functions will already
     // be checking to make sure the source is valid when it compiles them. If 
     // they are invalid, error messages will be displayed on the page.
     // make alias for shorter code.
     var gl = glCanvas3D;
 
     // createProgram creates a program object to which our shaders can be
-    // attached. We can later tell openGL which program to use by 
+    // attached. We can later tell WebGL which program to use by 
     // calling useProgram().
     var program = gl.createProgram();
 
@@ -206,7 +206,7 @@ c3dl.WebGL = function ()
       return null;
     }
 
-    // create a program object, similar to an opengl program object.
+    // create a program object, similar to an WebGL program object.
     var programObject = new c3dl.ProgramObject();
     programObject.rendererID = this.ID;
     programObject.programID = program;
@@ -259,7 +259,7 @@ c3dl.WebGL = function ()
   this.getMaxLineWidth = function ()
   {
     // returns the range, first value represents minimum value supported.
-    // opengles guarantees support for width of 1.
+    // WebGL guarantees support for width of 1.
     // should this be checked once on init and then we don't have to keep querying?
     var maxLineWidth = glCanvas3D.getParameter(glCanvas3D.ALIASED_LINE_WIDTH_RANGE);
 
@@ -953,7 +953,7 @@ c3dl.WebGL = function ()
    */
   this.renderPoints = function (pointPositions, pointColors, attenuation, pointSmooth, mode, size)
   {
-    // trying to render an empty list will result in an opengl error
+    // trying to render an empty list will result in an WebGL error
     if (pointPositions.length > 0 && pointColors.length > 0)
     {
       if (mode == c3dl.POINT_MODE_POINT)
@@ -1132,7 +1132,7 @@ c3dl.WebGL = function ()
    rendering state by calling useProgram().<br />
    <br />
    The size of the value will be queried and depending on its size, the 
-   appropriate OpenGL command will be called either uniform1f or 
+   appropriate WebGL command will be called either uniform1f or 
    uniform{1|2|3|4}fv.<br />
    <br />
    On some systems, if the variable exists in the shader but isn't used,
@@ -1182,7 +1182,7 @@ c3dl.WebGL = function ()
    rendering state by calling useProgram().<br />
    <br />
    The size of the value will be queried and depending on its size, the 
-   appropriate OpenGL command will be called either uniform1i or 
+   appropriate WebGL command will be called either uniform1i or 
    uniform{1|2|3|4}iv.<br />
    <br />
    On some systems, if the variable exists in the shader but isn't used,
@@ -1228,7 +1228,7 @@ c3dl.WebGL = function ()
 
   /**
    @private
-   Enable an OpenGL server-side capability.
+   Enable an WebGL server-side capability.
    
    @param {int} capability
    */
@@ -1257,13 +1257,13 @@ c3dl.WebGL = function ()
   /**
    @private
    
-   Disable a server-side OpenGL capability. This wraps the OpenGL ES
+   Disable a server-side WebGL capability. This wraps the WebGL 
    'disable' command and adds a conditional to make sure the capability is
    supported before trying to change the state.  If the capability is not
    supported and the state is change, the script could be prevented 
    from running.
    
-   @param {int} capability OpenGL ES capability
+   @param {int} capability WebGL capability
    */
   this.disable = function (capability)
   {

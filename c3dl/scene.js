@@ -11,7 +11,7 @@
 c3dl.Scene = function ()
 {
   // Engine Variables
-  var glCanvas3D = null; // OpenGL Context (Canvas)
+  var glCanvas3D = null; // WebGL Context (Canvas)
   var renderer = null;
   var camera = null; // Reference to a Camera type
   var projMat = null;
@@ -493,7 +493,7 @@ c3dl.Scene = function ()
   /**
    Set the renderer used to render the scene.
    
-   @param {c3dl.OpenGLES20} renderType
+   @param {c3dl.WebGL} renderType
    */
   this.setRenderer = function (renderType)
   {
@@ -771,7 +771,7 @@ c3dl.Scene = function ()
 
 
   /**
-   Acquire the OpenGL Context
+   Acquire the WebGL Context
    
    @returns {boolean} true if the renderer was initialized, otherwise false.
    */
@@ -864,9 +864,9 @@ c3dl.Scene = function ()
    */
   this.removeLight = function (lightName)
   {
-    // There are 2 copies of the light, one in our js code and one in the opengl
+    // There are 2 copies of the light, one in our js code and one in the WebGL
     // state variable.  We need to remove the light object from our list and set
-    // the opengl state variable to all zeros so it will no longer affect the scene.
+    // the WebGL state variable to all zeros so it will no longer affect the scene.
     // first find the index of the light in our array.
     var lightID = -1;
     for (var i = 0; i < lightList.length && lightID == -1; i++)
@@ -877,7 +877,7 @@ c3dl.Scene = function ()
       }
     }
 
-    // now that we have the index, we have to set the corresponding opengl state
+    // now that we have the index, we have to set the corresponding WebGL state
     // to zeros, which will prevent the light from affecting the scene.
     //
     if (lightID != -1)
@@ -887,7 +887,7 @@ c3dl.Scene = function ()
       // the light seems to stay on and can't be removed.		
       lightList[lightID] = null;
 
-      // we removed the light from our list, but openGL still has
+      // we removed the light from our list, but WebGL still has
       // a light state which needs to be cleared.  Otherwise the
       // light will still affect the scene.
       renderer.clearLight(lightID);
@@ -897,7 +897,7 @@ c3dl.Scene = function ()
 
   /**
    @private
-   Update the OpenGL light state variables with our list of lights
+   Update the WebGL light state variables with our list of lights
    This happens every frame.
    */
   this.updateLights = function ()
@@ -1060,7 +1060,7 @@ c3dl.Scene = function ()
     // projection matrix was used, it can query the scene.
     projMat = camera.getProjectionMatrix();
 
-    // now that the view matrix has been pushed onto the opengl matrix stack,
+    // now that the view matrix has been pushed onto the matrix stack,
     // we can specify the locations of the lights, which will use the top of the
     // matrix stack.
     thisScn.updateLights();

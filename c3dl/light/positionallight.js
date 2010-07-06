@@ -15,7 +15,7 @@ c3dl.PositionalLight = function ()
 {
   this.position = [0, 0, 0];
 
-  // use opengl default attenuation factors.
+  // use OpenGL default attenuation factors.
   // element 0 is for constant attenuation
   // element 1 is for linear attenuation
   // element 2 is for quadratic attenuation

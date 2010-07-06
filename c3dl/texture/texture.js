@@ -6,9 +6,9 @@
 /**
  @private
  @class A Texture is an image which is to be wrapped around a Model object. A 
- texture has a unique ID which can be used to identify it in openGL.
+ texture has a unique ID which can be used to identify it in WebGL.
  
- <p>To create a texture, call setup() passing in the OpenGL context as
+ <p>To create a texture, call setup() passing in the WebGL context as
  well as the path to the image.</p>
  */
 c3dl.Texture = function ()
@@ -23,7 +23,7 @@ c3dl.Texture = function ()
   /**
    @private
    Get the texture ID, the texture ID is a unique number which
-   we can use to notify what texture in opengl we want
+   we can use to notify what texture in WebGL we want
    to work with.
    
    @returns {int} The ID of the texture if the texture has been 
@@ -134,7 +134,7 @@ c3dl.Texture = function ()
       /**
        @private
        */
-      textureImage.setupOpenGL = function ()
+      textureImage.setupWebGL = function ()
       {
         // bindtexture() sets the selected texture (by id) to be 
         // the current texture.  the current texture is the one 
@@ -144,7 +144,7 @@ c3dl.Texture = function ()
 
       /**
        @private
-       Resize the texture so it can be used in OpenGL.  The texture 
+       Resize the texture so it can be used in WebGL.  The texture 
        may be distorted, but at least it will display something.
        The user will be notified their texture should be modified.		
        */
@@ -169,7 +169,7 @@ c3dl.Texture = function ()
       textureImage.onload = function ()
       {
         //
-        this.setupOpenGL();
+        this.setupWebGL();
 
         try
         {

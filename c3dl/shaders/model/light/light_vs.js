@@ -44,7 +44,7 @@ c3dl.light_vs =
 //
 "const int C3DL_MAX_LIGHTS = 7;" +
 
-// custom light structures needed, we can't access opengl light states.
+// custom light structures needed, we can't access WebGL light states.
 "uniform Light lights[C3DL_MAX_LIGHTS];" +
 
 

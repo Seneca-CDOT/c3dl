@@ -7,7 +7,7 @@
 /**
  @private
  @class TextureManager is a class designed to prevent the same 
- texture from being loaded more than once in the OpenGL context.
+ texture from being loaded more than once in the WebGL context.
  Users of the library don't actually have to bother with using it,
  they just have to create their Textures.
  */
@@ -85,7 +85,7 @@ c3dl.TextureManager = function (gl)
     if (this.getID(relativePath) != -1)
     {
       // remove it from this list?
-      // remove it from opengl
+      // remove it from WebGL
     }
   }
 
@@ -117,7 +117,7 @@ c3dl.TextureManager = function (gl)
 
   /**
    @private	
-   Get a string representation of this class. Will display all the OpenGLES 
+   Get a string representation of this class. Will display all the WebGL 
    texture IDs along with the associated texture path.
    
    @param {null|String} delimiter A string which will separate values. Typically will be 

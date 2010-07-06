@@ -829,7 +829,7 @@ c3dl.ColladaLoader = function ()
 
       // We now have the faces for a collation element and its input data streams,
       // however if the collation element is a <polylist> or <polygon>, we'll need to
-      // re-arrange some of the faces since OpenGLES does not support quads.
+      // re-arrange some of the faces since WebGL does not support quads.
       //  The next two conditionals handle these two cases.
 
       // <polylist> contains a list of polygons, each which can contains a different number 
@@ -846,7 +846,7 @@ c3dl.ColladaLoader = function ()
       // before we group the individual values in the faces array into
       // arrays so we can easily address values in the arrays for vertices,
       // textures, etc, we have to convert the quads into triangles since
-      // OpenGLES does not support the QUADS primitive mode.
+      // WebGL does not support the QUADS primitive mode.
       else if (collations[currColl].nodeName == "polygons")
       {
         // example looks like this:

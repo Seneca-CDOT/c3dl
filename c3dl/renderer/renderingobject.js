@@ -57,7 +57,7 @@ c3dl.RenderingObject = function ()
    useful state information as well as helper functions to easily set
    uniform and vertex attribute variables.
    
-   @returns {c3dl.OpenGLES20} the renderer used to render the geometry.
+   @returns {c3dl.WebGL} the renderer used to render the geometry.
    */
   this.getRenderer = function ()
   {

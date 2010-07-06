@@ -34,7 +34,7 @@ c3dl.VERTEX_PROGRAM_POINT_SIZE = 0x8642;
 c3dl.POINT_SMOOTH = 0x0B10;
 
 /**  
- To render c3dl.Point objects using the built-in OpenGL
+ To render c3dl.Point objects using the built-in WebGL
  points rendering ( using circles ), pass this value to
  the Scene's setPointRenderingMode() method.
  
@@ -299,7 +299,7 @@ c3dl.FUNC_REVERSE_SUBTRACT = 0x800B;
 /**
  @private
  When we try to get a location of a variable from a shader program,
- it may not exist.  If that is the case, opengles will return -1 to
+ it may not exist.  If that is the case, WebGL will return -1 to
  indicate that.
  @constant
  */

@@ -22,7 +22,7 @@
  */
 c3dl.DirectionalLight = function ()
 {
-  // opengl will interpret the light as directional if
+  // WebGL will interpret the light as directional if
   // the last value specified for POSITION is 0 and
   // positional if the last value for POSITION is 1.
   // We use a 'direction' variable, but when given the light direction needs
@@ -37,7 +37,7 @@ c3dl.DirectionalLight = function ()
    */
   this.getDirection = function ()
   {
-    return [this.direction[0], this.direction[1], this.direction[2]]
+    return [this.direction[0], this.direction[1], this.direction[2]];
   }
 
   /**

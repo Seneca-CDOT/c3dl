@@ -12,7 +12,7 @@ c3dl.Projection = [];
 // start with the modelview.
 c3dl.CurrentStackPointer = c3dl.ModelView;
 
-// like Opengl, our stack starts off with an identity matrix. Here, we 
+// like OpenGL, our stack starts off with an identity matrix. Here, we 
 // have to access the stacks directly since at this point we don't 
 // have access to the functions since they aren't defined yet.
 c3dl.ModelView.push(c3dl.makeIdentityMatrix());
@@ -38,7 +38,7 @@ c3dl.matrixMode = function (mode)
 
 
 /**
- create a copy of the top element and push on that copy. This results
+ Create a copy of the top element and push on that copy. This results
  in the first two element being identical. This is simply emulating what
  OpenGL does.
  */

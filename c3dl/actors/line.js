@@ -116,7 +116,7 @@ c3dl.Line = function ()
    */
   this.setWidth = function (width)
   {
-    // if a line width of 0 is passed to opengl, it will use a line with of 1, so 
+    // if a line width of 0 is passed to WebGL, it will use a line with of 1, so 
     // don't bother allowing the user to specify anything below 1.
     if (width >= 1)
     {

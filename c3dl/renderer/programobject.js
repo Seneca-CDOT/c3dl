@@ -7,7 +7,7 @@
  @private
  
  @class ProgramObject is used to store a program object ID, which 
- OpenGL generates along with the ID of the renderer which compiled
+ WebGL generates along with the ID of the renderer which compiled
  the shaders resulting in the program ID. 
  */
 c3dl.ProgramObject = function ()

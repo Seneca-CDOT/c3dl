@@ -13,15 +13,15 @@ c3dl.ParticleSystem = function ()
   // a copy of uv coords in each particle, keep one copy
   // in the particle system.
   this.particleUVs = [1, 1, //
-  1, 0, //
-  0, 0, //
-  0, 1]; //
+                      1, 0, //
+                      0, 0, //
+                      0, 1]; //
   // winding order of these verts is counter-clockwise, the same as models. This
-  // prevents having to change the winding order state in openGL when rendering.
+  // prevents having to change the winding order state in WebGL when rendering.
   this.billboardVerts = [1, -1, 0, // bottom right
-  1, 1, 0, // top right
-  - 1, 1, 0, // top left
-  - 1, -1, 0]; // bottom left
+                         1,  1, 0, // top right
+                       - 1,  1, 0, // top left
+                       - 1, -1, 0]; // bottom left
   // this particle system's transformation matrix
   this.mat = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
@@ -925,7 +925,7 @@ c3dl.ParticleSystem = function ()
       var topRight = c3dl.addVectors(camRight, this.camUp);
 
       // use counter clockwise order since models vertices are also counter clockwise.
-      // This prevents having to change the openGL state of the winding order when 
+      // This prevents having to change the WebGL state of the winding order when 
       // switching between rendering models and particle systems.			
       this.billboardVerts = [bottomRight[0], bottomRight[1], bottomRight[2], 
                              topRight[0], topRight[1], topRight[2], 
