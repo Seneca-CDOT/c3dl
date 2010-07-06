@@ -4,7 +4,6 @@
 */
 
 c3dl.line_fs = 
-
 "void main(void){ " + 
 "  gl_FragColor = gl_Color;" +
 "}";

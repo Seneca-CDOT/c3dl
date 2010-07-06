@@ -10,7 +10,7 @@
     <created>2008-12-19T19:14:30Z</created>
     <modified>2008-12-19T19:14:31Z</modified>
     <unit meter="0.0254" name="inch"/>
-    <up_axis>Z_UP</up_axis>
+    <up_axis>Y_UP</up_axis>
   </asset>
   <library_images>
     <image id="SkySphere02_Texture.jpg" name="SkySphere02_Texture_jpg">

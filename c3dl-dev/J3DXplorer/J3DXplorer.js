@@ -31,11 +31,10 @@ function J3DXplorer_main(canvasName)
 	scn.setRenderer(renderer);
 	scn.init(canvasName);
 	if(!renderer.isReady()){
-		var imgtag=document.getElementById("screenshot"); 
-		imgtag.style.display="block";
-		var canvas=document.getElementById(canvasName);
-		canvas.style.display="none";
-
+                var imgtag=document.getElementById("screenshot");
+                imgtag.style.display="block";
+                var canvas=document.getElementById(canvasName);
+                canvas.style.display="none";
 	}
 	else{
 	var j=0;	
@@ -83,13 +82,12 @@ function J3DXplorer_main(canvasName)
 	// SkySphere
 	var skySphere = new c3dl.Collada();			
 	skySphere.init("SkySphere.dae");
-	skySphere.translate([0,0,100]);
 	skySphere.setAngularVel(new Array(0,.00005,0));
 	skySphere.setPickable(false);
 	scn.addObjectToScene(skySphere);
 	
 	//
-	scn.setBackgroundColor([0.15,0.15,0.15]);
+	//scn.setBackgroundColor([0.15,0.15,0.15]);
 	scn.setAmbientLight([1,1,1]);
 	cam.setPosition([0,0,-30.0]);
 	cam.setLookAtPoint([0,0,0]);

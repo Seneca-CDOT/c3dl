@@ -4,11 +4,12 @@
 */
 
 /**
-  @private
-
-  class ColladaLoader is used by the ModelManager to load .DAE (COLLADA) files.
-*/
-c3dl.ColladaLoader = function () {
+ @private
+ 
+ class ColladaLoader is used by the ModelManager to load .DAE (COLLADA) files.
+ */
+c3dl.ColladaLoader = function ()
+{
   var XHR_STATE_COMPLETED = 4;
   var xmlhttp = null;
   this.done = false;
@@ -16,14 +17,15 @@ c3dl.ColladaLoader = function () {
   this.rootNode = new c3dl.SceneNode();
 
   /**
-    @private
-    Opens the DAE file, reads the vertex, normal and uv data and stores 
-    all the data in 'expanded' form into members.
+   @private
+   Opens the DAE file, reads the vertex, normal and uv data and stores 
+   all the data in 'expanded' form into members.
    
-    @param {String} relativePath
-    @param {c3dl.SceneNode} rootNode
-  */
-  this.load = function (relativePath, rootNode) {
+   @param {String} relativePath
+   @param {c3dl.SceneNode} rootNode
+   */
+  this.load = function (relativePath, rootNode)
+  {
     //
     this.rootNode = rootNode;
 
@@ -39,22 +41,27 @@ c3dl.ColladaLoader = function () {
 
     // this may throw an exception if the file isn't found, so 
     // catch the exception and give the user a helpful warning message.
-    try {
+    try
+    {
       // send the request
       xmlhttp.send(null);
     }
-    catch (err) {
+    catch (err)
+    {
       c3dl.debug.logWarning("Could not find file '" + relativePath + "'. Check the path.");
     }
 
     /**
      @private
-    */
-    xmlhttp.onreadystatechange = function () {
+     */
+    xmlhttp.onreadystatechange = function ()
+    {
       // when the state has changed to being finished, 
-      if (xmlhttp.readyState == XHR_STATE_COMPLETED) {
+      if (xmlhttp.readyState == XHR_STATE_COMPLETED)
+      {
         // this line may not be totally nnecessary.
-        if (xmlhttp.responseXML) {
+        if (xmlhttp.responseXML)
+        {
           xmlhttp.responseXML.colladaPath = relativePath;
 
           // we can now parse by calling the callback which 
@@ -67,33 +74,37 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-
-    Parse a node from the DAE file.  The part of the DAE file
-    we are interested with is the scenegraph which is a hierarchical
-    structure of nodes.  Nodes therefore can contain other nodes, thus
-    we use a recursive function to parse each one.
-
-    // clarify nodes in sg nodes in _DOM_
-    @param {xmlDocument} xmlObject The DAE DOM.
-    @param {} node The node element to parse. the DOM
-    @param {c3dl.SceneNode} sgNode The SceneGraph node, not part of the XML DOM.
-  */
-  this.parseNodeRecursive = function (xmlObject, node, sgNode) {
+   @private
+   
+   Parse a node from the DAE file.  The part of the DAE file
+   we are interested with is the scenegraph which is a hierarchical
+   structure of nodes.  Nodes therefore can contain other nodes, thus
+   we use a recursive function to parse each one.
+   
+   // clarify nodes in sg nodes in _DOM_
+   @param {xmlDocument} xmlObject The DAE DOM.
+   @param {} node The node element to parse. the DOM
+   @param {c3dl.SceneNode} sgNode The SceneGraph node, not part of the XML DOM.
+   */
+  this.parseNodeRecursive = function (xmlObject, node, sgNode)
+  {
     // set this node's transform
     var translateTag = c3dl.ColladaLoader.getChildNodesByNodeName(node, "translate");
 
     // node may not have one, so check first
-    if (translateTag) {
+    if (translateTag)
+    {
       // string representation of data between <translate> tags.
       var floatValues = c3dl.ColladaLoader.stringsToFloats(translateTag[0].childNodes[0].nodeValue, ' ');
 
-      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
+      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+      {
         var temp = floatValues[1];
         floatValues[1] = floatValues[2];
         floatValues[2] = -temp;
       }
-      else if(xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
+      else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+      {
         var temp = floatValues[0];
         floatValues[0] = -floatValues[1];
         floatValues[1] = temp;
@@ -104,22 +115,26 @@ c3dl.ColladaLoader = function () {
     // rotations
     var rotationTags = c3dl.ColladaLoader.getChildNodesByNodeName(node, "rotate");
 
-    if (rotationTags) {
+    if (rotationTags)
+    {
       // example
       // <rotate sid="rotateZ">0 0 1 15</rotate>
       // <rotate sid="rotateY">0 1 0 0</rotate>
       // <rotate sid="rotateX">1 0 0 0</rotate>
-      for (var i = 0; i < rotationTags.length; i++) {
+      for (var i = 0; i < rotationTags.length; i++)
+      {
         var floatValues = c3dl.ColladaLoader.stringsToFloats(rotationTags[i].childNodes[0].nodeValue, ' ');
 
         var vec = [floatValues[0], floatValues[1], floatValues[2]];
 
-        if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
+        if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+        {
           var temp = vec[1];
           vec[1] = vec[2];
           vec[2] = -temp;
         }
-        else if(xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
+        else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+        {
           var temp = vec[0];
           vec[0] = -vec[1];
           vec[1] = temp;
@@ -133,15 +148,18 @@ c3dl.ColladaLoader = function () {
 
     // <scale> tag
     var scaleTag = c3dl.ColladaLoader.getChildNodesByNodeName(node, "scale");
-    if (scaleTag) {
+    if (scaleTag)
+    {
       var floatValues = c3dl.ColladaLoader.stringsToFloats(scaleTag[0].childNodes[0].nodeValue, ' ');
-      
-      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
+
+      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+      {
         var temp = floatValues[1];
         floatValues[1] = floatValues[2];
         floatValues[2] = temp;
       }
-      if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
+      if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+      {
         var temp = floatValues[0];
         floatValues[0] = floatValues[1];
         floatValues[1] = temp;
@@ -156,11 +174,13 @@ c3dl.ColladaLoader = function () {
     //  The set of 16 numbers can have values with leading or trailing spaces, so we have to 
     // 
     var matrixTag = c3dl.ColladaLoader.getChildNodesByNodeName(node, "matrix");
-    if (matrixTag) {
+    if (matrixTag)
+    {
       var mat = c3dl.ColladaLoader.stringsToFloats(matrixTag[0].childNodes[0].nodeValue, ' ');
 
       // If Z-axis is up, any rotations on Y and Z need to be flipped.
-      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
+      if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+      {
         // swap y, z translation
         var temp = mat[7];
         mat[7] = mat[11];
@@ -180,12 +200,13 @@ c3dl.ColladaLoader = function () {
       }
 
       // If X-axis is up, any rotations on X and Y needs to be flipped.
-      if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
+      if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+      {
         // swap x, y translation        
         var temp = mat[3];
         mat[3] = -mat[7];
         mat[7] = temp;
-        
+
         temp = mat[0];
         mat[0] = mat[5];
         mat[5] = temp;
@@ -193,7 +214,7 @@ c3dl.ColladaLoader = function () {
         temp = mat[2];
         mat[2] = mat[6];
         mat[6] = temp;
-     
+
         temp = mat[8];
         mat[8] = mat[9];
         mat[9] = temp;
@@ -207,9 +228,11 @@ c3dl.ColladaLoader = function () {
     var geometries = c3dl.ColladaLoader.getChildNodesByNodeName(node, "instance_geometry");
 
     // base case: we found a geometry leaf node, now instantiate it.
-    if (geometries) {
+    if (geometries)
+    {
       // a node may contain many geometryNodes, so we have to create each one.
-      for (var currGeo = 0; currGeo < geometries.length; currGeo++) {
+      for (var currGeo = 0; currGeo < geometries.length; currGeo++)
+      {
         // the url references a <geometry> element within the <library_geometry>
         var url = geometries[currGeo].getAttribute("url").split('#')[1];
 
@@ -223,9 +246,11 @@ c3dl.ColladaLoader = function () {
     // <instance_node> appears after <instance_geometry>
     //
     var instance_nodes = c3dl.ColladaLoader.getChildNodesByNodeName(node, "instance_node");
-    if (instance_nodes) {
+    if (instance_nodes)
+    {
       // a <node> can contain 0..N <instance_node> so iterate over each one
-      for (var currNode = 0; currNode < instance_nodes.length; currNode++) {
+      for (var currNode = 0; currNode < instance_nodes.length; currNode++)
+      {
         // remove the '#' from the url
         var url = instance_nodes[currNode].getAttribute("url").split('#')[1];
         sgNode.addChild(this.instantiateNode(xmlObject, url));
@@ -240,9 +265,11 @@ c3dl.ColladaLoader = function () {
 
     // recursive case: the node has one or many nodes, therefore
     // we have to parse all of its nodes.
-    if (nodes) {
+    if (nodes)
+    {
       // for each of subnodes, call this function.
-      for (var i = 0; i < nodes.length; i++) {
+      for (var i = 0; i < nodes.length; i++)
+      {
         var scenenode = new c3dl.SceneNode();
         scenenode.setName(nodes[i].getAttribute("name"));
         sgNode.addChild(scenenode);
@@ -254,25 +281,27 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-
-    Get the child element of a parent element in the scenario when a schema can 
-    have only one of set of children. For example, the technique element in the 
-    common profile can have either constant, lambert, phong or blinn child elements
-    which are mutually exclusive.
-
-    @returns {object Element}
-
-    @param {Array} choiceTagNames Array of strings which contain the tags of
-    choices an element can have.
-  */
-  this.getChoice = function (parentTag, choiceTagNames) {
+   @private
+   
+   Get the child element of a parent element in the scenario when a schema can 
+   have only one of set of children. For example, the technique element in the 
+   common profile can have either constant, lambert, phong or blinn child elements
+   which are mutually exclusive.
+   
+   @returns {object Element}
+   
+   @param {Array} choiceTagNames Array of strings which contain the tags of
+   choices an element can have.
+   */
+  this.getChoice = function (parentTag, choiceTagNames)
+  {
     var choice = null;
     var i = 0;
 
     // use an iterator just in case the file does not conform to the spec
     // and we can just out of the loop
-    while (choice == null && i < choiceTagNames.length) {
+    while (choice == null && i < choiceTagNames.length)
+    {
       choice = parentTag.getElementsByTagName(choiceTagNames[i])[0];
       i++;
     }
@@ -281,16 +310,17 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-    Parse is responsible for traversing different parts of the xmlObject
-    and constructing the geometries from the data provided.
-
-    This function is not called directly, it is called once the xml is 
-    finished downloading.
-
-    @param {xmlDocument} xmlObject
-  */
-  this.parse = function (xmlObject) {
+   @private
+   Parse is responsible for traversing different parts of the xmlObject
+   and constructing the geometries from the data provided.
+   
+   This function is not called directly, it is called once the xml is 
+   finished downloading.
+   
+   @param {xmlDocument} xmlObject
+   */
+  this.parse = function (xmlObject)
+  {
     // since the xmlhttp object is calling this function, any reference
     // to 'this' refers to the xmlhttp object, but we want to access the members in
     // the object that owns this function, the DAELoader instance.  To
@@ -306,12 +336,14 @@ c3dl.ColladaLoader = function () {
     var library_images = root.getElementsByTagName("library_images");
 
     // <collada> may have 0 or many <library_images>
-    for (var libraryImagesIter = 0; libraryImagesIter < library_images.length; libraryImagesIter++) {
+    for (var libraryImagesIter = 0; libraryImagesIter < library_images.length; libraryImagesIter++)
+    {
       // one <library_images> has <images>. cardinality isn't mentioned in the spec.
       var imageElements = library_images[libraryImagesIter].getElementsByTagName("image");
 
       // 
-      for (var imageElementIter = 0; imageElementIter < imageElements.length; imageElementIter++) {
+      for (var imageElementIter = 0; imageElementIter < imageElements.length; imageElementIter++)
+      {
         // an <image> has exactly one <init_from> which have the uri or the
         // texture.
         //	<image id="file2" name="file2" depth="1">
@@ -324,11 +356,11 @@ c3dl.ColladaLoader = function () {
 
     // get the up axis so we can orient the object without making
     // the user do it explicitly.
-
     //
     //
     var upAxisTag = root.getElementsByTagName("up_axis")[0];
-    if (upAxisTag) {
+    if (upAxisTag)
+    {
       xmlObject.upAxis = upAxisTag.childNodes[0].nodeValue;
     }
 
@@ -381,8 +413,10 @@ c3dl.ColladaLoader = function () {
     var visualScene = null;
 
     // go over all the visual scenes trying to identify the one we want.
-    for (var i = 0; i < visualSceneList.length; i++) {
-      if (visualSceneList[i].getAttribute("id") == visualSceneToLoad) {
+    for (var i = 0; i < visualSceneList.length; i++)
+    {
+      if (visualSceneList[i].getAttribute("id") == visualSceneToLoad)
+      {
         visualScene = visualSceneList[i];
       }
     }
@@ -395,9 +429,11 @@ c3dl.ColladaLoader = function () {
 
     // there is a change nodes is null if the dae file was edited manually
     // and the nodes were removed. 
-    if (nodes) {
+    if (nodes)
+    {
       // parse each of the 'root' nodes.
-      for (var currNode = 0; currNode < nodes.length; currNode++) {
+      for (var currNode = 0; currNode < nodes.length; currNode++)
+      {
         var scenenode = new c3dl.SceneNode();
 
         //
@@ -415,12 +451,13 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-
-    @param {XMLDocument} xmlObject
-    @param {String} target
-  */
-  this.instantiateMaterial = function (xmlObject, target) {
+   @private
+   
+   @param {XMLDocument} xmlObject
+   @param {String} target
+   */
+  this.instantiateMaterial = function (xmlObject, target)
+  {
     var tempTexture = null;
 
     // we now have the material ID which we can look up in the library materials.
@@ -474,7 +511,8 @@ c3dl.ColladaLoader = function () {
     // get the texture
     var newparam = profile_COMMON.getElementsByTagName("newparam")[0];
 
-    if (newparam) {
+    if (newparam)
+    {
       // go to the surface type
       var surface = newparam.getElementsByTagName("surface")[0];
 
@@ -499,11 +537,13 @@ c3dl.ColladaLoader = function () {
       var resolvedTexture;
 
       // if the texture is an abosolute path, use it.
-      if (c3dl.isPathAbsolute(textureName)) {
+      if (c3dl.isPathAbsolute(textureName))
+      {
         resolvedTexture = textureName;
       }
       // otherwise, we need to place the path of dae file before the texture.
-      else {
+      else
+      {
         resolvedTexture = c3dl.getPathWithoutFilename(xmlObject.colladaPath) + textureName;
       }
       tempTexture = resolvedTexture;
@@ -528,24 +568,25 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-
-    The root COLLADA can contain ZERO OR MANY library_geometries node.
-    However in our case, since we are importing model data, should
-    have at least one library_geometries.  If absent this will cause
-    an error.
-
-    The library geometries node contains 1 or Many <geometry>
-    nodes.
-    If library_geometries describes a car,
-    there may be several <geometries> which described the chairs,
-    seats, body, etc.
-
-    @param {XMLDocument} xmlObject
-    @param url
-    @param instanceGeometryElement
-  */
-  this.instantiateGeometry = function (xmlObject, url, instanceGeometryElement) {
+   @private
+   
+   The root COLLADA can contain ZERO OR MANY library_geometries node.
+   However in our case, since we are importing model data, should
+   have at least one library_geometries.  If absent this will cause
+   an error.
+   
+   The library geometries node contains 1 or Many <geometry>
+   nodes.
+   If library_geometries describes a car,
+   there may be several <geometries> which described the chairs,
+   seats, body, etc.
+   
+   @param {XMLDocument} xmlObject
+   @param url
+   @param instanceGeometryElement
+   */
+  this.instantiateGeometry = function (xmlObject, url, instanceGeometryElement)
+  {
     var root = xmlObject.documentElement;
     var libraryGeometries = root.getElementsByTagName("library_geometries");
 
@@ -556,11 +597,14 @@ c3dl.ColladaLoader = function () {
     // the url provided points to a geometry in a geometry library. We'll need to
     // go through the libraries and find which library it is in.
     // TODO: add breakout when found
-    for (var currLib = 0; currLib < libraryGeometries.length; currLib++) {
+    for (var currLib = 0; currLib < libraryGeometries.length; currLib++)
+    {
       var geometries = libraryGeometries[currLib].getElementsByTagName("geometry");
       // for each geometry
-      for (var currGeo = 0; currGeo < geometries.length; currGeo++) {
-        if (geometries[currGeo].getAttribute("id") == url) {
+      for (var currGeo = 0; currGeo < geometries.length; currGeo++)
+      {
+        if (geometries[currGeo].getAttribute("id") == url)
+        {
           // found it
           geoToCreate = geometries[currGeo];
         }
@@ -605,8 +649,11 @@ c3dl.ColladaLoader = function () {
     //
     // The library does have means to render lines, but reading this primitive has not been added yet.
     //
-    for (var i = 0; i < mesh.childNodes.length; i++) {
-      if (mesh.childNodes[i].nodeName == "triangles" || mesh.childNodes[i].nodeName == "polygons" || mesh.childNodes[i].nodeName == "polylist") {
+    for (var i = 0; i < mesh.childNodes.length; i++)
+    {
+      if (mesh.childNodes[i].nodeName == "triangles" || mesh.childNodes[i].nodeName == "polygons" ||
+        mesh.childNodes[i].nodeName == "polylist")
+      {
         collations.push(mesh.childNodes[i]);
       }
     }
@@ -615,7 +662,8 @@ c3dl.ColladaLoader = function () {
     // <p> element represents a primitive. 
     //
     // currColl = current collation
-    for (var currColl = 0; currColl < collations.length; currColl++) {
+    for (var currColl = 0; currColl < collations.length; currColl++)
+    {
       // Depending on the type of collation element, the data will be layed out slighly differently.			
       //
       // <triangles> and <polylist> are similar in that they both only have one <p> tag.
@@ -624,7 +672,8 @@ c3dl.ColladaLoader = function () {
       //
       // triangles are always composed of 3 vertices so this element does not require <vcount>
       //
-      if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist") {
+      if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist")
+      {
         var p = this.getFirstChildByNodeName(collations[currColl], "p");
         rawFaces = this.mergeChildData(p.childNodes).split(" ");
       }
@@ -634,19 +683,23 @@ c3dl.ColladaLoader = function () {
       // <p> ... </p>
       // each <p> element describes one polygon which can vary in length from others
       //
-      else if (collations[currColl].nodeName == "polygons") {
+      else if (collations[currColl].nodeName == "polygons")
+      {
         var p_tags = collations[currColl].getElementsByTagName("p");
         rawFaces = [];
-        for (var i = 0; i < p_tags.length; i++) {
+        for (var i = 0; i < p_tags.length; i++)
+        {
           // need to get rid of the spaces
           var p_line = p_tags[i].childNodes[0].nodeValue.split(" ");
-          for (var j = 0; j < p_line.length; j++) {
+          for (var j = 0; j < p_line.length; j++)
+          {
             rawFaces.push(parseInt(p_line[j]));
           }
         }
       }
       // If this message is ever seen, that means I have to write the case for it.
-      else {
+      else
+      {
         c3dl.debug.logError(collations[currColl].nodeName + " collation element is not yet supported");
       }
 
@@ -668,16 +721,18 @@ c3dl.ColladaLoader = function () {
 
       // The order of the <input> tags can vary, so we can't rely on how they are arranged
       // in most documents.
-      for (var i = 0; i < inputs.length; i++) {
-        /**************/
+      for (var i = 0; i < inputs.length; i++)
+      { /**************/
         /*  VERTICES  */
         /**************/
-        if (inputs[i].getAttribute("semantic") == "VERTEX") {
+        if (inputs[i].getAttribute("semantic") == "VERTEX")
+        {
           this.vertexOffset = inputs[i].getAttribute("offset");
           // need to remove the leading # from the value
           this.vertexSource = inputs[i].getAttribute("source").split('#')[1];
 
-          var vertices = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "vertices", "id", this.vertexSource);
+          var vertices = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "vertices", "id", 
+            this.vertexSource);
 
           // get the child
           var input = vertices.getElementsByTagName("input")[0];
@@ -690,15 +745,19 @@ c3dl.ColladaLoader = function () {
           var data = this.getData(xmlObject, "source", "id", posSource);
           vertexStride = parseInt(data.stride);
 
-          if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride) {
+          if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+          {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride)
+            {
               var temp = data.values[vertIter + 1];
               data.values[vertIter + 1] = data.values[vertIter + 2];
               data.values[vertIter + 2] = -temp;
             }
           }
-          else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride) {
+          else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+          {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride)
+            {
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
               data.values[vertIter + 1] = temp;
@@ -711,23 +770,27 @@ c3dl.ColladaLoader = function () {
         /**************/
         /*   NORMAL   */
         /**************/
-        else if (inputs[i].getAttribute("semantic") == "NORMAL") {
+        else if (inputs[i].getAttribute("semantic") == "NORMAL")
+        {
           this.normalOffset = inputs[i].getAttribute("offset");
           // need to remove the leading # from the value
           this.normalSource = inputs[i].getAttribute("source").split('#')[1];
           var data = this.getData(xmlObject, "source", "id", this.normalSource);
           normalsStride = parseInt(data.stride);
           // length * stride instead of literal?
-          
-          if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP") {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride) {
+          if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
+          {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride)
+            {
               var temp = data.values[vertIter + 1];
               data.values[vertIter + 1] = data.values[vertIter + 2];
               data.values[vertIter + 2] = -temp;
             }
           }
-          else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP") {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride) {
+          else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
+          {
+            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride)
+            {
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
               data.values[vertIter + 1] = temp;
@@ -740,7 +803,8 @@ c3dl.ColladaLoader = function () {
         /**************/
         /*  TEXCOORD  */
         /**************/
-        else if (inputs[i].getAttribute("semantic") == "TEXCOORD") {
+        else if (inputs[i].getAttribute("semantic") == "TEXCOORD")
+        {
           this.texCoordOffset = inputs[i].getAttribute("offset");
           // need to remove the leading # from the value
           var uvSource = inputs[i].getAttribute("source").split('#')[1];
@@ -749,7 +813,8 @@ c3dl.ColladaLoader = function () {
 
           // WebGL expects the bottom left corner of the
           // texture in the top left, so we need to flip the texture coordinates
-          for (var currUV = 1; currUV < data.values.length; currUV += texCoordsStride) {
+          for (var currUV = 1; currUV < data.values.length; currUV += texCoordsStride)
+          {
             data.values[currUV] = 1 - data.values[currUV];
           }
 
@@ -767,14 +832,14 @@ c3dl.ColladaLoader = function () {
       // re-arrange some of the faces since OpenGLES does not support quads.
       //  The next two conditionals handle these two cases.
 
-
       // <polylist> contains a list of polygons, each which can contains a different number 
       // of vertices (one poly has 3 another has 5).  Since we can't render polygons or even
       // quads in GLES, the polygons need to be broken down into triangles. Note, it is assumed
       // only simple convex polygons are used. (no intersections are present and no polygons are
       // concave). If there are intersections or the polygons are concave, they will be represented
       // incorrectly.
-      if (collations[currColl].nodeName == "polylist") {
+      if (collations[currColl].nodeName == "polylist")
+      {
         rawFaces = this.splitPolylist(collations[currColl], inputs.length, rawFaces);
       }
 
@@ -782,7 +847,8 @@ c3dl.ColladaLoader = function () {
       // arrays so we can easily address values in the arrays for vertices,
       // textures, etc, we have to convert the quads into triangles since
       // OpenGLES does not support the QUADS primitive mode.
-      else if (collations[currColl].nodeName == "polygons") {
+      else if (collations[currColl].nodeName == "polygons")
+      {
         // example looks like this:
         // 0,0,1,1,2,2,3,3,4,4,....
         // here is a quad and collada states its winding
@@ -803,14 +869,17 @@ c3dl.ColladaLoader = function () {
         // count is an attribute of polygons which lists how many primitives the
         // polygon has. we can use this data to find out how many times we have to
         // change the parts.
-        for (var currPrim = 0; currPrim < collations[currColl].getAttribute("count"); currPrim++) {
+        for (var currPrim = 0; currPrim < collations[currColl].getAttribute("count"); currPrim++)
+        {
           var partsArray = [];
 
           // make an array of array so we can easily index parts
           // use four since a polygon primitive is defined as having 4 points
-          for (var currPart = 0; currPart < 4; currPart++) {
+          for (var currPart = 0; currPart < 4; currPart++)
+          {
             var part = [];
-            for (currScalar = 0; currScalar < inputs.length; currScalar++) {
+            for (currScalar = 0; currScalar < inputs.length; currScalar++)
+            {
               part.push(rawFaces[(currPrim * inputs.length * 4) + (currPart * partSize) + currScalar]);
             }
             partsArray.push(part);
@@ -818,22 +887,28 @@ c3dl.ColladaLoader = function () {
 
           // need to push on the RAW values, don't push on arrays.
           // TODO: write a function for this.
-          for (var s = 0; s < partsArray[0].length; s++) {
+          for (var s = 0; s < partsArray[0].length; s++)
+          {
             trianglesList.push(partsArray[0][s]);
           }
-          for (var s = 0; s < partsArray[1].length; s++) {
+          for (var s = 0; s < partsArray[1].length; s++)
+          {
             trianglesList.push(partsArray[1][s]);
           }
-          for (var s = 0; s < partsArray[3].length; s++) {
+          for (var s = 0; s < partsArray[3].length; s++)
+          {
             trianglesList.push(partsArray[3][s]);
           }
-          for (var s = 0; s < partsArray[3].length; s++) {
+          for (var s = 0; s < partsArray[3].length; s++)
+          {
             trianglesList.push(partsArray[3][s]);
           }
-          for (var s = 0; s < partsArray[1].length; s++) {
+          for (var s = 0; s < partsArray[1].length; s++)
+          {
             trianglesList.push(partsArray[1][s]);
           }
-          for (var s = 0; s < partsArray[2].length; s++) {
+          for (var s = 0; s < partsArray[2].length; s++)
+          {
             trianglesList.push(partsArray[2][s]);
           }
         }
@@ -847,17 +922,18 @@ c3dl.ColladaLoader = function () {
       // each primitive collation element can have a material name. this name matches to the
       // <instance_material>'s symbol attribute value.					
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
-      collationElement.init(this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2));
-
+      collationElement.init(this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
+        this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
+        this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2));
       geometry.addPrimitiveSet(collationElement);
     } // end iterating over collations
-
 
     // get the texture for the geometry
     // go back to the instance_geometry
     // <instance_geometry> has either 0 or 1 <bind_material>, so just get the first if it exsits.
     var bind_material = instanceGeometryElement.getElementsByTagName("bind_material")[0];
-    if (bind_material) {
+    if (bind_material)
+    {
       // <bind_material> has exactly 1 <technique_common>, so only get the first.
       var technique_common = bind_material.getElementsByTagName("technique_common")[0];
 
@@ -865,7 +941,8 @@ c3dl.ColladaLoader = function () {
       var instance_materials = technique_common.getElementsByTagName("instance_material");
 
       // iterate over all the <instance_material>'s <technique_common> has.
-      for (var im = 0; im < instance_materials.length; im++) {
+      for (var im = 0; im < instance_materials.length; im++)
+      {
         // target is the target material to instantiate
         var target = instance_materials[im].getAttribute("target").split('#')[1];
 
@@ -884,8 +961,10 @@ c3dl.ColladaLoader = function () {
 
         // The material was instantiated and now we have to iterate over the collations
         // and find the collation which has a material which matches the material name.
-        for (var ic = 0; ic < GeoCollations.length; ic++) {
-          if (GeoCollations[ic].tempMaterial == symbol) {
+        for (var ic = 0; ic < GeoCollations.length; ic++)
+        {
+          if (GeoCollations[ic].tempMaterial == symbol)
+          {
             GeoCollations[ic].setMaterial(instanceMaterial);
             GeoCollations[ic].setTexture(tex);
           }
@@ -896,13 +975,14 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-    @param {XMLDocument} xmlObject
-    @param {String} url
-
-    @returns {c3dl.SceneNode}
-  */
-  this.instantiateNode = function (xmlObject, url) {
+   @private
+   @param {XMLDocument} xmlObject
+   @param {String} url
+   
+   @returns {c3dl.SceneNode}
+   */
+  this.instantiateNode = function (xmlObject, url)
+  {
     var root = xmlObject.documentElement;
     var libraryNodes = root.getElementsByTagName("library_nodes");
 
@@ -911,17 +991,16 @@ c3dl.ColladaLoader = function () {
 
     // <collada> may have many <library_node>. We'll need to go through each to find
     // the node with the name we are looking for.
-    for (var currLib = 0; currLib < libraryNodes.length
-    /*&& nodeToCreate == null*/
-    ; currLib++) {
+    for (var currLib = 0; currLib < libraryNodes.length /*&& nodeToCreate == null*/ ; currLib++)
+    {
       // get all the nodes in this library.
       var nodes = libraryNodes[currLib].getElementsByTagName("node");
 
       // find the node in the list.
-      for (var currNode = 0; currNode < nodes.length
-      /*&& nodeToCreate == null*/
-      ; currNode++) {
-        if (nodes[currNode].getAttribute("id") == url) {
+      for (var currNode = 0; currNode < nodes.length /*&& nodeToCreate == null*/ ; currNode++)
+      {
+        if (nodes[currNode].getAttribute("id") == url)
+        {
           // found it
           nodeToCreate = nodes[currNode];
         }
@@ -937,31 +1016,34 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-    This function takes a list of scalar values and 
-    groups them into elements inside an array.  This 
-    must be done since in the DAE file, the values are
-    stored one after another in a linear format. Since
-    the triangles/faces use indices to access these scalars,
-    we have to group them together so indexing will work 
-    properly.
-
-    @param {Array} rawScalarValues
-    @param {int} numComponentsPerElement
-    @param {int} stride
-
-    @returns {Array}
-  */
-  this.groupScalarsIntoArray = function (rawScalarValues, numComponentsPerElement, stride) {
+   @private
+   This function takes a list of scalar values and 
+   groups them into elements inside an array.  This 
+   must be done since in the DAE file, the values are
+   stored one after another in a linear format. Since
+   the triangles/faces use indices to access these scalars,
+   we have to group them together so indexing will work 
+   properly.
+   
+   @param {Array} rawScalarValues
+   @param {int} numComponentsPerElement
+   @param {int} stride
+   
+   @returns {Array}
+   */
+  this.groupScalarsIntoArray = function (rawScalarValues, numComponentsPerElement, stride)
+  {
     // start off with an empty list
     var listOfArrays = [];
 
     //
-    for (var i = 0; i < rawScalarValues.length; i += stride) {
+    for (var i = 0; i < rawScalarValues.length; i += stride)
+    {
       var element = [];
 
       //
-      for (var j = i; j < i + numComponentsPerElement; j++) {
+      for (var j = i; j < i + numComponentsPerElement; j++)
+      {
         element.push(rawScalarValues[j]);
       }
 
@@ -973,13 +1055,14 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-
-    @param {} collation
-    @param {int} numInputs
-    @param {Array} rawFaces
-  */
-  this.splitPolylist = function (collation, numInputs, rawFaces) {
+   @private
+   
+   @param {} collation
+   @param {int} numInputs
+   @param {Array} rawFaces
+   */
+  this.splitPolylist = function (collation, numInputs, rawFaces)
+  {
     // rawFaces = this.splitPolylist(collations[currColl], inputs.length);
     // <vcount> has the count of vertices for each polygon.
     // <vcount> 4 4 4 3 4 5 3 4 .. </vcount>
@@ -1006,15 +1089,18 @@ c3dl.ColladaLoader = function () {
     // triangle fans.
     // Vertices, according to the spec, will be counter clockwise.  Because
     // of this, we should be able to make fans without problems.
-    for (var currPrim = 0; currPrim < collation.getAttribute("count"); currPrim++, vcountIndex++) {
+    for (var currPrim = 0; currPrim < collation.getAttribute("count"); currPrim++, vcountIndex++)
+    {
       var partsArray = [];
 
       // the current number in the vcount list may have different values depending, may have 3, 4 or more
       // so we have to iterate for the amount of values in the primitive.
-      for (var currPart = 0; currPart < vcountList[vcountIndex]; currPart++) {
+      for (var currPart = 0; currPart < vcountList[vcountIndex]; currPart++)
+      {
         var part = [];
 
-        for (currScalar = 0; currScalar < numInputs; currScalar++) {
+        for (currScalar = 0; currScalar < numInputs; currScalar++)
+        {
           // first part (primOffset * inputs.length) indexes into the primitive
           // part.  Second part will index into the specific part we want.
           part.push(rawFaces[(primOffset * numInputs) + (currPart * numInputs) + currScalar]);
@@ -1040,27 +1126,32 @@ c3dl.ColladaLoader = function () {
       var last = 1;
       var firstTriangle = true;
       // create a triangle fan
-      for (var fanIndex = 0; fanIndex < vcountList[vcountIndex] - 1;) {
+      for (var fanIndex = 0; fanIndex < vcountList[vcountIndex] - 1;)
+      {
         // s iterator is for scalar, we are dealing with single values.
         // push on the first 
-        for (var s = 0; s < partsArray[0].length; s++) {
+        for (var s = 0; s < partsArray[0].length; s++)
+        {
           // first
           trianglesList.push(partsArray[0][s]);
         }
         fanIndex++;
 
         // last
-        for (var s = 0; s < partsArray[0].length; s++) {
+        for (var s = 0; s < partsArray[0].length; s++)
+        {
           trianglesList.push(partsArray[last][s]);
         }
 
         // if this is the first iteration, increase the fanIndex.
-        if (firstTriangle) {
+        if (firstTriangle)
+        {
           fanIndex++;
           firstTriangle = false;
         }
 
-        for (var s = 0; s < partsArray[0].length; s++) {
+        for (var s = 0; s < partsArray[0].length; s++)
+        {
           trianglesList.push(partsArray[fanIndex][s]);
         }
 
@@ -1074,26 +1165,30 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-    @param {XMLDocument} xmlObject
-    @param {String} libraryName
-    @param {String} elementName
-    @param {String} elementAttributeId
-
-    @returns
-  */
-  this.findElementInLibrary = function (xmlObject, libraryName, elementName, elementAttributeId) {
+   @private
+   @param {XMLDocument} xmlObject
+   @param {String} libraryName
+   @param {String} elementName
+   @param {String} elementAttributeId
+   
+   @returns
+   */
+  this.findElementInLibrary = function (xmlObject, libraryName, elementName, elementAttributeId)
+  {
     // collada may have many listings of the same library.
     var libraries = xmlObject.getElementsByTagName(libraryName);
 
     // for all the libraries in the <collada> element
-    for (libraryIter = 0; libraryIter < libraries.length; libraryIter++) {
+    for (libraryIter = 0; libraryIter < libraries.length; libraryIter++)
+    {
       var elements = libraries[libraryIter].getElementsByTagName(elementName);
 
       // for all the elements in each library.
-      for (elementIter = 0; elementIter < elements.length; elementIter++) {
+      for (elementIter = 0; elementIter < elements.length; elementIter++)
+      {
         // found it
-        if (elementAttributeId == elements[elementIter].getAttribute("id")) {
+        if (elementAttributeId == elements[elementIter].getAttribute("id"))
+        {
           return elements[elementIter];
         }
       }
@@ -1104,15 +1199,16 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-    @param {} xmlObject	
-    @param {String} nodeName
-    @param {String} attributeKey
-    @param {String} attributeValue
-
-    @return 
-  */
-  this.getData = function (xmlObject, nodeName, attributeKey, attributeValue) {
+   @private
+   @param {} xmlObject	
+   @param {String} nodeName
+   @param {String} attributeKey
+   @param {String} attributeValue
+   
+   @return 
+   */
+  this.getData = function (xmlObject, nodeName, attributeKey, attributeValue)
+  {
     var data = new Object();
 
     // find node that has 'src' value as id
@@ -1137,43 +1233,44 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-    @param {Array} faces A 2D array which has indices.  Each index points
-    to a set of vertex, normal or texture coordinates.
-
-    <pre>
-    // faces can look like this:
-    [
-    [0,0,0] , 
-    [1,0,1] , 
-    [2,0,2] 
-    ]
-    // first value in each element is vertex index.
-    // second value is normal index.
-    // third value is uv index.
-    </pre>
-
-    @param {Array} array The array to expand. For a cube, the array of vertices
-    can look like:
-
-    <pre>
-    [1.00000,1.00000,-1.00000] , [1.00000,-1.00000,-1.00000] , [-1.00000,-1.00000,-1.00000] 
-    </pre>
-
-    @param offset Refers to the component we are interested in within an array
-    in the faces array.  Since the faces array has indices for verts, normals and texcoords,
-    using a different index gets us a index which is a 0 based index into a list of 
-    coordinates.
-
-    <pre>
-    here is a faces array.  If we used offset=2, we would get the following indices:
-    [0,0,0] , [1,0,1] , [2,0,2] 
-    ^         ^         ^
-    </pre>
-
-    @param {int} numComponentsToExpand
-  */
-  this.expandFaces = function (faces, array, offset, numComponentsToExpand) {
+   @private
+   @param {Array} faces A 2D array which has indices.  Each index points
+   to a set of vertex, normal or texture coordinates.
+   
+   <pre>
+   // faces can look like this:
+   [
+   [0,0,0] , 
+   [1,0,1] , 
+   [2,0,2] 
+   ]
+   // first value in each element is vertex index.
+   // second value is normal index.
+   // third value is uv index.
+   </pre>
+   
+   @param {Array} array The array to expand. For a cube, the array of vertices
+   can look like:
+   
+   <pre>
+   [1.00000,1.00000,-1.00000] , [1.00000,-1.00000,-1.00000] , [-1.00000,-1.00000,-1.00000] 
+   </pre>
+   
+   @param offset Refers to the component we are interested in within an array
+   in the faces array.  Since the faces array has indices for verts, normals and texcoords,
+   using a different index gets us a index which is a 0 based index into a list of 
+   coordinates.
+   
+   <pre>
+   here is a faces array.  If we used offset=2, we would get the following indices:
+   [0,0,0] , [1,0,1] , [2,0,2] 
+   ^         ^         ^
+   </pre>
+   
+   @param {int} numComponentsToExpand
+   */
+  this.expandFaces = function (faces, array, offset, numComponentsToExpand)
+  {
     // this is a single dimensional array which hold expanded values.
     var expandedArray = [];
 
@@ -1191,11 +1288,13 @@ c3dl.ColladaLoader = function () {
     //  \    /      \    /      \    /  
     //    \/          \/          \/
     // currFace=0   currFace=1    ...
-    for (var currFace = 0; currFace < faces.length; currFace++) {
+    for (var currFace = 0; currFace < faces.length; currFace++)
+    {
       // have to be scalar, no arrays
       // each element in the faces array is another array. That second array
       // hold components.
-      for (var currComp = 0; currComp < numComponentsToExpand; currComp++) {
+      for (var currComp = 0; currComp < numComponentsToExpand; currComp++)
+      {
         // go to a particular face:
         // [3, 1, 4]
         face = faces[currFace];
@@ -1219,7 +1318,8 @@ c3dl.ColladaLoader = function () {
         // ...
         // this is done for each component, for textures, we have 2 components.
         // for normals, we have 3.
-        if (coordIndex) {
+        if (coordIndex)
+        {
           coord = array[coordIndex][currComp];
         }
 
@@ -1234,25 +1334,27 @@ c3dl.ColladaLoader = function () {
   }
 
   /**
-    @private
-    Loading is done once all the nodes in the .DAE file have been created and placed
-    into the ModelManager.
-
-    @returns {bool} true if loading is done, false otherwise. 
-  */
-  this.doneLoading = function () {
+   @private
+   Loading is done once all the nodes in the .DAE file have been created and placed
+   into the ModelManager.
+   
+   @returns {bool} true if loading is done, false otherwise. 
+   */
+  this.doneLoading = function ()
+  {
     return this.done;
   }
 
   /**
-    @private
-
-    get data from blinn, phong, lambert node
-
-    @param {}
-    @param {String} str
-  */
-  this.getColor = function (node, str) {
+   @private
+   
+   get data from blinn, phong, lambert node
+   
+   @param {}
+   @param {String} str
+   */
+  this.getColor = function (node, str)
+  {
     // ambient, diffuse, specular, etc.
     var component = node != null ? node.getElementsByTagName(str)[0] : null;
 
@@ -1261,12 +1363,15 @@ c3dl.ColladaLoader = function () {
     var returnValue = [0, 0, 0];
 
     // if the component is present (ambient, diffuse, specular)
-    if (component) {
+    if (component)
+    {
       var value = this.getChoice(component, ["color", "float", "texture"]);
 
-      if (value.nodeName == "color") {
+      if (value.nodeName == "color")
+      {
         returnValue = [];
-        for (var currNode = 0; currNode < value.childNodes.length; currNode++) {
+        for (var currNode = 0; currNode < value.childNodes.length; currNode++)
+        {
           returnValue += value.childNodes[currNode].nodeValue;
         }
         returnValue = returnValue.split(" ");
@@ -1274,11 +1379,13 @@ c3dl.ColladaLoader = function () {
         returnValue = returnValue.slice(0, 3);
       }
       //
-      else if (value.nodeName == "float") {
+      else if (value.nodeName == "float")
+      {
         returnValue = parseFloat(value.childNodes[0].nodeValue);
       }
       // 
-      else if (value.nodeName == "texture") {
+      else if (value.nodeName == "texture")
+      {
         returnValue = [1, 1, 1];
       }
     }
@@ -1289,22 +1396,24 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-    When reading data in between tags, 
-
-    There tends to be a lot of data between tags such as <float_array>
-    <float_array id="Teapot-mesh-positions-array" count="1590">29.4787 0 50.5349 ..... 34.093 </float_array>
-
-    We can't just read the node value contents because it is broken up into 4096 byte chunks. So 
-    we use this function to merge all the chunks together.
-
-    @param {String} childNodes
-
-    @returns
-  */
-  this.mergeChildData = function (childNodes) {
+   @private
+   When reading data in between tags, 
+   
+   There tends to be a lot of data between tags such as <float_array>
+   <float_array id="Teapot-mesh-positions-array" count="1590">29.4787 0 50.5349 ..... 34.093 </float_array>
+   
+   We can't just read the node value contents because it is broken up into 4096 byte chunks. So 
+   we use this function to merge all the chunks together.
+   
+   @param {String} childNodes
+   
+   @returns
+   */
+  this.mergeChildData = function (childNodes)
+  {
     var values = [];
-    for (var currNode = 0; currNode < childNodes.length; currNode++) {
+    for (var currNode = 0; currNode < childNodes.length; currNode++)
+    {
       values += childNodes[currNode].nodeValue;
     }
 
@@ -1322,18 +1431,21 @@ c3dl.ColladaLoader = function () {
 
 
   /**
-    @private
-    Get the first child of type 'nodeName' of a element 'searchNode'.
-
-    @param {Object Element} searchNode - the element to search.
-    @param {String} nodeName - the node to search for.
-
-    @returns 
-  */
-  this.getFirstChildByNodeName = function (searchNode, nodeName) {
-    for (var i = 0; i < searchNode.childNodes.length; i++) {
+   @private
+   Get the first child of type 'nodeName' of a element 'searchNode'.
+   
+   @param {Object Element} searchNode - the element to search.
+   @param {String} nodeName - the node to search for.
+   
+   @returns 
+   */
+  this.getFirstChildByNodeName = function (searchNode, nodeName)
+  {
+    for (var i = 0; i < searchNode.childNodes.length; i++)
+    {
       // found it!
-      if (searchNode.childNodes[i].nodeName == nodeName) {
+      if (searchNode.childNodes[i].nodeName == nodeName)
+      {
         return searchNode.childNodes[i];
       }
     }
@@ -1344,18 +1456,19 @@ c3dl.ColladaLoader = function () {
 
 
 /**
-  @private	
-
-  static method of collada loader. 
-
-  @param {} xmlObject
-  @param {String} nodeName
-  @param {String} attributeKey
-  @param {String} attributeValue
-
-  @returns 
-*/
-c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attributeKey, attributeValue) {
+ @private	
+ 
+ static method of collada loader. 
+ 
+ @param {} xmlObject
+ @param {String} nodeName
+ @param {String} attributeKey
+ @param {String} attributeValue
+ 
+ @returns 
+ */
+c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attributeKey, attributeValue)
+{
   var nodeFound;
 
   // go to the root of the XML
@@ -1365,8 +1478,10 @@ c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attribu
   var elements = root.getElementsByTagName(nodeName);
 
   // we might have a few tags, we need to find the one with the id specified
-  for (var i = 0; i < elements.length; i++) {
-    if (elements[i].getAttribute(attributeKey) == attributeValue) {
+  for (var i = 0; i < elements.length; i++)
+  {
+    if (elements[i].getAttribute(attributeKey) == attributeValue)
+    {
       nodeFound = elements[i];
     }
   }
@@ -1375,22 +1490,26 @@ c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attribu
 
 
 /**
-  @private
-  Get the child nodes of searchNode which have the name 'nodeName'.
-  This funciton is not recursive.  It only returns the <b>direct</b> children.
-
-  @param {String} searchNode - the node to search.
-  @param {String} nodeName - the nodes to search for.
-
-  @returns {Array} array of node elements.
-*/
-c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName) {
+ @private
+ Get the child nodes of searchNode which have the name 'nodeName'.
+ This funciton is not recursive.  It only returns the <b>direct</b> children.
+ 
+ @param {String} searchNode - the node to search.
+ @param {String} nodeName - the nodes to search for.
+ 
+ @returns {Array} array of node elements.
+ */
+c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName)
+{
   var children = [];
   var foundOne = false;
 
-  if (searchNode.childNodes.length > 0) {
-    for (var i = 0; i < searchNode.childNodes.length; i++) {
-      if (searchNode.childNodes[i].nodeName == nodeName) {
+  if (searchNode.childNodes.length > 0)
+  {
+    for (var i = 0; i < searchNode.childNodes.length; i++)
+    {
+      if (searchNode.childNodes[i].nodeName == nodeName)
+      {
         children.push(searchNode.childNodes[i]);
         foundOne = true;
       }
@@ -1399,7 +1518,8 @@ c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName) {
 
   // somehow need to specify if non were found, so 
   // send back a null if that's the case.
-  if (foundOne == false) {
+  if (foundOne == false)
+  {
     children = null;
   }
 
@@ -1409,17 +1529,18 @@ c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName) {
 
 
 /**
-  @private
-  static method of c3dl.ColladaLoader
-
-  Turn a series of strings seperated by 'delimiter' into float values.
-  used when we need to convert <translate>0.0 0.0 0.0</translate> into float
-  values.
-
-  @param {String} numbers A string which contains numbers such as "1.0 0.0 1.0 0.0       0.0 1.0 ..." note the spaces.
-  @param {String} delimeter A string which is being used to separate the numbers.
-*/
-c3dl.ColladaLoader.stringsToFloats = function (numbers, delimeter) {
+ @private
+ static method of c3dl.ColladaLoader
+ 
+ Turn a series of strings seperated by 'delimiter' into float values.
+ used when we need to convert <translate>0.0 0.0 0.0</translate> into float
+ values.
+ 
+ @param {String} numbers A string which contains numbers such as "1.0 0.0 1.0 0.0       0.0 1.0 ..." note the spaces.
+ @param {String} delimeter A string which is being used to separate the numbers.
+ */
+c3dl.ColladaLoader.stringsToFloats = function (numbers, delimeter)
+{
   var floatValues = [];
 
   // Get rid of leading and trailing spaces so they don't interfere with out split().
@@ -1437,7 +1558,8 @@ c3dl.ColladaLoader.stringsToFloats = function (numbers, delimeter) {
   // strings, so convert them to float.
   var strValues = trimmedNumbers.split(delimeter);
 
-  for (var i = 0; i < strValues.length; i++) {
+  for (var i = 0; i < strValues.length; i++)
+  {
     floatValues.push(parseFloat(strValues[i]));
   }
 

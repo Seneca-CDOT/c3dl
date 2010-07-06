@@ -10,7 +10,7 @@
     <created>2008-12-18T07:30:43Z</created>
     <modified>2008-12-18T07:30:44Z</modified>
     <unit meter="0.0254" name="inch"/>
-    <up_axis>Z_UP</up_axis>
+    <up_axis>Y_UP</up_axis>
   </asset>
   <library_images>
     <image id="c3DL_UVTexture.jpg" name="c3DL_UVTexture_jpg">
