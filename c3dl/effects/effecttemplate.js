@@ -175,7 +175,7 @@ c3dl.EffectTemplate = function ()
   {
     var ret = [];
 
-    for (var i = 0; i < this.params.length; i++)
+    for (var i = 0, len = this.params.length; i < len; i++)
     {
       var val;
 
@@ -261,7 +261,7 @@ c3dl.EffectTemplate = function ()
     var programID = -1;
     var found = false;
 
-    for (var i = 0; found == false && i < this.programObjects.length; i++)
+    for (var i = 0, len = this.programObjects.length; found == false && i < len; i++)
     {
       if (found === false)
       {

@@ -129,7 +129,7 @@ c3dl.ParticleSystem = function ()
 
     // stay within the bounds and don't emit more than we have.
     // we count down until numParticlesToEmit is zero.
-    for (var i = 0; i < this.particles.length && numToEmit > 0; i++)
+    for (var i = 0, len = this.particles.length; i < len && numToEmit > 0; i++)
     {
       // if we found a dead particle, recycle it.
       if (this.particles[i].isAlive() == false)
@@ -203,15 +203,15 @@ c3dl.ParticleSystem = function ()
     this.particleColors = new Array(this.particles.length * 4 * 4);
     this.particleTexCoords = new Array(this.particles.length * 2 * 4);
 
-    for (var i = 0; i < this.particleColors.length; i++)
+    for (var i = 0, len = this.particleColors.length; i < len; i++)
     {
       this.particleColors[i] = 0.0;
     }
-    for (var i = 0; i < this.particleVerts.length; i++)
+    for (var i = 0, len = this.particleVerts.length; i < len; i++)
     {
       this.particleVerts[i] = 0.0;
     }
-    for (var i = 0; i < this.particleTexCoords.length; i++)
+    for (var i = 0, len = this.particleTexCoords.length; i < len; i++)
     {
       this.particleTexCoords[i] = 0;
     }
@@ -718,7 +718,7 @@ c3dl.ParticleSystem = function ()
 
     var p = 0,
       j = 0;
-    for (var i = 0; i < this.particleColors.length; i++, j++)
+    for (var i = 0, len =this.particleColors.length; i < len; i++, j++)
     {
       if (i != 0 && i % 16 == 0)
       {
@@ -734,7 +734,7 @@ c3dl.ParticleSystem = function ()
     }
     //     c3dl.debug.logWarning(p + "  .   " + this.particleColors);
     // now update the particles
-    for (var i = 0; i < this.particles.length; i++)
+    for (var i = 0, len = this.particles.length; i < len; i++)
     {
       // don't update the particle unless its alive.
       if (this.particles[i].isAlive())
@@ -810,7 +810,7 @@ c3dl.ParticleSystem = function ()
   {
     if (this.firstTimeRender === true)
     {
-      for (var i = 0, j = 0; i < this.particleTexCoords.length; i++, j++)
+      for (var i = 0, j = 0, len = this.particleTexCoords.length; i < len; i++, j++)
       {
         if (j > 7)
         {

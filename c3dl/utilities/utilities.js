@@ -76,7 +76,7 @@ c3dl.isPathAbsolute = function (path)
 {
   var isAbsolute = false;
 
-  for (var i = 0; i < path.length && i < 8; i++)
+  for (var i = 0, len = path.length; i < len && i < 8; i++)
   {
     if (path.charAt(i) == ":")
     {

@@ -109,7 +109,7 @@ c3dl.Effect = function ()
   {
     var isFound = false;
     var returnVal = null;
-    for (var i = 0; i < this.instanceParams.length; i++)
+    for (var i = 0, len = this.instanceParams.length; i < len; i++)
     {
       if (this.instanceParams[i].name == paramName)
       {
@@ -146,7 +146,7 @@ c3dl.Effect = function ()
     {
       var isFound = false;
 
-      for (var i = 0; !isFound && i < this.instanceParams.length; i++)
+      for (var i = 0, len = this.instanceParams.length; !isFound && i < len; i++)
       {
         if (paramName == this.instanceParams[i].name)
         {
