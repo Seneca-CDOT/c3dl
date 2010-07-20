@@ -19,6 +19,7 @@ c3dl.BoundingSphere = function ()
   this.original = [0, 0, 0];
   // position of the boundingSphere in world space.
   this.position = [0, 0, 0];
+  this.center = [0, 0, 0];
   this.radius = 0;
 
   // This varialbe exists here to solve the problem of the Model and Bounding Sphere
@@ -61,7 +62,25 @@ c3dl.BoundingSphere = function ()
     // too much allocation. So allocate outside the loop.
     var vector = [0, 0, 0];
     var currVector;
-
+	var maxMins = [], lengthVerts = [], heightVerts= [], widthVerts= [];
+	var j = 0;
+    for (var i = 0; i < vertices.length/3; i++) {
+      lengthVerts[i] = vertices[j];
+      heightVerts[i] = vertices[j+1];
+      widthVerts[i] = vertices[j+2];
+      j+=3
+    }    
+    
+    maxMins[0] = c3dl.findMax(lengthVerts); 
+	maxMins[1] = c3dl.findMin(lengthVerts);
+    maxMins[2] = c3dl.findMax(heightVerts);
+    maxMins[3] = c3dl.findMin(heightVerts); 
+    maxMins[4] = c3dl.findMax(widthVerts); 
+    maxMins[5] = c3dl.findMin(widthVerts);     
+     
+    this.center[0] = (maxMins[0] + maxMins[1])/2;
+    this.center[1] = (maxMins[2] + maxMins[3])/2;
+    this.center[2] = (maxMins[4] + maxMins[5])/2;
     // iterate over the vertices and find the longest vector.
     for (var i = 0; i < vertices.length; i += 3)
     {
@@ -96,7 +115,7 @@ c3dl.BoundingSphere = function ()
    */
   this.setPosition = function (position)
   {
-    this.position = [position[0], position[1], position[2]];
+    this.position = [position[0]+this.center[0], position[1]+this.center[1], position[2]+this.center[2]];
   }
 
   /**

@@ -1178,7 +1178,39 @@ c3dl.Scene = function ()
     // particle system was inserted, but the getObj(index) would then have 
     // been invalidated.
     var particleSystems = [];
-
+	// frustum culling
+	function Plane() {
+		this.A = null;
+		this.B = null;
+		this.C = null;
+		this.D = null;
+		this.normalize = function() {
+		   var t = Math.sqrt( this.A * this.A + this.B * this.B + this.C * this.C );
+		   this.A /= t;
+		   this.B /= t;
+		   this.C /= t;
+		   this.D /= t;
+		}
+	}
+	
+	var sphereInFrustum	= function(frustumPlane, boundingSphere) {
+		for(var i = 0; i < 6; i++) {
+			var pos = boundingSphere.getPosition();
+			
+			
+			var temp1 = frustumPlane[i].A * pos[0];
+			var temp2 = frustumPlane[i].B*pos[1]; 
+			var temp3 = frustumPlane[i].C*pos[2];
+			var temp4 = frustumPlane[i].D;
+			var d = temp1 + temp2 +temp3 +temp4;
+			if(d <=-boundingSphere.getRadius()) {
+			  return false; 
+			}
+		}
+		return true;
+    } 
+	
+	
     for (var i = 0; i < objList.length; i++)
     {
       if (objList[i].getObjectType() == c3dl.PARTICLE_SYSTEM)
@@ -1188,9 +1220,67 @@ c3dl.Scene = function ()
 
       if (objList[i].getObjectType() == c3dl.COLLADA)
       {
-        objList[i].render(glCanvas3D, this);
-      }
+		var checker = true;
+		
+		var cam = this.getCamera();
+		var projMatrix = cam.getProjectionMatrix();		
+        var viewMatrix = cam.getViewMatrix();
+		var modelMatrix = objList[i].getTransform();
+		
+		var modelViewMatrix = c3dl.multiplyMatrixByMatrix(viewMatrix,modelMatrix);
+	    var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix,modelViewMatrix);
 
+		frustumPlane = [];
+		
+		//right
+		frustumPlane[0] = new Plane();
+		frustumPlane[0].A=frustumMatrix[3]-frustumMatrix[0];
+		frustumPlane[0].B=frustumMatrix[7]-frustumMatrix[4];
+		frustumPlane[0].C=frustumMatrix[11]-frustumMatrix[8];
+		frustumPlane[0].D=frustumMatrix[15]-frustumMatrix[12];
+		//left
+		frustumPlane[1] = new Plane();
+		frustumPlane[1].A=frustumMatrix[3]+frustumMatrix[0];
+		frustumPlane[1].B=frustumMatrix[7]+frustumMatrix[4];
+		frustumPlane[1].C=frustumMatrix[11]+frustumMatrix[8];
+		frustumPlane[1].D=frustumMatrix[15]+frustumMatrix[12];
+		//bottom
+		frustumPlane[2] = new Plane();
+		frustumPlane[2].A=frustumMatrix[3]+frustumMatrix[1];
+		frustumPlane[2].B=frustumMatrix[7]+frustumMatrix[5];
+		frustumPlane[2].C=frustumMatrix[11]+frustumMatrix[9];
+		frustumPlane[2].D=frustumMatrix[15]+frustumMatrix[13];
+		//top
+		frustumPlane[3] = new Plane();
+		frustumPlane[3].A=frustumMatrix[3]-frustumMatrix[1];
+		frustumPlane[3].B=frustumMatrix[7]-frustumMatrix[5];
+		frustumPlane[3].C=frustumMatrix[11]-frustumMatrix[9];
+		frustumPlane[3].D=frustumMatrix[15]-frustumMatrix[13];
+		//far
+		frustumPlane[4] = new Plane();
+		frustumPlane[4].A=frustumMatrix[3]-frustumMatrix[2];
+		frustumPlane[4].B=frustumMatrix[7]-frustumMatrix[6];
+		frustumPlane[4].C=frustumMatrix[11]-frustumMatrix[10];
+		frustumPlane[4].D=frustumMatrix[15]-frustumMatrix[14] ;
+		//near
+		frustumPlane[5] = new Plane();
+		frustumPlane[5].A=frustumMatrix[3]+frustumMatrix[2];
+		frustumPlane[5].B=frustumMatrix[7]+frustumMatrix[6];
+		frustumPlane[5].C=frustumMatrix[11]+frustumMatrix[10];
+		frustumPlane[5].D=frustumMatrix[15]+frustumMatrix[14];
+		
+		for(var j=0; j<6; j++) {
+		   frustumPlane[j].normalize();
+		}
+		
+		var boundingSpheres = objList[i].getBoundingSpheres();
+		for (var j = 0; j < boundingSpheres.length; j++) {
+			checker = sphereInFrustum(frustumPlane, boundingSpheres[j]);
+		}
+		if (checker) {		
+			objList[i].render(glCanvas3D, this);
+		}
+      }
     }
 
     // POINTS
@@ -1200,8 +1290,7 @@ c3dl.Scene = function ()
     pointPositions = new Array();
     pointColors = new Array();
     //}
-    var currPoint = 0;
-
+    var currPoint = 0;    
     // find all the points and group them together so we can make
     // only 1 call to drawArrays instead of once for each point.
     for (var i = 0; i < objList.length; i++)
@@ -1262,6 +1351,7 @@ c3dl.Scene = function ()
     }
   }
 
+  
   /**
    Flags the main loop for exit.
    */
