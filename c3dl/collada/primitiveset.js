@@ -60,11 +60,11 @@ c3dl.PrimitiveSet = function ()
     this.buffers.normals = glCanvas3D.createBuffer();
     this.buffers.texCoords = glCanvas3D.createBuffer();
     glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.buffers.vertices);
-    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.vertices), glCanvas3D.STATIC_DRAW);
+    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.vertices, glCanvas3D.STATIC_DRAW);
     glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.buffers.normals);
-    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.normals), glCanvas3D.STATIC_DRAW);
+    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.normals, glCanvas3D.STATIC_DRAW);
     glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.buffers.texCoords);
-    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.texCoords), glCanvas3D.STATIC_DRAW);
+    glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.texCoords, glCanvas3D.STATIC_DRAW);
   }
 
   this.getVBOVertices = function ()

@@ -60,9 +60,9 @@ c3dl.ColladaManager.loadFile = function (filePath)
 
     // give the loader a sceneGraph which it will populate with nodes.
     // We know it has finished once it has set the scenegraph's root.
+
     var colladaLoader = new c3dl.ColladaLoader();
     colladaLoader.load(filePath, rootNode);
-
     c3dl.ColladaManager.keys.push(filePath);
     c3dl.ColladaManager.values.push(rootNode);
   }

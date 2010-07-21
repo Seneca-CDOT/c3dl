@@ -675,7 +675,7 @@ c3dl.ColladaLoader = function ()
       if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist")
       {
         var p = this.getFirstChildByNodeName(collations[currColl], "p");
-        rawFaces = this.mergeChildData(p.childNodes).split(" ");
+        new Float32Array(rawFaces = this.mergeChildData(p.childNodes).split(" "));
       }
 
       // <polygon>s are broken up like this:
@@ -686,14 +686,14 @@ c3dl.ColladaLoader = function ()
       else if (collations[currColl].nodeName == "polygons")
       {
         var p_tags = collations[currColl].getElementsByTagName("p");
-        rawFaces = [];
+        rawFaces = new Float32Array(collations[currColl].getAttribute("count"));
         for (var i = 0; i < p_tags.length; i++)
         {
           // need to get rid of the spaces
           var p_line = p_tags[i].childNodes[0].nodeValue.split(" ");
           for (var j = 0; j < p_line.length; j++)
           {
-            rawFaces.push(parseInt(p_line[j]));
+            rawFaces[i+j](parseInt(p_line[j]));
           }
         }
       }
@@ -744,7 +744,6 @@ c3dl.ColladaLoader = function ()
           // can index into it.
           var data = this.getData(xmlObject, "source", "id", posSource);
           vertexStride = parseInt(data.stride);
-
           if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
           {
             for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride)
@@ -763,7 +762,6 @@ c3dl.ColladaLoader = function ()
               data.values[vertIter + 1] = temp;
             }
           }
-
           verticesArray = this.groupScalarsIntoArray(data.values, 3, vertexStride);
         }
 
@@ -790,13 +788,12 @@ c3dl.ColladaLoader = function ()
           else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
           {
             for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride)
-            {
+            {		
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
               data.values[vertIter + 1] = temp;
             }
           }
-
           normalsArray = this.groupScalarsIntoArray(data.values, 3, normalsStride);
         }
 
@@ -842,7 +839,6 @@ c3dl.ColladaLoader = function ()
       {
         rawFaces = this.splitPolylist(collations[currColl], inputs.length, rawFaces);
       }
-
       // before we group the individual values in the faces array into
       // arrays so we can easily address values in the arrays for vertices,
       // textures, etc, we have to convert the quads into triangles since
@@ -913,7 +909,7 @@ c3dl.ColladaLoader = function ()
           }
         }
         // now we can overrite what rawFaces had in it
-        rawFaces = trianglesList;
+        rawFaces = new Float32Array(trianglesList);
       } // if polygons
       // we don't need a case for triangles since
       // now that we know how many inputs there were, we can group the faces.
@@ -1039,12 +1035,12 @@ c3dl.ColladaLoader = function ()
     //
     for (var i = 0; i < rawScalarValues.length; i += stride)
     {
-      var element = [];
-
+      var element = new Float32Array(numComponentsPerElement);
+	  var counter = 0;
       //
       for (var j = i; j < i + numComponentsPerElement; j++)
       {
-        element.push(rawScalarValues[j]);
+        element[counter++]=rawScalarValues[j];
       }
 
       listOfArrays.push(element);
@@ -1079,7 +1075,6 @@ c3dl.ColladaLoader = function ()
     // since we can only support triangles, we have to make a triangle list
     // and convert any quads to triangles.
     var trianglesList = [];
-
     //
     var partSize = numInputs;
 
@@ -1092,7 +1087,6 @@ c3dl.ColladaLoader = function ()
     for (var currPrim = 0; currPrim < collation.getAttribute("count"); currPrim++, vcountIndex++)
     {
       var partsArray = [];
-
       // the current number in the vcount list may have different values depending, may have 3, 4 or more
       // so we have to iterate for the amount of values in the primitive.
       for (var currPart = 0; currPart < vcountList[vcountIndex]; currPart++)
@@ -1160,7 +1154,7 @@ c3dl.ColladaLoader = function ()
     }
     // overwrite rawFaces with the triangle faces, as if quads never existed.
     //rawFaces = trianglesList;				
-    return trianglesList;
+    return new Float32Array(trianglesList);
   }
 
 
@@ -1224,11 +1218,10 @@ c3dl.ColladaLoader = function ()
     var accessorSrc = accessor.getAttribute("source").split("#")[1];
 
     //
-    var float_array = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "float_array", "id", accessorSrc);
-
+    var float_array = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "float_array", "id", accessorSrc);   
     //values in the DAE file are seperated with a space
     // don't use nodeValue since it will be broken up in 4096 chunks
-    data.values = this.mergeChildData(float_array.childNodes).split(" ");
+	data.values = new Float32Array(this.mergeChildData(float_array.childNodes).split(" "));
     return data;
   }
 
@@ -1271,9 +1264,10 @@ c3dl.ColladaLoader = function ()
    */
   this.expandFaces = function (faces, array, offset, numComponentsToExpand)
   {
+  
     // this is a single dimensional array which hold expanded values.
-    var expandedArray = [];
-
+    var expandedArray = new Float32Array(faces.length*3);
+	var counter = 0;
     // in the nested loop, we divide the instructions into parts to
     // make it easier to read, but don't allocate these varialbes everytime
     // the loop is executed, so declare them here. This speeds up the parser
@@ -1299,7 +1293,6 @@ c3dl.ColladaLoader = function ()
         // [3, 1, 4]
         face = faces[currFace];
 
-
         // we might be dealing with verts, norms or textures, each has a different offset.
         // then go to a particular value inside denoted by the offset.
         // [3, 1, 4]
@@ -1318,16 +1311,11 @@ c3dl.ColladaLoader = function ()
         // ...
         // this is done for each component, for textures, we have 2 components.
         // for normals, we have 3.
-        if (coordIndex)
-        {
-          coord = array[coordIndex][currComp];
-        }
-
-        // we have the value, but its a string so we have to convert it to a number.
-        floatVal = parseFloat(coord);
-
+        if (array) {
+			coord = array[coordIndex][currComp];
+		}
         // insert that value into the 1d array.
-        expandedArray.push(floatVal);
+        expandedArray[counter++]=coord;
       }
     }
     return expandedArray;
