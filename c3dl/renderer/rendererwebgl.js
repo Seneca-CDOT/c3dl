@@ -276,7 +276,7 @@ c3dl.WebGL = function ()
   {
     if (lightID >= 0 && lightID < c3dl.MAX_LIGHTS)
     {
-      for (var i = 0; i < this.programsWithLights.length; i++)
+      for (var i = 0, len = this.programsWithLights.length; i < len; i++)
       {
         var PID = this.programsWithLights[i];
 
@@ -312,7 +312,7 @@ c3dl.WebGL = function ()
     var prevVal = c3dl.debug.getVisible();
     c3dl.debug.setVisible(false);
 
-    for (var i = 0; i < this.programsWithLights.length; i++)
+    for (var i = 0, len = this.programsWithLights.length; i < len; i++)
     {
       glCanvas3D.useProgram(this.programsWithLights[i]);
       this.setUniformf(this.programsWithLights[i], "ambientLightColor", ambientLight);
@@ -335,14 +335,14 @@ c3dl.WebGL = function ()
   this.updateLights = function (lightList)
   {
     // The list of all the program objects which have lights need to be updated
-    for (var progObjIter = 0; progObjIter < this.programsWithLights.length; progObjIter++)
+    for (var progObjIter = 0, len = this.programsWithLights.length; progObjIter < len; progObjIter++)
     {
       var shader = this.programsWithLights[progObjIter];
 
       glCanvas3D.useProgram(shader);
 
       // iterate over all the lights
-      for (var i = 0; i < lightList.length; i++)
+      for (var i = 0, len2 = lightList.length; i < len2; i++)
       {
         // create a base string to shorten code below.
         var base = "lights[" + i + "].";
@@ -690,7 +690,7 @@ c3dl.WebGL = function ()
           // check if the user added the light vertex shader source.
           // if they did, we'll need to update the light states every
           // update for that shader.
-          for (var i = 0; i < vertexShaders.length; i++)
+          for (var i = 0, len = vertexShaders.length; i < len; i++)
           {
             if (vertexShaders[i] == c3dl.light_vs)
             {
@@ -700,7 +700,7 @@ c3dl.WebGL = function ()
             }
           }
 
-          for (var i = 0; i < fragmentShaders.length; i++)
+          for (var i = 0, len = fragmentShaders.length; i < len; i++)
           {
             if (fragmentShaders[i] == c3dl.light_vs)
             {
@@ -845,7 +845,7 @@ c3dl.WebGL = function ()
     this.setUniformMatrix(shader, "rot", [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
     this.setVertexAttribArray(shader, "Vertex", 3, psys.getVBOVertices());
 
-    for (var i = 0; i < psys.getNumParticles(); i++)
+    for (var i = 0, numParticles = psys.getNumParticles(); i < numParticles; i++)
     {
       if (psys.getParticle(i).isAlive())
       {
@@ -901,7 +901,7 @@ c3dl.WebGL = function ()
 
       // we need to render each line individually since each can have 
       // a different width.
-      for (var l = 0; l < lines.length; l++)
+      for (var l = 0, len = lines.length; l < len; l++)
       {
         glCanvas3D.lineWidth(lines[l].getWidth());
 
@@ -1019,7 +1019,7 @@ c3dl.WebGL = function ()
         {
           c3dl.pushMatrix();
 
-          for (var i = 0; i < pointPositions.length; i += 3)
+          for (var i = 0, len = pointPositions.length; i < len; i += 3)
           {
             // 
             var mat = c3dl.makeIdentityMatrix();

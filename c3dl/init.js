@@ -23,7 +23,7 @@ c3dl.addProgressBars = function ()
   var canvases = document.getElementsByTagName('canvas');
 
   // add a progress bar for each of the canvases.
-  for (var i = 0; i < canvases.length; i++)
+  for (var i = 0, len = canvases.length; i < len; i++)
   {
     // to place the loading gif in the center of the canvas, we'll need to
     // get the absolute position of the canvas.
@@ -97,7 +97,7 @@ c3dl.init = function ()
   // call the main methods.
   if (c3dl.preloadModels.length == 0)
   {
-    for (var i = 0; i < c3dl.mainCallBacks.length; i++)
+    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
     {
       // Each element is an object which holds a function 
       // and a tag.  They were both placed in a wrapper
@@ -118,7 +118,7 @@ c3dl.init = function ()
     // the user know that there is loading occuring.
     c3dl.addProgressBars();
 
-    for (var i = 0; i < c3dl.preloadModels.length; i++)
+    for (var i = 0, len = c3dl.preloadModels.length; i < len; i++)
     {
       var preloadColadda = new c3dl.Collada();
       preloadColadda.init(c3dl.preloadModels[i]);

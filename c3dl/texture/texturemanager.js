@@ -104,7 +104,7 @@ c3dl.TextureManager = function (gl)
   {
     var id = -1;
 
-    for (var i = 0; i < this.values.length; i++)
+    for (var i = 0, len = this.values.length; i < len; i++)
     {
       if (this.values[i].getRelativePath() == relativePath)
       {
@@ -136,7 +136,7 @@ c3dl.TextureManager = function (gl)
 
     // start with en empty string
     var str = "";
-    for (var i = 0; i < this.values.length; i++)
+    for (var i = 0, len = this.values.length; i < len; i++)
     {
       str += "ID = " + this.keys[i] + delimiter + "Path = " + this.values[i].getRelativePath();
 

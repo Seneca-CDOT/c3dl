@@ -96,7 +96,7 @@ c3dl.Picking = function (scene)
 
     // Collada objects must pass an enclosure test first before their individual
     // triangles are tested against the ray, to speed up this test.
-    for (var i = 0; i < scn.getObjListSize(); i++)
+    for (var i = 0, len = scn.getObjListSize(); i < len; i++)
     {
       var currObj = scn.getObj(i);
 
@@ -130,7 +130,7 @@ c3dl.Picking = function (scene)
       // We only test the objects which have passed the bounding volume test.
       // If the ray has not intersected the bounding volume, it can't possibly intersect
       // with any triangle in the object.
-      for (var i = 0; i < passedBoundsTest.length; i++)
+      for (var i = 0, len = passedBoundsTest.length; i < len; i++)
       {
         var currObject = passedBoundsTest[i];
         // if the object is a collada object
@@ -156,7 +156,7 @@ c3dl.Picking = function (scene)
     if (scn.getPointRenderingMode() == c3dl.POINT_MODE_POINT)
     {
       // for every point in the scene
-      for (var i = 0; i < scn.getObjListSize(); i++)
+      for (var i = 0, len = scn.getObjListSize(); i < len; i++)
       {
         if (scn.getObj(i) instanceof c3dl.Point)
         {
@@ -202,7 +202,7 @@ c3dl.Picking = function (scene)
     else if (scn.getPointRenderingMode() == c3dl.POINT_MODE_SPHERE)
     {
       // for every point in the scene
-      for (var i = 0; i < scn.getObjListSize(); i++)
+      for (var i = 0, len = scn.getObjListSize(); i < len; i++)
       {
         if (scn.getObj(i) instanceof c3dl.Point)
         {
@@ -371,9 +371,9 @@ c3dl.sortObjectsFromCam = function (scene, camera, pickedObjects)
   // used to swap objects
   var temp;
   // Sort all intersecting objects from closet to farthest 
-  for (var i = 0; i < pickedObjects.length; i++)
+  for (var i = 0, len = pickedObjects.length; i < len; i++)
   {
-    for (var j = 0; j < pickedObjects.length; j++)
+    for (var j = 0, len2= pickedObjects.length; j < len2; j++)
     {
       objAPos = pickedObjects[i].getPosition();
       objBPos = pickedObjects[j].getPosition();

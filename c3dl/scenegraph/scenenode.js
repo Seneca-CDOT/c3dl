@@ -36,7 +36,7 @@ c3dl.SceneNode.prototype.clone = function (other)
   c3dl._super(this, arguments, "clone");
 
   // copy all the children
-  for (var i = 0; i < other.children.length; i++)
+  for (var i = 0, len = other.children.length; i < len; i++)
   {
     this.addChild(other.children[i].getCopy());
   }
@@ -76,7 +76,7 @@ c3dl.SceneNode.prototype.findNode = function (nodeName)
   // otherwise check the children
   else
   {
-    for (var i = 0; i < this.children.length; i++)
+    for (var i = 0, len = this.children.length; i < len; i++)
     {
       //
       if (this.children[i] instanceof c3dl.SceneNode)
@@ -108,7 +108,7 @@ c3dl.SceneNode.prototype.update = function (timeStep)
 {
   c3dl._super(this, arguments, "update");
 
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     this.children[i].update(timeStep);
   }
@@ -128,7 +128,7 @@ c3dl.SceneNode.prototype.render = function (glCanvas3D, scene)
   c3dl.pushMatrix();
   c3dl.multMatrix(this.getTransform());
 
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     this.children[i].render(glCanvas3D, scene);
   }
@@ -147,7 +147,7 @@ c3dl.SceneNode.prototype.render = function (glCanvas3D, scene)
  */
 c3dl.SceneNode.prototype.setTexture = function (textureName)
 {
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     this.children[i].setTexture(textureName);
   }
@@ -159,7 +159,7 @@ c3dl.SceneNode.prototype.setTexture = function (textureName)
  */
 c3dl.SceneNode.prototype.setMaterial = function (material)
 {
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     this.children[i].setMaterial(material);
   }
@@ -169,7 +169,7 @@ c3dl.SceneNode.prototype.setMaterial = function (material)
  */
 c3dl.SceneNode.prototype.setEffect = function (effect)
 {
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     this.children[i].setEffect(effect);
   }
@@ -195,7 +195,7 @@ c3dl.SceneNode.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
 
   var passed = false;
 
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     // found a node which passed, we don't have to test the rest of the nodes.
     if (this.children[i].rayIntersectsTriangles(rayOrigin, rayDir))
@@ -228,7 +228,7 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
 
   // iterate over each child or stop until we find one which has passed the Bounding
   // sphere test.
-  for (var i = 0; i < this.children.length; i++)
+  for (var i = 0, len = this.children.length; i < len; i++)
   {
     // found a node which passed, we don't have to test the rest of the nodes.
     if (this.children[i].rayIntersectsEnclosures(rayOrigin, rayDir))

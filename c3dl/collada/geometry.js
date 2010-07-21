@@ -37,7 +37,7 @@ c3dl.Geometry = function ()
   this.clone = function (other)
   {
     // 
-    for (var i = 0; i < other.primitiveSets.length; i++)
+    for (var i = 0, len = other.primitiveSets.length; i < len; i++)
     {
       this.primitiveSets.push(other.primitiveSets[i].getCopy());
     }
@@ -92,7 +92,7 @@ c3dl.Geometry = function ()
   {
     var mat = c3dl.peekMatrix();
 
-    for (var i = 0; i < this.primitiveSets.length; i++)
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
       var bs = this.primitiveSets[i].getBoundingSphere();
       var longestVec;
@@ -132,12 +132,12 @@ c3dl.Geometry = function ()
     var vert2 = new Float32Array(3);
     var vert3 = new Float32Array(3);
 
-    for (var i = 0; i < this.primitiveSets.length; i++)
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
       var vertices = this.primitiveSets[i].getVertices();
 
       // Iterate over each face of the object and test it against the ray.
-      for (var j = 0; j < vertices.length; j += 9)
+      for (var j = 0, len2 = vertices.length; j < len2; j += 9)
       {
         // 3 points of a triangle with the object's position offset
         vert1[0] = vertices[j];
@@ -180,7 +180,7 @@ c3dl.Geometry = function ()
     if (this.firstTimeRender == true)
     {
       // iterate over the primitive sets and setup their VBOs
-      for (var i = 0; i < this.primitiveSets.length; i++)
+      for (var i = 0, len = this.primitiveSets.length; i < len; i++)
       {
         this.primitiveSets[i].setupVBO(glCanvas3D);
       }
@@ -192,7 +192,7 @@ c3dl.Geometry = function ()
     if (scene.getBoundingVolumeVisibility())
     {
       // tell all the collation elements/ primitive sets to render their bounding spheres.
-      for (var i = 0; i < this.primitiveSets.length; i++)
+      for (var i = 0, len = this.primitiveSets.length; i < len; i++)
       {
         var bs = this.primitiveSets[i].getBoundingSphere();
         if (bs)
@@ -226,7 +226,7 @@ c3dl.Geometry = function ()
    */
   this.setMaterial = function (material)
   {
-    for (var i = 0; i < this.primitiveSets.length; i++)
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
       this.primitiveSets[i].setMaterial(material);
     }
@@ -240,7 +240,7 @@ c3dl.Geometry = function ()
    */
   this.setTexture = function (texture)
   {
-    for (var i = 0; i < this.primitiveSets.length; i++)
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
       this.primitiveSets[i].setTexture(texture);
     }
@@ -255,7 +255,7 @@ c3dl.Geometry = function ()
   this.update = function (timeStep)
   {
     //
-    for (var i = 0; i < this.primitiveSets.length; i++)
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
       var bs = this.primitiveSets[i].getBoundingSphere();
       if (bs)

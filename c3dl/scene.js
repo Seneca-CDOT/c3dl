@@ -797,7 +797,7 @@ c3dl.Scene = function ()
 
       // setup the lights
       // we have an array of elements, but they are all undefined,
-      for (var i = 0; i < lightList.length; i++)
+      for (var i = 0, len = lightList.length; i < len; i++)
       {
         lightList[i] = null;
       }
@@ -818,7 +818,7 @@ c3dl.Scene = function ()
    */
   this.getLight = function (name)
   {
-    for (var i = 0; i < lightList.length; i++)
+    for (var i = 0, len = lightList.length; i < len; i++)
     {
       // if we found a match, since we have 'holes' in the array
       // check that the value is not null before calling its method.
@@ -869,7 +869,7 @@ c3dl.Scene = function ()
     // the WebGL state variable to all zeros so it will no longer affect the scene.
     // first find the index of the light in our array.
     var lightID = -1;
-    for (var i = 0; i < lightList.length && lightID == -1; i++)
+    for (var i = 0, len = lightList.length; i < len && lightID == -1; i++)
     {
       if (lightList[i] && lightList[i].getName() == lightName)
       {
@@ -946,7 +946,7 @@ c3dl.Scene = function ()
     if (obj instanceof c3dl.Primitive || obj instanceof c3dl.Point || obj instanceof c3dl.Line || obj instanceof c3dl.ParticleSystem)
     {
       // Check against each item in the list
-      for (var i = 0; i < objList.length; i++)
+      for (var i = 0, len = objList.length; i < len; i++)
       {
         if (objList[i] == obj)
         {
@@ -1034,7 +1034,7 @@ c3dl.Scene = function ()
     // which case, the renderer needs to create them.
     if (textureQueue.length > 0)
     {
-      for (var i = 0; i < textureQueue.length; i++)
+      for (var i = 0, len = textureQueue.length; i < len; i++)
       {
         renderer.addTexture(textureQueue[i]);
       }
@@ -1092,7 +1092,7 @@ c3dl.Scene = function ()
     }
 
     // update the rest of the objects individually
-    for (var i = 0; i < objList.length; i++)
+    for (var i = 0, len = objList.length; i < len; i++)
     {
       // we don't need to update lines or points since their
       // positions/coords are controlled by the user in the
@@ -1179,7 +1179,7 @@ c3dl.Scene = function ()
     // been invalidated.
     var particleSystems = [];
 
-    for (var i = 0; i < objList.length; i++)
+    for (var i = 0, len = objList.length; i < len; i++)
     {
       if (objList[i].getObjectType() == c3dl.PARTICLE_SYSTEM)
       {
@@ -1204,7 +1204,7 @@ c3dl.Scene = function ()
 
     // find all the points and group them together so we can make
     // only 1 call to drawArrays instead of once for each point.
-    for (var i = 0; i < objList.length; i++)
+    for (var i = 0, len = objList.length; i < len; i++)
     {
       if (objList[i].getObjectType() == c3dl.POINT && objList[i].isVisible())
       {
@@ -1244,7 +1244,7 @@ c3dl.Scene = function ()
     // and pass the lines to the renderer.
     var lines = [];
 
-    for (var j = 0; j < objList.length; j++)
+    for (var j = 0, len = objList.length; j < len; j++)
     {
       if (objList[j].getObjectType() == c3dl.LINE && objList[j].isVisible())
       {
@@ -1256,7 +1256,7 @@ c3dl.Scene = function ()
     // Render the particle systems last because they 
     // have blending
     // glCanvas3D.frontFace(glCanvas3D.CW);
-    for (var i = 0; i < particleSystems.length; i++)
+    for (var i = 0, len = particleSystems.length; i < len; i++)
     {
       particleSystems[i].render(glCanvas3D, this);
     }
@@ -1290,7 +1290,7 @@ c3dl.Scene = function ()
   {
     if (textureManager)
     {
-      for (var i = 0; i < imagePaths.length; i++)
+      for (var i = 0, len = imagePaths.length; i < len; i++)
       {
         textureManager.addTexture(imagePaths[i]);
       }

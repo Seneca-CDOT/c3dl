@@ -63,7 +63,7 @@ c3dl.BoundingSphere = function ()
     var currVector;
 
     // iterate over the vertices and find the longest vector.
-    for (var i = 0; i < vertices.length; i += 3)
+    for (var i = 0, len = vertices.length; i < len; i += 3)
     {
       // 
       vector[0] = vertices[i + 0];

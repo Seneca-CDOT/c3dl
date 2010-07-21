@@ -77,7 +77,7 @@ c3dl.ColladaQueue =
     {
       c3dl.removeProgressBars();
 
-      for (var i = 0; i < c3dl.mainCallBacks.length; i++)
+      for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
       {
         var func = c3dl.mainCallBacks[i].f;
         var tag = c3dl.mainCallBacks[i].t;

@@ -114,7 +114,7 @@ c3dl.ColladaManager.getIndex = function (filePath)
 {
   var index = -1;
 
-  for (var i = 0; i < c3dl.ColladaManager.values.length; i++)
+  for (var i = 0, len = c3dl.ColladaManager.values.length; i < len; i++)
   {
     if (filePath == c3dl.ColladaManager.keys[i])
     {

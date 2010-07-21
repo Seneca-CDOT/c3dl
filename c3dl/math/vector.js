@@ -30,7 +30,7 @@ c3dl.isValidVector = function (vecArr)
     // user wants w = 1.
     if (vecArr.length == 3 || vecArr.length == 4)
     {
-      for (var i = 0; i < vecArr.length; i++)
+      for (var i = 0, len = vecArr.length; i < len; i++)
       {
         // Check for bad values
         if (isNaN(vecArr[i])) return false;
