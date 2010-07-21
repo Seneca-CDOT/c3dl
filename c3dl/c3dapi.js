@@ -55,7 +55,7 @@ c3dl_require('math/vector.js');
 c3dl_require('math/matrix.js');
 c3dl_require('math/quaternion.js');
 c3dl_require('matrixstack.js');
-
+c3dl_require('math/mjs.js');
 //cameras
 c3dl_require('camera/camera.js');
 c3dl_require('camera/freecamera.js');

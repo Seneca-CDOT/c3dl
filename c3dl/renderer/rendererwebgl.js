@@ -363,7 +363,7 @@ c3dl.WebGL = function ()
               // place the light in viewspace here instead of the shader, preventing placing the lights
               // in viewspace for every vertex.
               var dir = c3dl.multiplyMatrixByDirection(c3dl.peekMatrix(), lightList[i].getDirection());
-              dir.push(0);
+              dir =c3dl.addVectorComponent(dir,0);
 
               this.setUniformf(shader, base + "position", dir);
 
@@ -376,7 +376,7 @@ c3dl.WebGL = function ()
             {
               var pos = lightList[i].getPosition();
               pos = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), pos);
-              pos.push(1);
+              pos = c3dl.addVectorComponent(pos,1);
 
               var dir = lightList[i].getDirection();
               dir = c3dl.multiplyMatrixByDirection(c3dl.peekMatrix(), dir);
@@ -392,7 +392,7 @@ c3dl.WebGL = function ()
               var pos = lightList[i].getPosition();
               //pos = c3dl.multiplyMatrixByVector(c3dl.getUniform("viewMatrix"), pos);
               pos = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), pos);
-              pos.push(1);
+              pos = c3dl.addVectorComponent(pos,1);
 
               this.setUniformf(shader, base + "position", pos);
               this.setUniformf(shader, base + "spotCutoff", 180.0);

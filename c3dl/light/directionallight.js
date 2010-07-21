@@ -27,7 +27,7 @@ c3dl.DirectionalLight = function ()
   // positional if the last value for POSITION is 1.
   // We use a 'direction' variable, but when given the light direction needs
   // to be specified, we just pass in our this.direction into the POSITION parameter.
-  this.direction = [0, 0, 1];
+  this.direction = c3dl.makeVector(0, 0, 1);
   this.type = c3dl.DIRECTIONAL_LIGHT;
 
   /**
@@ -37,7 +37,7 @@ c3dl.DirectionalLight = function ()
    */
   this.getDirection = function ()
   {
-    return [this.direction[0], this.direction[1], this.direction[2]];
+    return c3dl.copyVector(this.direction);
   }
 
   /**
@@ -49,10 +49,7 @@ c3dl.DirectionalLight = function ()
    */
   this.setDirection = function (dir)
   {
-    if (c3dl.isValidVector(dir))
-    {
-      this.direction = c3dl.normalizeVector(dir);
-    }
+    this.direction = c3dl.normalizeVector(dir);
   }
 }
 

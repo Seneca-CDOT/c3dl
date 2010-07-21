@@ -12,18 +12,18 @@ c3dl.ParticleSystem = function ()
   // particle uv's won't change so instead of keeping
   // a copy of uv coords in each particle, keep one copy
   // in the particle system.
-  this.particleUVs = [1, 1, //
-                      1, 0, //
-                      0, 0, //
-                      0, 1]; //
+  this.particleUVs = new Float32Array([1, 1, //
+                                       1, 0, //
+                                       0, 0, //
+                                       0, 1]); //
   // winding order of these verts is counter-clockwise, the same as models. This
   // prevents having to change the winding order state in WebGL when rendering.
-  this.billboardVerts = [1, -1, 0, // bottom right
-                         1,  1, 0, // top right
-                       - 1,  1, 0, // top left
-                       - 1, -1, 0]; // bottom left
+  this.billboardVerts = new Float32Array([1, -1, 0, // bottom right
+                                          1,  1, 0, // top right
+                                        - 1,  1, 0, // top left
+                                        - 1, -1, 0]); // bottom left
   // this particle system's transformation matrix
-  this.mat = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  this.mat = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
   // list of the Particle objects.
   this.particles;
@@ -38,8 +38,8 @@ c3dl.ParticleSystem = function ()
   // velocity range of the particles.  When particles
   // are born they are assigned a range between these two
   // values.
-  this.minVelocity = [0, 0, 0];
-  this.maxVelocity = [0, 0, 0];
+  this.minVelocity = c3dl.makeVector(0, 0, 0);
+  this.maxVelocity = c3dl.makeVector(0, 0, 0);
 
   this.maxAngVel = 0;
   this.minAngVel = 0;
@@ -52,8 +52,8 @@ c3dl.ParticleSystem = function ()
 
   // the color range of the particles. The color also contains an
   // alpha component.
-  this.minColor = [0, 0, 0, 0];
-  this.maxColor = [0, 0, 0, 0];
+  this.minColor = new Float32Array([0, 0, 0, 0]);
+  this.maxColor = new Float32Array([0, 0, 0, 0]);
 
   //
   //
@@ -63,7 +63,7 @@ c3dl.ParticleSystem = function ()
   // acceleration is a property of the subsystem. Every
   // particle in the subsystem will share the same
   // acceleration.
-  this.acceleration = [0, 0, 0, 0];
+  this.acceleration = new Float32Array([0, 0, 0, 0]);
 
   // blend modes
   this.dstBlend = c3dl.ZERO;
@@ -75,9 +75,9 @@ c3dl.ParticleSystem = function ()
   // on each update, we check if our local values are the
   // same as the scene's camera. if the scene's camera 
   // was updated, we recalculate our billboard.
-  this.camUp = [0, 0, 0];
-  this.camLeft = [0, 0, 0];
-  this.camDir = [0, 0, 0];
+  this.camUp = c3dl.makeVector(0, 0, 0);
+  this.camLeft = c3dl.makeVector(0, 0, 0);
+  this.camDir = c3dl.makeVector(0, 0, 0);
 
   // if the particle system is playing then the particles are
   // updated and rendered. Otherwise they are
@@ -199,9 +199,9 @@ c3dl.ParticleSystem = function ()
       this.particles[i] = new c3dl.Particle();
     }
 
-    this.particleVerts = new Array(this.particles.length * 3 * 4);
-    this.particleColors = new Array(this.particles.length * 4 * 4);
-    this.particleTexCoords = new Array(this.particles.length * 2 * 4);
+    this.particleVerts = new Float32Array(this.particles.length * 3 * 4);
+    this.particleColors = new Float32Array(this.particles.length * 4 * 4);
+    this.particleTexCoords = new Float32Array(this.particles.length * 2 * 4);
 
     for (var i = 0; i < this.particleColors.length; i++)
     {
@@ -335,7 +335,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getAcceleration = function ()
   {
-    return this.acceleration;
+    return new Float32Array(this.acceleration);
   }
 
   /**
@@ -366,7 +366,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMaxColor = function ()
   {
-    return this.maxColor;
+    return new Float32Array(this.maxColor);
   }
 
   /**
@@ -375,7 +375,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMinColor = function ()
   {
-    return this.minColor;
+    return new Float32Array(this.minColor);
   }
 
   /**
@@ -403,7 +403,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMinVelocity = function ()
   {
-    return this.minVelocity;
+    return new Float32Array(this.minVelocity);
   }
 
   /**
@@ -415,7 +415,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMaxVelocity = function ()
   {
-    return this.maxVelocity;
+    return new Float32Array(this.maxVelocity);
   }
 
   /**
@@ -446,10 +446,10 @@ c3dl.ParticleSystem = function ()
    */
   this.setAcceleration = function (acceleration)
   {
-    if (c3dl.isValidVector(acceleration))
-    {
-      this.acceleration = acceleration;
-    }
+    this.acceleration[0] = acceleration[0];
+	this.acceleration[1] = acceleration[1];
+	this.acceleration[2] = acceleration[2];
+	this.acceleration[3] = acceleration[3];
   }
 
   /**
@@ -498,7 +498,10 @@ c3dl.ParticleSystem = function ()
   {
     if (c3dl.isValidColor(maxColor))
     {
-      this.maxColor = maxColor;
+      this.maxColor[0] = maxColor[0];
+	  this.maxColor[1] = maxColor[1];
+	  this.maxColor[2] = maxColor[2];
+	  this.maxColor[3] = maxColor[3];
     }
   }
 
@@ -512,7 +515,10 @@ c3dl.ParticleSystem = function ()
   {
     if (c3dl.isValidColor(minColor))
     {
-      this.minColor = minColor;
+      this.minColor[0] = minColor[0];
+	  this.minColor[1] = minColor[1];
+	  this.minColor[2] = minColor[2];
+	  this.minColor[3] = minColor[3];
     }
   }
 
@@ -574,10 +580,9 @@ c3dl.ParticleSystem = function ()
    */
   this.setMinVelocity = function (minVelocity)
   {
-    if (c3dl.isValidVector(minVelocity))
-    {
-      this.minVelocity = minVelocity;
-    }
+    this.minVelocity[0] = minVelocity[0];
+	this.minVelocity[1] = minVelocity[1];
+	this.minVelocity[2] = minVelocity[2];
   }
 
   /**
@@ -587,23 +592,23 @@ c3dl.ParticleSystem = function ()
    */
   this.setMaxVelocity = function (maxVelocity)
   {
-    if (c3dl.isValidVector(maxVelocity))
-    {
-      this.maxVelocity = maxVelocity;
-    }
+    this.maxVelocity[0] = maxVelocity[0];
+	this.maxVelocity[1] = maxVelocity[1];
+	this.maxVelocity[2] = maxVelocity[2];
   }
 
   /**
    */
   this.setMaxAngularVelocity = function (maxAngVel)
   {
-
+    this.maxAngVel = maxAngVel;
   }
 
   /**
    */
   this.setMinAngularVelocity = function (minAngVel)
   {
+    this.minAngVel = minAngVel;
   }
 
   /**
@@ -821,28 +826,28 @@ c3dl.ParticleSystem = function ()
 
       this.VBOColors = glCanvas3D.createBuffer();
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOColors);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleColors), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleColors, glCanvas3D.STREAM_DRAW);
 
       this.VBOVertices = glCanvas3D.createBuffer();
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOVertices);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleVerts), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleVerts, glCanvas3D.STREAM_DRAW);
 
       this.VBOTexCoords = glCanvas3D.createBuffer();
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOTexCoords);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleTexCoords), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleTexCoords, glCanvas3D.STREAM_DRAW);
 
       this.firstTimeRender = 0;
     }
     else
     {
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOColors);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleColors), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleColors, glCanvas3D.STREAM_DRAW);
 
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOVertices);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleVerts), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleVerts, glCanvas3D.STREAM_DRAW);
 
       glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.VBOTexCoords);
-      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(this.particleTexCoords), glCanvas3D.STREAM_DRAW);
+      glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.particleTexCoords, glCanvas3D.STREAM_DRAW);
     }
 
     // disable writing into the depth buffer. This will prevent

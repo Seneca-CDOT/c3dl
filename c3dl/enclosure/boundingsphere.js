@@ -15,10 +15,10 @@ c3dl.BoundingSphere = function ()
   // non-uniform scaling is applied to the model, the enclosure will not.
   // For the enclosure to do so would incur an O(n) operation everytime the 
   // a model is scaled non-uniformly.
-  this.longestVector = [0, 0, 0];
-  this.original = [0, 0, 0];
+  this.longestVector = c3dl.makeVector(0, 0, 0);
+  this.original = c3dl.makeVector(0, 0, 0);
   // position of the boundingSphere in world space.
-  this.position = [0, 0, 0];
+  this.position = c3dl.makeVector(0, 0, 0);
   this.radius = 0;
 
   // This varialbe exists here to solve the problem of the Model and Bounding Sphere
@@ -59,7 +59,7 @@ c3dl.BoundingSphere = function ()
 
     // do not allocate a new vector for every iteration to prevent
     // too much allocation. So allocate outside the loop.
-    var vector = [0, 0, 0];
+    var vector = c3dl.makeVector(0, 0, 0);
     var currVector;
 
     // iterate over the vertices and find the longest vector.
@@ -96,7 +96,9 @@ c3dl.BoundingSphere = function ()
    */
   this.setPosition = function (position)
   {
-    this.position = [position[0], position[1], position[2]];
+    this.position[0] = position[0];
+	this.position[1] = position[1];
+	this.position[2] = position[2];
   }
 
   /**
@@ -150,6 +152,6 @@ c3dl.BoundingSphere = function ()
    */
   this.getPosition = function ()
   {
-    return [this.position[0], this.position[1], this.position[2]];
+    return c3dl.copyVector(this.position);
   }
 }

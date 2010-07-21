@@ -42,7 +42,7 @@ c3dl.OrbitCamera = c3dl.inherit(c3dl.Camera, function ()
   this.farthestDistance = 0;
 
   // the point in space the camera will 'orbit'.
-  this.orbitPoint = [0, 0, 0];
+  this.orbitPoint = c3dl.makeVector(0, 0, 0);
 });
 
 /**
@@ -85,7 +85,7 @@ c3dl.OrbitCamera.prototype.getFarthestDistance = function ()
  */
 c3dl.OrbitCamera.prototype.getOrbitPoint = function ()
 {
-  return c3dl.copyObj(this.orbitPoint);
+  return c3dl.copyVector(this.orbitPoint);
 }
 
 
@@ -243,7 +243,7 @@ c3dl.OrbitCamera.prototype.setDistance = function (distance)
   if (distance >= this.getClosestDistance() && distance <= this.getFarthestDistance())
   {
     // place the camera at the orbit point, then goFarther
-    this.pos = c3dl.copyObj(this.orbitPoint);
+    this.pos = c3dl.copyVector(this.orbitPoint);
 
     this.goFarther(distance);
   }
@@ -291,21 +291,15 @@ c3dl.OrbitCamera.prototype.setFarthestDistance = function (distance)
  */
 c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
 {
-  if (c3dl.isValidVector(orbitPoint))
-  {
-    // get the distance the camera was from the orbit point.
-    var orbitPointToCam = c3dl.multiplyVector(this.dir, -this.getDistance());
-
-    //
-    this.orbitPoint = orbitPoint;
-
-    this.pos = c3dl.addVectors(this.orbitPoint, orbitPointToCam);
-  }
-  else
-  {
-    c3dl.debug.logWarning("OrbitCamera::setOrbitPoint() called with a parameter that's not a vector");
-  }
+  // get the distance the camera was from the orbit point.
+  var orbitPointToCam = c3dl.multiplyVector(this.dir, -this.getDistance());
+  this.orbitPoint[0] = orbitPoint[0];
+  this.orbitPoint[1] = orbitPoint[1];
+  this.orbitPoint[2] = orbitPoint[2];
+  this.pos = c3dl.addVectors(this.orbitPoint, orbitPointToCam);
 }
+  
+
 
 
 /**
@@ -373,46 +367,38 @@ c3dl.OrbitCamera.prototype.yaw = function (angle)
  */
 c3dl.OrbitCamera.prototype.setPosition = function (position)
 {
-  if (c3dl.isValidVector(position))
+  var distFromNewPosToOP = c3dl.vectorLength(c3dl.subtractVectors(this.orbitPoint, position));
+
+  // make sure the new position of the cam is between the min 
+  // and max allowed constraints.	
+  if (distFromNewPosToOP >= this.getClosestDistance() && distFromNewPosToOP <= this.getFarthestDistance())
   {
-    var distFromNewPosToOP = c3dl.vectorLength(c3dl.subtractVectors(this.orbitPoint, position));
+    this.pos = c3dl.copyObj(position);
 
-    // make sure the new position of the cam is between the min 
-    // and max allowed constraints.	
-    if (distFromNewPosToOP >= this.getClosestDistance() && distFromNewPosToOP <= this.getFarthestDistance())
+    var camPosToOrbitPoint = c3dl.subtractVectors(this.orbitPoint, this.pos);
+
+	// if the position was set such that the direction vector is parallel to the global
+    // up axis, the cross product won't work. In that case, leave the left vector as it was.
+    if (c3dl.isVectorEqual([0, 0, 0], c3dl.vectorCrossProduct(camPosToOrbitPoint, [0, 1, 0])))
     {
-      this.pos = c3dl.copyObj(position);
-
-      //
-      var camPosToOrbitPoint = c3dl.subtractVectors(this.orbitPoint, this.pos);
-
-      // if the position was set such that the direction vector is parallel to the global
-      // up axis, the cross product won't work. In that case, leave the left vector as it was.
-      if (c3dl.isVectorEqual([0, 0, 0], c3dl.vectorCrossProduct(camPosToOrbitPoint, [0, 1, 0])))
-      {
-        // set the direction
-        this.dir = c3dl.normalizeVector(camPosToOrbitPoint);
-
-        // the left vector will be perpendicular to the global up
-        // axis and direction.
-        //this.left = c3dl.vectorCrossProduct([0,1,0], this.dir);
-        this.up = c3dl.vectorCrossProduct(this.dir, this.left);
-      }
-      else
-      {
-
-        // set the direction
-        //this.setOrbitPoint(this.orbitPoint);
-        this.dir = c3dl.normalizeVector(c3dl.subtractVectors(this.orbitPoint, this.pos));
-
-        // the left vector will be perpendicular to the global up
-        // axis and direction.
-        this.left = c3dl.vectorCrossProduct([0, 1, 0], this.dir);
-
-        this.up = c3dl.vectorCrossProduct(this.dir, this.left);
-      }
+      // set the direction
+      this.dir = c3dl.normalizeVector(camPosToOrbitPoint);
+      // the left vector will be perpendicular to the global up
+      // axis and direction.
+      //this.left = c3dl.vectorCrossProduct([0,1,0], this.dir);
+      this.up = c3dl.vectorCrossProduct(this.dir, this.left);
     }
-  }
+    else
+    {
+      // set the direction
+      //this.setOrbitPoint(this.orbitPoint);
+      this.dir = c3dl.normalizeVector(c3dl.subtractVectors(this.orbitPoint, this.pos));
+      // the left vector will be perpendicular to the global up
+      // axis and direction.
+      this.left = c3dl.vectorCrossProduct([0, 1, 0], this.dir);
+      this.up = c3dl.vectorCrossProduct(this.dir, this.left);
+    }
+ }
 }
 
 

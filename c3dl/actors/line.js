@@ -15,10 +15,10 @@
 c3dl.Line = function ()
 {
   // begin and end coordinates in the order [x,y,z].
-  this.coords = [0, 0, 0, 0, 0, 0];
+  this.coords = new Float32Array([0, 0, 0, 0, 0, 0]);
 
   // begin and end colors in the order [r,g,b].
-  this.colors = [0, 0, 0, 0, 0, 0];
+  this.colors = new Float32Array([0, 0, 0, 0, 0, 0]);
 
   // Will the line be drawn on render?
   this.visible = true;
@@ -143,7 +143,7 @@ c3dl.Line = function ()
    */
   this.getCoordinates = function ()
   {
-    return [this.coords[0], this.coords[1], this.coords[2], this.coords[3], this.coords[4], this.coords[5]];
+    return new Float32Array([this.coords[0], this.coords[1], this.coords[2], this.coords[3], this.coords[4], this.coords[5]]);
   }
 
   /**
@@ -154,7 +154,7 @@ c3dl.Line = function ()
    */
   this.getColors = function ()
   {
-    return [this.colors[0], this.colors[1], this.colors[2], this.colors[3], this.colors[4], this.colors[5]];
+    return new Float32Array([this.colors[0], this.colors[1], this.colors[2], this.colors[3], this.colors[4], this.colors[5]]);
   }
 
   /**

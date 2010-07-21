@@ -62,7 +62,6 @@ c3dl.Picking = function (scene)
     // device coordinates and multiply by the inverse projection matrix to get
     // the clip coordinates.
     var clipCoords = c3dl.multiplyMatrixByVector(iproj, normalizedDeviceCoords);
-
     // perspective divide
     clipCoords[0] /= clipCoords[3];
     clipCoords[1] /= clipCoords[3];
@@ -86,7 +85,7 @@ c3dl.Picking = function (scene)
     // place the ray from clip space into view space
     //
     //
-    var rayTerminalPoint = c3dl.multiplyMatrixByVector(viewMatrix, [x, y, z, 0]);
+    var rayTerminalPoint = c3dl.multiplyMatrixByVector(viewMatrix, new Float32Array([x, y, z, 0]));
     var rayDir = c3dl.normalizeVector(rayTerminalPoint);
 
     // This array will hold the indices of the objects which pass the boundingSphere/Ray test.

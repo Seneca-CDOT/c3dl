@@ -45,11 +45,9 @@ c3dl.PrimitiveSet = function ()
     this.normals = normals;
     this.texCoords = texCoords;
     this.boundingSphere = new c3dl.BoundingSphere();
-
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
     this.boundingSphere.init(this.vertices);
-    this.boundingSphere.setPosition([0, 0, 0]);
   }
 
   /**

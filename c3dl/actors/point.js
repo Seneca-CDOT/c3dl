@@ -14,10 +14,10 @@
 c3dl.Point = function ()
 {
   // no alpha, but may be implemented in the future. 
-  this.color = [0, 0, 0];
+  this.color = c3dl.makeVector(0, 0, 0);
 
   //
-  this.position = [0, 0, 0];
+  this.position =c3dl.makeVector(0, 0, 0);
 
   //
   this.visible = true;

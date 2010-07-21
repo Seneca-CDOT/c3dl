@@ -24,9 +24,9 @@ c3dl.Light = function ()
   // properties which will light the scene.  the other lights are off by default. It
   // was decided to zero out all the components for all the lights 0-7 to prevent
   // any confusion.
-  this.ambient = [0, 0, 0];
-  this.diffuse = [0, 0, 0];
-  this.specular = [0, 0, 0];
+  this.ambient = c3dl.makeVector(0, 0, 0);
+  this.diffuse = c3dl.makeVector(0, 0, 0);
+  this.specular = c3dl.makeVector(0, 0, 0);
   //this.on = 0;
   this.on = false;
 
@@ -62,7 +62,7 @@ c3dl.Light = function ()
    */
   this.getAmbient = function ()
   {
-    return c3dl.copyObj(this.ambient);
+    return c3dl.copyVector(this.ambient);
   }
 
   /**
@@ -79,7 +79,7 @@ c3dl.Light = function ()
    */
   this.getDiffuse = function ()
   {
-    return c3dl.copyObj(this.diffuse);
+    return c3dl.copyVector(this.diffuse);
   }
 
   /**
@@ -95,7 +95,7 @@ c3dl.Light = function ()
    */
   this.getSpecular = function ()
   {
-    return c3dl.copyObj(this.specular);
+    return c3dl.copyVector(this.specular);
   }
 
   /**
@@ -162,10 +162,9 @@ c3dl.Light = function ()
    */
   this.setAmbient = function (color)
   {
-    if (color.length >= 3)
-    {
-      this.ambient = color.slice(0, 3);
-    }
+      this.ambient[0] = color[0];
+	  this.ambient[1] = color[1];
+	  this.ambient[2] = color[2];  
   }
 
   /**
@@ -182,10 +181,9 @@ c3dl.Light = function ()
    */
   this.setDiffuse = function (color)
   {
-    if (color.length >= 3)
-    {
-      this.diffuse = color.slice(0, 3);
-    }
+    this.diffuse[0] = color[0];
+	this.diffuse[1] = color[1];
+	this.diffuse[2] = color[2]; 
   }
 
   /**
@@ -201,9 +199,8 @@ c3dl.Light = function ()
    */
   this.setSpecular = function (color)
   {
-    if (color.length >= 3)
-    {
-      this.specular = color.slice(0, 3);
-    }
+    this.specular[0] = color[0];
+    this.specular[1] = color[1];
+    this.specular[2] = color[2];
   }
 }

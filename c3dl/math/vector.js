@@ -23,7 +23,7 @@
 c3dl.isValidVector = function (vecArr)
 {
   // Check if the value being passed is an array
-  if (vecArr instanceof Array)
+  if (vecArr instanceof Array || vecArr instanceof Float32Array)
   {
     // Need to allow 4D vectors since last element of 
     // vector may not always be 1, and we can't assume
@@ -52,7 +52,7 @@ c3dl.isValidVector = function (vecArr)
  */
 c3dl.copyVector = function (srcVec)
 {
-  return c3dl.makeVector(srcVec[0], srcVec[1], srcVec[2]);
+  return V3.clone(srcVec);
 }
 
 /**
@@ -63,17 +63,17 @@ c3dl.copyVector = function (srcVec)
  */
 c3dl.copyVectorContents = function (srcVec, destVec)
 {
-  if (!c3dl.isValidVector(srcVec) || !c3dl.isValidVector(destVec))
-  {
-    c3dl.debug.logWarning("copyVectorContents() didn't get two vectors as parameters");
-    return;
-  }
-
-  destVec[0] = srcVec[0];
-  destVec[1] = srcVec[1];
-  destVec[2] = srcVec[2];
+ destVec= V3.clone(srcVec);
 }
-
+c3dl.addVectorComponent = function (srcVec, newComponent)
+{
+  var newVec = new Float32Array(4);
+  newVec[0]=srcVec[0]
+  newVec[1]=srcVec[1]
+  newVec[2]=srcVec[2]
+  newVec[3]=newComponent
+  return newVec;
+}
 /**
  Create a 3D Vector from the given 'newX', 'newY' 
  and 'newZ' arguments.
@@ -87,9 +87,7 @@ c3dl.copyVectorContents = function (srcVec, destVec)
  */
 c3dl.makeVector = function (newX, newY, newZ)
 {
-  var vec = [!isNaN(newX) ? parseFloat(newX) : 0.0, !isNaN(newY) ? parseFloat(newY) : 0.0, !isNaN(newZ) ? parseFloat(newZ) : 0.0];
-
-  return vec;
+  return  new Float32Array([!isNaN(newX) ? parseFloat(newX) : 0.0, !isNaN(newY) ? parseFloat(newY) : 0.0, !isNaN(newZ) ? parseFloat(newZ) : 0.0]);
 }
 
 /**
@@ -102,39 +100,30 @@ c3dl.makeVector = function (newX, newY, newZ)
  object, otherwise returns nulls.
  */
 c3dl.normalizeVector = function (vec)
-{
-  if (c3dl.isValidVector(vec))
-  {
-    var compr = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
-
-    // Sometimes this can become invalid
-    if (!isNaN(compr))
-    {
-      var ln = Math.sqrt(compr);
-
-      // If the length is greater then zero, return the normalized Vector
-      if (!isNaN(ln) && ln != 0.0)
-      {
-        // Normalization
-        vec[0] = vec[0] != 0.0 ? vec[0] / ln : 0.0;
-        vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
-        vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
-
-        return vec;
-      }
-      else
-      {
-        c3dl.debug.logWarning('normalizeVector() called with a vector of length 0');
-      }
-    }
-    else
-    {
-      c3dl.debug.logWarning('normalizeVector() called with a vector with compr 0');
-    }
+{ 
+  if (vec.length === 4) {
+	  var compr = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+	  // Sometimes this can become invalid
+	  var ln = Math.sqrt(compr);
+	  // If the length is greater then zero, return the normalized Vector
+	  // Normalization
+	  vec[0] = vec[0] != 0.0 ? vec[0] / ln : 0.0;
+	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
+	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
+	  vec[3] = vec[3] != 0.0 ? vec[2] / ln : 0.0;
+	  return new Float32Array(vec);
   }
-
-  c3dl.debug.logWarning('normalizeVector() called with a parameter that\'s not a vector');
-  return null;
+  else {
+	  var compr = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+	  // Sometimes this can become invalid
+	  var ln = Math.sqrt(compr);
+	  // If the length is greater then zero, return the normalized Vector
+	  // Normalization
+	  vec[0] = vec[0] != 0.0 ? vec[0] / ln : 0.0;
+	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
+	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
+	  return new Float32Array(vec);
+  }
 }
 
 /**
@@ -148,15 +137,7 @@ c3dl.normalizeVector = function (vec)
  */
 c3dl.vectorDotProduct = function (vecOne, vecTwo)
 {
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    return parseFloat(vecOne[0] * vecTwo[0] + vecOne[1] * vecTwo[1] + vecOne[2] * vecTwo[2]);
-  }
-  else
-  {
-    c3dl.debug.logWarning('vectorDotProduct() called with a parameter that\'s not a vector');
-    return null;
-  }
+  return V3.dot(vecOne,vecTwo);
 }
 
 /**
@@ -173,8 +154,8 @@ c3dl.vectorProject = function (vecOne, vecTwo)
   // result =  ---------------- x vecTwo
   //           vecTwo . vecTwo
   // get the top and bottom dot product
-  var topDot = c3dl.vectorDotProduct(vecOne, vecTwo);
-  var bottomDot = c3dl.vectorDotProduct(vecTwo, vecTwo);
+  var topDot = V3.dot(vecOne, vecTwo);
+  var bottomDot = V3.dot(vecTwo, vecTwo);
 
   return c3dl.multiplyVector(vecTwo, topDot / bottomDot);
 }
@@ -190,29 +171,7 @@ c3dl.vectorProject = function (vecOne, vecTwo)
  */
 c3dl.vectorCrossProduct = function (vecOne, vecTwo, dest)
 {
-  // Sanity Check
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    var thisVec = vecOne;
-    var inVec = vecTwo;
-
-    // Normalize the Units first
-    // not sure why we need normalize them first, it would
-    // mess up any 'pure math' calculations such as ones in picking.        
-    //c3dl.normalizeVector(inVec);
-    //c3dl.normalizeVector(thisVec);
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    // Perform a Cross Product
-    dest[0] = thisVec[1] * inVec[2] - thisVec[2] * inVec[1];
-    dest[1] = thisVec[2] * inVec[0] - thisVec[0] * inVec[2];
-    dest[2] = thisVec[0] * inVec[1] - thisVec[1] * inVec[0];
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('vectorCrossProduct() called with a parameter that\'s not a vector');
-  return null;
+return V3.cross(vecOne, vecTwo, dest);
 }
 
 /**
@@ -224,14 +183,7 @@ c3dl.vectorCrossProduct = function (vecOne, vecTwo, dest)
  */
 c3dl.vectorLength = function (vec)
 {
-  if (c3dl.isValidVector(vec))
-  {
-    // the dot product of a vector by itself will yeild its length.
-    return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-  }
-
-  c3dl.debug.logWarning('vectorLength() called with a parameter that\'s not a vector');
-  return null;
+  return V3.length(vec);
 }
 
 /**	
@@ -243,14 +195,7 @@ c3dl.vectorLength = function (vec)
  */
 c3dl.vectorLengthSq = function (vec)
 {
-  if (c3dl.isValidVector(vec))
-  {
-    // The dot product of any vector by itself will yeild its length.
-    return (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-  }
-
-  c3dl.debug.logWarning('vectorLengthSq() called with a parameter that\'s not a vector');
-  return null;
+  return V3.lengthSquared(vec);
 }
 
 /**
@@ -266,19 +211,7 @@ c3dl.vectorLengthSq = function (vec)
  */
 c3dl.addVectors = function (vecOne, vecTwo, dest)
 {
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    dest[0] = vecOne[0] + vecTwo[0];
-    dest[1] = vecOne[1] + vecTwo[1];
-    dest[2] = vecOne[2] + vecTwo[2];
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('addVectors() called with invalid parameters');
-  return null;
+  return V3.add(vecOne, vecTwo, dest);
 }
 
 /**
@@ -293,19 +226,7 @@ c3dl.addVectors = function (vecOne, vecTwo, dest)
  */
 c3dl.subtractVectors = function (vecOne, vecTwo, dest)
 {
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    dest[0] = vecOne[0] - vecTwo[0];
-    dest[1] = vecOne[1] - vecTwo[1];
-    dest[2] = vecOne[2] - vecTwo[2];
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('subtractVectors() called with invalid parameters');
-  return null;
+  return V3.sub(vecOne, vecTwo, dest);
 }
 
 /**
@@ -325,19 +246,7 @@ c3dl.subtractVectors = function (vecOne, vecTwo, dest)
  */
 c3dl.multiplyVector = function (vec, scalar, dest)
 {
-  if (c3dl.isValidVector(vec) && !isNaN(scalar))
-  {
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    dest[0] = vec[0] * scalar;
-    dest[1] = vec[1] * scalar;
-    dest[2] = vec[2] * scalar;
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('multiplyVector() called with invalid parameters');
-  return null;
+  return V3.scale(vec, scalar, dest);
 }
 
 /**
@@ -353,25 +262,12 @@ c3dl.multiplyVector = function (vec, scalar, dest)
  */
 c3dl.divideVector = function (vec, scalar, dest)
 {
-  if (c3dl.isValidVector(vec) && !isNaN(scalar))
-  {
-    if (scalar == 0)
-    {
-      c3dl.debug.logWarning('divideVector() called with scalar 0');
-      return null;
-    }
+  if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
+  dest[0] = vec[0] / scalar;
+  dest[1] = vec[1] / scalar;
+  dest[2] = vec[2] / scalar;
 
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    dest[0] = vec[0] / scalar;
-    dest[1] = vec[1] / scalar;
-    dest[2] = vec[2] / scalar;
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('divideVector() called with invalid parameters');
-  return null;
+  return dest;
 }
 
 
@@ -391,19 +287,11 @@ c3dl.divideVector = function (vec, scalar, dest)
  */
 c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest)
 {
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
-
-    dest[0] = vecOne[0] * vecTwo[0];
-    dest[1] = vecOne[1] * vecTwo[1];
-    dest[2] = vecOne[2] * vecTwo[2];
-
-    return dest;
-  }
-
-  c3dl.debug.logWarning('multiplyVectorByVector() called with invalid parameters');
-  return null;
+  if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
+  dest[0] = vecOne[0] * vecTwo[0];
+  dest[1] = vecOne[1] * vecTwo[1];
+  dest[2] = vecOne[2] * vecTwo[2];
+  return dest;
 }
 
 
@@ -418,18 +306,9 @@ c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest)
  */
 c3dl.isVectorEqual = function (vecOne, vecTwo)
 {
-  // Sanity Check
-  if (c3dl.isValidVector(vecOne) && c3dl.isValidVector(vecTwo))
-  {
-    // add tolerance to calculations
-    return (vecOne[0] == vecTwo[0] && vecOne[1] == vecTwo[1] && vecOne[2] == vecTwo[2]);
-  }
-
-  c3dl.debug.logWarning('isVectorEqual() called with invalid parameters');
-  return null;
+  // add tolerance to calculations
+  return (vecOne[0] === vecTwo[0] && vecOne[1] === vecTwo[1] && vecOne[2] === vecTwo[2]);
 }
-
-
 
 /**
  Check to see if a Vector is a zero vector, that is a vector with a 
@@ -443,13 +322,8 @@ c3dl.isVectorEqual = function (vecOne, vecTwo)
  */
 c3dl.isVectorZero = function (vec)
 {
-  if (c3dl.isValidVector(vec))
-  {
-    // Check for a tolerance
-    return ((-c3dl.TOLERANCE < vec[0] && vec[0] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[1] && vec[1] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[2] && vec[2] < c3dl.TOLERANCE));
-  }
-
-  return false;
+  // Check for a tolerance
+  return ((-c3dl.TOLERANCE < vec[0] && vec[0] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[1] && vec[1] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[2] && vec[2] < c3dl.TOLERANCE));
 }
 
 

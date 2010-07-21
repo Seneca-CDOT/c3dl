@@ -13,13 +13,13 @@
  */
 c3dl.PositionalLight = function ()
 {
-  this.position = [0, 0, 0];
+  this.position = c3dl.makeVector(0, 0, 0);
 
   // use OpenGL default attenuation factors.
   // element 0 is for constant attenuation
   // element 1 is for linear attenuation
   // element 2 is for quadratic attenuation
-  this.attenuation = [1, 0, 0];
+  this.attenuation = c3dl.makeVector(1, 0, 0);
 
   // need to override the type the abstract class set.
   this.type = c3dl.POSITIONAL_LIGHT;
@@ -32,7 +32,7 @@ c3dl.PositionalLight = function ()
    */
   this.getAttenuation = function ()
   {
-    return [this.attenuation[0], this.attenuation[1], this.attenuation[2]];
+    return c3dl.copyVector(this.attenuation);
   }
 
   /**
@@ -42,7 +42,7 @@ c3dl.PositionalLight = function ()
    */
   this.getPosition = function ()
   {
-    return [this.position[0], this.position[1], this.position[2]];
+    return c3dl.copyVector(this.position);
   }
 
   /**
@@ -60,7 +60,9 @@ c3dl.PositionalLight = function ()
    */
   this.setAttenuation = function (attenuation)
   {
-    this.attenuation = attenuation;
+    this.attenuation[0] = attenuation[0];
+	this.attenuation[1] = attenuation[1];
+	this.attenuation[2] = attenuation[2];
   }
 
   /**
@@ -70,10 +72,9 @@ c3dl.PositionalLight = function ()
    */
   this.setPosition = function (vec)
   {
-    if (c3dl.isValidVector(vec))
-    {
-      this.position = vec;
-    }
+    this.position[0] = vec[0];
+	this.position[1] = vec[1];
+	this.position[2] = vec[2];
   }
 }
 

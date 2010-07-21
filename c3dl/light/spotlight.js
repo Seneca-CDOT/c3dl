@@ -26,7 +26,7 @@ c3dl.SpotLight = function ()
   this.type = c3dl.SPOT_LIGHT;
 
   // the direction where the spot light is pointing.
-  this.direction = [0, 0, -1];
+  this.direction = c3dl.makeVector(0, 0, -1);
 
   // how concentrated is the light?
   // use the OpenGL default value of zero to indicate uniform 
@@ -54,7 +54,7 @@ c3dl.SpotLight = function ()
    */
   this.getDirection = function ()
   {
-    return [this.direction[0], this.direction[1], this.direction[2]];
+    return c3dl.copyVector(this.direction);
   }
 
   /**
@@ -93,10 +93,7 @@ c3dl.SpotLight = function ()
    */
   this.setDirection = function (dir)
   {
-    if (c3dl.isValidVector(dir))
-    {
-      this.direction = c3dl.normalizeVector(dir);
-    }
+    this.direction = c3dl.normalizeVector(dir);
   }
 
   /**

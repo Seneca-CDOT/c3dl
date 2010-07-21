@@ -10,10 +10,10 @@
 c3dl.Camera = function ()
 {
   // Raw Position Values
-  this.left = [1.0, 0.0, 0.0]; // Camera Left vector
-  this.up = [0.0, 1.0, 0.0]; // Camera Up vector
-  this.dir = [0.0, 0.0, 1.0]; // The direction its looking at
-  this.pos = [0.0, 0.0, 0.0]; // Camera eye position
+  this.left = c3dl.makeVector(1.0, 0.0, 0.0); // Camera Left vector
+  this.up = c3dl.makeVector(0.0, 1.0, 0.0); // Camera Up vector
+  this.dir = c3dl.makeVector(0.0, 0.0, 1.0); // The direction its looking at
+  this.pos = c3dl.makeVector(0.0, 0.0, 0.0); // Camera eye position
   this.projectionTransform = null;
   this.projMatrix;
   this.viewMatrix;
@@ -54,7 +54,7 @@ c3dl.Camera.prototype.applyToWorld = function (aspectRatio)
  */
 c3dl.Camera.prototype.getDir = function ()
 {
-  return [this.dir[0], this.dir[1], this.dir[2]];
+  return c3dl.copyVector(this.dir);
 }
 
 
@@ -87,7 +87,7 @@ c3dl.Camera.prototype.getFieldOfView = function ()
  */
 c3dl.Camera.prototype.getLeft = function ()
 {
-  return [this.left[0], this.left[1], this.left[2]];
+  return c3dl.copyVector(this.left);
 }
 
 
@@ -109,7 +109,7 @@ c3dl.Camera.prototype.getNearClippingPlane = function ()
  */
 c3dl.Camera.prototype.getPosition = function ()
 {
-  return [this.pos[0], this.pos[1], this.pos[2]];
+  return c3dl.copyVector(this.pos);
 }
 
 
@@ -118,7 +118,7 @@ c3dl.Camera.prototype.getPosition = function ()
  */
 c3dl.Camera.prototype.getProjectionMatrix = function ()
 {
-  return c3dl.copyObj(this.projMatrix);
+  return c3dl.copyMatrix(this.projMatrix);
 }
 
 /**
@@ -126,7 +126,7 @@ c3dl.Camera.prototype.getProjectionMatrix = function ()
  */
 c3dl.Camera.prototype.getViewMatrix = function ()
 {
-  return c3dl.copyObj(this.viewMatrix);
+  return c3dl.copyMatrix(this.viewMatrix);
 }
 
 /**
@@ -136,7 +136,7 @@ c3dl.Camera.prototype.getViewMatrix = function ()
  */
 c3dl.Camera.prototype.getUp = function ()
 {
-  return [this.up[0], this.up[1], this.up[2]];
+  return c3dl.copyVector(this.up);
 }
 
 

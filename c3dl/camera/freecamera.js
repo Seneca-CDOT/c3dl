@@ -13,8 +13,8 @@ c3dl.FreeCamera = c3dl.inherit(c3dl.Camera, function ()
 {
   c3dl._superc(this);
   // Delta Values for Animations
-  this.linVel = [0.0, 0.0, 0.0]; // Animation of positions
-  this.angVel = [0.0, 0.0, 0.0]; // Animations of rotation around (side Vector, up Vector, dir Vector)
+  this.linVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animation of positions
+  this.angVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animations of rotation around (side Vector, up Vector, dir Vector)
 });
 
 /**
@@ -24,7 +24,7 @@ c3dl.FreeCamera = c3dl.inherit(c3dl.Camera, function ()
  */
 c3dl.FreeCamera.prototype.getAngularVel = function ()
 {
-  return [this.angVel[0], this.angVel[1], this.angVel[2]];
+  return c3dl.copyVector(this.angVel);
 }
 
 
@@ -35,7 +35,7 @@ c3dl.FreeCamera.prototype.getAngularVel = function ()
  */
 c3dl.FreeCamera.prototype.getLinearVel = function ()
 {
-  return [this.linVel[0], this.linVel[1], this.linVel[2]];
+  return c3dl.copyVector(this.linVel);
 }
 
 
@@ -69,17 +69,6 @@ c3dl.FreeCamera.prototype.roll = function (angle)
  */
 c3dl.FreeCamera.prototype.rotateOnAxis = function (axisVec, angle)
 {
-  if (!c3dl.isValidVector(axisVec))
-  {
-    c3dl.debug.logWarning('FreeCamera::rotateOnAxis() called with the first parameter not a vector');
-    return;
-  }
-  if (isNaN(angle))
-  {
-    c3dl.debug.logWarning('FreeCamera::rotateOnAxis() called with the second parameter not a number');
-    return;
-  }
-
   // Create a proper Quaternion based on location and angle
   var quat = c3dl.axisAngleToQuat(axisVec, angle);
 
@@ -106,14 +95,9 @@ c3dl.FreeCamera.prototype.rotateOnAxis = function (axisVec, angle)
  */
 c3dl.FreeCamera.prototype.setAngularVel = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.angVel = c3dl.makeVector(newVec[0], newVec[1], newVec[2]);
-  }
-  else
-  {
-    c3dl.debug.logWarning('FreeCamera::setAngularVel() called with a parameter that\'s not a vector');
-  }
+  this.angVel[0] = newVec[0];
+  this.angVel[1] = newVec[1];
+  this.angVel[2] = newVec[2];
 }
 
 
@@ -126,14 +110,9 @@ c3dl.FreeCamera.prototype.setAngularVel = function (newVec)
  */
 c3dl.FreeCamera.prototype.setLinearVel = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.linVel = c3dl.makeVector(newVec[0], newVec[1], newVec[2]);
-  }
-  else
-  {
-    c3dl.debug.logWarning('FreeCamera::setLinearVel() called with a parameter that\'s not a vector');
-  }
+  this.linVel[0] = newVec[0];
+  this.linVel[1] = newVec[1];
+  this.linVel[2] = newVec[2];
 }
 
 
@@ -146,33 +125,26 @@ c3dl.FreeCamera.prototype.setLinearVel = function (newVec)
  */
 c3dl.FreeCamera.prototype.setLookAtPoint = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
     // if the position hasn't yet been changed and they want the
     // camera to look at [0,0,0], that will create a problem.
-    if (c3dl.isVectorEqual(this.pos, [0, 0, 0]) && c3dl.isVectorEqual(newVec, [0, 0, 0]))
-    {
-      c3dl.debug.logWarning("Cannot lookAt [0,0,0] since camera is at [0,0,0]." +
-        " Move camera before calling setLookAt()");
-    }
-    else
-    {
-      // Figure out the direction of the point we are looking at.
-      this.dir = c3dl.subtractVectors(newVec, this.pos);
-      c3dl.normalizeVector(this.dir);
-
-      // Adjust the Up and Left vectors accordingly
-      c3dl.vectorCrossProduct([0, 1, 0], this.dir, this.left);
-      c3dl.normalizeVector(this.left);
-      c3dl.vectorCrossProduct(this.dir, this.left, this.up);
-      c3dl.normalizeVector(this.up);
-    }
+  if (c3dl.isVectorEqual(this.pos, [0, 0, 0]) && c3dl.isVectorEqual(newVec, [0, 0, 0]))
+  {
+    c3dl.debug.logWarning("Cannot lookAt [0,0,0] since camera is at [0,0,0]." +
+      " Move camera before calling setLookAt()");
   }
   else
   {
-    c3dl.debug.logWarning("FreeCamera::setLookAtPoint() called with a parameter that's not a vector");
+    // Figure out the direction of the point we are looking at.
+    this.dir = c3dl.subtractVectors(newVec, this.pos);
+    c3dl.normalizeVector(this.dir);
+    // Adjust the Up and Left vectors accordingly
+    c3dl.vectorCrossProduct([0, 1, 0], this.dir, this.left);
+    c3dl.normalizeVector(this.left);
+    c3dl.vectorCrossProduct(this.dir, this.left, this.up);
+    c3dl.normalizeVector(this.up);
   }
 }
+ 
 
 
 /**
@@ -183,15 +155,9 @@ c3dl.FreeCamera.prototype.setLookAtPoint = function (newVec)
  */
 c3dl.FreeCamera.prototype.setPosition = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    // Set the new Position of the eye
-    this.pos = newVec;
-  }
-  else
-  {
-    c3dl.debug.logWarning("FreeCamera::setPosition() called with a parameter that's not a vector");
-  }
+  this.pos[0] = newVec[0];
+  this.pos[1] = newVec[1];
+  this.pos[2] = newVec[2];
 }
 
 
@@ -202,14 +168,9 @@ c3dl.FreeCamera.prototype.setPosition = function (newVec)
  */
 c3dl.FreeCamera.prototype.setUpVector = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.up = c3dl.makeVector(newVec[0], newVec[1], newVec[2]);
-  }
-  else
-  {
-    c3dl.debug.logWarning('FreeCamera::setUpVector() called with a parameter that\'s not a vector');
-  }
+  this.up[0] = newVec[0];
+  this.up[1] = newVec[1];
+  this.up[2] = newVec[2];
 }
 
 

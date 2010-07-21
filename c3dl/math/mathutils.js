@@ -70,22 +70,16 @@ c3dl.invSqrt = function (num)
  */
 c3dl.lookAt = function (eye, center, up)
 {
-  if (c3dl.isValidVector(eye) && c3dl.isValidVector(center) && c3dl.isValidVector(up))
-  {
-    // Figure out the Orientation
-    var z = c3dl.subtractVectors(eye, center, null);
-    var x = c3dl.vectorCrossProduct(up, z, null);
-    var y = c3dl.vectorCrossProduct(z, x, null);
-    c3dl.normalizeVector(z);
-    c3dl.normalizeVector(y);
-    c3dl.normalizeVector(x);
+  // Figure out the Orientation
+  var z = c3dl.subtractVectors(eye, center, null);
+  var x = c3dl.vectorCrossProduct(up, z, null);
+  var y = c3dl.vectorCrossProduct(z, x, null);
+  c3dl.normalizeVector(z);
+  c3dl.normalizeVector(y);
+  c3dl.normalizeVector(x);
 
-    // makeMatrix expects values to be in column-major
-    return c3dl.makeMatrix(x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, 0, 0, 0, 1);
-  }
-
-  c3dl.debug.logWarning('lookAt() called with a parameters that are not vectors');
-  return null;
+  // makeMatrix expects values to be in column-major
+  return c3dl.makeMatrix(x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, 0, 0, 0, 1);
 }
 
 /**
@@ -106,12 +100,7 @@ c3dl.lookAt = function (eye, center, up)
  */
 c3dl.makeOrtho = function (left, right, bottom, top, znear, zfar)
 {
-  var tx = -(right + left) / (right - left);
-  var ty = -(top + bottom) / (top - bottom);
-  var tz = -(zfar + znear) / (zfar - znear);
-
-  return c3dl.makeMatrix(
-  2 / (left - right), 0, 0, tx, 0, 2 / (top - bottom), 0, ty, 0, 0, -2 / (zfar - znear), tz, 0, 0, 0, 1);
+  return M4x4.makeOrtho(left, right, bottom, top, znear, zfar);
 }
 
 /**
@@ -129,12 +118,7 @@ c3dl.makeOrtho = function (left, right, bottom, top, znear, zfar)
  */
 c3dl.makePerspective = function (fovy, aspect, znear, zfar)
 {
-  var ymax = znear * Math.tan(fovy * Math.PI / 360.0);
-  var ymin = -ymax;
-  var xmin = ymin * aspect;
-  var xmax = ymax * aspect;
-
-  return c3dl.makeFrustum(xmin, xmax, ymin, ymax, znear, zfar);
+  return M4x4.makePerspective(fovy, aspect, znear, zfar);
 }
 
 /**
@@ -152,15 +136,7 @@ c3dl.makePerspective = function (fovy, aspect, znear, zfar)
  */
 c3dl.makeFrustum = function (left, right, bottom, top, znear, zfar)
 {
-  var X = 2 * znear / (right - left);
-  var Y = 2 * znear / (top - bottom);
-  var A = (right + left) / (right - left);
-  var B = (top + bottom) / (top - bottom);
-  var C = -(zfar + znear) / (zfar - znear);
-  var D = -2 * zfar * znear / (zfar - znear);
-
-  // specify values in column major order
-  return c3dl.makeMatrix(X, 0, 0, 0, 0, Y, 0, 0, A, B, C, -1, 0, 0, D, 0);
+  return M4x4.makeFrustum(left, right, bottom, top, znear, zfar);
 }
 
 /**

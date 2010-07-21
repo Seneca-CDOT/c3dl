@@ -40,7 +40,7 @@ c3dl.Scene = function ()
 
   // each scene has its own point attenuation factors giving the user
   // the flexibility to have different factors for each scene.
-  var pointAttenuation = [1, 0, 0];
+  var pointAttenuation = c3dl.makeVector(1, 0, 0);
   var pointSize = 5;
   var pointSmoothing = true;
 
@@ -69,7 +69,7 @@ c3dl.Scene = function ()
 
   // This will be the color of the background if the user does not change it.
   var backgroundColor = [c3dl.DEFAULT_BG_RED, c3dl.DEFAULT_BG_GREEN, c3dl.DEFAULT_BG_BLUE];
-  var ambientLight = [1, 1, 1];
+  var ambientLight = c3dl.makeVector(1, 1, 1);
   var thisScn = null;
 
   // If the user calls addTexture on scene, but the scene does not have

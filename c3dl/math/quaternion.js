@@ -21,7 +21,7 @@
 c3dl.isValidQuat = function (quat)
 {
   // All math types are arrays instead of objects for performance reasons.
-  if (quat instanceof Array)
+  if (quat instanceof Array || quat instanceof Float32Array)
   {
     // Must be 4 values long
     if (quat.length == 4)
@@ -54,7 +54,7 @@ c3dl.isValidQuat = function (quat)
 c3dl.makeQuat = function (newW, newX, newY, newZ)
 {
   // Quat = W + X * i + Y * j + Z * k 
-  var quat = [];
+  var quat = Float32Array(4);
 
   quat[0] = !isNaN(newW) ? parseFloat(newW) : 0.0; // W
   quat[1] = !isNaN(newX) ? parseFloat(newX) : 0.0; // X
@@ -74,11 +74,6 @@ c3dl.makeQuat = function (newW, newX, newY, newZ)
  */
 c3dl.quatToMatrix = function (quat, dest)
 {
-  if (!c3dl.isValidQuat(quat))
-  {
-    c3dl.debug.logWarning('quatToMatrix() called with the first parameter not a quaternion');
-    return null;
-  }
   var quatToMatrixTx = 2.0 * quat[1];
   var quatToMatrixTy = 2.0 * quat[2];
   var quatToMatrixTz = 2.0 * quat[3];
@@ -116,7 +111,7 @@ c3dl.quatToMatrix = function (quat, dest)
   else
   {
     // Setup a new Matrix out of this quaternion
-    var newMat = new Array(16);
+    var newMat = new Float32Array(16);
 
     newMat[0] = 1.0 - (quatToMatrixTyy + quatToMatrixTzz);
     newMat[1] = quatToMatrixTxy + quatToMatrixTwz;
@@ -162,13 +157,15 @@ c3dl.quatToAxisAngle = function (axisVec, angleScalar)
     angleScalar = 2.0 * Math.acos(quat[0]);
 
     // Set the Vector
-    axisVec = [quat[1] * invLength, quat[2] * invLength, quat[3] * invLength];
+    axisVec[0] = quat[1] * invLength; 
+	axisVec[1] = quat[2] * invLength; 
+	axisVec[3] = quat[3] * invLength;
   }
   else
   {
     // Set world Axis
     angleScalar = 0.0;
-    axisVec = [1.0, 0.0, 0.0];
+    axisVec = c3dl.makeVector(1.0, 0.0, 0.0);
   }
 }
 
@@ -187,18 +184,6 @@ c3dl.axisAngleToQuathalfAngle;
 c3dl.axisAngleToQuats;
 c3dl.axisAngleToQuat = function (axisVec, angleScalar, dest)
 {
-  if (!c3dl.isValidVector(axisVec))
-  {
-    c3dl.debug.logWarning('axisAngleToQuat() called with the first parameter not a vector');
-    return null;
-  }
-
-  if (isNaN(angleScalar))
-  {
-    c3dl.debug.logWarning('axisAngleToQuat() called with the second parameter not a number');
-    return null;
-  }
-
   // q = cos(A/2) + sin(A/2) * (x*i + y*j + z*k)
   c3dl.axisAngleToQuathalfAngle = 0.5 * angleScalar;
   c3dl.axisAngleToQuats = Math.sin(c3dl.axisAngleToQuathalfAngle);
@@ -230,59 +215,49 @@ c3dl.axisAngleToQuat = function (axisVec, angleScalar, dest)
  */
 c3dl.matrixToQuat = function (newMat)
 {
-  if (c3dl.isValidMatrix(newMat))
+  var quat = c3dl.makeQuat();
+  var trace = newMat[0] + newMat[5] + newMat[10] + 1;
+  var sqTrace;
+  var s;
+  if (trace > 0.0)
   {
-    var quat = c3dl.makeQuat();
-    var trace = newMat[0] + newMat[5] + newMat[10] + 1;
-    var sqTrace;
-    var s;
-
-    if (trace > 0.0)
+    sqTrace = Math.sqrt(trace);
+    s = 0.5 / sqTrace;
+    quat[0] = 0.25 / s;
+    quat[1] = (newMat[6] - newMat[9]) * s;
+    quat[2] = (newMat[8] - newMat[2]) * s;
+    quat[3] = (newMat[1] - newMat[4]) * s;
+  }
+  else
+  {
+    if (newMat[0] > newMat[5] && newMat[0] > newMat[10])
     {
-      sqTrace = Math.sqrt(trace);
-
-      s = 0.5 / sqTrace;
-      quat[0] = 0.25 / s;
-      quat[1] = (newMat[6] - newMat[9]) * s;
-      quat[2] = (newMat[8] - newMat[2]) * s;
-      quat[3] = (newMat[1] - newMat[4]) * s;
-
+      s = 2.0 * Math.sqrt(1.0 + newMat[0] - newMat[5] - newMat[10]);
+      quat[1] = 0.25 * s;
+      quat[2] = (newMat[1] - newMat[4]) / s;
+      quat[3] = (newMat[2] - newMat[8]) / s;
+      quat[0] = (newMat[9] - newMat[6]) / s;
+    }
+    else if (newMat[5] > newMat[10])
+    {
+      s = 2.0 * Math.sqrt(1.0 + newMat[5] - newMat[0] - newMat[10]);
+      quat[1] = (newMat[1] - newMat[4]) / s;
+      quat[2] = 0.25 * s;
+      quat[3] = (newMat[9] - newMat[6]) / s;
+      quat[0] = (newMat[2] - newMat[8]) / s;
     }
     else
     {
-      if (newMat[0] > newMat[5] && newMat[0] > newMat[10])
-      {
-        s = 2.0 * Math.sqrt(1.0 + newMat[0] - newMat[5] - newMat[10]);
-        quat[1] = 0.25 * s;
-        quat[2] = (newMat[1] - newMat[4]) / s;
-        quat[3] = (newMat[2] - newMat[8]) / s;
-        quat[0] = (newMat[9] - newMat[6]) / s;
-      }
-      else if (newMat[5] > newMat[10])
-      {
-        s = 2.0 * Math.sqrt(1.0 + newMat[5] - newMat[0] - newMat[10]);
-        quat[1] = (newMat[1] - newMat[4]) / s;
-        quat[2] = 0.25 * s;
-        quat[3] = (newMat[9] - newMat[6]) / s;
-        quat[0] = (newMat[2] - newMat[8]) / s;
-      }
-      else
-      {
-        s = 2.0 * Math.sqrt(1.0 + newMat[10] - newMat[0] - newMat[5]);
-        quat[1] = (newMat[2] - newMat[8]) / s;
-        quat[2] = (newMat[9] - newMat[6]) / s;
-        quat[3] = 0.25 * s;
-        quat[0] = (newMat[1] - newMat[4]) / s;
-      }
+      s = 2.0 * Math.sqrt(1.0 + newMat[10] - newMat[0] - newMat[5]);
+      quat[1] = (newMat[2] - newMat[8]) / s;
+      quat[2] = (newMat[9] - newMat[6]) / s;
+      quat[3] = 0.25 * s;
+      quat[0] = (newMat[1] - newMat[4]) / s;
     }
-
-    return quat;
   }
 
-  c3dl.debug.logWarning('matrixToQuat() called with a parameter that\'s not a matrix');
-  return null;
-}
-
+    return quat;
+ }
 
 /**
  @param {Array} quat
@@ -291,15 +266,8 @@ c3dl.matrixToQuat = function (newMat)
  */
 c3dl.quatLengthSq = function (quat)
 {
-  if (c3dl.isValidQuat(quat))
-  {
-    return quat[1] * quat[1] + quat[2] * quat[2] + quat[3] * quat[3];
-  }
-
-  c3dl.debug.logWarning('quatLengthSq() called with a parameter that\'s not a quaternion');
-  return null;
+  return quat[1] * quat[1] + quat[2] * quat[2] + quat[3] * quat[3];
 }
-
 
 /**
  Get the length of Quaternion 'quat'.
@@ -311,13 +279,7 @@ c3dl.quatLengthSq = function (quat)
  */
 c3dl.quatLength = function (quat)
 {
-  if (c3dl.isValidQuat(quat))
-  {
-    return Math.sqrt(c3dl.quatLengthSq(quat));
-  }
-
-  c3dl.debug.logWarning('quatLength() called with a parameter that\'s not a quaternion');
-  return null;
+   return Math.sqrt(c3dl.quatLengthSq(quat));
 }
 
 
@@ -331,18 +293,11 @@ c3dl.quatLength = function (quat)
  */
 c3dl.addQuats = function (quatOne, quatTwo)
 {
-  if (c3dl.isValidQuat(quatOne) && c3dl.isValidQuat(quatTwo))
-  {
-    var quat = c3dl.makeQuat();
-
-    for (var i = 0; i < 4; i++)
+  var quat = c3dl.makeQuat();
+  for (var i = 0; i < 4; i++) {
     quat[i] = quatOne[i] + quatTwo[i];
-
-    return quat;
   }
-
-  c3dl.debug.logWarning('addQuats() called with parameters that are not quaternions');
-  return null;
+return quat;
 }
 
 
@@ -356,18 +311,11 @@ c3dl.addQuats = function (quatOne, quatTwo)
  */
 c3dl.subtractQuats = function (quatOne, quatTwo)
 {
-  if (c3dl.isValidQuat(quatOne) && c3dl.isValidQuat(quatTwo))
-  {
-    var quat = c3dl.makeQuat();
-
-    for (var i = 0; i < 4; i++)
+  var quat = c3dl.makeQuat();
+  for (var i = 0; i < 4; i++) {
     quat[i] = quatOne[i] - quatTwo[i];
-
-    return quat;
   }
-
-  c3dl.debug.logWarning('addQuats() called with parameters that are not quaternions');
-  return null;
+  return quat;
 }
 
 
@@ -381,19 +329,12 @@ c3dl.subtractQuats = function (quatOne, quatTwo)
  */
 c3dl.multiplyQuatByScalar = function (quatOne, scalar)
 {
-  if (c3dl.isValidQuat(quatOne) && !isNaN(scalar))
-  {
-    var quat = c3dl.makeQuat();
-
-    for (var i = 0; i < 4; i++)
+  var quat = c3dl.makeQuat();
+  for (var i = 0; i < 4; i++) {
     quat[i] = quatOne[i] * scalar; //!! Mark: is this supposed to be a multiply?
-    return quat;
   }
-
-  c3dl.debug.logWarning('addQuats() called with parameters that are not valid');
-  return null;
+  return quat;
 }
-
 
 /**
  Get the conjugate of Quaternion 'quat'.
@@ -404,18 +345,13 @@ c3dl.multiplyQuatByScalar = function (quatOne, scalar)
  */
 c3dl.getQuatConjugate = function (quat)
 {
-  if (c3dl.isValidQuat(quat))
-  {
-    var nQt = c3dl.makeQuat();
-
-    nQt = [quat[0], -quat[1], -quat[2], -quat[3]];
-    return nQt;
-  }
-
-  c3dl.debug.logWarning('getQuatConjugate() called with a parameter that\'s not a quaternion');
-  return null;
+  var nQt = c3dl.makeQuat();
+  nQt[0] = quat[0]; 
+  nQt[1] = -quat[1]; 
+  nQt[2] = -quat[2]; 
+  nQt[3] = -quat[3];
+  return nQt;
 }
-
 
 /**
  Dot Product
@@ -427,14 +363,7 @@ c3dl.getQuatConjugate = function (quat)
  */
 c3dl.quatDotProduct = function (quatOne, quatTwo)
 {
-  if (c3dl.isValidQuat(quatOne) && c3dl.isValidQuat(quatTwo))
-  {
-    return quatOne[0] * quatTwo[0] + quatOne[1] * quatTwo[1] + quatOne[2] * quatTwo[2] + 
-      quatOne[3] * quatTwo[3];
-  }
-
-  c3dl.debug.logWarning('quatDotProduct() called with parameters that are not valid');
-  return null;
+  return quatOne[0] * quatTwo[0] + quatOne[1] * quatTwo[1] + quatOne[2] * quatTwo[2] + quatOne[3] * quatTwo[3];
 }
 
 /**
@@ -446,35 +375,26 @@ c3dl.quatDotProduct = function (quatOne, quatTwo)
  */
 c3dl.normalizeQuat = function (quat)
 {
-  if (c3dl.isValidQuat(quat))
+  var newQuat = c3dl.makeQuat();
+  var len = c3dl.quatLength(quat);
+  var invLen = 1.0 / len;
+  if (len > 0.001)
   {
-    var newQuat = c3dl.makeQuat();
-    var len = c3dl.quatLength(quat);
-    var invLen = 1.0 / len;
-
-    if (len > 0.001)
-    {
-      newQuat[0] = quat[0] * invLen;
-      newQuat[1] = quat[1] * invLen;
-      newQuat[2] = quat[2] * invLen;
-      newQuat[3] = quat[3] * invLen;
-    }
-    else
-    {
-      // If Normalization Cannot be done
-      newQuat[0] = 0.0;
-      newQuat[1] = 0.0;
-      newQuat[2] = 0.0;
-      newQuat[3] = 0.0;
-    }
-
-    return newQuat;
+    newQuat[0] = quat[0] * invLen;
+    newQuat[1] = quat[1] * invLen;
+    newQuat[2] = quat[2] * invLen;
+    newQuat[3] = quat[3] * invLen;
   }
-
-  c3dl.debug.logWarning('normalizeQuat() called with parameters that are not valid');
-  return null;
+  else
+  {
+    // If Normalization Cannot be done
+    newQuat[0] = 0.0;
+    newQuat[1] = 0.0;
+    newQuat[2] = 0.0;
+    newQuat[3] = 0.0;
+  }
+  return newQuat;
 }
-
 
 /**
  Get the inverse of the Quaternion quat.
@@ -485,28 +405,18 @@ c3dl.normalizeQuat = function (quat)
  */
 c3dl.inverseQuat = function (quat)
 {
-  if (c3dl.isValidQuat(quat))
-  {
-    var invQuat = c3dl.makeQuat();
-    var norm = 0.0;
-
-    for (var i = 0; i < 4; i++)
-    {
-      norm += quat[i] * quat[i];
-    }
-
-    if (norm > 0.0)
-    {
-      var invNorm = 1.0 / norm;
-      invQuat[0] = quat[0] * invNorm;
-      invQuat[1] = -quat[1] * invNorm;
-      invQuat[2] = -quat[2] * invNorm;
-      invQuat[3] = -quat[3] * invNorm;
-    }
-
-    return invQuat;
+  var invQuat = c3dl.makeQuat();
+  var norm = 0.0;
+  for (var i = 0; i < 4; i++) {
+    norm += quat[i] * quat[i];
   }
-
-  c3dl.debug.logWarning('inverseQuat() called with parameters that are not valid');
-  return null;
+  if (norm > 0.0)
+  {
+    var invNorm = 1.0 / norm;
+    invQuat[0] = quat[0] * invNorm;
+    invQuat[1] = -quat[1] * invNorm;
+    invQuat[2] = -quat[2] * invNorm;
+    invQuat[3] = -quat[3] * invNorm;
+  }
+  return invQuat;
 }

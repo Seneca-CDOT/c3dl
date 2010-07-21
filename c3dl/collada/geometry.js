@@ -128,9 +128,9 @@ c3dl.Geometry = function ()
     var raydir = c3dl.normalizeVector(c3dl.multiplyMatrixByDirection(mat, rayDir));
 
     // allocate and resuse these vertices to prevent allocation and deletion every face.
-    var vert1 = new Array(3);
-    var vert2 = new Array(3);
-    var vert3 = new Array(3);
+    var vert1 = new Float32Array(3);
+    var vert2 = new Float32Array(3);
+    var vert3 = new Float32Array(3);
 
     for (var i = 0; i < this.primitiveSets.length; i++)
     {

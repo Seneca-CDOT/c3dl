@@ -15,16 +15,16 @@ c3dl.Particle = function ()
   this.alive = false;
 
   // what the particle looks like
-  this.color = [0, 0, 0, 0];
+  this.color = new Float32Array([0, 0, 0, 0]);
   this.size = 0;
 
   // how the particle moves and its location
   this.position = c3dl.makeVector(0, 0, 0);
   this.velocity = c3dl.makeVector(0, 0, 0);
   this.rotation = 0;
-  this.vertices = [1, -1, 0, -1, -1, 0, -1, 1, 0, 1, 1, 0];
+  this.vertices = new Float32Array([1, -1, 0, -1, -1, 0, -1, 1, 0, 1, 1, 0]);
 
-  this.transform = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  this.transform = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
   /**
    @private
@@ -42,7 +42,7 @@ c3dl.Particle = function ()
    */
   this.getPosition = function ()
   {
-    return this.position;
+    return c3dl.copyVector(this.position);
   }
 
   /**
@@ -50,7 +50,7 @@ c3dl.Particle = function ()
    */
   this.getVelocity = function ()
   {
-    return this.velocity;
+    return c3dl.copyVector(this.velocity);
   }
 
   /**
@@ -72,7 +72,7 @@ c3dl.Particle = function ()
    */
   this.getColor = function ()
   {
-    return [this.color[0], this.color[1], this.color[2], this.color[3]];
+    return new Float32Array(this.color);
   }
 
   /**
@@ -103,7 +103,7 @@ c3dl.Particle = function ()
    */
   this.getTransform = function ()
   {
-    return this.transform;
+    return new Float32Array(this.transform);
   }
 
   /**
@@ -111,14 +111,7 @@ c3dl.Particle = function ()
    */
   this.getVertices = function ()
   {
-    var verts = new Array();
-
-    for (var i = 0; i < 12; i++) //18
-    {
-      verts.push(this.vertices[i] + this.position[i % 3]);
-    }
-
-    return verts;
+    return new Float32Array(verts);
   }
 
   /**
@@ -148,7 +141,9 @@ c3dl.Particle = function ()
    */
   this.setVelocity = function (velocity)
   {
-    this.velocity = velocity;
+    this.velocity[0] = velocity[0];
+	this.velocity[1] = velocity[1];
+	this.velocity[2] = velocity[2];
   }
 
   /**

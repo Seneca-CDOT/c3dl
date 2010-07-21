@@ -11,10 +11,10 @@
  */
 c3dl.Material = function ()
 {
-  this.emission = [0, 0, 0];
-  this.ambient = [0, 0, 0];
-  this.diffuse = [0, 0, 0];
-  this.specular = [0, 0, 0];
+  this.emission = c3dl.makeVector(0, 0, 0);
+  this.ambient = c3dl.makeVector(0, 0, 0);
+  this.diffuse = c3dl.makeVector(0, 0, 0);
+  this.specular = c3dl.makeVector(0, 0, 0);
   this.shininess = 0;
   this.name = "unnamed";
 
@@ -35,7 +35,7 @@ c3dl.Material = function ()
    */
   this.getEmission = function ()
   {
-    return c3dl.copyObj(this.emission);
+    return c3dl.copyVector(this.emission);
   }
 
   /**
@@ -45,7 +45,7 @@ c3dl.Material = function ()
    */
   this.getAmbient = function ()
   {
-    return c3dl.copyObj(this.ambient);
+    return c3dl.copyVector(this.ambient);
   }
 
   /**
@@ -55,7 +55,7 @@ c3dl.Material = function ()
    */
   this.getDiffuse = function ()
   {
-    return c3dl.copyObj(this.diffuse);
+    return c3dl.copyVector(this.diffuse);
   }
 
   /**
@@ -75,7 +75,7 @@ c3dl.Material = function ()
    */
   this.getSpecular = function ()
   {
-    return c3dl.copyObj(this.specular);
+    return c3dl.copyVector(this.specular);
   }
 
   /**
@@ -102,7 +102,9 @@ c3dl.Material = function ()
   {
     if (this.assertColor(color))
     {
-      this.emission = c3dl.copyObj(color);
+      this.emission[0] = color[0];
+	  this.emission[1] = color[1];
+	  this.emission[2] = color[2];
     }
   }
 
@@ -115,7 +117,9 @@ c3dl.Material = function ()
   {
     if (this.assertColor(color))
     {
-      this.ambient = c3dl.copyObj(color);
+      this.ambient[0] = color[0];
+	  this.ambient[1] = color[1];
+	  this.ambient[2] = color[2];
     }
   }
 
@@ -128,7 +132,9 @@ c3dl.Material = function ()
   {
     if (this.assertColor(color))
     {
-      this.diffuse = c3dl.copyObj(color);
+      this.diffuse[0] = color[0];
+	  this.diffuse[1] = color[1];
+	  this.diffuse[2] = color[2];
     }
   }
 
@@ -141,7 +147,9 @@ c3dl.Material = function ()
   {
     if (this.assertColor(color))
     {
-      this.specular = c3dl.copyObj(color);
+      this.specular[0] = color[0];
+	  this.specular[1] = color[1];
+	  this.specular[2] = color[2];
     }
   }
 

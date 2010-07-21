@@ -44,7 +44,7 @@
 c3dl.isValidMatrix = function (mat)
 {
   // Check if the value being passed is an array
-  if (mat instanceof Array)
+  if (mat instanceof Array || mat instanceof Float32Array)
   {
     // Must be array of 16 Values
     if (mat.length == 16)
@@ -61,7 +61,6 @@ c3dl.isValidMatrix = function (mat)
 
   return false;
 }
-
 
 /**
  Create an identity matrix. An identity matrix is a matrix in 
@@ -90,7 +89,7 @@ c3dl.isValidMatrix = function (mat)
  */
 c3dl.makeIdentityMatrix = function ()
 {
-  return [1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+  return new Float32Array([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
 }
 
 
@@ -102,7 +101,7 @@ c3dl.makeIdentityMatrix = function ()
  */
 c3dl.makeZeroMatrix = function ()
 {
-  return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+  return new Float32Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
 }
 
 /**
@@ -131,7 +130,7 @@ c3dl.makeZeroMatrix = function ()
  */
 c3dl.setMatrix = function (mat, e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e22, e23, 
   e30, e31, e32, e33)
-{
+{ 
   mat[0] = e00;
   mat[1] = e01;
   mat[2] = e02;
@@ -223,17 +222,13 @@ c3dl.matricesEqual = function (matrix1, matrix2)
  */
 c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
 {
-  if (c3dl.isValidVector(vecLeft) && c3dl.isValidVector(vecUp) && c3dl.isValidVector(vecFrwd) &&
-    c3dl.isValidVector(vecPos))
-  {
     // +-                            -+
     // |  Left.x, Up.y, Dir.x, Pos.x  |
     // |  Left.y, Up.x, Dir.y, Pos.y  |
     // |  Left.z, Up.z, Dir.z, Pos.z  |
     // |  0.0,    0.0,    0.0,  1.0   |
     // +-                            -+
-    var mat = new Array(16);
-
+    var mat = new Float32Array(16);
     // Left
     mat[0] = vecLeft[0];
     mat[1] = vecLeft[1];
@@ -258,11 +253,7 @@ c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
     mat[14] = vecPos[2];
     mat[15] = 1.0;
 
-    return mat;
-  }
-
-  c3dl.debug.logWarning('makePoseMatrix() called with a parameters that are not valid');
-  return null;
+    return  mat;
 }
 
 
@@ -297,15 +288,7 @@ c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
  */
 c3dl.transposeMatrix = function (mat)
 {
-  if (c3dl.isValidMatrix(mat))
-  {
-    // Transpose this matrix
-    return [mat[0], mat[4], mat[8], mat[12], mat[1], mat[5], mat[9], mat[13], mat[2], mat[6], mat[10],
-      mat[14], mat[3], mat[7], mat[11], mat[15]];
-  }
-
-  c3dl.debug.logWarning('transposeMatrix() called with a parameter that is not a proper Matrix');
-  return null;
+    return M4x4.transpose(mat);
 }
 
 
@@ -325,82 +308,65 @@ c3dl.transposeMatrix = function (mat)
  */
 c3dl.inverseMatrix = function (mat)
 {
-  if (c3dl.isValidMatrix(mat))
-  {
-    var kInv = [];
-    var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
-    var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
-    var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
-    var fA3 = mat[1] * mat[6] - mat[2] * mat[5];
-    var fA4 = mat[1] * mat[7] - mat[3] * mat[5];
-    var fA5 = mat[2] * mat[7] - mat[3] * mat[6];
-    var fB0 = mat[8] * mat[13] - mat[9] * mat[12];
-    var fB1 = mat[8] * mat[14] - mat[10] * mat[12];
-    var fB2 = mat[8] * mat[15] - mat[11] * mat[12];
-    var fB3 = mat[9] * mat[14] - mat[10] * mat[13];
-    var fB4 = mat[9] * mat[15] - mat[11] * mat[13];
-    var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
-
-    // Determinant
-    var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
-
-    // Account for a very small value
-    if (Math.abs(fDet) <= 1e-9)
-    {
-      c3dl.debug.logWarning('inverseMatrix() failed due to bad values');
-      return null;
-    }
-
-    kInv[0] = +mat[5] * fB5 - mat[6] * fB4 + mat[7] * fB3;
-    kInv[4] = -mat[4] * fB5 + mat[6] * fB2 - mat[7] * fB1;
-    kInv[8] = +mat[4] * fB4 - mat[5] * fB2 + mat[7] * fB0;
-    kInv[12] = -mat[4] * fB3 + mat[5] * fB1 - mat[6] * fB0;
-    kInv[1] = -mat[1] * fB5 + mat[2] * fB4 - mat[3] * fB3;
-    kInv[5] = +mat[0] * fB5 - mat[2] * fB2 + mat[3] * fB1;
-    kInv[9] = -mat[0] * fB4 + mat[1] * fB2 - mat[3] * fB0;
-    kInv[13] = +mat[0] * fB3 - mat[1] * fB1 + mat[2] * fB0;
-    kInv[2] = +mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3;
-    kInv[6] = -mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1;
-    kInv[10] = +mat[12] * fA4 - mat[13] * fA2 + mat[15] * fA0;
-    kInv[14] = -mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0;
-    kInv[3] = -mat[9] * fA5 + mat[10] * fA4 - mat[11] * fA3;
-    kInv[7] = +mat[8] * fA5 - mat[10] * fA2 + mat[11] * fA1;
-    kInv[11] = -mat[8] * fA4 + mat[9] * fA2 - mat[11] * fA0;
-    kInv[15] = +mat[8] * fA3 - mat[9] * fA1 + mat[10] * fA0;
-
-    // Inverse using Determinant
-    var fInvDet = 1.0 / fDet;
-    kInv[0] *= fInvDet;
-    kInv[1] *= fInvDet;
-    kInv[2] *= fInvDet;
-    kInv[3] *= fInvDet;
-    kInv[4] *= fInvDet;
-    kInv[5] *= fInvDet;
-    kInv[6] *= fInvDet;
-    kInv[7] *= fInvDet;
-    kInv[8] *= fInvDet;
-    kInv[9] *= fInvDet;
-    kInv[10] *= fInvDet;
-    kInv[11] *= fInvDet;
-    kInv[12] *= fInvDet;
-    kInv[13] *= fInvDet;
-    kInv[14] *= fInvDet;
-    kInv[15] *= fInvDet;
-
-    // Check if our matrix is correct
-    if (c3dl.isValidMatrix(kInv))
-    {
-      return kInv;
-    }
-
-    // Just in case the calculation fails, return a null
-    c3dl.debug.logWarning('inverseMatrix() failed due to math errors');
-    return null;
-  }
-
-  c3dl.debug.logWarning('inverseMatrix() called with a parameter that is not a proper Matrix');
-  return null;
-
+if (!mat) {
+	return
+}
+var kInv =  new Float32Array(16);
+	var fA0 = mat[ 0] * mat[ 5] - mat[ 1] * mat[ 4];
+ 	var fA1 = mat[ 0] * mat[ 6] - mat[ 2] * mat[ 4];
+ 	var fA2 = mat[ 0] * mat[ 7] - mat[ 3] * mat[ 4];
+ 	var fA3 = mat[ 1] * mat[ 6] - mat[ 2] * mat[ 5];
+ 	var fA4 = mat[ 1] * mat[ 7] - mat[ 3] * mat[ 5];
+ 	var fA5 = mat[ 2] * mat[ 7] - mat[ 3] * mat[ 6];
+ 	var fB0 = mat[ 8] * mat[13] - mat[ 9] * mat[12];
+ 	var fB1 = mat[ 8] * mat[14] - mat[10] * mat[12];
+ 	var fB2 = mat[ 8] * mat[15] - mat[11] * mat[12];
+ 	var fB3 = mat[ 9] * mat[14] - mat[10] * mat[13];
+ 	var fB4 = mat[ 9] * mat[15] - mat[11] * mat[13];
+ 	var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
+  	// Determinant
+ 	var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
+ 	// Account for a very small value
+	if (Math.abs(fDet) <= 1e-9)
+ 	{
+ 	  c3dl.debug.logWarning('inverseMatrix() failed due to bad values');
+   	  return null;
+	} 
+	kInv[ 0] = + mat[ 5] * fB5 - mat[ 6] * fB4 + mat[ 7] * fB3;
+	kInv[ 4] = - mat[ 4] * fB5 + mat[ 6] * fB2 - mat[ 7] * fB1;
+	kInv[ 8] = + mat[ 4] * fB4 - mat[ 5] * fB2 + mat[ 7] * fB0;
+	kInv[12] = - mat[ 4] * fB3 + mat[ 5] * fB1 - mat[ 6] * fB0;
+	kInv[ 1] = - mat[ 1] * fB5 + mat[ 2] * fB4 - mat[ 3] * fB3;
+	kInv[ 5] = + mat[ 0] * fB5 - mat[ 2] * fB2 + mat[ 3] * fB1;
+	kInv[ 9] = - mat[ 0] * fB4 + mat[ 1] * fB2 - mat[ 3] * fB0;
+	kInv[13] = + mat[ 0] * fB3 - mat[ 1] * fB1 + mat[ 2] * fB0;
+	kInv[ 2] = + mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3;
+	kInv[ 6] = - mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1; 		
+	kInv[10] = + mat[12] * fA4 - mat[13] * fA2 + mat[15] * fA0;
+ 	kInv[14] = - mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0;
+ 	kInv[ 3] = - mat[ 9] * fA5 + mat[10] * fA4 - mat[11] * fA3;
+ 	kInv[ 7] = + mat[ 8] * fA5 - mat[10] * fA2 + mat[11] * fA1;
+ 	kInv[11] = - mat[ 8] * fA4 + mat[ 9] * fA2 - mat[11] * fA0;
+ 	kInv[15] = + mat[ 8] * fA3 - mat[ 9] * fA1 + mat[10] * fA0;
+  	// Inverse using Determinant
+ 	var fInvDet = 1.0 / fDet;
+ 	kInv[ 0] *= fInvDet;
+ 	kInv[ 1] *= fInvDet;
+ 	kInv[ 2] *= fInvDet;
+ 	kInv[ 3] *= fInvDet;
+ 	kInv[ 4] *= fInvDet;
+ 	kInv[ 5] *= fInvDet;
+ 	kInv[ 6] *= fInvDet;
+ 	kInv[ 7] *= fInvDet;
+ 	kInv[ 8] *= fInvDet;
+ 	kInv[ 9] *= fInvDet;
+ 	kInv[10] *= fInvDet;
+ 	kInv[11] *= fInvDet;
+ 	kInv[12] *= fInvDet;
+ 	kInv[13] *= fInvDet;
+ 	kInv[14] *= fInvDet;
+	kInv[15] *= fInvDet;
+  	return kInv;
 }
 
 
@@ -415,8 +381,6 @@ c3dl.inverseMatrix = function (mat)
  */
 c3dl.matrixDeterminant = function (mat)
 {
-  if (c3dl.isValidMatrix(mat))
-  {
     var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
     var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
     var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
@@ -434,10 +398,6 @@ c3dl.matrixDeterminant = function (mat)
     var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
 
     return fDet;
-  }
-
-  c3dl.debug.logWarning('matrixDeterminant() called with a parameter that is not a proper Matrix');
-  return null;
 }
 
 
@@ -452,38 +412,31 @@ c3dl.matrixDeterminant = function (mat)
  */
 c3dl.matrixAdjoint = function (mat)
 {
-  if (c3dl.isValidMatrix(mat))
-  {
-    var k = [];
-    var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
-    var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
-    var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
-    var fA3 = mat[1] * mat[6] - mat[2] * mat[5];
-    var fA4 = mat[1] * mat[7] - mat[3] * mat[5];
-    var fA5 = mat[2] * mat[7] - mat[3] * mat[6];
-    var fB0 = mat[8] * mat[13] - mat[9] * mat[12];
-    var fB1 = mat[8] * mat[14] - mat[10] * mat[12];
-    var fB2 = mat[8] * mat[15] - mat[11] * mat[12];
-    var fB3 = mat[9] * mat[14] - mat[10] * mat[13];
-    var fB4 = mat[9] * mat[15] - mat[11] * mat[13];
-    var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
+  var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
+  var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
+  var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
+  var fA3 = mat[1] * mat[6] - mat[2] * mat[5];
+  var fA4 = mat[1] * mat[7] - mat[3] * mat[5];
+  var fA5 = mat[2] * mat[7] - mat[3] * mat[6];
+  var fB0 = mat[8] * mat[13] - mat[9] * mat[12];
+  var fB1 = mat[8] * mat[14] - mat[10] * mat[12];
+  var fB2 = mat[8] * mat[15] - mat[11] * mat[12];
+  var fB3 = mat[9] * mat[14] - mat[10] * mat[13];
+  var fB4 = mat[9] * mat[15] - mat[11] * mat[13];
+  var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
 
-    // Adjoint
-    k = [mat[5] * fB5 - mat[6] * fB4 + mat[7] * fB3, -mat[1] * fB5 + mat[2] * fB4 - mat[3] * fB3,
-      mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3, -mat[9] * fA5 + mat[10] * fA4 - mat[11] * fA3,
-      -mat[4] * fB5 + mat[6] * fB2 - mat[7] * fB1, mat[0] * fB5 - mat[2] * fB2 + mat[3] * fB1, 
-      -mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1, mat[8] * fA5 - mat[10] * fA2 + mat[11] * fA1,
-      mat[4] * fB4 - mat[5] * fB2 + mat[7] * fB0, -mat[0] * fB4 + mat[1] * fB2 - mat[3] * fB0, 
-      mat[12] * fA4 - mat[13] * fA2 + mat[15] * fA0, -mat[8] * fA4 + mat[9] * fA2 - mat[11] * fA0,
-      -mat[4] * fB3 + mat[5] * fB1 - mat[6] * fB0, mat[0] * fB3 - mat[1] * fB1 + mat[2] * fB0,
-      -mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0,
-      mat[8] * fA3 - mat[9] * fA1 + mat[10] * fA0];
+  // Adjoint
+  var k = new Float32Array([mat[5] * fB5 - mat[6] * fB4 + mat[7] * fB3, -mat[1] * fB5 + mat[2] * fB4 - mat[3] * fB3,
+    mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3, -mat[9] * fA5 + mat[10] * fA4 - mat[11] * fA3,
+    -mat[4] * fB5 + mat[6] * fB2 - mat[7] * fB1, mat[0] * fB5 - mat[2] * fB2 + mat[3] * fB1, 
+    -mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1, mat[8] * fA5 - mat[10] * fA2 + mat[11] * fA1,
+    mat[4] * fB4 - mat[5] * fB2 + mat[7] * fB0, -mat[0] * fB4 + mat[1] * fB2 - mat[3] * fB0, 
+    mat[12] * fA4 - mat[13] * fA2 + mat[15] * fA0, -mat[8] * fA4 + mat[9] * fA2 - mat[11] * fA0,
+    -mat[4] * fB3 + mat[5] * fB1 - mat[6] * fB0, mat[0] * fB3 - mat[1] * fB1 + mat[2] * fB0,
+    -mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0,
+    mat[8] * fA3 - mat[9] * fA1 + mat[10] * fA0]);
 
     return k;
-  }
-
-  c3dl.debug.logWarning('matrixAdjoint() called with a parameter that is not a proper Matrix');
-  return null;
 }
 
 
@@ -498,23 +451,9 @@ c3dl.matrixAdjoint = function (mat)
  @returns {Array} The Matrix 'mat', with each component 
  multiplied by 'scalar'.
  */
-c3dl.multiplyMatrixByScalar = function (mat, scalar)
-{
-  var matrix = [];
-
-  if (c3dl.isValidMatrix(mat) && !isNaN(scalar))
-  {
-    // Multiply each variable
-    for (var i = 0; i < 16; i++)
-    {
-      matrix[i] = mat[i] * scalar;
-    }
-
-    return matrix;
-  }
-
-  c3dl.debug.logWarning('multiplyMatrixByScalar() called with a parameters that are invalid');
-  return null;
+c3dl.multiplyMatrixByScalar = function (mat,scalar )
+{ 
+    return M4x4.mul(mat,scalar);
 }
 
 // -----------------------------------------------------------------------------
@@ -531,23 +470,14 @@ c3dl.multiplyMatrixByScalar = function (mat, scalar)
  */
 c3dl.divideMatrixByScalar = function (mat, scalar)
 {
-  var matrix = [];
-
-  if (c3dl.isValidMatrix(mat) && !isNaN(scalar) && scalar != 0.0)
+  var matrix = new Float32Array(16);
+  // Multiply each variable
+  for (var i = 0; i < 16; i++)
   {
-    // Multiply each variable
-    for (var i = 0; i < 16; i++)
-    {
-      matrix[i] = mat[i] / scalar;
-    }
-
-    return matrix;
+    matrix[i] = mat[i] / scalar;
   }
-
-  c3dl.debug.logWarning('multiplyMatrixByScalar() called with a parameters that are invalid');
-  return null;
+  return matrix;
 }
-
 
 /**
  Multiply matrix 'matOne' by 'matTwo'.
@@ -559,48 +489,7 @@ c3dl.divideMatrixByScalar = function (mat, scalar)
  */
 c3dl.multiplyMatrixByMatrix = function (matOne, matTwo, newMat)
 {
-  if (!newMat)
-  {
-    newMat = [];
-  }
-
-  // Check to see if the value being passed is a Matrix
-  if (!c3dl.isValidMatrix(matOne) || !c3dl.isValidMatrix(matTwo))
-  {
-    c3dl.debug.logWarning('multiplyMatrixByMatrix() called with a invalid parameters');
-    return null;
-  }
-
-  // We multiply the first by the second
-  newMat[0] = (matOne[0] * matTwo[0] + matOne[4] * matTwo[1] + matOne[8] * matTwo[2] + matOne[12] * matTwo[3]);
-  newMat[1] = (matOne[1] * matTwo[0] + matOne[5] * matTwo[1] + matOne[9] * matTwo[2] + matOne[13] * matTwo[3]);
-  newMat[2] = (matOne[2] * matTwo[0] + matOne[6] * matTwo[1] + matOne[10] * matTwo[2] + matOne[14] * matTwo[3]);
-  newMat[3] = (matOne[3] * matTwo[0] + matOne[7] * matTwo[1] + matOne[11] * matTwo[2] + matOne[15] * matTwo[3]);
-
-  newMat[4] = (matOne[0] * matTwo[4] + matOne[4] * matTwo[5] + matOne[8] * matTwo[6] + matOne[12] * matTwo[7]);
-  newMat[5] = (matOne[1] * matTwo[4] + matOne[5] * matTwo[5] + matOne[9] * matTwo[6] + matOne[13] * matTwo[7]);
-  newMat[6] = (matOne[2] * matTwo[4] + matOne[6] * matTwo[5] + matOne[10] * matTwo[6] + matOne[14] * matTwo[7]);
-  newMat[7] = (matOne[3] * matTwo[4] + matOne[7] * matTwo[5] + matOne[11] * matTwo[6] + matOne[15] * matTwo[7]);
-
-  newMat[8] = (matOne[0] * matTwo[8] + matOne[4] * matTwo[9] + matOne[8] * matTwo[10] + matOne[12] * matTwo[11]);
-  newMat[9] = (matOne[1] * matTwo[8] + matOne[5] * matTwo[9] + matOne[9] * matTwo[10] + matOne[13] * matTwo[11]);
-  newMat[10] = (matOne[2] * matTwo[8] + matOne[6] * matTwo[9] + matOne[10] * matTwo[10] + matOne[14] * matTwo[11]);
-  newMat[11] = (matOne[3] * matTwo[8] + matOne[7] * matTwo[9] + matOne[11] * matTwo[10] + matOne[15] * matTwo[11]);
-
-  newMat[12] = (matOne[0] * matTwo[12] + matOne[4] * matTwo[13] + matOne[8] * matTwo[14] + matOne[12] * matTwo[15]);
-  newMat[13] = (matOne[1] * matTwo[12] + matOne[5] * matTwo[13] + matOne[9] * matTwo[14] + matOne[13] * matTwo[15]);
-  newMat[14] = (matOne[2] * matTwo[12] + matOne[6] * matTwo[13] + matOne[10] * matTwo[14] + matOne[14] * matTwo[15]);
-  newMat[15] = (matOne[3] * matTwo[12] + matOne[7] * matTwo[13] + matOne[11] * matTwo[14] + matOne[15] * matTwo[15]);
-
-  if (c3dl.isValidMatrix(newMat))
-  {
-    return newMat;
-  }
-  else
-  {
-    c3dl.debug.logWarning('multiplyMatrixByMatrix() matrix multiplication error');
-    return null;
-  }
+  return newMat = M4x4.mul(matOne,matTwo);
 }
 
 
@@ -615,33 +504,25 @@ c3dl.multiplyMatrixByMatrix = function (matOne, matTwo, newMat)
  */
 c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
 {
-  if (c3dl.isValidMatrix(mat) && c3dl.isValidVector(vec))
+  if (!dest)
   {
-    if (!dest)
-    {
-      dest = c3dl.makeVector();
-
-      // since we don't need to multiply the translation part, we leave it out.
-      dest[0] = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2]; // + mat[12] * 0;
-      dest[1] = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2]; // + mat[13] * 0;
-      dest[2] = mat[2] * vec[0] + mat[6] * vec[1] + mat[10] * vec[2]; // + mat[14] * 0;
-      return dest;
-    }
-    else
-    {
-      var a = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2]; // + mat[12] * 0;
-      var b = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2]; // + mat[13] * 0;
-      var c = mat[2] * vec[0] + mat[6] * vec[1] + mat[10] * vec[2]; // + mat[14] * 0;
-      dest[0] = a;
-      dest[1] = b;
-      dest[2] = c;
-
-      return dest;
-    }
+    dest = c3dl.makeVector();
+    // since we don't need to multiply the translation part, we leave it out.
+    dest[0] = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2]; // + mat[12] * 0;
+    dest[1] = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2]; // + mat[13] * 0;
+    dest[2] = mat[2] * vec[0] + mat[6] * vec[1] + mat[10] * vec[2]; // + mat[14] * 0;
+    return dest;
   }
-  dest = null;
-  c3dl.debug.logWarning('multiplyMatrixByDirection() called with invalid parameters');
-  return null;
+  else
+  {
+    var a = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2]; // + mat[12] * 0;
+    var b = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2]; // + mat[13] * 0;
+    var c = mat[2] * vec[0] + mat[6] * vec[1] + mat[10] * vec[2]; // + mat[14] * 0;
+    dest[0] = a;
+	dest[1] = b;
+    dest[2] = c;
+    return dest;
+  }
 }
 
 
@@ -666,16 +547,13 @@ c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
  */
 c3dl.multiplyMatrixByVector = function (mat, vec, dest)
 {
-  if (c3dl.isValidMatrix(mat) && c3dl.isValidVector(vec))
-  {
-    // if user didn't give us last component, assume 1 which is the majority 
-    // of the cases.
+    vec = new Float32Array(vec);
     var w = (vec.length == 3 ? 1 : vec[3]);
-
+	
     if (!dest)
     {
       // match the destination size with the vector size.
-      dest = (vec.length == 3 ? [0, 0, 0] : [0, 0, 0, 0]);
+      dest = new Float32Array((vec.length == 3 ? [0, 0, 0] : [0, 0, 0, 0]));
 
       dest[0] = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2] + mat[12] * w;
       dest[1] = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2] + mat[13] * w;
@@ -706,13 +584,9 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest)
       {
         dest[3] = d
       }
-
       return dest;
     }
-  }
-  dest = null;
-  c3dl.debug.logWarning('multiplyMatrixByVector() called with invalid parameters');
-  return null;
+
 }
 
 /**
@@ -727,21 +601,13 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest)
  */
 c3dl.addMatrices = function (matOne, matTwo)
 {
-  if (c3dl.isValidMatrix(matOne) && c3dl.isValidMatrix(matTwo))
+  var m = new Float32Array(16);
+  for (var i = 0; i < 16; i++)
   {
-    var m = [];
-
-    for (var i = 0; i < 16; i++)
-    {
-      // Add each value of the matrix to its counterpart
-      m[i] = matOne[i] + matTwo[i];
-    }
-
-    return m;
+    // Add each value of the matrix to its counterpart
+   m[i] = matOne[i] + matTwo[i];
   }
-
-  c3dl.debug.logWarning('addMatrices() called with invalid parameters');
-  return null;
+  return m;
 }
 
 
@@ -759,19 +625,16 @@ c3dl.addMatrices = function (matOne, matTwo)
  */
 c3dl.subtractMatrices = function (matOne, matTwo)
 {
-  if (c3dl.isValidMatrix(matOne) && c3dl.isValidMatrix(matTwo))
-  {
-    var m = [];
-
-    for (var i = 0; i < 16; i++)
-    {
-      // Add each value of the matrix to its counterpart
-      m[i] = matOne[i] - matTwo[i];
-    }
-
+   var m = new Float32Array(16);
+   for (var i = 0; i < 16; i++)
+   {
+     // Add each value of the matrix to its counterpart
+     m[i] = matOne[i] - matTwo[i];
+   }
     return m;
-  }
+ }
 
-  c3dl.debug.logWarning('subtractMatrices() called with invalid parameters');
-  return null;
+c3dl.copyMatrix = function (srcMat)
+{
+  return M4x4.clone(srcMat);
 }

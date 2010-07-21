@@ -29,7 +29,7 @@ c3dl.Actor = function ()
  */
 c3dl.Actor.prototype.getPosition = function ()
 {
-  return c3dl.makeVector(this.pos[0], this.pos[1], this.pos[2]);
+  return c3dl.copyVector(this.pos);
 }
 
 /**
@@ -39,7 +39,7 @@ c3dl.Actor.prototype.getPosition = function ()
  */
 c3dl.Actor.prototype.getUp = function ()
 {
-  return c3dl.makeVector(this.up[0], this.up[1], this.up[2]);
+  return c3dl.copyVector(this.up);
 }
 
 /**
@@ -50,7 +50,7 @@ c3dl.Actor.prototype.getUp = function ()
  */
 c3dl.Actor.prototype.getDirection = function ()
 {
-  return c3dl.makeVector(this.dir[0], this.dir[1], this.dir[2]);
+  return c3dl.copyVector(this.dir);
 }
 
 /**
@@ -60,7 +60,7 @@ c3dl.Actor.prototype.getDirection = function ()
  */
 c3dl.Actor.prototype.getLeft = function ()
 {
-  return c3dl.makeVector(this.left[0], this.left[1], this.left[2]);
+  return c3dl.copyVector(this.left);
 }
 
 /**
@@ -70,7 +70,7 @@ c3dl.Actor.prototype.getLeft = function ()
  */
 c3dl.Actor.prototype.getLinearVel = function ()
 {
-  return c3dl.makeVector(this.linVel[0], this.linVel[1], this.linVel[2]);
+  return c3dl.copyVector(this.linVel);
 }
 
 /**
@@ -80,7 +80,7 @@ c3dl.Actor.prototype.getLinearVel = function ()
  */
 c3dl.Actor.prototype.getAngularVel = function ()
 {
-  return c3dl.makeVector(this.angVel[0], this.angVel[1], this.angVel[2]);
+  return c3dl.copyVector(this.angVel);
 }
 
 /**
@@ -91,7 +91,7 @@ c3dl.Actor.prototype.getAngularVel = function ()
  */
 c3dl.Actor.prototype.getScale = function ()
 {
-  return c3dl.makeVector(this.scaleVec[0], this.scaleVec[1], this.scaleVec[2]);
+  return c3dl.copyVector(this.scaleVec[0], this.scaleVec[1], this.scaleVec[2]);
 }
 
 /**
@@ -159,20 +159,15 @@ c3dl.Actor.prototype.resetTransform = function ()
  */
 c3dl.Actor.prototype.scale = function (scaleVec)
 {
-  if (c3dl.isValidVector(scaleVec))
+  // none of the values should be less than or equal to zero
+  if (scaleVec[0] > 0.0 && scaleVec[1] > 0.0 && scaleVec[2] > 0.0)
   {
-    // none of the values should be less than or equal to zero
-    if (scaleVec[0] > 0.0 && scaleVec[1] > 0.0 && scaleVec[2] > 0.0)
-    {
-      this.scaleVec = [this.scaleVec[0] * scaleVec[0], this.scaleVec[1] * scaleVec[1], this.scaleVec[2] * scaleVec[2]];
-    }
-  }
-  else
-  {
-    c3dl.debug.logWarning('Actor::scale() called with a parameter that\'s not a vector');
+    this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
+	this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
+    this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
   }
 }
-
+ 
 /**
  Set the new location of the Actor.
  
@@ -180,14 +175,9 @@ c3dl.Actor.prototype.scale = function (scaleVec)
  */
 c3dl.Actor.prototype.setPosition = function (vecPos)
 {
-  if (c3dl.isValidVector(vecPos))
-  {
-    this.pos = vecPos;
-  }
-  else
-  {
-    c3dl.debug.logWarning("Actor::setPosition() called with a parameter that's not a vector");
-  }
+  this.pos[0] = vecPos[0];
+  this.pos[1] = vecPos[1];
+  this.pos[2] = vecPos[2];
 }
 
 /**
@@ -210,23 +200,14 @@ c3dl.Actor.prototype.translate = function (translation)
  */
 c3dl.Actor.prototype.setForward = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    // Figure out the direction of the point we are looking at
-    this.dir = this.pos;
-    c3dl.subtractVectors(this.dir, newVec, this.dir);
-    c3dl.normalizeVector(this.dir);
-
-    // Adjust the Up and Left vectors accordingly
-    c3dl.vectorCrossProduct(this.up, this.dir, this.left);
-    c3dl.normalizeVector(this.left);
-    c3dl.vectorCrossProduct(this.dir, this.up, this.up);
-    c3dl.normalizeVector(this.up);
-  }
-  else
-  {
-    c3dl.debug.logWarning('Actor::setForward() called with a parameter that\'s not a vector');
-  }
+  this.dir = this.pos;
+  c3dl.subtractVectors(this.dir, newVec, this.dir);
+  c3dl.normalizeVector(this.dir);
+  // Adjust the Up and Left vectors accordingly
+  c3dl.vectorCrossProduct(this.up, this.dir, this.left);
+  c3dl.normalizeVector(this.left);
+  c3dl.vectorCrossProduct(this.dir, this.up, this.up);
+  c3dl.normalizeVector(this.up);
 }
 
 /**
@@ -234,16 +215,12 @@ c3dl.Actor.prototype.setForward = function (newVec)
  
  @param {Array} newVec
  */
+ 
 c3dl.Actor.prototype.setUpVector = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.up = newVec;
-  }
-  else
-  {
-    c3dl.debug.logWarning('Actor::setUpVector() called with a parameter that\'s not a vector');
-  }
+  this.up[0] = newVec[0];
+  this.up[1] = newVec[1];
+  this.up[2] = newVec[2];
 }
 
 /**
@@ -253,14 +230,9 @@ c3dl.Actor.prototype.setUpVector = function (newVec)
  */
 c3dl.Actor.prototype.setLinearVel = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.linVel = newVec;
-  }
-  else
-  {
-    c3dl.debug.logWarning('Actor::setLinearVel() called with a parameter that\'s not a vector');
-  }
+  this.linVel[0] = newVec[0];
+  this.linVel[1] = newVec[1];
+  this.linVel[2] = newVec[2];
 }
 
 /**
@@ -271,14 +243,9 @@ c3dl.Actor.prototype.setLinearVel = function (newVec)
  */
 c3dl.Actor.prototype.setAngularVel = function (newVec)
 {
-  if (c3dl.isValidVector(newVec))
-  {
-    this.angVel = newVec;
-  }
-  else
-  {
-    c3dl.debug.logWarning("Actor's setAngularVel() called with a parameter that's not a vector");
-  }
+  this.angVel[0] = newVec[0];
+  this.angVel[1] = newVec[1];
+  this.angVel[2] = newVec[2];
 }
 
 /**
@@ -304,16 +271,6 @@ c3dl.Actor.prototype.rotateOnAxis = function (axisVec, angle)
   var rotateOnAxisQuat = c3dl.makeQuat(0, 0, 0, 0);
   var rotateOnAxisMat = c3dl.makeZeroMatrix();
   
-  if (!c3dl.isValidVector(axisVec))
-  {
-    c3dl.debug.logWarning('Actor::rotateOnAxis() called with the first parameter not a vector');
-    return;
-  }
-  if (isNaN(angle))
-  {
-    c3dl.debug.logWarning('Actor::rotateOnAxis() called with the second parameter not a number');
-    return;
-  }
   if (angle == 0)
   {
     return;
