@@ -76,7 +76,9 @@ c3dl.BoundingSphere = function ()
       if (currVector > longestLengthFound)
       {
         longestLengthFound = currVector;
-        this.longestVector = [vertices[i + 0], vertices[i + 1], vertices[i + 2]];
+        this.longestVector[0] = vertices[i + 0]; 
+		this.longestVector[0] = vertices[i + 1]; 
+		this.longestVector[0] = vertices[i + 2];
       }
     }
 

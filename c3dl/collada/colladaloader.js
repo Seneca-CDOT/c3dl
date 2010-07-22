@@ -121,7 +121,7 @@ c3dl.ColladaLoader = function ()
       // <rotate sid="rotateZ">0 0 1 15</rotate>
       // <rotate sid="rotateY">0 1 0 0</rotate>
       // <rotate sid="rotateX">1 0 0 0</rotate>
-      for (var i = 0; i < rotationTags.length; i++)
+      for (var i = 0, len = rotationTags.length; i < len; i++)
       {
         var floatValues = c3dl.ColladaLoader.stringsToFloats(rotationTags[i].childNodes[0].nodeValue, ' ');
 
@@ -231,7 +231,7 @@ c3dl.ColladaLoader = function ()
     if (geometries)
     {
       // a node may contain many geometryNodes, so we have to create each one.
-      for (var currGeo = 0; currGeo < geometries.length; currGeo++)
+      for (var currGeo = 0, len = geometries.length; currGeo < len; currGeo++)
       {
         // the url references a <geometry> element within the <library_geometry>
         var url = geometries[currGeo].getAttribute("url").split('#')[1];
@@ -249,7 +249,7 @@ c3dl.ColladaLoader = function ()
     if (instance_nodes)
     {
       // a <node> can contain 0..N <instance_node> so iterate over each one
-      for (var currNode = 0; currNode < instance_nodes.length; currNode++)
+      for (var currNode = 0, len = instance_nodes.length; currNode < len; currNode++)
       {
         // remove the '#' from the url
         var url = instance_nodes[currNode].getAttribute("url").split('#')[1];
@@ -268,7 +268,7 @@ c3dl.ColladaLoader = function ()
     if (nodes)
     {
       // for each of subnodes, call this function.
-      for (var i = 0; i < nodes.length; i++)
+      for (var i = 0, len = nodes.length; i < len; i++)
       {
         var scenenode = new c3dl.SceneNode();
         scenenode.setName(nodes[i].getAttribute("name"));
@@ -336,13 +336,13 @@ c3dl.ColladaLoader = function ()
     var library_images = root.getElementsByTagName("library_images");
 
     // <collada> may have 0 or many <library_images>
-    for (var libraryImagesIter = 0; libraryImagesIter < library_images.length; libraryImagesIter++)
+    for (var libraryImagesIter = 0, len = library_images.length; libraryImagesIter < len; libraryImagesIter++)
     {
       // one <library_images> has <images>. cardinality isn't mentioned in the spec.
       var imageElements = library_images[libraryImagesIter].getElementsByTagName("image");
 
       // 
-      for (var imageElementIter = 0; imageElementIter < imageElements.length; imageElementIter++)
+      for (var imageElementIter = 0, len2 = imageElements.length; imageElementIter < len2; imageElementIter++)
       {
         // an <image> has exactly one <init_from> which have the uri or the
         // texture.
@@ -413,7 +413,7 @@ c3dl.ColladaLoader = function ()
     var visualScene = null;
 
     // go over all the visual scenes trying to identify the one we want.
-    for (var i = 0; i < visualSceneList.length; i++)
+    for (var i = 0, len = visualSceneList.length; i < len; i++)
     {
       if (visualSceneList[i].getAttribute("id") == visualSceneToLoad)
       {
@@ -432,7 +432,7 @@ c3dl.ColladaLoader = function ()
     if (nodes)
     {
       // parse each of the 'root' nodes.
-      for (var currNode = 0; currNode < nodes.length; currNode++)
+      for (var currNode = 0, len = nodes.length; currNode < len; currNode++)
       {
         var scenenode = new c3dl.SceneNode();
 
@@ -597,11 +597,11 @@ c3dl.ColladaLoader = function ()
     // the url provided points to a geometry in a geometry library. We'll need to
     // go through the libraries and find which library it is in.
     // TODO: add breakout when found
-    for (var currLib = 0; currLib < libraryGeometries.length; currLib++)
+    for (var currLib = 0, len = libraryGeometries.length; currLib < len; currLib++)
     {
       var geometries = libraryGeometries[currLib].getElementsByTagName("geometry");
       // for each geometry
-      for (var currGeo = 0; currGeo < geometries.length; currGeo++)
+      for (var currGeo = 0, len2= geometries.length; currGeo < len2; currGeo++)
       {
         if (geometries[currGeo].getAttribute("id") == url)
         {
@@ -649,7 +649,7 @@ c3dl.ColladaLoader = function ()
     //
     // The library does have means to render lines, but reading this primitive has not been added yet.
     //
-    for (var i = 0; i < mesh.childNodes.length; i++)
+    for (var i = 0, len = mesh.childNodes.length; i < len; i++)
     {
       if (mesh.childNodes[i].nodeName == "triangles" || mesh.childNodes[i].nodeName == "polygons" ||
         mesh.childNodes[i].nodeName == "polylist")
@@ -662,7 +662,7 @@ c3dl.ColladaLoader = function ()
     // <p> element represents a primitive. 
     //
     // currColl = current collation
-    for (var currColl = 0; currColl < collations.length; currColl++)
+    for (var currColl = 0, len = collations.length; currColl < len; currColl++)
     {
       // Depending on the type of collation element, the data will be layed out slighly differently.			
       //
@@ -687,11 +687,11 @@ c3dl.ColladaLoader = function ()
       {
         var p_tags = collations[currColl].getElementsByTagName("p");
         rawFaces = new Float32Array(collations[currColl].getAttribute("count"));
-        for (var i = 0; i < p_tags.length; i++)
+        for (var i = 0, len2 = p_tags.length; i < len2; i++)
         {
           // need to get rid of the spaces
           var p_line = p_tags[i].childNodes[0].nodeValue.split(" ");
-          for (var j = 0; j < p_line.length; j++)
+          for (var j = 0, len3 = p_line.length; j < len3; j++)
           {
             rawFaces[i+j](parseInt(p_line[j]));
           }
@@ -721,7 +721,7 @@ c3dl.ColladaLoader = function ()
 
       // The order of the <input> tags can vary, so we can't rely on how they are arranged
       // in most documents.
-      for (var i = 0; i < inputs.length; i++)
+      for (var i = 0, len2 = inputs.length; i < len2; i++)
       { /**************/
         /*  VERTICES  */
         /**************/
@@ -746,7 +746,7 @@ c3dl.ColladaLoader = function ()
           vertexStride = parseInt(data.stride);
           if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
           {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride)
+            for (var vertIter = 0, len3 = data.values.length; vertIter < len3; vertIter += vertexStride)
             {
               var temp = data.values[vertIter + 1];
               data.values[vertIter + 1] = data.values[vertIter + 2];
@@ -755,7 +755,7 @@ c3dl.ColladaLoader = function ()
           }
           else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
           {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += vertexStride)
+            for (var vertIter = 0, len3 = data.values.length; vertIter < len3; vertIter += vertexStride)
             {
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
@@ -778,7 +778,7 @@ c3dl.ColladaLoader = function ()
           // length * stride instead of literal?
           if (xmlObject.upAxis && xmlObject.upAxis == "Z_UP")
           {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride)
+            for (var vertIter = 0, len3 = data.values.length; vertIter < len3; vertIter += normalsStride)
             {
               var temp = data.values[vertIter + 1];
               data.values[vertIter + 1] = data.values[vertIter + 2];
@@ -787,7 +787,7 @@ c3dl.ColladaLoader = function ()
           }
           else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
           {
-            for (var vertIter = 0; vertIter < data.values.length; vertIter += normalsStride)
+            for (var vertIter = 0, len3 = data.values.length; vertIter < len3; vertIter += normalsStride)
             {		
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
@@ -810,7 +810,7 @@ c3dl.ColladaLoader = function ()
 
           // WebGL expects the bottom left corner of the
           // texture in the top left, so we need to flip the texture coordinates
-          for (var currUV = 1; currUV < data.values.length; currUV += texCoordsStride)
+          for (var currUV = 1, len3 = data.values.length; currUV < len3; currUV += texCoordsStride)
           {
             data.values[currUV] = 1 - data.values[currUV];
           }
@@ -865,7 +865,7 @@ c3dl.ColladaLoader = function ()
         // count is an attribute of polygons which lists how many primitives the
         // polygon has. we can use this data to find out how many times we have to
         // change the parts.
-        for (var currPrim = 0; currPrim < collations[currColl].getAttribute("count"); currPrim++)
+		for (var currPrim = 0, count = collations[currColl].getAttribute("count"); currPrim < count; currPrim++)
         {
           var partsArray = [];
 
@@ -874,7 +874,7 @@ c3dl.ColladaLoader = function ()
           for (var currPart = 0; currPart < 4; currPart++)
           {
             var part = [];
-            for (currScalar = 0; currScalar < inputs.length; currScalar++)
+            for (currScalar = 0, len2 = inputs.length; currScalar < len2; currScalar++)
             {
               part.push(rawFaces[(currPrim * inputs.length * 4) + (currPart * partSize) + currScalar]);
             }
@@ -883,27 +883,27 @@ c3dl.ColladaLoader = function ()
 
           // need to push on the RAW values, don't push on arrays.
           // TODO: write a function for this.
-          for (var s = 0; s < partsArray[0].length; s++)
+          for (var s = 0, len2 = partsArray[0].length; s < len2; s++)
           {
             trianglesList.push(partsArray[0][s]);
           }
-          for (var s = 0; s < partsArray[1].length; s++)
+          for (var s = 0, len2 = partsArray[1].length; s < len2; s++)
           {
             trianglesList.push(partsArray[1][s]);
           }
-          for (var s = 0; s < partsArray[3].length; s++)
+          for (var s = 0, len2 = partsArray[3].length; s < len2; s++)
           {
             trianglesList.push(partsArray[3][s]);
           }
-          for (var s = 0; s < partsArray[3].length; s++)
+          for (var s = 0, len2 = partsArray[3].length; s < len2; s++)
           {
             trianglesList.push(partsArray[3][s]);
           }
-          for (var s = 0; s < partsArray[1].length; s++)
+          for (var s = 0, len2 = partsArray[1].length; s < len2; s++)
           {
             trianglesList.push(partsArray[1][s]);
           }
-          for (var s = 0; s < partsArray[2].length; s++)
+          for (var s = 0, len2 = partsArray[2].length; s < len2; s++)
           {
             trianglesList.push(partsArray[2][s]);
           }
@@ -937,7 +937,7 @@ c3dl.ColladaLoader = function ()
       var instance_materials = technique_common.getElementsByTagName("instance_material");
 
       // iterate over all the <instance_material>'s <technique_common> has.
-      for (var im = 0; im < instance_materials.length; im++)
+      for (var im = 0, len2 = instance_materials.length; im < len2; im++)
       {
         // target is the target material to instantiate
         var target = instance_materials[im].getAttribute("target").split('#')[1];
@@ -957,7 +957,7 @@ c3dl.ColladaLoader = function ()
 
         // The material was instantiated and now we have to iterate over the collations
         // and find the collation which has a material which matches the material name.
-        for (var ic = 0; ic < GeoCollations.length; ic++)
+        for (var ic = 0, len = GeoCollations.length; ic < len; ic++)
         {
           if (GeoCollations[ic].tempMaterial == symbol)
           {
@@ -987,13 +987,13 @@ c3dl.ColladaLoader = function ()
 
     // <collada> may have many <library_node>. We'll need to go through each to find
     // the node with the name we are looking for.
-    for (var currLib = 0; currLib < libraryNodes.length /*&& nodeToCreate == null*/ ; currLib++)
+    for (var currLib = 0, len = libraryNodes.length; currLib < len /*&& nodeToCreate == null*/ ; currLib++)
     {
       // get all the nodes in this library.
       var nodes = libraryNodes[currLib].getElementsByTagName("node");
 
       // find the node in the list.
-      for (var currNode = 0; currNode < nodes.length /*&& nodeToCreate == null*/ ; currNode++)
+      for (var currNode = 0, len2 = nodes.length; currNode < len2 /*&& nodeToCreate == null*/ ; currNode++)
       {
         if (nodes[currNode].getAttribute("id") == url)
         {
@@ -1033,7 +1033,7 @@ c3dl.ColladaLoader = function ()
     var listOfArrays = [];
 
     //
-    for (var i = 0; i < rawScalarValues.length; i += stride)
+    for (var i = 0, len = rawScalarValues.length; i < len; i += stride)
     {
       var element = new Float32Array(numComponentsPerElement);
 	  var counter = 0;
@@ -1084,7 +1084,7 @@ c3dl.ColladaLoader = function ()
     // triangle fans.
     // Vertices, according to the spec, will be counter clockwise.  Because
     // of this, we should be able to make fans without problems.
-    for (var currPrim = 0; currPrim < collation.getAttribute("count"); currPrim++, vcountIndex++)
+    for (var currPrim = 0, count = collation.getAttribute("count"); currPrim < count; currPrim++, vcountIndex++)
     {
       var partsArray = [];
       // the current number in the vcount list may have different values depending, may have 3, 4 or more
@@ -1124,7 +1124,7 @@ c3dl.ColladaLoader = function ()
       {
         // s iterator is for scalar, we are dealing with single values.
         // push on the first 
-        for (var s = 0; s < partsArray[0].length; s++)
+        for (var s = 0, len = partsArray[0].length; s < len; s++)
         {
           // first
           trianglesList.push(partsArray[0][s]);
@@ -1132,7 +1132,7 @@ c3dl.ColladaLoader = function ()
         fanIndex++;
 
         // last
-        for (var s = 0; s < partsArray[0].length; s++)
+        for (var s = 0, len = partsArray[0].length; s < len; s++)
         {
           trianglesList.push(partsArray[last][s]);
         }
@@ -1144,7 +1144,7 @@ c3dl.ColladaLoader = function ()
           firstTriangle = false;
         }
 
-        for (var s = 0; s < partsArray[0].length; s++)
+        for (var s = 0, len = partsArray[0].length; s < len; s++)
         {
           trianglesList.push(partsArray[fanIndex][s]);
         }
@@ -1173,12 +1173,12 @@ c3dl.ColladaLoader = function ()
     var libraries = xmlObject.getElementsByTagName(libraryName);
 
     // for all the libraries in the <collada> element
-    for (libraryIter = 0; libraryIter < libraries.length; libraryIter++)
+    for (libraryIter = 0, len = libraries.length; libraryIter < len; libraryIter++)
     {
       var elements = libraries[libraryIter].getElementsByTagName(elementName);
 
       // for all the elements in each library.
-      for (elementIter = 0; elementIter < elements.length; elementIter++)
+      for (elementIter = 0, len2 = elements.length; elementIter < len2; elementIter++)
       {
         // found it
         if (elementAttributeId == elements[elementIter].getAttribute("id"))
@@ -1282,7 +1282,7 @@ c3dl.ColladaLoader = function ()
     //  \    /      \    /      \    /  
     //    \/          \/          \/
     // currFace=0   currFace=1    ...
-    for (var currFace = 0; currFace < faces.length; currFace++)
+    for (var currFace = 0, len = faces.length; currFace < len; currFace++)
     {
       // have to be scalar, no arrays
       // each element in the faces array is another array. That second array
@@ -1358,7 +1358,7 @@ c3dl.ColladaLoader = function ()
       if (value.nodeName == "color")
       {
         returnValue = [];
-        for (var currNode = 0; currNode < value.childNodes.length; currNode++)
+        for (var currNode = 0, len = value.childNodes.length; currNode < len; currNode++)
         {
           returnValue += value.childNodes[currNode].nodeValue;
         }
@@ -1400,7 +1400,7 @@ c3dl.ColladaLoader = function ()
   this.mergeChildData = function (childNodes)
   {
     var values = [];
-    for (var currNode = 0; currNode < childNodes.length; currNode++)
+    for (var currNode = 0, len = childNodes.length; currNode < len; currNode++)
     {
       values += childNodes[currNode].nodeValue;
     }
@@ -1429,7 +1429,7 @@ c3dl.ColladaLoader = function ()
    */
   this.getFirstChildByNodeName = function (searchNode, nodeName)
   {
-    for (var i = 0; i < searchNode.childNodes.length; i++)
+    for (var i = 0, len = searchNode.childNodes.length; i < len; i++)
     {
       // found it!
       if (searchNode.childNodes[i].nodeName == nodeName)
@@ -1466,7 +1466,7 @@ c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attribu
   var elements = root.getElementsByTagName(nodeName);
 
   // we might have a few tags, we need to find the one with the id specified
-  for (var i = 0; i < elements.length; i++)
+  for (var i = 0, len = elements.length; i < len; i++)
   {
     if (elements[i].getAttribute(attributeKey) == attributeValue)
     {
@@ -1494,7 +1494,7 @@ c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName)
 
   if (searchNode.childNodes.length > 0)
   {
-    for (var i = 0; i < searchNode.childNodes.length; i++)
+    for (var i = 0, len = searchNode.childNodes.length; i < len; i++)
     {
       if (searchNode.childNodes[i].nodeName == nodeName)
       {
@@ -1546,7 +1546,7 @@ c3dl.ColladaLoader.stringsToFloats = function (numbers, delimeter)
   // strings, so convert them to float.
   var strValues = trimmedNumbers.split(delimeter);
 
-  for (var i = 0; i < strValues.length; i++)
+  for (var i = 0, len = strValues.length; i < len; i++)
   {
     floatValues.push(parseFloat(strValues[i]));
   }
