@@ -71,8 +71,14 @@ c3dl_require('actors/primitive.js');
 c3dl_require('actors/point.js');
 c3dl_require('actors/line.js');
 
-//
+//frustum culling
+c3dl_require('frustum_culling/frustum.js');
+c3dl_require('frustum_culling/plane.js');
+
+//scene
 c3dl_require('scene.js');
+
+//texture
 c3dl_require('texture/texture.js');
 c3dl_require('texture/texturemanager.js');
 c3dl_require('texture/textureutils.js');
