@@ -176,3 +176,24 @@ c3dl.getRandom = function (min, max)
   var norm = Math.random();
   return ((max - min) * norm) + min;
 }
+c3dl.findMax = function (arrayIn)
+{
+  var max = arrayIn[0];
+  for (i=0; i<arrayIn.length; i++) {
+    if (arrayIn[i]>max) {
+      max = arrayIn[i];
+    }
+  }
+  return max;
+};
+
+c3dl.findMin = function (arrayIn)
+{
+  var min = arrayIn[0];
+  for (i=0; i<arrayIn.length; i++) {
+    if (arrayIn[i]<min) {
+      min = arrayIn[i];
+    }
+  }
+  return min;
+};

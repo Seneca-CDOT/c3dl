@@ -479,3 +479,8 @@ c3dl.Collada.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
   c3dl.popMatrix();
   return result;
 }
+
+c3dl.Collada.prototype.getBoundingSpheres = function ()
+{
+  return this.sceneGraph.getBoundingSpheres();
+}

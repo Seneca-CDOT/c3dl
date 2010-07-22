@@ -240,3 +240,78 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
   c3dl.popMatrix();
   return passed;
 }
+
+c3dl.SceneNode.prototype.getBoundingSpheres  = function ()
+{
+var boundingSpheres =[];
+  for (var i = 0; i < this.children.length; i++)
+  { 
+    if (this.children[i] instanceof c3dl.SceneNode) { 
+      boundingSpheres = boundingSpheres.concat(this.children[i].getBoundingSpheres());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) { 
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        boundingSpheres  = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());  
+      }
+    }
+  }
+  return boundingSpheres;
+}
+
+c3dl.SceneNode.prototype.setPosition  = function (vecPos)
+{
+  if (c3dl.isValidVector(vecPos))
+  {
+    this.pos = vecPos;
+	for (var i = 0; i < this.children.length; i++)
+	{ 
+		if (this.children[i] instanceof c3dl.SceneNode) { 
+		  this.children[i].setBoundingSpherePosition(vecPos);
+		}
+		else if (this.children[i] instanceof c3dl.Geometry) { 
+		  for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+			this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(vecPos);  
+		  }
+		}
+	}
+  }
+  else
+  {
+    c3dl.debug.logWarning("Actor::setPosition() called with a parameter that's not a vector");
+  }
+}
+
+c3dl.SceneNode.prototype.update = function (timeStep)
+{
+	var velVec = c3dl.multiplyVector(this.linVel, timeStep);    
+	c3dl.addVectors(this.pos, velVec, this.pos);
+	for (var i = 0; i < this.children.length; i++)
+	{ 
+		if (this.children[i] instanceof c3dl.SceneNode) { 
+			this.children[i].setBoundingSpherePosition(this.pos);
+		}
+		else if (this.children[i] instanceof c3dl.Geometry) { 
+			for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+				this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(this.pos);  
+			 }
+		}
+	}
+	// Apply some rotations to the orientation from the angular velocity
+	this.pitch(this.angVel[0] * timeStep);
+	this.yaw(this.angVel[1] * timeStep);
+	this.roll(this.angVel[2] * timeStep);
+}
+c3dl.SceneNode.prototype.setBoundingSpherePosition  = function (vecPos)
+{
+	for (var i = 0; i < this.children.length; i++)
+	{ 
+		if (this.children[i] instanceof c3dl.SceneNode) { 
+			this.children[i].setBoundingSpherePosition(vecPos);
+		}
+		else if (this.children[i] instanceof c3dl.Geometry) { 
+			for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+				this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(vecPos);  
+			}
+		}
+	}
+}
