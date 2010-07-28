@@ -44,7 +44,7 @@
 c3dl.isValidMatrix = function (mat)
 {
   // Check if the value being passed is an array
-  if (mat instanceof Array || mat instanceof Float32Array)
+  if (mat instanceof Array || mat instanceof MJS_FLOAT_ARRAY_TYPE)
   {
     // Must be array of 16 Values
     if (mat.length == 16)
@@ -89,7 +89,7 @@ c3dl.isValidMatrix = function (mat)
  */
 c3dl.makeIdentityMatrix = function ()
 {
-  return new Float32Array([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
+  return new MJS_FLOAT_ARRAY_TYPE([1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]);
 }
 
 
@@ -101,7 +101,7 @@ c3dl.makeIdentityMatrix = function ()
  */
 c3dl.makeZeroMatrix = function ()
 {
-  return new Float32Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
+  return new C3DL_FLOAT_ARRAY([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]);
 }
 
 /**
@@ -228,7 +228,7 @@ c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
     // |  Left.z, Up.z, Dir.z, Pos.z  |
     // |  0.0,    0.0,    0.0,  1.0   |
     // +-                            -+
-    var mat = new Float32Array(16);
+    var mat = new C3DL_FLOAT_ARRAY(16);
     // Left
     mat[0] = vecLeft[0];
     mat[1] = vecLeft[1];
@@ -311,7 +311,7 @@ c3dl.inverseMatrix = function (mat)
 if (!mat) {
 	return
 }
-var kInv =  new Float32Array(16);
+var kInv =  new C3DL_FLOAT_ARRAY(16);
 	var fA0 = mat[ 0] * mat[ 5] - mat[ 1] * mat[ 4];
  	var fA1 = mat[ 0] * mat[ 6] - mat[ 2] * mat[ 4];
  	var fA2 = mat[ 0] * mat[ 7] - mat[ 3] * mat[ 4];
@@ -426,7 +426,7 @@ c3dl.matrixAdjoint = function (mat)
   var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
 
   // Adjoint
-  var k = new Float32Array([mat[5] * fB5 - mat[6] * fB4 + mat[7] * fB3, -mat[1] * fB5 + mat[2] * fB4 - mat[3] * fB3,
+  var k = new C3DL_FLOAT_ARRAY([mat[5] * fB5 - mat[6] * fB4 + mat[7] * fB3, -mat[1] * fB5 + mat[2] * fB4 - mat[3] * fB3,
     mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3, -mat[9] * fA5 + mat[10] * fA4 - mat[11] * fA3,
     -mat[4] * fB5 + mat[6] * fB2 - mat[7] * fB1, mat[0] * fB5 - mat[2] * fB2 + mat[3] * fB1, 
     -mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1, mat[8] * fA5 - mat[10] * fA2 + mat[11] * fA1,
@@ -470,7 +470,7 @@ c3dl.multiplyMatrixByScalar = function (mat,scalar )
  */
 c3dl.divideMatrixByScalar = function (mat, scalar)
 {
-  var matrix = new Float32Array(16);
+  var matrix = new C3DL_FLOAT_ARRAY(16);
   // Multiply each variable
   for (var i = 0; i < 16; i++)
   {
@@ -547,13 +547,13 @@ c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
  */
 c3dl.multiplyMatrixByVector = function (mat, vec, dest)
 {
-    vec = new Float32Array(vec);
+    vec = new C3DL_FLOAT_ARRAY(vec);
     var w = (vec.length == 3 ? 1 : vec[3]);
 	
     if (!dest)
     {
       // match the destination size with the vector size.
-      dest = new Float32Array((vec.length == 3 ? [0, 0, 0] : [0, 0, 0, 0]));
+      dest = new C3DL_FLOAT_ARRAY((vec.length == 3 ? [0, 0, 0] : [0, 0, 0, 0]));
 
       dest[0] = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2] + mat[12] * w;
       dest[1] = mat[1] * vec[0] + mat[5] * vec[1] + mat[9] * vec[2] + mat[13] * w;
@@ -601,7 +601,7 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest)
  */
 c3dl.addMatrices = function (matOne, matTwo)
 {
-  var m = new Float32Array(16);
+  var m = new C3DL_FLOAT_ARRAY(16);
   for (var i = 0; i < 16; i++)
   {
     // Add each value of the matrix to its counterpart
@@ -625,7 +625,7 @@ c3dl.addMatrices = function (matOne, matTwo)
  */
 c3dl.subtractMatrices = function (matOne, matTwo)
 {
-   var m = new Float32Array(16);
+   var m = new C3DL_FLOAT_ARRAY(16);
    for (var i = 0; i < 16; i++)
    {
      // Add each value of the matrix to its counterpart

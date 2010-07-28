@@ -1,5 +1,5 @@
 function Plane() {
-  this.normal = new Float32Array(3);
+  this.normal = new C3DL_FLOAT_ARRAY(3);
   this.offset = null;
   this.init = function(normal, offset) {
 		this.normal[0] = normal[0];

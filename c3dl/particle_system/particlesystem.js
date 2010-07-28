@@ -12,18 +12,18 @@ c3dl.ParticleSystem = function ()
   // particle uv's won't change so instead of keeping
   // a copy of uv coords in each particle, keep one copy
   // in the particle system.
-  this.particleUVs = new Float32Array([1, 1, //
+  this.particleUVs = new C3DL_FLOAT_ARRAY([1, 1, //
                                        1, 0, //
                                        0, 0, //
                                        0, 1]); //
   // winding order of these verts is counter-clockwise, the same as models. This
   // prevents having to change the winding order state in WebGL when rendering.
-  this.billboardVerts = new Float32Array([1, -1, 0, // bottom right
+  this.billboardVerts = new C3DL_FLOAT_ARRAY([1, -1, 0, // bottom right
                                           1,  1, 0, // top right
                                         - 1,  1, 0, // top left
                                         - 1, -1, 0]); // bottom left
   // this particle system's transformation matrix
-  this.mat = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  this.mat = new C3DL_FLOAT_ARRAY([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
   // list of the Particle objects.
   this.particles;
@@ -52,8 +52,8 @@ c3dl.ParticleSystem = function ()
 
   // the color range of the particles. The color also contains an
   // alpha component.
-  this.minColor = new Float32Array([0, 0, 0, 0]);
-  this.maxColor = new Float32Array([0, 0, 0, 0]);
+  this.minColor = new C3DL_FLOAT_ARRAY([0, 0, 0, 0]);
+  this.maxColor = new C3DL_FLOAT_ARRAY([0, 0, 0, 0]);
 
   //
   //
@@ -63,7 +63,7 @@ c3dl.ParticleSystem = function ()
   // acceleration is a property of the subsystem. Every
   // particle in the subsystem will share the same
   // acceleration.
-  this.acceleration = new Float32Array([0, 0, 0, 0]);
+  this.acceleration = new C3DL_FLOAT_ARRAY([0, 0, 0, 0]);
 
   // blend modes
   this.dstBlend = c3dl.ZERO;
@@ -199,9 +199,9 @@ c3dl.ParticleSystem = function ()
       this.particles[i] = new c3dl.Particle();
     }
 
-    this.particleVerts = new Float32Array(this.particles.length * 3 * 4);
-    this.particleColors = new Float32Array(this.particles.length * 4 * 4);
-    this.particleTexCoords = new Float32Array(this.particles.length * 2 * 4);
+    this.particleVerts = new C3DL_FLOAT_ARRAY(this.particles.length * 3 * 4);
+    this.particleColors = new C3DL_FLOAT_ARRAY(this.particles.length * 4 * 4);
+    this.particleTexCoords = new C3DL_FLOAT_ARRAY(this.particles.length * 2 * 4);
 
     for (var i = 0, len = this.particleColors.length; i < len; i++)
     {
@@ -335,7 +335,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getAcceleration = function ()
   {
-    return new Float32Array(this.acceleration);
+    return new C3DL_FLOAT_ARRAY(this.acceleration);
   }
 
   /**
@@ -366,7 +366,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMaxColor = function ()
   {
-    return new Float32Array(this.maxColor);
+    return new C3DL_FLOAT_ARRAY(this.maxColor);
   }
 
   /**
@@ -375,7 +375,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMinColor = function ()
   {
-    return new Float32Array(this.minColor);
+    return new C3DL_FLOAT_ARRAY(this.minColor);
   }
 
   /**
@@ -403,7 +403,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMinVelocity = function ()
   {
-    return new Float32Array(this.minVelocity);
+    return new C3DL_FLOAT_ARRAY(this.minVelocity);
   }
 
   /**
@@ -415,7 +415,7 @@ c3dl.ParticleSystem = function ()
    */
   this.getMaxVelocity = function ()
   {
-    return new Float32Array(this.maxVelocity);
+    return new C3DL_FLOAT_ARRAY(this.maxVelocity);
   }
 
   /**

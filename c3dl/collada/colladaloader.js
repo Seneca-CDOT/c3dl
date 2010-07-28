@@ -652,7 +652,7 @@ c3dl.ColladaLoader = function ()
     for (var i = 0, len = mesh.childNodes.length; i < len; i++)
     {
       if (mesh.childNodes[i].nodeName == "triangles" || mesh.childNodes[i].nodeName == "polygons" ||
-        mesh.childNodes[i].nodeName == "polylist")
+        mesh.childNodes[i].nodeName == "polylist" || mesh.childNodes[i].nodeName =="lines" )
       {
         collations.push(mesh.childNodes[i]);
       }
@@ -672,10 +672,11 @@ c3dl.ColladaLoader = function ()
       //
       // triangles are always composed of 3 vertices so this element does not require <vcount>
       //
-      if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist")
+      if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist" ||
+	  collations[currColl].nodeName == "lines")
       {
         var p = this.getFirstChildByNodeName(collations[currColl], "p");
-        new Float32Array(rawFaces = this.mergeChildData(p.childNodes).split(" "));
+        new C3DL_FLOAT_ARRAY(rawFaces = this.mergeChildData(p.childNodes).split(" "));
       }
 
       // <polygon>s are broken up like this:
@@ -686,7 +687,7 @@ c3dl.ColladaLoader = function ()
       else if (collations[currColl].nodeName == "polygons")
       {
         var p_tags = collations[currColl].getElementsByTagName("p");
-        rawFaces = new Float32Array(collations[currColl].getAttribute("count"));
+        rawFaces = new C3DL_FLOAT_ARRAY(collations[currColl].getAttribute("count"));
         for (var i = 0, len2 = p_tags.length; i < len2; i++)
         {
           // need to get rid of the spaces
@@ -909,18 +910,23 @@ c3dl.ColladaLoader = function ()
           }
         }
         // now we can overrite what rawFaces had in it
-        rawFaces = new Float32Array(trianglesList);
+        rawFaces = new C3DL_FLOAT_ARRAY(trianglesList);
       } // if polygons
       // we don't need a case for triangles since
       // now that we know how many inputs there were, we can group the faces.
-      faces = this.groupScalarsIntoArray(rawFaces, inputs.length, inputs.length);
+      faces = this.groupScalarsIntoArray(rawFaces, inputs.length, inputs.length,collations[currColl].nodeName);
 
       // each primitive collation element can have a material name. this name matches to the
       // <instance_material>'s symbol attribute value.					
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
-      collationElement.init(this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
-        this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
-        this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2));
+	  if (collations[currColl].nodeName !== "lines") {
+        collationElement.init(this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
+          this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
+          this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2));
+	  }
+	  else {
+	    collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
+	  }
       geometry.addPrimitiveSet(collationElement);
     } // end iterating over collations
 
@@ -1035,7 +1041,7 @@ c3dl.ColladaLoader = function ()
     //
     for (var i = 0, len = rawScalarValues.length; i < len; i += stride)
     {
-      var element = new Float32Array(numComponentsPerElement);
+      var element = new C3DL_FLOAT_ARRAY(numComponentsPerElement);
 	  var counter = 0;
       //
       for (var j = i; j < i + numComponentsPerElement; j++)
@@ -1154,7 +1160,7 @@ c3dl.ColladaLoader = function ()
     }
     // overwrite rawFaces with the triangle faces, as if quads never existed.
     //rawFaces = trianglesList;				
-    return new Float32Array(trianglesList);
+    return new C3DL_FLOAT_ARRAY(trianglesList);
   }
 
 
@@ -1221,7 +1227,7 @@ c3dl.ColladaLoader = function ()
     var float_array = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "float_array", "id", accessorSrc);   
     //values in the DAE file are seperated with a space
     // don't use nodeValue since it will be broken up in 4096 chunks
-	data.values = new Float32Array(this.mergeChildData(float_array.childNodes).split(" "));
+	data.values = new C3DL_FLOAT_ARRAY(this.mergeChildData(float_array.childNodes).split(" "));
     return data;
   }
 
@@ -1266,7 +1272,7 @@ c3dl.ColladaLoader = function ()
   {
   
     // this is a single dimensional array which hold expanded values.
-    var expandedArray = new Float32Array(faces.length*3);
+    var expandedArray = new C3DL_FLOAT_ARRAY(faces.length*3);
 	var counter = 0;
     // in the nested loop, we divide the instructions into parts to
     // make it easier to read, but don't allocate these varialbes everytime

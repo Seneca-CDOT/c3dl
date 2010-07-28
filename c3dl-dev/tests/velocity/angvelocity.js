@@ -22,6 +22,7 @@ function canvasMain(canvasName){
         scn.setCamera(cam);
         scn.setUpdateCallback(checktime);
         scn.startScene();
+		 duck.setDrawBoundingBox(true);
     }
     
 function checktime(time){

@@ -21,7 +21,7 @@
 c3dl.isValidQuat = function (quat)
 {
   // All math types are arrays instead of objects for performance reasons.
-  if (quat instanceof Array || quat instanceof Float32Array)
+  if (quat instanceof Array || quat instanceof C3DL_FLOAT_ARRAY)
   {
     // Must be 4 values long
     if (quat.length == 4)
@@ -54,7 +54,7 @@ c3dl.isValidQuat = function (quat)
 c3dl.makeQuat = function (newW, newX, newY, newZ)
 {
   // Quat = W + X * i + Y * j + Z * k 
-  var quat = Float32Array(4);
+  var quat = new C3DL_FLOAT_ARRAY(4);
 
   quat[0] = !isNaN(newW) ? parseFloat(newW) : 0.0; // W
   quat[1] = !isNaN(newX) ? parseFloat(newX) : 0.0; // X
@@ -111,7 +111,7 @@ c3dl.quatToMatrix = function (quat, dest)
   else
   {
     // Setup a new Matrix out of this quaternion
-    var newMat = new Float32Array(16);
+    var newMat = new C3DL_FLOAT_ARRAY(16);
 
     newMat[0] = 1.0 - (quatToMatrixTyy + quatToMatrixTzz);
     newMat[1] = quatToMatrixTxy + quatToMatrixTwz;

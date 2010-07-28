@@ -47,6 +47,7 @@ c3dl.Scene = function ()
   // default point rendering to spheres to prevent possible crashing
   // when users render points which playing a DVD on OS X.
   var pointRenderingMode = c3dl.POINT_MODE_SPHERE;
+  var pauseFlag = false; //Pause the render loop
   var exitFlag = false; // Exits the render loop
   var canvasTag = null;
   var canvas2Dlist = [];
@@ -78,7 +79,8 @@ c3dl.Scene = function ()
   // once it is set.
   var textureQueue = [];
   var pointPositions = null;
-
+  //type of culling 
+  var culling = "BoundingSphere"
 
   // -------------------------------------------------------
   /**
@@ -1024,50 +1026,47 @@ c3dl.Scene = function ()
       }
       return;
     }
+    if (!pauseFlag){
+      // update the camera and objects
+      camera.update(Date.now() - lastTimeTaken);
+      thisScn.updateObjects(Date.now() - lastTimeTaken);
+      lastTimeTaken = Date.now();
 
-    // update the camera and objects
-    camera.update(Date.now() - lastTimeTaken);
-    thisScn.updateObjects(Date.now() - lastTimeTaken);
-    lastTimeTaken = Date.now();
-
-    // The user may have added a texture to the scene in 
-    // which case, the renderer needs to create them.
-    if (textureQueue.length > 0)
-    {
-      for (var i = 0, len = textureQueue.length; i < len; i++)
+      // The user may have added a texture to the scene in 
+      // which case, the renderer needs to create them.
+      if (textureQueue.length > 0)
       {
-        renderer.addTexture(textureQueue[i]);
+        for (var i = 0, len = textureQueue.length; i < len; i++)
+        {
+          renderer.addTexture(textureQueue[i]);
+        }
+        // clear out the queue. It will be empty until the
+        // user adds new textures.
+        textureQueue = [];
       }
-      // clear out the queue. It will be empty until the
-      // user adds new textures.
-      textureQueue = [];
+      // clear the depth buffer and color buffer. This needs to be 
+      // done every frame since objects likely have moved.
+      renderer.clearBuffers();
+
+      // we could have 2 canvases with different dimensions, but the same camera.
+      // Therefore we need to update the camera with the aspect ratio since it's the 
+      // camera that creates the projection matrix.
+      // creates the projection matrix
+      // this will place the view matrix at the bottom of the matrix stack.
+      camera.applyToWorld(canvasTag.width / canvasTag.height);
+
+      // save the projection matrix so if the picking code needs to know what
+      // projection matrix was used, it can query the scene.
+      projMat = camera.getProjectionMatrix();
+
+      // now that the view matrix has been pushed onto the matrix stack,
+      // we can specify the locations of the lights, which will use the top of the
+      // matrix stack.
+      thisScn.updateLights();
+
+      // render objects in the scene.
+      thisScn.renderObjects(glCanvas3D);
     }
-
-
-    // clear the depth buffer and color buffer. This needs to be 
-    // done every frame since objects likely have moved.
-    renderer.clearBuffers();
-
-    // we could have 2 canvases with different dimensions, but the same camera.
-    // Therefore we need to update the camera with the aspect ratio since it's the 
-    // camera that creates the projection matrix.
-    //
-    // creates the projection matrix
-    // this will place the view matrix at the bottom of the matrix stack.
-    camera.applyToWorld(canvasTag.width / canvasTag.height);
-
-    // save the projection matrix so if the picking code needs to know what
-    // projection matrix was used, it can query the scene.
-    projMat = camera.getProjectionMatrix();
-
-    // now that the view matrix has been pushed onto the matrix stack,
-    // we can specify the locations of the lights, which will use the top of the
-    // matrix stack.
-    thisScn.updateLights();
-
-    // render objects in the scene.
-    thisScn.renderObjects(glCanvas3D);
-
     // we just rendered to the back buffer, so to see the changes, swap
     // the front and back buffers.
     //renderer.swapBuffers();
@@ -1178,7 +1177,6 @@ c3dl.Scene = function ()
     // particle system was inserted, but the getObj(index) would then have 
     // been invalidated.
     var particleSystems = [];
-
     for (var i = 0, len = objList.length; i < len; i++)
     {
       if (objList[i].getObjectType() == c3dl.PARTICLE_SYSTEM)
@@ -1188,11 +1186,47 @@ c3dl.Scene = function ()
 
       if (objList[i].getObjectType() == c3dl.COLLADA)
       {
-        objList[i].render(glCanvas3D, this);
+        var checker;	
+		var cam = this.getCamera();
+		var projMatrix = cam.getProjectionMatrix();		
+        var viewMatrix = cam.getViewMatrix();
+		var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix);
+		var frustumCulling = new Frustum(frustumMatrix);
+		//Culling using spheres
+		if (culling === "BoundingSphere") {
+		  var boundingSpheres = objList[i].getBoundingSpheres();
+		  for (var j = 0; j < boundingSpheres.length; j++) {
+			checker = frustumCulling.sphereInFrustum(boundingSpheres[j]);
+			if (checker === "INSIDE") {	
+			  break;
+			}
+		  }
+		  if (checker === "INSIDE") {		
+			objList[i].render(glCanvas3D, this);
+		  }
+        }		  
+		//Culling Boxes
+		else if (culling === "BoundingBox") {
+		  for (var j = 0; j < 3; j++) {
+		    box = objList[i].getBoundingBox();
+		    sizes = [];
+		    sizes[0]= box.getHeight();
+		    sizes[1]= box.getLength();
+		    sizes[2]= box.getWidth();
+	        checker = frustumCulling.boundingBoxInfrustumPlane(box.getPosition(),sizes[j]);
+			if (checker === "INSIDE") {	
+			  break;
+			}
+		  }
+		  if (checker === "INSIDE") {		
+			objList[i].render(glCanvas3D, this);
+		  }
+	    }
+		else {
+		  objList[i].render(glCanvas3D, this);
+		}
       }
-
     }
-
     // POINTS
     // if first time
     //if(pointPositions == null)
@@ -1270,7 +1304,14 @@ c3dl.Scene = function ()
     // This flags the main loop to exit gracefully
     exitFlag = true;
   }
-
+  this.unpauseScene = function ()
+  {
+    pauseFlag = false;
+  }
+    this.pauseScene = function ()
+  {
+    pauseFlag = true;
+  }
   /**
    @private
    Loads images before they are actually used.  If a Model is created 

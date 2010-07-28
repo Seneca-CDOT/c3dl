@@ -411,3 +411,10 @@ c3dl.PICK_PRECISION_BOUNDING_VOLUME = 1;
  @constant
  */
 c3dl.PICK_PRECISION_TRIANGLE = 2;
+
+try {
+  WebGLFloatArray;
+} catch (x) {
+  WebGLFloatArray = Float32Array;
+}
+const C3DL_FLOAT_ARRAY = WebGLFloatArray;

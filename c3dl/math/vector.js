@@ -23,7 +23,7 @@
 c3dl.isValidVector = function (vecArr)
 {
   // Check if the value being passed is an array
-  if (vecArr instanceof Array || vecArr instanceof Float32Array)
+  if (vecArr instanceof Array || vecArr instanceof C3DL_FLOAT_ARRAY)
   {
     // Need to allow 4D vectors since last element of 
     // vector may not always be 1, and we can't assume
@@ -67,7 +67,7 @@ c3dl.copyVectorContents = function (srcVec, destVec)
 }
 c3dl.addVectorComponent = function (srcVec, newComponent)
 {
-  var newVec = new Float32Array(4);
+  var newVec = new C3DL_FLOAT_ARRAY(4);
   newVec[0]=srcVec[0]
   newVec[1]=srcVec[1]
   newVec[2]=srcVec[2]
@@ -87,7 +87,7 @@ c3dl.addVectorComponent = function (srcVec, newComponent)
  */
 c3dl.makeVector = function (newX, newY, newZ)
 {
-  return  new Float32Array([!isNaN(newX) ? parseFloat(newX) : 0.0, !isNaN(newY) ? parseFloat(newY) : 0.0, !isNaN(newZ) ? parseFloat(newZ) : 0.0]);
+  return  new C3DL_FLOAT_ARRAY([!isNaN(newX) ? parseFloat(newX) : 0.0, !isNaN(newY) ? parseFloat(newY) : 0.0, !isNaN(newZ) ? parseFloat(newZ) : 0.0]);
 }
 
 /**
@@ -111,7 +111,7 @@ c3dl.normalizeVector = function (vec)
 	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
 	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
 	  vec[3] = vec[3] != 0.0 ? vec[2] / ln : 0.0;
-	  return new Float32Array(vec);
+	  return new C3DL_FLOAT_ARRAY(vec);
   }
   else {
 	  var compr = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
@@ -122,7 +122,7 @@ c3dl.normalizeVector = function (vec)
 	  vec[0] = vec[0] != 0.0 ? vec[0] / ln : 0.0;
 	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
 	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
-	  return new Float32Array(vec);
+	  return new C3DL_FLOAT_ARRAY(vec);
   }
 }
 

@@ -50,12 +50,12 @@ c3dl_require('renderer/rendererwebgl.js');
 c3dl_require('renderer/programobject.js');
 
 //math
+c3dl_require('math/mjs.js');
 c3dl_require('math/mathutils.js');
 c3dl_require('math/vector.js');
 c3dl_require('math/matrix.js');
 c3dl_require('math/quaternion.js');
 c3dl_require('matrixstack.js');
-c3dl_require('math/mjs.js');
 //cameras
 c3dl_require('camera/camera.js');
 c3dl_require('camera/freecamera.js');
@@ -64,6 +64,7 @@ c3dl_require('camera/orbitcamera.js');
 //bounding volumes
 c3dl_require('enclosure/boundingsphere.js');
 c3dl_require('enclosure/visualboundingsphere.js');
+c3dl_require('enclosure/boundingbox.js');
 
 //actors
 c3dl_require('actors/actor.js');

@@ -104,15 +104,37 @@ c3dl.SceneNode.prototype.findNode = function (nodeName)
  
  @param {float} timeStep
  */
-c3dl.SceneNode.prototype.update = function (timeStep)
+c3dl.SceneNode.prototype.update = function (timeStep, scaleVec,rotateMat)
 {
   c3dl._super(this, arguments, "update");
-
-  for (var i = 0, len = this.children.length; i < len; i++)
-  {
-    this.children[i].update(timeStep);
-  }
+   c3dl.pushMatrix();
+   if (!scaleVec) {
+    scaleVec= this.scaleVec;
+	}
+   else if (this.scaleVec) {
+    scaleVec = c3dl.multiplyVectorByVector(scaleVec, this.scaleVec);
+   }
+   if (!rotateMat) {
+    rotateMat= this.getRotateMat();
+	}
+   else if (this.scaleVec) {
+    rotateMat = c3dl.multiplyMatrixByMatrix(rotateMat, this.getRotateMat());
+   }
+   c3dl.multMatrix(this.getTransform());
+	var velVec = c3dl.multiplyVector(this.linVel, timeStep);    
+	c3dl.addVectors(this.pos, velVec, this.pos);
+	totalPos= c3dl.multiplyMatrixByVector(c3dl.peekMatrix(),this.pos);
+	for (var i = 0; i < this.children.length; i++)
+	{ 
+		this.children[i].update(timeStep, scaleVec,rotateMat);
+	}
+	// Apply some rotations to the orientation from the angular velocity
+	this.pitch(this.angVel[0] * timeStep);
+	this.yaw(this.angVel[1] * timeStep);
+	this.roll(this.angVel[2] * timeStep);
+	c3dl.popMatrix();
 }
+
 
 /**
  @private
@@ -222,8 +244,6 @@ c3dl.SceneNode.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
  */
 c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
 {
-  c3dl.pushMatrix();
-  c3dl.multMatrix(this.getTransform());
   var passed = false;
 
   // iterate over each child or stop until we find one which has passed the Bounding
@@ -237,7 +257,6 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
       break;
     }
   }
-  c3dl.popMatrix();
   return passed;
 }
 
@@ -251,67 +270,57 @@ var boundingSpheres =[];
     }
     else if (this.children[i] instanceof c3dl.Geometry) { 
       for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        boundingSpheres  = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());  
+	    if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
+          boundingSpheres  = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());  
+		}
       }
     }
   }
   return boundingSpheres;
 }
 
-c3dl.SceneNode.prototype.setPosition  = function (vecPos)
+c3dl.SceneNode.prototype.getAllVerts  = function ()
 {
-  if (c3dl.isValidVector(vecPos))
-  {
-    this.pos = vecPos;
-	for (var i = 0; i < this.children.length; i++)
-	{ 
-		if (this.children[i] instanceof c3dl.SceneNode) { 
-		  this.children[i].setBoundingSpherePosition(vecPos);
+var allverts =[];
+  var numverts = 0;
+  var temp2 = [],temp3=[];
+  c3dl.pushMatrix();
+  c3dl.multMatrix(this.getTransform());	
+  for (var i = 0; i < this.children.length; i++)
+  { 
+    if (this.children[i] instanceof c3dl.SceneNode) { 
+      allverts = allverts.concat(this.children[i].getAllVerts());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) { 
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+	    if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
+          var temp  = this.children[i].getPrimitiveSets()[j].getBoundingSphere().getMaxMins();
+          c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[0], temp[2], temp[4]],temp2); 
+          c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[1], temp[3], temp[5]],temp3);		  
+          allverts = allverts.concat(temp2);
+		  allverts = allverts.concat(temp3);
 		}
-		else if (this.children[i] instanceof c3dl.Geometry) { 
-		  for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-			this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(vecPos);  
-		  }
-		}
-	}
+      }
+    }
   }
-  else
-  {
-    c3dl.debug.logWarning("Actor::setPosition() called with a parameter that's not a vector");
-  }
+  c3dl.popMatrix();
+  return allverts;
 }
 
-c3dl.SceneNode.prototype.update = function (timeStep)
+c3dl.SceneNode.prototype.center  = function (newcenter)
 {
-	var velVec = c3dl.multiplyVector(this.linVel, timeStep);    
-	c3dl.addVectors(this.pos, velVec, this.pos);
-	for (var i = 0; i < this.children.length; i++)
-	{ 
-		if (this.children[i] instanceof c3dl.SceneNode) { 
-			this.children[i].setBoundingSpherePosition(this.pos);
-		}
-		else if (this.children[i] instanceof c3dl.Geometry) { 
-			for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-				this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(this.pos);  
-			 }
-		}
-	}
-	// Apply some rotations to the orientation from the angular velocity
-	this.pitch(this.angVel[0] * timeStep);
-	this.yaw(this.angVel[1] * timeStep);
-	this.roll(this.angVel[2] * timeStep);
-}
-c3dl.SceneNode.prototype.setBoundingSpherePosition  = function (vecPos)
-{
-	for (var i = 0; i < this.children.length; i++)
-	{ 
-		if (this.children[i] instanceof c3dl.SceneNode) { 
-			this.children[i].setBoundingSpherePosition(vecPos);
-		}
-		else if (this.children[i] instanceof c3dl.Geometry) { 
-			for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-				this.children[i].getPrimitiveSets()[j].getBoundingSphere().setPosition(vecPos);  
-			}
-		}
-	}
+  for (var i = 0; i < this.children.length; i++)
+  { 
+    if (this.children[i] instanceof c3dl.SceneNode) {  
+      this.children[i].center(newcenter);
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) { 
+       var temp = new c3dl.SceneNode();
+       for (var j = 0; j < this.children.length; j++) 
+         temp.addChild(this.children[j]);   
+       this.children = [];
+       this.children[i] = temp; 
+       temp.setTransform(c3dl.makePoseMatrix([1,0,0],[0,1,0],[0,0,1], [-newcenter[0],-newcenter[1],-newcenter[2]])); 
+    }
+  }
 }

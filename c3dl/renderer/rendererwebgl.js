@@ -613,7 +613,7 @@ c3dl.WebGL = function ()
    
    @param {c3dl.BoundingSphere} boundingSphere
    */
-  this.renderBoundingSphere = function (boundingSphere)
+  this.renderBoundingSphere = function (boundingSphere,viewMatrix)
   {
     // create an short alias
     var shader = this.boundingSphereShader;
@@ -626,29 +626,25 @@ c3dl.WebGL = function ()
     }
     else
     {
-      c3dl.pushMatrix();
-
-      var top = c3dl.peekMatrix();
-      var mat = c3dl.makeIdentityMatrix();
+	  var sphereMatrix = c3dl.makeIdentityMatrix();
+	  c3dl.matrixMode(c3dl.PROJECTION);
+      var projMatrix = c3dl.peekMatrix();
+      c3dl.matrixMode(c3dl.MODELVIEW); 
       // set the bounding sphere's position
-      mat[12] = top[12];
-      mat[13] = top[13];
-      mat[14] = top[14];
-	  
-      mat[0] = mat[5] = mat[10] = boundingSphere.getRadius();
+	  var pos =boundingSphere.getPosition();
+	  sphereMatrix[12] = pos[0];
+      sphereMatrix[13] = pos[1];
+      sphereMatrix[14] = pos[2];
+	  sphereMatrix[0] = sphereMatrix[5] = sphereMatrix[10] = boundingSphere.getRadius();
 
-      c3dl.matrixMode(c3dl.PROJECTION);
-      var proj = c3dl.peekMatrix();
-      c3dl.matrixMode(c3dl.MODELVIEW);
-	  
       // create a modelviewprojection matrix.  By doing this, we can multiply
       // 3 matrices together once per model instead of once per vertex.
-      var MVPMatrix = c3dl.multiplyMatrixByMatrix(proj, mat);
-	
+      var sphereViewMatrix = c3dl.multiplyMatrixByMatrix(viewMatrix,sphereMatrix);
+	  
+      var MVPMatrix = c3dl.multiplyMatrixByMatrix(projMatrix, sphereViewMatrix);
       this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix);
       this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert);
       glCanvas3D.drawArrays(glCanvas3D.POINTS, 0, c3dl.BOUNDING_SPHERE_VERTICES.length / 3);
-      c3dl.popMatrix();
     }
   }
 

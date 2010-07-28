@@ -40,14 +40,37 @@ function Frustum(frustumMatrix) {
     this.frustumPlane[j].normalize();
   }		
   this.sphereInFrustum = function(boundingSphere) {
-		for(var i = 0; i < 6; i++) {
-			var pos = boundingSphere.getPosition();					
-			var d = this.frustumPlane[i].normal[0] * pos[0] + this.frustumPlane[i].normal[1]* pos[1] +
-                    this.frustumPlane[i].normal[2]* pos[2] + this.frustumPlane[i].offset;
-			if(d <=-boundingSphere.getRadius()) {
-			  return "OUTSIDE"; 
-			}
-		}
-		return "INSIDE";
-    } 
+    for(var i = 0; i < 6; i++) {
+	  var pos = boundingSphere.getPosition();					
+	  var d = this.frustumPlane[i].normal[0] * pos[0] + this.frustumPlane[i].normal[1]* pos[1] +
+              this.frustumPlane[i].normal[2]* pos[2] + this.frustumPlane[i].offset;
+	  if(d <=-boundingSphere.getRadius()) {
+		return "OUTSIDE"; 
+	  }
+    }
+    return "INSIDE";
+  } 
+  this.boundingBoxInfrustumPlane= function(pos, size)
+  {
+    for(var i = 0; i < 6; i++ )
+    {
+      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
+        return "OUTSIDE";
+    }
+    return "INSIDE";
+  }
 }

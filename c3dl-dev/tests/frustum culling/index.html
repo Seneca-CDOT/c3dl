@@ -5,8 +5,42 @@
         <script type="application/javascript" src="fc.js"></script>
     </head>
     <body>
-
-        <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
-		<input type="label" id="fps" value="">
+        <table>
+		  <tr>
+		    <td><canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas><td/>
+			<td>
+			<input type="button" id="NCam" value="Next Cam" onclick="nextCam();">
+			<input type="button" id="PCam" value="Previous Cam" onclick="prevCam();">
+			<br/>
+			Select Axis:
+			<br/>
+			<input type="checkbox" id="X" value=""> X 
+			<SELECT id="Xlist">
+			<OPTION VALUE="Xpos"> Positive
+			<OPTION VALUE="Xneg"> Negative
+			</SELECT>
+			<br/>
+		    <input type="checkbox" id="Y" value="">	Y
+			<SELECT id="Ylist">
+			<OPTION VALUE="Ypos"> Positive
+			<OPTION VALUE="Yneg"> Negative
+			</SELECT>
+			<br/>
+			<input type="checkbox" id="Z" value=""> Z
+			<SELECT id="Zlist">
+			<OPTION VALUE="Zpos"> Positive
+			<OPTION VALUE="Zneg"> Negative
+			</SELECT>
+			<br/>
+			<input type="button" id="fire" value="Fire!" onclick="blastOff();"/>
+			<br/>
+			Object:<input type="text" id="InOut" value="">
+			</td>
+		  </tr>
+          <tr>
+		    <td> FPS:<input type="text" id="fps" value=""><td/>
+			<td></td>
+		  </tr>
+		<table>  
     </body>
 </html>

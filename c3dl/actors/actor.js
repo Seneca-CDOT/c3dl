@@ -112,6 +112,13 @@ c3dl.Actor.prototype.getTransform = function ()
   return mat;
 }
 
+
+c3dl.Actor.prototype.getRotateMat = function ()
+{
+  var mat = c3dl.makePoseMatrix(this.left, this.up, this.dir, [0,0,0]);
+  return mat;
+}
+
 /**
  Get the name of this actor.
  
@@ -342,13 +349,7 @@ c3dl.Actor.prototype.pitch = function (angle)
  */
 c3dl.Actor.prototype.update = function (timeStep)
 {
-		var velVec = c3dl.multiplyVector(this.linVel, timeStep);    
-		c3dl.addVectors(this.pos, velVec, this.pos);
 
-		// Apply some rotations to the orientation from the angular velocity
-		this.pitch(this.angVel[0] * timeStep);
-		this.yaw(this.angVel[1] * timeStep);
-		this.roll(this.angVel[2] * timeStep);
 }
 
 /**

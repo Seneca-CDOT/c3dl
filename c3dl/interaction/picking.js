@@ -85,7 +85,7 @@ c3dl.Picking = function (scene)
     // place the ray from clip space into view space
     //
     //
-    var rayTerminalPoint = c3dl.multiplyMatrixByVector(viewMatrix, new Float32Array([x, y, z, 0]));
+    var rayTerminalPoint = c3dl.multiplyMatrixByVector(viewMatrix, new C3DL_FLOAT_ARRAY([x, y, z, 0]));
     var rayDir = c3dl.normalizeVector(rayTerminalPoint);
 
     // This array will hold the indices of the objects which pass the boundingSphere/Ray test.
@@ -423,38 +423,44 @@ c3dl.rayIntersectsSphere = function (rayInitialPoint, rayD, spherePos, sphereRad
 
   var rayDir = c3dl.normalizeVector(rayD);
 
-  //
   var v = c3dl.subtractVectors(rayInitialPoint, spherePos);
+  var a = c3dl.vectorDotProduct(rayDir,rayDir)
+  var b = 2.0 * c3dl.vectorDotProduct(v, rayDir);
+  var c = c3dl.vectorDotProduct(v, v) - (sphereRadius * sphereRadius);
 
-  //
-  var b = 2.0 * c3dl.vectorDotProduct(rayDir, v);
-
-  //
-  var c = c3dl.vectorDotProduct(v, v);
-
-  //
-  c = c - Math.pow(sphereRadius, 2);
-
-  //
-  var discriminant = (b * b) - (4.0 * c);
+  var discriminant = (b * b) - (4.0 * a * c);
 
   // these will hold the intersection values.
-  var s0, s1;
+  var q;
 
   // If the discriminant is less than 0, we cannot get the square root
   // since it would result in an imaginary number.	
-  if (discriminant > 0)
-  {
-    discriminant = Math.sqrt(discriminant);
-    s0 = (-b + discriminant) / 2;
-    s1 = (-b - discriminant) / 2;
-
-    if (s0 >= 0.0 || s1 >= 0.0)
+  if (discriminant >= 0)
+  {	
+    var discriminantsqrt = Math.sqrt(discriminant);
+	if (b < 0) {
+     q = (-b - discriminantsqrt) / 2;
+	}
+	else {
+     q = (-b + discriminantsqrt) / 2;
+	}
+    var t0 = q / a;
+    var t1 = c / q;
+    // make sure t0 is smaller than t1
+    if (t0 > t1)
     {
-      hasIntersected = true;
+        // if t0 is bigger than t1 swap them around
+        var temp = t0;
+        t0 = t1;
+        t1 = temp;
     }
+	if (t1 < 0) {
+        return false;
+    }
+    if (t1 > 0 || t0 > 0) {
+        hasIntersected = true;
+	}
   }
-
   return hasIntersected;
 }
 

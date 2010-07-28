@@ -27,6 +27,8 @@ c3dl.PrimitiveSet = function ()
   this.vertices = null;
   this.normals = null;
   this.texCoords = null;
+  this.type = null;
+  this.lineList = null;
   this.boundingSphere = null;
   this.buffers =
   {
@@ -39,17 +41,40 @@ c3dl.PrimitiveSet = function ()
    @param {Array} normals
    @param {Array} texCoords
    */
-  this.init = function (vertices, normals, texCoords)
+  this.init = function (vertices, normals, texCoords,type)
   {
     this.vertices = vertices;
     this.normals = normals;
     this.texCoords = texCoords;
     this.boundingSphere = new c3dl.BoundingSphere();
+	this.type = type;
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
     this.boundingSphere.init(this.vertices);
   }
-
+  this.initLine = function (vertices, faces, type)
+  {
+    this.vertices = [];
+    this.lineList = [];
+    for (var i = 0; i < vertices.length; i++) { 
+      var xyz = [];
+      xyz[0]= parseFloat(vertices[i][0]);
+      xyz[1] = parseFloat(vertices[i][1]);
+      xyz[2] = parseFloat(vertices[i][2]);
+	  this.vertices.push(xyz[0]);
+      this.vertices.push(xyz[1]);
+      this.vertices.push(xyz[2]);
+    }
+    this.type = type;
+    for (var i = 0; i < faces.length; i+=2) {
+      var line = new c3dl.Line();
+      var start = faces[i][0];
+      var end = faces[i+1][0];
+      line.setCoordinates([this.vertices[start*3], this.vertices[start*3+1], this.vertices[start*3+2]],
+       [this.vertices[end*3], this.vertices[end*3+1], this.vertices[end*3+2] ]);
+      this.lineList.push(line);
+    }
+  }
   /**
    @private
    
@@ -99,13 +124,14 @@ c3dl.PrimitiveSet = function ()
     copy.vertices = this.vertices;
     copy.normals = this.normals;
     copy.texCoords = this.texCoords;
-    copy.boundingSphere = this.boundingSphere;
     copy.texture = this.texture;
-
+    copy.lineList = this.lineList;
+	copy.type = this.type;
     // get a deep copy of the material since every collada object's primitive set
     // can have its own material.		
     copy.material = this.material ? this.material.getCopy() : null;
-
+	if (this.boundingSphere)
+      copy.boundingSphere = this.boundingSphere.getCopy();
     return copy;
   }
 
@@ -196,5 +222,13 @@ c3dl.PrimitiveSet = function ()
   this.setTexture = function (texture)
   {
     this.texture = texture;
+  }
+  this.getLines = function ()
+  {
+    return this.lineList;
+  }
+  this.getType = function ()
+  {
+    return this.type;
   }
 }

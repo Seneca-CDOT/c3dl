@@ -51,15 +51,14 @@ function loadLevel(board) {
       switch (board[z][x]) {
         case 0:
         {
-          var earth = new c3dl.Collada();
-          earth.init(PLANE_PATH);
-          // move down y to prevent z-fighting with planes
-          // under models
-          earth.scale([3,1,3]);
-          earth.translate([z*30,-0.5,x*30]);
-          //set the id for later use during picking
-          earth.id = i;
-          scn.addObjectToScene(earth);
+         var earth = new c3dl.Collada();
+         earth.init(PLANE_PATH);
+         // move down y to prevent z-fighting with planes
+         // under models
+         earth.scale([3,1,3]);
+         earth.translate([z*30,-0.5,x*30]);
+         //set the id for later use during picking
+         scn.addObjectToScene(earth);
         }break;
         case 1:
         {
@@ -67,8 +66,7 @@ function loadLevel(board) {
           townHall.init(BARRACKS_PATH);
           townHall.translate([z*10,0,x*10]);
           scn.addObjectToScene(townHall);
-          
-           var earth = new c3dl.Collada();
+          var earth = new c3dl.Collada();
           earth.init(PLANE_PATH);
           // move down y to prevent z-fighting with planes
           // under models

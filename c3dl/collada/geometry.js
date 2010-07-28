@@ -90,24 +90,18 @@ c3dl.Geometry = function ()
    */
   this.rayIntersectsEnclosures = function (rayOrigin, rayDir)
   {
-    var mat = c3dl.peekMatrix();
 
     for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
-      var bs = this.primitiveSets[i].getBoundingSphere();
-      var longestVec;
-
-      var leftLen = c3dl.vectorLength([mat[0], mat[1], mat[2]]);
-      var upLen = c3dl.vectorLength([mat[4], mat[5], mat[6]]);
-      var dirLen = c3dl.vectorLength([mat[8], mat[9], mat[10]]);
-      longestVec = leftLen > upLen ? leftLen : upLen;
-      longestVec = longestVec > dirLen ? longestVec : dirLen;
-      bs.setPosition([mat[12], mat[13], mat[14]])
-      bs.scale([longestVec, longestVec, longestVec]);
-      if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, bs.getPosition(), bs.getRadius()))
-      {
-        return true;
-      }
+	  if (this.getPrimitiveSets()[i].getType()!=="lines") {
+	    var bs = this.primitiveSets[i].getBoundingSphere();
+	    var pos = bs.getPosition();
+	    var radius = bs.getRadius();
+        if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, pos, radius))
+        {
+          return true;
+        }
+	  }
     }
     return false;
   }
@@ -128,35 +122,37 @@ c3dl.Geometry = function ()
     var raydir = c3dl.normalizeVector(c3dl.multiplyMatrixByDirection(mat, rayDir));
 
     // allocate and resuse these vertices to prevent allocation and deletion every face.
-    var vert1 = new Float32Array(3);
-    var vert2 = new Float32Array(3);
-    var vert3 = new Float32Array(3);
+    var vert1 = new C3DL_FLOAT_ARRAY(3);
+    var vert2 = new C3DL_FLOAT_ARRAY(3);
+    var vert3 = new C3DL_FLOAT_ARRAY(3);
 
     for (var i = 0, len = this.primitiveSets.length; i < len; i++)
     {
-      var vertices = this.primitiveSets[i].getVertices();
+	  if (this.getPrimitiveSets()[i].getType() !=="lines") {
+        var vertices = this.primitiveSets[i].getVertices();
 
-      // Iterate over each face of the object and test it against the ray.
-      for (var j = 0, len2 = vertices.length; j < len2; j += 9)
-      {
-        // 3 points of a triangle with the object's position offset
-        vert1[0] = vertices[j];
-        vert1[1] = vertices[j + 1]
-        vert1[2] = vertices[j + 2];
-
-        vert2[0] = vertices[j + 3];
-        vert2[1] = vertices[j + 4];
-        vert2[2] = vertices[j + 5];
-
-        vert3[0] = vertices[j + 6];
-        vert3[1] = vertices[j + 7];
-        vert3[2] = vertices[j + 8];
-
-        if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3))
+        // Iterate over each face of the object and test it against the ray.
+        for (var j = 0, len2 = vertices.length; j < len2; j += 9)
         {
-          return true;
+        // 3 points of a triangle with the object's position offset
+          vert1[0] = vertices[j];
+          vert1[1] = vertices[j + 1]
+          vert1[2] = vertices[j + 2];
+
+          vert2[0] = vertices[j + 3];
+          vert2[1] = vertices[j + 4];
+          vert2[2] = vertices[j + 5];
+
+          vert3[0] = vertices[j + 6];
+          vert3[1] = vertices[j + 7];
+          vert3[2] = vertices[j + 8];
+
+          if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3))
+          {
+            return true;
+          }
         }
-      }
+	  }
     }
     return false;
   }
@@ -175,32 +171,36 @@ c3dl.Geometry = function ()
       c3dl.debug.logWarning('Geometry::render() called with a null glCanvas3D');
       return false;
     }
-
-    // The first time this is rendered, setup VBOs.
-    if (this.firstTimeRender == true)
-    {
-      // iterate over the primitive sets and setup their VBOs
-      for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    if (this.getPrimitiveSets()[0].getType()==="lines") {
+      scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
+	}
+	else {
+      // The first time this is rendered, setup VBOs.
+      if (this.firstTimeRender == true)
       {
-        this.primitiveSets[i].setupVBO(glCanvas3D);
-      }
-      this.firstTimeRender = false;
-    }
-
-    scene.getRenderer().renderGeometry(this);
-
-    if (scene.getBoundingVolumeVisibility())
-    {
-      // tell all the collation elements/ primitive sets to render their bounding spheres.
-      for (var i = 0, len = this.primitiveSets.length; i < len; i++)
-      {
-        var bs = this.primitiveSets[i].getBoundingSphere();
-        if (bs)
+        // iterate over the primitive sets and setup their VBOs
+        for (var i = 0, len = this.primitiveSets.length; i < len; i++)
         {
-          bs.render(scene);
+          this.primitiveSets[i].setupVBO(glCanvas3D);
+        }
+        this.firstTimeRender = false;
+      }
+
+      scene.getRenderer().renderGeometry(this);
+  
+      if (scene.getBoundingVolumeVisibility())
+      {
+        // tell all the collation elements/ primitive sets to render their bounding spheres.
+        for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+        {
+          var bs = this.primitiveSets[i].getBoundingSphere();
+          if (bs)
+          {
+            bs.render(scene);
+          }
         }
       }
-    }
+	}
   }
 
 
@@ -252,7 +252,7 @@ c3dl.Geometry = function ()
    
    Called automatically
    */
-  this.update = function (timeStep)
+  this.update = function (timeStep, scaleVec,rotateMat)
   {
     //
     for (var i = 0, len = this.primitiveSets.length; i < len; i++)
@@ -260,8 +260,10 @@ c3dl.Geometry = function ()
       var bs = this.primitiveSets[i].getBoundingSphere();
       if (bs)
       {
-        //bs.setPosition(this.pos);
-        bs.setPosition([0, 0, 0]);
+		var test = c3dl.peekMatrix();
+        bs.setPosition([test[12],test[13],test[14]]);
+		bs.scale(scaleVec);
+		bs.moveCenter(rotateMat);
       }
     }
   }

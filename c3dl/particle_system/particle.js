@@ -15,16 +15,16 @@ c3dl.Particle = function ()
   this.alive = false;
 
   // what the particle looks like
-  this.color = new Float32Array([0, 0, 0, 0]);
+  this.color = new C3DL_FLOAT_ARRAY([0, 0, 0, 0]);
   this.size = 0;
 
   // how the particle moves and its location
   this.position = c3dl.makeVector(0, 0, 0);
   this.velocity = c3dl.makeVector(0, 0, 0);
   this.rotation = 0;
-  this.vertices = new Float32Array([1, -1, 0, -1, -1, 0, -1, 1, 0, 1, 1, 0]);
+  this.vertices = new C3DL_FLOAT_ARRAY([1, -1, 0, -1, -1, 0, -1, 1, 0, 1, 1, 0]);
 
-  this.transform = new Float32Array([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+  this.transform = new C3DL_FLOAT_ARRAY([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
 
   /**
    @private
@@ -72,7 +72,7 @@ c3dl.Particle = function ()
    */
   this.getColor = function ()
   {
-    return new Float32Array(this.color);
+    return new C3DL_FLOAT_ARRAY(this.color);
   }
 
   /**
@@ -103,7 +103,7 @@ c3dl.Particle = function ()
    */
   this.getTransform = function ()
   {
-    return new Float32Array(this.transform);
+    return new C3DL_FLOAT_ARRAY(this.transform);
   }
 
   /**
@@ -111,7 +111,7 @@ c3dl.Particle = function ()
    */
   this.getVertices = function ()
   {
-    return new Float32Array(verts);
+    return new C3DL_FLOAT_ARRAY(verts);
   }
 
   /**
