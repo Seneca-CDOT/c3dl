@@ -643,3 +643,11 @@ c3dl.Collada.prototype.getBoundingBoxCorners = function ()
 {
   return this.boundingbox.getCorners();
 }
+
+c3dl.Collada.prototype.centerObject = function ()
+{
+  this.sceneGraph.center(this.boundingbox.realposition);
+  this.boundingbox.center();
+}
+
+
