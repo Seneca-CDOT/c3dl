@@ -1,46 +1,53 @@
 <html>
-    <head>
-        <title>Frustum Culling</title>
-        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
-        <script type="application/javascript" src="fc.js"></script>
-    </head>
-    <body>
-        <table>
-		  <tr>
-		    <td><canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas><td/>
-			<td>
-			<input type="button" id="NCam" value="Next Cam" onclick="nextCam();">
-			<input type="button" id="PCam" value="Previous Cam" onclick="prevCam();">
-			<br/>
-			Select Axis:
-			<br/>
-			<input type="checkbox" id="X" value=""> X 
-			<SELECT id="Xlist">
-			<OPTION VALUE="Xpos"> Positive
-			<OPTION VALUE="Xneg"> Negative
-			</SELECT>
-			<br/>
-		    <input type="checkbox" id="Y" value="">	Y
-			<SELECT id="Ylist">
-			<OPTION VALUE="Ypos"> Positive
-			<OPTION VALUE="Yneg"> Negative
-			</SELECT>
-			<br/>
-			<input type="checkbox" id="Z" value=""> Z
-			<SELECT id="Zlist">
-			<OPTION VALUE="Zpos"> Positive
-			<OPTION VALUE="Zneg"> Negative
-			</SELECT>
-			<br/>
-			<input type="button" id="fire" value="Fire!" onclick="blastOff();"/>
-			<br/>
-			Object:<input type="text" id="InOut" value="">
-			</td>
-		  </tr>
-          <tr>
-		    <td> FPS:<input type="text" id="fps" value=""><td/>
-			<td></td>
-		  </tr>
-		<table>  
-    </body>
+  <head>
+    <title>Frustum Culling</title>
+    <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+    <script type="application/javascript" src="fc.js"></script>
+  </head>
+  <body>
+	<table>
+      <tr>
+        <td><canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas><td/>
+        <td>
+          <input type="button" id="NCam" value="Next Cam" onclick="nextCam();">
+          <input type="button" id="PCam" value="Previous Cam" onclick="prevCam();">
+          <br/>
+          Select Axis:
+          <br/>
+          <input type="checkbox" id="X" value=""> X 
+          <SELECT id="Xlist">
+            <OPTION VALUE="Xpos"> Positive
+            <OPTION VALUE="Xneg"> Negative
+          </SELECT>
+          <br/>
+          <input type="checkbox" id="Y" value="">	Y
+          <SELECT id="Ylist">
+            <OPTION VALUE="Ypos"> Positive
+            <OPTION VALUE="Yneg"> Negative
+          </SELECT>
+          <br/>
+          <input type="checkbox" id="Z" value=""> Z
+          <SELECT id="Zlist">
+            <OPTION VALUE="Zpos"> Positive
+            <OPTION VALUE="Zneg"> Negative
+          </SELECT>
+          <br/>
+          <input type="button" id="fire" value="Fire!" onclick="blastOff();"/>
+		  <input type="button" id="reset" value="Reset" onclick="reset();"/>
+          <br/>
+          Object:<input type="text" id="InOut" value="">
+        </td>
+      </tr>
+        <tr>
+	    <td> FPS:<input type="text" id="fps" value=""><td/>
+	    <td></td>
+      </tr>
+    <table> 
+    This test has multiple camera veiws and tells the user if the object is inside or outside the camera view. <br/>	
+    To use this test: <br/>
+	1)Select axis or axes in which to apply linear velocity. <br/>
+	2)Click the "Fire!" button.<br/>
+	3)When the object leaves the veiw of the camera the FPS should increase and the text field should say "Outside".<br/>
+	
+  </body>
 </html>

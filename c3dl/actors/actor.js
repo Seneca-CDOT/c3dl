@@ -115,8 +115,7 @@ c3dl.Actor.prototype.getTransform = function ()
 
 c3dl.Actor.prototype.getRotateMat = function ()
 {
-  var mat = c3dl.makePoseMatrix(this.left, this.up, this.dir, [0,0,0]);
-  return mat;
+  return c3dl.makePoseMatrix(this.left, this.up, this.dir, [0,0,0]);
 }
 
 /**

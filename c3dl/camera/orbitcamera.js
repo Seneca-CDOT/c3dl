@@ -374,7 +374,6 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
   if (distFromNewPosToOP >= this.getClosestDistance() && distFromNewPosToOP <= this.getFarthestDistance())
   {
     this.pos = c3dl.copyObj(position);
-
     var camPosToOrbitPoint = c3dl.subtractVectors(this.orbitPoint, this.pos);
 
 	// if the position was set such that the direction vector is parallel to the global
@@ -385,13 +384,11 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
       this.dir = c3dl.normalizeVector(camPosToOrbitPoint);
       // the left vector will be perpendicular to the global up
       // axis and direction.
-      //this.left = c3dl.vectorCrossProduct([0,1,0], this.dir);
       this.up = c3dl.vectorCrossProduct(this.dir, this.left);
     }
     else
     {
       // set the direction
-      //this.setOrbitPoint(this.orbitPoint);
       this.dir = c3dl.normalizeVector(c3dl.subtractVectors(this.orbitPoint, this.pos));
       // the left vector will be perpendicular to the global up
       // axis and direction.
