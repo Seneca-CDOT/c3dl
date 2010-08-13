@@ -174,7 +174,7 @@ c3dl.Texture = function ()
         try
         {
           // place the texture into video memory
-          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, this);
+          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, glCanvas3D.RGBA, glCanvas3D.RGBA, glCanvas3D.UNSIGNED_BYTE, this);
           this.glCanvas3D.generateMipmap(glCanvas3D.TEXTURE_2D);
           this.isSetup = true;
         }
