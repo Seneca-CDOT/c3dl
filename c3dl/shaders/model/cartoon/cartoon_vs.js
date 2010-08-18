@@ -12,6 +12,8 @@ c3dl.cartoon_vs =
 "varying vec3 norm;" +
 "varying vec3 pos;" +
 
+"varying vec4 texCoord;" +
+
 // for every model we multiply the projection, view and model matrices
 // once to prevent having to do it for every vertex, however we still need
 // the model and view matrices to calculate lighting.
@@ -36,5 +38,5 @@ c3dl.cartoon_vs =
 "  gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
 "  pos = vec3( modelViewMatrix * vec4(Vertex,1.0));" +
 
-"  gl_TexCoord[0] = vec4(Texture,1.0);" + 
+"  texCoord = vec4(Texture,1.0);" + 
 "}";

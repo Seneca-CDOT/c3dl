@@ -8,6 +8,8 @@ c3dl.point_vs =
 "attribute vec3 Vertex;" + 
 "attribute vec3 Color;" + 
 
+"varying vec4 frontColor;" +
+
 "uniform vec3 attenuation;" +
 "uniform mat4 modelViewProjMatrix;" +
 "uniform mat4 viewMatrix;" +
@@ -23,7 +25,6 @@ c3dl.point_vs =
 	// the points will attenuate depending on the attenuation factors and 
 	// the distance from the camera.
 "	gl_PointSize = 1.0/(attenuation[0] + (attenuation[1] * d) + (attenuation[2] * d * d));" +
-"	gl_FrontColor = vec4(Color, 1.0); " +
+"	frontColor = vec4(Color, 1.0); " +
 "	gl_Position = modelViewProjMatrix * v;" +
-
 "}";

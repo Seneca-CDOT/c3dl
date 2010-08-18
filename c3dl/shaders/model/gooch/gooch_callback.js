@@ -96,7 +96,6 @@ c3dl.gooch_callback = function (renderingObj)
 
   gl.useProgram(programObjID);
 
-  //renderer.setUniformi(programObjID, "lightingOn", true);
   // render all the collation elements. Every collation element in an object will
   // have the same tranformation
   for (var coll = 0; coll < geometry.getPrimitiveSets().length; coll++)

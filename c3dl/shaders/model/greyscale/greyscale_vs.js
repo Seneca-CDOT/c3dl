@@ -20,6 +20,8 @@ c3dl.greyscale_vs =
 // matrix to transform the vertex normals
 "uniform mat4 normalMatrix;" + 
 
+"varying vec4 frontColor;" +
+"varying vec4 texCoord;" +
 
 "void main(void){" + 
 
@@ -79,16 +81,16 @@ c3dl.greyscale_vs =
 "	}" +
 
 "	if( usingMaterial ){" +
-"		gl_FrontColor =	vec4(material.emission +				" +
-"							ambientLightColor +					" +
-"							ambient * material.ambient +		" +
-"							diffuse * material.diffuse +		" +
-"							specular * material.specular,1.0);	" +
+"		frontColor =	vec4( material.emission + " +
+"                       ambientLightColor + " +
+"                       ambient * material.ambient + " +
+"                       diffuse * material.diffuse + " +
+"                       specular * material.specular,1.0);	" +
 "	}" +
 "	else{" +
-"		gl_FrontColor = vec4(ambientLightColor + ambient + diffuse + specular,1.0);" +
+"		frontColor = vec4(ambientLightColor + ambient + diffuse + specular,1.0);" +
 "	}" +
 
 "	gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
-"	gl_TexCoord[0] = vec4(Texture,1.0);" + 
+"	texCoord = vec4(Texture,1.0);" + 
 "}";

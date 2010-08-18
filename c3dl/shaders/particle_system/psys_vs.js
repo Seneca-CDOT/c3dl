@@ -5,8 +5,11 @@
 
 c3dl.psys_vs = 
 
+"varying vec4 frontColor;" +
+"varying vec4 texCoord;" +
+
 "attribute vec3 Vertex;" + 
-"attribute vec2 Texture;" + 
+"attribute vec4 Texture;" + 
 
 "uniform vec4 Color;" +
 "uniform mat4 modelViewProjMatrix;" +
@@ -14,9 +17,10 @@ c3dl.psys_vs =
 
 "void main(void){" +
 
-"	gl_FrontColor = Color;" + 
+"	frontColor = Color;" + 
 "	gl_Position = modelViewProjMatrix * vec4( Vertex, 1.0);" +
-"	gl_TexCoord[0] = rot * vec4(Texture.s - 0.5, Texture.t - 0.5, 1.0, 1.0);" + 
-" gl_TexCoord[0].s += 0.5;" +
-" gl_TexCoord[0].t += 0.5;" +
+
+"	texCoord = rot * vec4(Texture.x - 0.5, Texture.y - 0.5, 1.0, 1.0);" + 
+" texCoord.x += 0.5;" +
+" texCoord.y += 0.5;" +
 "}";

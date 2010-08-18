@@ -573,6 +573,7 @@ c3dl.WebGL = function ()
     // CARTOON
     c3dl.effects.CARTOON = new c3dl.EffectTemplate();
     c3dl.effects.CARTOON.addVertexShader(c3dl.cartoon_vs);
+    c3dl.effects.CARTOON.addFragmentShader("#ifdef GL_ES \n precision highp float; \n #endif \n ");
     c3dl.effects.CARTOON.addFragmentShader(c3dl.light_vs);
     c3dl.effects.CARTOON.addFragmentShader(c3dl.cartoon_fs);
     c3dl.effects.CARTOON.setRenderingCallback(c3dl.cartoon_callback);
@@ -583,6 +584,7 @@ c3dl.WebGL = function ()
     // GOOCH
     c3dl.effects.GOOCH = new c3dl.EffectTemplate();
     c3dl.effects.GOOCH.addVertexShader(c3dl.gooch_vs);
+    c3dl.effects.GOOCH.addFragmentShader("#ifdef GL_ES \n precision highp float; \n #endif \n ");
     c3dl.effects.GOOCH.addFragmentShader(c3dl.light_vs);
     c3dl.effects.GOOCH.addFragmentShader(c3dl.gooch_fs);
     c3dl.effects.GOOCH.setRenderingCallback(c3dl.gooch_callback);

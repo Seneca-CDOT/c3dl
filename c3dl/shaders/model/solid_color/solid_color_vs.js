@@ -13,12 +13,13 @@ c3dl.solid_color_vs =
 "uniform mat4 modelViewProjMatrix;" +
 "uniform vec3 color;" +
 
+"varying vec4 frontColor;" +
+
 "void main(void){" + 
 
 // Assign so they aren't optimized out
 "  vec3 dummy = Normal;" +
-"	 gl_TexCoord[0] = vec4(Texture,1.0);" + 
 
-"  gl_FrontColor = vec4(color,1.0);" +
+"  frontColor = vec4(color, 1.0);" +
 "	 gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
 "}";

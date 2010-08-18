@@ -7,8 +7,8 @@ c3dl.cartoon_fs =
 
 "uniform sampler2D myTex;" + 
 "uniform sampler2D celShadeTex;" + 
-
 "uniform int usingTexture;" +
+"varying vec4 texCoord;" +
 
 "varying vec3 norm;" +
 "varying vec3 pos;" +
@@ -73,8 +73,8 @@ c3dl.cartoon_fs =
 
 "    if( usingTexture == 1 )" +
 "    {" +
-"      vec3 texel = vec3(texture2D(myTex, gl_TexCoord[0].xy));" +
-"      color = vec4(texel,1.0);" + 
+"      vec3 texel = vec3(texture2D(myTex, texCoord.xy));" +
+"      color = vec4(texel, 1.0);" + 
 "    }" + 
 
 "    float intensity = 0.0;" +

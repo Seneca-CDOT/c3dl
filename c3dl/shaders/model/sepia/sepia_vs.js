@@ -9,6 +9,9 @@ c3dl.sepia_vs =
 "attribute vec3 Normal;" + 
 "attribute vec3 Texture;" + 
 
+"varying vec4 frontColor;" +
+"varying vec4 texCoord;" +
+
 // for every model we multiply the projection, view and model matrices
 // once to prevent having to do it for every vertex, however we still need
 // the view matrix to calculate lighting.
@@ -77,16 +80,16 @@ c3dl.sepia_vs =
 "	}" +
 
 "	if( usingMaterial ){" +
-"		gl_FrontColor =	vec4(material.emission +				" +
-"							ambientLightColor +					" +
-"							ambient * material.ambient +		" +
-"							diffuse * material.diffuse +		" +
-"							specular * material.specular,1.0);	" +
+"		frontColor =	vec4( material.emission + " +
+"                       ambientLightColor + " +
+"                       ambient * material.ambient + " +
+"                       diffuse * material.diffuse + " +
+"                       specular * material.specular,1.0);	" +
 "	}" +
 "	else{" +
-"		gl_FrontColor = vec4(ambientLightColor + ambient + diffuse + specular,1.0);" +
+"		frontColor = vec4(ambientLightColor + ambient + diffuse + specular,1.0);" +
 "	}" +
 
 "	gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
-"	gl_TexCoord[0] = vec4(Texture,1.0);" + 
+"	texCoord = vec4(Texture,1.0);" + 
 "}";

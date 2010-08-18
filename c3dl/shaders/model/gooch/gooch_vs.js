@@ -34,5 +34,4 @@ c3dl.gooch_vs =
 "	ViewVec = normalize(-ecPos);" +
 
 "	gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
-"	gl_FrontColor = vec4(0.0, 0.0, 1.0, 1.0); "+
 "}";

@@ -6,10 +6,12 @@
 c3dl.bounding_sphere_vs =
 
 "attribute vec3 Vertex;" +
+"varying vec4 frontColor;" +
 
 // calculate once in JS code instead of once per vertex.
 "uniform mat4 modelViewProjMatrix;" +
 
 "void main(void){" + 
-"  gl_FrontColor = vec4(0.0, 0.0, 0.0, 1.0);" + 
-"  gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" + "}";
+"  frontColor = vec4(0.0, 0.0, 0.0, 1.0);" + 
+"  gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" + 
+"}";
