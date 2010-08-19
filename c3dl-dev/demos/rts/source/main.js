@@ -26,9 +26,8 @@ c3dl.addModel(PERSON_PATH);
 c3dl.addModel(PLANE_PATH);
 c3dl.addModel(SPHERE_PATH);
 
-// consts 
+// constants 
 const TOWN_HALL = 1;
-
 
 var board1 = [
   [0,0,0,0,0,0,0,0,0,0],
