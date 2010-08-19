@@ -4,43 +4,43 @@
 */
 
 /**
- @private
- @class A Texture is an image which is to be wrapped around a Model object. A 
- texture has a unique ID which can be used to identify it in WebGL.
+  @private
+  @class A Texture is an image which is to be wrapped around a Model object. A 
+  texture has a unique ID which can be used to identify it in WebGL.
  
- <p>To create a texture, call setup() passing in the WebGL context as
- well as the path to the image.</p>
- */
+  <p>To create a texture, call setup() passing in the WebGL context as
+  well as the path to the image.</p>
+*/
 c3dl.Texture = function ()
 {
   // textureImage will be created as an Image().
   /**
-   @private
-   */
+    @private
+  */
   var textureImage = null;
   var isSetup = false;
 
   /**
-   @private
-   Get the texture ID, the texture ID is a unique number which
-   we can use to notify what texture in WebGL we want
-   to work with.
+    @private
+    Get the texture ID, the texture ID is a unique number which
+    we can use to notify what texture in WebGL we want
+    to work with.
    
-   @returns {int} The ID of the texture if the texture has been 
-   loaded, 0 otherwise.
-   */
+    @returns {int} The ID of the texture if the texture has been 
+    loaded, 0 otherwise.
+  */
   this.getTextureID = function ()
   {
     return textureImage.ID;
   }
 
   /**	
-   @private
-   Get the absolute path of the Texture.
+    @private
+    Get the absolute path of the Texture.
    
-   @returns {string} The absolute path of the texture using the 
-   image's src property.
-   */
+    @returns {string} The absolute path of the texture using the 
+    image's src property.
+  */
   this.getAbsolutePath = function ()
   {
     if (textureImage != null)
@@ -55,24 +55,24 @@ c3dl.Texture = function ()
   }
 
   /** 
-   @private
-   Get the path of the image relative the main.js file.  This will
-   be the same path the user passes in when they call setTexture on
-   a model.		
+    @private
+    Get the path of the image relative the main.js file.  This will
+    be the same path the user passes in when they call setTexture on
+    a model.
    
-   @returns {string} The relative path of texture.
-   */
+    @returns {string} The relative path of texture.
+  */
   this.getRelativePath = function ()
   {
     return textureImage.relativePath;
   }
 
   /**
-   @private
-   Check if the Texture has been setup.
+    @private
+    Check if the Texture has been setup.
    
-   @returns {boolean} True if the Texture has been setup, false otherwise.
-   */
+    @returns {boolean} True if the Texture has been setup, false otherwise.
+  */
   this.getIsSetup = function ()
   {
     return isSetup;
@@ -93,7 +93,7 @@ c3dl.Texture = function ()
    
    @return {boolean} true if the Texture could be set up, false 
    if the texture was already setup or if setup failed.
-   */
+  */
   this.setup = function (glCanvas3D, source, sourceCanvas)
   {
     var returnCode = true;
@@ -132,8 +132,8 @@ c3dl.Texture = function ()
       glCanvas3D.activeTexture(glCanvas3D.TEXTURE0);
 
       /**
-       @private
-       */
+        @private
+      */
       textureImage.setupWebGL = function ()
       {
         // bindtexture() sets the selected texture (by id) to be 
@@ -143,11 +143,11 @@ c3dl.Texture = function ()
       }
 
       /**
-       @private
-       Resize the texture so it can be used in WebGL.  The texture 
-       may be distorted, but at least it will display something.
-       The user will be notified their texture should be modified.		
-       */
+        @private
+        Resize the texture so it can be used in WebGL.  The texture 
+        may be distorted, but at least it will display something.
+        The user will be notified their texture should be modified.
+      */
       textureImage.resizeImage = function ()
       {
         // not power-of-two, so resize it using a 2d canvas
@@ -162,10 +162,23 @@ c3dl.Texture = function ()
         this.canvas = canvas;
       }
 
+      /*
+        Wrapper for old texImage2D specification
+      */
+      textureImage.texImage2DWrapper = function(){
+        try
+        {
+          // new way
+          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, glCanvas3D.RGBA, glCanvas3D.RGBA, glCanvas3D.UNSIGNED_BYTE, this);
+        }catch(ex){
+          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, this, false);
+        }
+      }
+
       /**
-       @private
-       Set the function to run when the image is loaded
-       */
+        @private
+        Set the function to run when the image is loaded
+      */
       textureImage.onload = function ()
       {
         //
@@ -173,14 +186,13 @@ c3dl.Texture = function ()
 
         try
         {
-          // place the texture into video memory
-          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, glCanvas3D.RGBA, glCanvas3D.RGBA, glCanvas3D.UNSIGNED_BYTE, this);
+          this.texImage2DWrapper();
           this.glCanvas3D.generateMipmap(glCanvas3D.TEXTURE_2D);
           this.isSetup = true;
         }
-        catch (err)
+        catch (ex)
         {
-          c3dl.debug.logError('Texture exception - tried to call texImage2DHTML()');
+          c3dl.debug.logError('Texture exception: ' + ex);
         }
       };
 
