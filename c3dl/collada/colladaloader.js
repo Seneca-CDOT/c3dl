@@ -651,8 +651,10 @@ c3dl.ColladaLoader = function ()
     //
     for (var i = 0, len = mesh.childNodes.length; i < len; i++)
     {
-      if (mesh.childNodes[i].nodeName == "triangles" || mesh.childNodes[i].nodeName == "polygons" ||
-        mesh.childNodes[i].nodeName == "polylist" || mesh.childNodes[i].nodeName =="lines" )
+      if (mesh.childNodes[i].nodeName == "triangles" || 
+          mesh.childNodes[i].nodeName == "polygons" ||
+          mesh.childNodes[i].nodeName == "polylist" || 
+          mesh.childNodes[i].nodeName == "lines" )
       {
         collations.push(mesh.childNodes[i]);
       }
@@ -672,30 +674,39 @@ c3dl.ColladaLoader = function ()
       //
       // triangles are always composed of 3 vertices so this element does not require <vcount>
       //
-      if (collations[currColl].nodeName == "triangles" || collations[currColl].nodeName == "polylist" ||
-	  collations[currColl].nodeName == "lines")
+      if (collations[currColl].nodeName == "triangles" || 
+          collations[currColl].nodeName == "polylist" ||
+          collations[currColl].nodeName == "lines")
       {
         var p = this.getFirstChildByNodeName(collations[currColl], "p");
         new C3DL_FLOAT_ARRAY(rawFaces = this.mergeChildData(p.childNodes).split(" "));
       }
 
-      // <polygon>s are broken up like this:
+      // <polygon> contains a list of <p>...</p>
       // <p> 0 0 1 1 2 2 3 3 </p>
+      // <p> 1 1 2 2 3 3 4 4 </p>
       // <p> ... </p>
+      // <polygon> also has an "count" attribute which lists how many of <p></p> it has.
       // each <p> element describes one polygon which can vary in length from others
       //
       else if (collations[currColl].nodeName == "polygons")
       {
         var p_tags = collations[currColl].getElementsByTagName("p");
-        rawFaces = new C3DL_FLOAT_ARRAY(collations[currColl].getAttribute("count"));
-        for (var i = 0, len2 = p_tags.length; i < len2; i++)
+        var faces = [];
+                       
+        for (var i = 0; i < p_tags.length; i++)
         {
           // need to get rid of the spaces
           var p_line = p_tags[i].childNodes[0].nodeValue.split(" ");
-          for (var j = 0, len3 = p_line.length; j < len3; j++)
+          for (var j = 0; j < p_line.length; j++)
           {
-            rawFaces[i+j](parseInt(p_line[j]));
+            faces.push(parseInt(p_line[j]));
           }
+        }
+        
+        rawFaces = new C3DL_FLOAT_ARRAY(faces.length);
+        for(var i = 0; i < faces.length; i++){
+          rawFaces[i] = faces[i];
         }
       }
       // If this message is ever seen, that means I have to write the case for it.
@@ -920,9 +931,11 @@ c3dl.ColladaLoader = function ()
       // <instance_material>'s symbol attribute value.					
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
 	  if (collations[currColl].nodeName !== "lines") {
-        collationElement.init(this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
+        collationElement.init(
+          this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
           this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
-          this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2));
+          this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2)
+        );
 	  }
 	  else {
 	    collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
@@ -1042,11 +1055,12 @@ c3dl.ColladaLoader = function ()
     for (var i = 0, len = rawScalarValues.length; i < len; i += stride)
     {
       var element = new C3DL_FLOAT_ARRAY(numComponentsPerElement);
-	  var counter = 0;
+      var counter = 0;
+      
       //
       for (var j = i; j < i + numComponentsPerElement; j++)
       {
-        element[counter++]=rawScalarValues[j];
+        element[counter++] = rawScalarValues[j];
       }
 
       listOfArrays.push(element);
@@ -1270,10 +1284,9 @@ c3dl.ColladaLoader = function ()
    */
   this.expandFaces = function (faces, array, offset, numComponentsToExpand)
   {
-  
     // this is a single dimensional array which hold expanded values.
     var expandedArray = new C3DL_FLOAT_ARRAY(faces.length*3);
-	var counter = 0;
+    var counter = 0;
     // in the nested loop, we divide the instructions into parts to
     // make it easier to read, but don't allocate these varialbes everytime
     // the loop is executed, so declare them here. This speeds up the parser
@@ -1312,16 +1325,17 @@ c3dl.ColladaLoader = function ()
         // coord is a vertex coord, normal or uv coord retrieved from the
         // 'array' array.
         //
-        // ["29.4787", "0", "50.5349"]  -> array[0]
-        // ["29.4787", "0", "50.5349"]  -> array[1]
+        // ["29.4787", "0", "50.5349"] -> array[0]
+        // ["29.4787", "0", "50.5349"] -> array[1]
         // ...
         // this is done for each component, for textures, we have 2 components.
         // for normals, we have 3.
-        if (array) {
-			coord = array[coordIndex][currComp];
-		}
+        
+        if (array){
+          coord = array[coordIndex][currComp];
+        }
         // insert that value into the 1d array.
-        expandedArray[counter++]=coord;
+        expandedArray[counter++] = coord;
       }
     }
     return expandedArray;

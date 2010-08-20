@@ -25,6 +25,9 @@ c3dl.addMainCallBack(transform_test, "transform_test");
 c3dl.addModel("models/fly_plane_polylist.dae");
 c3dl.addMainCallBack(fly_plane_polylist, "fly_plane_polylist");
 
+c3dl.addModel("models/move_widget.dae");
+c3dl.addMainCallBack(move_widget, "move_widget");
+
 function gun(canvasName)
 {
 	var scn = new c3dl.Scene();
@@ -286,6 +289,35 @@ function fly_plane_polylist(canvasName)
   var cam = new c3dl.FreeCamera();
 	cam.setPosition([0,0,20]);
   cam.setLookAtPoint([0,0,0]);
+
+	scn.setCamera(cam);
+	scn.startScene();
+}
+
+function move_widget(canvasName)
+{
+	var scn = new c3dl.Scene();
+	scn.setCanvasTag(canvasName);
+	var renderer = new c3dl.WebGL();
+	scn.setRenderer(renderer);
+	scn.init();
+	
+	var dir = new c3dl.DirectionalLight();
+	dir.setDirection([0,0,1]);
+	dir.setDiffuse([.3,.3,.3]);
+	dir.setOn(true);
+	scn.addLight(dir);
+	
+	var obj = new c3dl.Collada();
+	obj.init("models/move_widget.dae");
+  obj.scale([4,4,4]);
+	obj.setAngularVel([0.001,0.001,0]);
+
+	scn.addObjectToScene(obj);
+	scn.setAmbientLight([.3,.3,.3]);
+
+  var cam = new c3dl.FreeCamera();
+	cam.setPosition([0,0,-5]);
 
 	scn.setCamera(cam);
 	scn.startScene();
