@@ -136,18 +136,6 @@ c3dl.Scene = function ()
   }
 
   /**
-   If point smoothing is on, points are rendered as circles, otherwise they are rendered as
-   squares.
-   
-   @returns {bool} true if points will be rendered as circles, false if points are rendered as
-   squares.
-   */
-  this.getPointSmooth = function ()
-  {
-    return pointSmoothing;
-  }
-
-  /**
    @private
    
    When the picking function runs, it needs the projection matrix
@@ -1270,8 +1258,7 @@ c3dl.Scene = function ()
       }
     }
 
-    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointSmooth(), this.getPointRenderingMode(), pointSize);
-
+    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointRenderingMode(), pointSize);
 
     // LINES
     // collect all the lines from the scene, place them into this array

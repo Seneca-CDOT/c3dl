@@ -498,9 +498,6 @@ c3dl.WebGL = function ()
     // enable the depth buffer, only needs to be done once, so do it here		
     glCanvas3D.enable(glCanvas3D.DEPTH_TEST);
 
-    // we need to define this ourselves since it is not present in canvas 3d 0.4.3
-    this.enable(c3dl.VERTEX_PROGRAM_POINT_SIZE);
-
     // create the shader programs
     //this.geometryShader = this.createProgram(c3dl.material_vs+c3dl.light_vs+c3dl.model_vs, c3dl.model_fs).getProgramID();
     this.particleSystemShader = this.createProgram(c3dl.psys_vs, c3dl.psys_fs).getProgramID();
@@ -945,11 +942,10 @@ c3dl.WebGL = function ()
    @param {Array} pointPositions
    @param {Array} pointColors
    @param {Array} attenuation
-   @param {bool} pointSmooth
    @param {int} mode
    @param {float} size
    */
-  this.renderPoints = function (pointPositions, pointColors, attenuation, pointSmooth, mode, size)
+  this.renderPoints = function (pointPositions, pointColors, attenuation, mode, size)
   {
     // trying to render an empty list will result in an WebGL error
     if (pointPositions.length > 0 && pointColors.length > 0)
@@ -965,10 +961,6 @@ c3dl.WebGL = function ()
         c3dl.matrixMode(c3dl.PROJECTION);
         var projectionMatrix = c3dl.peekMatrix();
         c3dl.matrixMode(c3dl.MODELVIEW);
-
-        // if point smoothing is on, points will be rendered as circles, 
-        // otherwise they will be rendered as squares.
-        pointSmooth ? this.enable(c3dl.POINT_SMOOTH) : this.disable(c3dl.POINT_SMOOTH);
 
         // create a ModelViewProjection matrix.  By doing this, we can multiply
         // 3 matrices together once instead of once per point

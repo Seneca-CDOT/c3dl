@@ -189,7 +189,7 @@ c3dl.Picking = function (scene)
           // test if x,y coords of mouse click falls within circle
           // if passed, add point index to list of points that passed test.
           // add pointList as a list which has one of its points picked.
-          if ((scn.getPointSmooth() && isPointInCircle(clickedCanvasCoords, viewportCoords, pointPixelSize)) || (!scn.getPointSmooth() && isPointInSquare(clickedCanvasCoords, viewportCoords, pointPixelSize)))
+          if (isPointInSquare(clickedCanvasCoords, viewportCoords, pointPixelSize))
           {
             objectsPicked.push(point);
           }

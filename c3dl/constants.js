@@ -22,17 +22,6 @@ Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
  */
 c3dl.TOLERANCE = 0.00001;
 
-/**
- @private
- We need to define this ourselves since it is not present in canvas 3d 0.4.3
- */
-c3dl.VERTEX_PROGRAM_POINT_SIZE = 0x8642;
-
-/**
- @private
- */
-c3dl.POINT_SMOOTH = 0x0B10;
-
 /**  
  To render c3dl.Point objects using the built-in WebGL
  points rendering ( using circles ), pass this value to
@@ -412,9 +401,15 @@ c3dl.PICK_PRECISION_BOUNDING_VOLUME = 1;
  */
 c3dl.PICK_PRECISION_TRIANGLE = 2;
 
-try {
-  WebGLFloatArray;
-} catch (x) {
-  WebGLFloatArray = Float32Array;
+/*
+  Compatibility wrapper
+*/
+try{
+  Float32Array;
+}catch(ex){
+  Uint8Array = WebGLUnsignedByteArray;
+  Float32Array = WebGLFloatArray;
 }
-const C3DL_FLOAT_ARRAY = WebGLFloatArray;
+
+const C3DL_FLOAT_ARRAY = Float32Array;
+const C3DL_UINT_ARRAY = Uint8Array;
