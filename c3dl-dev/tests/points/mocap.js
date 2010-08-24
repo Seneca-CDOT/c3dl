@@ -1,5 +1,12 @@
-/* This demo reads some mocap data from an xml file (selected through a dropDown List)
-   and displays a simple collada object to represent each point.  */
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
+
+/*
+  This demo reads some mocap data from an xml file (selected through a dropDown List)
+  and displays a simple collada object to represent each point. 
+*/
 
 // Global variables
 var cam;
@@ -12,10 +19,7 @@ var xmlDoc;
 var x;
 var frate;
 var pointList;
-var lineList;
 var totaltime;
-var things = [];
-var pointsSmooth = true;
 var sphereSize = 25;
 
 var isDragging = false;
@@ -135,7 +139,6 @@ function canvasMain(canvasName)
 
 function down(){}
 
-
 function updateM(event)
 {	
 	// towards user
@@ -149,7 +152,6 @@ function updateM(event)
 		orbitCam.goCloser(-event.detail*ZOOM_SENSITIVITY);
 	}
 }
-
 
 function pickCallback(pickingObj)
 {
@@ -173,8 +175,6 @@ function pickCallback(pickingObj)
 	}
 }
 
-
-
 function changeKeyState(event, keyState)
 {
 	switch( event.keyCode)
@@ -185,24 +185,11 @@ function changeKeyState(event, keyState)
 	}
 }
 
-
-function togglePointSmoothing()
-{
-		scn.setPointSmooth(!scn.getPointSmooth());
-}
 function up(event)
 {	
-	//var glCanvas3D = c3dl.getContext();
 	var glCanvas3D = scn.getRenderer().getGLContext();
 
-	// S key
-	if(event.keyCode == 83)
-	{
-		// toggle point smoothing
-		scn.setPointSmooth(!scn.getPointSmooth());
-	}
-
-	// C color change
+	// C - color change
 	if(event.keyCode == 67)
 	{
 		for(var i = 0; i < pointList.length; i++)
@@ -223,7 +210,7 @@ function up(event)
 		}
 	}
 
-	//E
+	// E
 	if(event.keyCode == 69)
 	{
 		for(var i=0; i < 50; i++)
@@ -233,18 +220,12 @@ function up(event)
 			p.setPosition([0,0,i*10]);
 			scn.addObjectToScene(p);
 		}
-		
-		//scn.setPointSize( scn.getPointSize() + 2);
 	}
 	
+  // D
 	if(event.keyCode == 68)
 	{
 		scn.setPointSize( scn.getPointSize() - 2);
-	}
-	
-	if(event.keyCode == 66)
-	{
-
 	}
 
 	// Q
@@ -254,12 +235,11 @@ function up(event)
 		document.getElementById('debug').innerHTML = "Frame Rate = " + frate;
 	}
 
-	// R
+	// R - fix this
 	if(event.keyCode == 82)
 	{
-		cam.roll(0.1);
-		newScene("ff_3on3.combined_rom.xml");
-	
+		//cam.roll(0.1);
+		//newScene("ff_3on3.combined_rom.xml");
 	}
 
 	// V change visibility
@@ -269,10 +249,8 @@ function up(event)
 		{
 			pointList[i].setVisible(!pointList[i].isVisible());
 		}
-		//pointList.setVisible( !pointList.getVisible());
 	}	
 }
-
 
 function changePointRenderingMode(mode)
 {
@@ -323,9 +301,7 @@ function newScene(fName)
 
 	scn.setPointAttenuation([0.1, 0, 0]);
 
-
 	pointList = new Array();
-	//c3dl.debug.logInfo('new scene');
 
 	for(var i = 0; i < currentObjects.length; i++)
 	{
@@ -346,8 +322,6 @@ function newScene(fName)
 	}
 }
 
-
-
 function mouseUp(event)
 {
 	// user released the LMB.
@@ -356,7 +330,6 @@ function mouseUp(event)
 		isDragging = false;
 	}
 }
-
 
 function mouseDown(evt)
 {
@@ -369,7 +342,6 @@ function mouseDown(evt)
 		rotationStartCoords[1] = yevtpos(evt);
 	}
 }
-
 
 function mouseMove(evt)
 {
@@ -392,7 +364,6 @@ function mouseMove(evt)
 		rotationStartCoords = [x,y];
 	}
 }
-
 
 function xevtpos(evt)
 {
