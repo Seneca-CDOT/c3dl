@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>C3DL Mocap Demo</title>
+        
+        <!-- jQuery stuff -->  
+        <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="jquery-ui-1.7.2.custom.min.js"></script>
+        <link rel="stylesheet" type="text/css" media="screen" href="jquery-ui-1.7.2.custom.css" />
+
+        <!-- Set the path to the c3dl library and load the script -->
+        <script type="application/javascript"> var SCRIPT_PATH = '../../../canvas3dapi/'</script>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="mocap.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+      <script type="text/javascript">
+        $(function() {
+          $("#frateSlider").slider({
+          value:60,
+          min: 0,
+          max: 150,
+          step: 1,
+          slide: function(event, ui) {
+            $("#frate").val(ui.value);
+          }
+          });
+
+          $("#frate").val($("#frateSlider").slider("value"));
+        });
+
+        $(function() {
+          $("#sphereSizeSlider").slider({
+          value:25,
+          min: 1,
+          max: 100,
+          step: 1,
+          slide: function(event, ui) {
+            $("#sphereSize").val(ui.value);
+          }
+          });
+
+          $("#sphereSize").val($("#sphereSizeSlider").slider("value"));
+        });
+      </script>
+
+    <table border="0">
+      <tr>
+        <td>
+          <canvas id="mocap" width="600" height="300"></canvas>
+        </td>
+        <td>
+          Frame rate: <span id="frameRate"></span>
+          <div id="frateSlider"></div><br/>
+
+          Point mode: <input type="radio" checked="yes" name="pointMode" onclick="changePointRenderingMode(0);" />2D points <input type="radio" name="pointMode" onclick="changePointRenderingMode(1);"/>3D Points<br />
+          2D Point Smoothing <input type="checkbox" checked="checked" onclick="togglePointSmoothing();" /><br />
+          <br />
+
+          Sphere size: <span id="sphereSize"></span>
+          <div id="sphereSizeSlider"></div><br/>
+          
+          <input type="button" onclick="newPointColors();" value="New point Colors" /> <br />
+          <br />
+          FPS: <font id="fps" color = "#FF0000"></font>
+        </td>
+      </tr>
+    </table>
+ 	
+    </body>
+</html>
