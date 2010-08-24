@@ -46,7 +46,7 @@ function canvasMain(canvasName)
 
   scn.setCamera(cam);
   scn.setUpdateCallback(update);
-  scn.setKeyboardCallback(up,down);
+  scn.setKeyboardCallback(up,null);
   scn.startScene();
 }
 
