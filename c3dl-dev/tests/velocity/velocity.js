@@ -1,7 +1,7 @@
 c3dl.addMainCallBack(canvasMain, "test");
 c3dl.addModel("duck.dae");
 
-var timesincelastchange=0;
+var timeSinceLastChange=0;
 var duck;
 var testDone = false;
 
@@ -30,8 +30,8 @@ function canvasMain(canvasName){
 
 function checktime(time){
   if( !testDone ){
-    timesincelastchange += time; 
-    if(timesincelastchange >= 8000){
+    timeSinceLastChange += time; 
+    if(timeSinceLastChange >= 8000){
       testDone = true;
       duck.setLinearVel([0.0, 0.0, 0.0]);
 	    var pos = duck.getPosition();

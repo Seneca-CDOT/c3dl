@@ -33,7 +33,7 @@ function checktime(time){
     if(timeSinceLastChange >= 8000){
       testDone = true;
       duck.setAngularVel([0.0, 0.0, 0.0]);
-	    var dir = duck.getDirection();
+      var dir = duck.getDirection();
       document.getElementById('res').innerHTML = "[" + dir[0].toFixed(2) + "," + dir[1].toFixed(2) + "," + dir[2].toFixed(2) + "]";
     }
   }
