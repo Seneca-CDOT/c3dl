@@ -1,14 +1,29 @@
 <html>
-    <head>
-        <title>Velocity</title>
-        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
-        <script type="application/javascript" src="velocity.js"></script>
-    </head>
-    <body>
-      <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
-	  <br/> 
-	  This test will add Linear Velocity of -0.05 in the Y-axis to the duck for 8 seconds then stop and the user will be alerted the final position of the duck. 
-	  <br/>
-	  The Ducks end position should be [0.00,-399.75,0.00] (allow a margin of error because time will not be exactly 8 seconds).
-    </body>
+  <head>
+    <title>Velocity</title>
+    <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+    <script type="application/javascript" src="velocity.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+  </head>
+
+  <body>    
+    <h1><a href="http://www.c3dl.org/">C3DL</a> Velocity Test</h1>
+
+    <p>
+	    This test will add Linear Velocity of -0.05 in the Y-axis to the duck for 8 seconds<br />
+      then stop and the result will appear below.<br/>
+      <br />
+  	  The Ducks end position should be [0.00,-399.75,0.00] (allow a margin of error<br />
+      because time will not be exactly 8 seconds).<br />
+    </p>
+
+    <p>
+      Result: <span id="res"></span>
+    </p>
+
+    <p>
+      <canvas id="test" style="border: 2px solid blue" width="300" height="300"></canvas>
+    </p>
+
+  </body>
 </html>

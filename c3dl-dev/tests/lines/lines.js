@@ -86,6 +86,7 @@ function update(t)
 			}
 		}
 	}
+  document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scn.getFPS());
 }
 
 function up(event)
