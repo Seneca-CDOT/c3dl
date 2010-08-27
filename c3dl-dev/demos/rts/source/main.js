@@ -195,10 +195,6 @@ var selection = (
       },
       setBounds: function (x1, y1, x2, y2, x3, y3, x4, y4) {
         coords = [x1, y1, x2, y2, x3, y3, x4, y4];
-        //lines[0].setCoordinates([x, 2, z], [x2, 2, z2]);
-        // lines[1].setCoordinates([x2, 2, z], [x2, 2, z2]);
-        // lines[2].setCoordinates([x2, 2, z2], [x, 2, z2]);
-        // lines[3].setCoordinates([x, 2, z2], [x, 2, z]);
       },
       getLines: function () {
         return lines;
@@ -381,7 +377,7 @@ function canvasMain(canvasName) {
   selectedEffect.setParameter("color", [0.3, 0.6, 0.9]);
 
   //var onFire = new c3dl.Effect();
- // onFire.init(c3dl.effects.SEPIA);
+  //onFire.init(c3dl.effects.SEPIA);
   //onFire.setParameter("color", [0.6, 0.3, 0.2]);
 
   // sunlight goes from east to west 
@@ -399,28 +395,10 @@ function canvasMain(canvasName) {
   selection.init();
   selection.setBounds(0, 0, 50, 50);
   selection.setVisible(false);
-/*
-  // Create the game board
-  var r = -1;
-  var c = -1;
-  for (var i = 0; i < 25; i++, c++) {
-    if (i != 0 && i % 5 == 0) {
-      r++;
-      c = -1
-    }
-    var earth = new c3dl.Collada();
-    earth.init(PLANE_PATH);
-    // move down y to prevent z-fighting with planes
-    // under models
-    earth.translate([r*11,-0.5,c*11]);
-    //set the id for later use during picking
-    earth.id = i;
-    scn.addObjectToScene(earth);
-  }*/
     
   loadLevel(board1);
     
-   var s = new c3dl.Collada();
+  var s = new c3dl.Collada();
   s.init(SPHERE_PATH);
   s.yaw(Math.PI/2);
   s.pitch(1);
@@ -577,9 +555,9 @@ function moveCamera(direction, amount) {
 function mouseDown(event) {
   
   switch(event.button) {
-    case 0:   mouseButtonsDown.BTN1 = true;break;
-    case 1:   mouseButtonsDown.BTN2 = true;break;
-    case 2:   mouseButtonsDown.BTN3 = true;break;
+    case 0:  mouseButtonsDown.BTN1 = true;break;
+    case 1:  mouseButtonsDown.BTN2 = true;break;
+    case 2:  mouseButtonsDown.BTN3 = true;break;
     default:break;
   }
 
@@ -986,6 +964,8 @@ function update(deltaTime) {
   var mat = c3dl.quatToMatrix(quat);
   c3dl.multiplyMatrixByVector(mat, pos, pos);
   sun.setDirection(pos);
+  
+  document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scn.getFPS());
 }
 
 /*
