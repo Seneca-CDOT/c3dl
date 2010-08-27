@@ -1045,26 +1045,8 @@ c3dl.WebGL = function ()
    @param {int} shader
    @param {String} varName
    @param {int} size
-   @param {Array} array
+   @param vbo
    */
-/*this.setVertexAttribArray = function(shader, varName, size, array, vbo)
-	{
-		var attribLoc = glCanvas3D.getAttribLocation(shader, varName);
-
-		if(attribLoc != c3dl.SHADER_VAR_NOT_FOUND)
-		{
-			glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, vbo);
-			glCanvas3D.vertexAttribPointer(attribLoc, size, glCanvas3D.FLOAT, false, 0, 0);
-			glCanvas3D.enableVertexAttribArray(attribLoc);
-		}
-		else
-		{
-			c3dl.debug.logError("Attribute variable '" +  varName + "' not found in shader with ID = " + shader);
-		}
-	}*/
-
-
-
   this.setVertexAttribArray = function (shader, varName, size, vbo)
   {
     var attribLoc = glCanvas3D.getAttribLocation(shader, varName);

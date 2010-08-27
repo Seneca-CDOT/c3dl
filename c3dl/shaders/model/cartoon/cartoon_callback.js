@@ -45,7 +45,7 @@ c3dl.cartoon_callback = function (renderingObj)
     // to send unnecessary data.
     var outlineProgID = renderer.SOLID_COLOR_EFFECT_ID;
 
-    gl.enable(gl.CULL_FACES);
+    gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.FRONT);
     gl.useProgram(outlineProgID);
     renderer.setUniformf(outlineProgID, "color", [0, 0, 0]);
