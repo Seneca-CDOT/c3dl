@@ -107,7 +107,7 @@ c3dl.Actor.prototype.getTransform = function ()
   var mat = c3dl.makePoseMatrix(this.left, this.up, this.dir, this.pos);
   var smat = c3dl.makeMatrix();
   c3dl.setMatrix(smat, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, 
-    this.scaleVec[2], 0, 0, 0, 0, 1);
+  this.scaleVec[2], 0, 0, 0, 0, 1);
   mat = c3dl.multiplyMatrixByMatrix(mat, smat);
   return mat;
 }
@@ -169,7 +169,7 @@ c3dl.Actor.prototype.scale = function (scaleVec)
   if (scaleVec[0] > 0.0 && scaleVec[1] > 0.0 && scaleVec[2] > 0.0)
   {
     this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
-	this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
+  	this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
   }
 }

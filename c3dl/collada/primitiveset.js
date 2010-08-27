@@ -47,7 +47,7 @@ c3dl.PrimitiveSet = function ()
     this.normals = normals;
     this.texCoords = texCoords;
     this.boundingSphere = new c3dl.BoundingSphere();
-	this.type = type;
+	  this.type = type;
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
     this.boundingSphere.init(this.vertices);
@@ -61,7 +61,7 @@ c3dl.PrimitiveSet = function ()
       xyz[0]= parseFloat(vertices[i][0]);
       xyz[1] = parseFloat(vertices[i][1]);
       xyz[2] = parseFloat(vertices[i][2]);
-	  this.vertices.push(xyz[0]);
+	    this.vertices.push(xyz[0]);
       this.vertices.push(xyz[1]);
       this.vertices.push(xyz[2]);
     }
@@ -126,12 +126,13 @@ c3dl.PrimitiveSet = function ()
     copy.texCoords = this.texCoords;
     copy.texture = this.texture;
     copy.lineList = this.lineList;
-	copy.type = this.type;
+	  copy.type = this.type;
     // get a deep copy of the material since every collada object's primitive set
     // can have its own material.		
     copy.material = this.material ? this.material.getCopy() : null;
-	if (this.boundingSphere)
+    if (this.boundingSphere){
       copy.boundingSphere = this.boundingSphere.getCopy();
+    }
     return copy;
   }
 

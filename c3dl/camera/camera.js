@@ -40,7 +40,7 @@ c3dl.Camera.prototype.applyToWorld = function (aspectRatio)
 
   // Create a projection matrix and store it inside a globally accessible place.
   this.projMatrix = c3dl.makePerspective(this.fieldOfView, aspectRatio, this.nearClippingPlane, 
-    this.farClippingPlane);
+  this.farClippingPlane);
   c3dl.matrixMode(c3dl.PROJECTION);
   c3dl.loadMatrix(this.projMatrix);
   c3dl.matrixMode(c3dl.MODELVIEW);

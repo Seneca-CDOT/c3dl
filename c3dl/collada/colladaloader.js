@@ -877,7 +877,7 @@ c3dl.ColladaLoader = function ()
         // count is an attribute of polygons which lists how many primitives the
         // polygon has. we can use this data to find out how many times we have to
         // change the parts.
-		for (var currPrim = 0, count = collations[currColl].getAttribute("count"); currPrim < count; currPrim++)
+        for (var currPrim = 0, count = collations[currColl].getAttribute("count"); currPrim < count; currPrim++)
         {
           var partsArray = [];
 
@@ -930,7 +930,7 @@ c3dl.ColladaLoader = function ()
       // each primitive collation element can have a material name. this name matches to the
       // <instance_material>'s symbol attribute value.					
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
-	  if (collations[currColl].nodeName !== "lines") {
+	    if (collations[currColl].nodeName !== "lines") {
         collationElement.init(
           this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
           this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
@@ -1239,9 +1239,9 @@ c3dl.ColladaLoader = function ()
 
     //
     var float_array = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "float_array", "id", accessorSrc);   
-    //values in the DAE file are seperated with a space
+    // values in the DAE file are seperated with a space
     // don't use nodeValue since it will be broken up in 4096 chunks
-	data.values = new C3DL_FLOAT_ARRAY(this.mergeChildData(float_array.childNodes).split(" "));
+	  data.values = new C3DL_FLOAT_ARRAY(this.mergeChildData(float_array.childNodes).split(" "));
     return data;
   }
 

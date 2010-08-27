@@ -62,9 +62,9 @@ c3dl.BoundingSphere = function ()
     // too much allocation. So allocate outside the loop.
     var vector = c3dl.makeVector(0, 0, 0);
     var currVector;
-	lengthVerts = new C3DL_FLOAT_ARRAY(vertices.length/3), 
-	    heightVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3);
-	var j = 0;
+	  lengthVerts = new C3DL_FLOAT_ARRAY(vertices.length/3), 
+	  heightVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3);
+	  var j = 0;
     for (var i = 0, len = vertices.length/3; i < len; i++) {
       lengthVerts[i] = vertices[j];
       heightVerts[i] = vertices[j+1];
@@ -73,7 +73,7 @@ c3dl.BoundingSphere = function ()
     }    
     
     this.maxMins[0] = c3dl.findMax(lengthVerts); 
-	this.maxMins[1] = c3dl.findMin(lengthVerts);
+	  this.maxMins[1] = c3dl.findMin(lengthVerts);
     this.maxMins[2] = c3dl.findMax(heightVerts);
     this.maxMins[3] = c3dl.findMin(heightVerts); 
     this.maxMins[4] = c3dl.findMax(widthVerts); 
@@ -82,13 +82,13 @@ c3dl.BoundingSphere = function ()
     this.center[0] = (this.maxMins[0] + this.maxMins[1])/2;
     this.center[1] = (this.maxMins[2] + this.maxMins[3])/2;
     this.center[2] = (this.maxMins[4] + this.maxMins[5])/2;
-	for (var i = 0; i < vertices.length; i += 3)
+	  for (var i = 0; i < vertices.length; i += 3)
     {
       // 
       vector[0] = vertices[i + 0];
       vector[1] = vertices[i + 1];
       vector[2] = vertices[i + 2];	
-	  c3dl.subtractVectors(vector, this.center, vector);
+	    c3dl.subtractVectors(vector, this.center, vector);
       currVector = c3dl.vectorLength(vector);
 
       // once the longest vector is found, this becomes our radius.
@@ -103,7 +103,7 @@ c3dl.BoundingSphere = function ()
     this.original[0] = this.longestVector[0];
     this.original[1] = this.longestVector[1];
     this.original[2] = this.longestVector[2];
-	this.radius=c3dl.vectorLength(this.longestVector);
+    this.radius=c3dl.vectorLength(this.longestVector);
   }
 
   /**
@@ -115,7 +115,7 @@ c3dl.BoundingSphere = function ()
    */
   this.setPosition = function (position)
   {
-    this.position[0] = position[0]+this.center[0];
+  this.position[0] = position[0]+this.center[0];
 	this.position[1] = position[1]+this.center[1];
 	this.position[2] = position[2]+this.center[2];
   }
@@ -128,7 +128,6 @@ c3dl.BoundingSphere = function ()
     mat = c3dl.multiplyMatrixByMatrix(mat, smat);
     return mat;
   }
-  
   
   /**
    @private
@@ -148,10 +147,10 @@ c3dl.BoundingSphere = function ()
     this.longestVector[0] = this.original[0] * largestScale;
     this.longestVector[1] = this.original[1] * largestScale;
     this.longestVector[2] = this.original[2] * largestScale;
-	this.center[0] = (this.maxMins[0]* largestScale + this.maxMins[1]* largestScale)/2;
-	this.center[1] = (this.maxMins[2]* largestScale + this.maxMins[3]* largestScale)/2;
-	this.center[2] = (this.maxMins[4]* largestScale + this.maxMins[5]* largestScale)/2;
-	this.radius=c3dl.vectorLength(this.longestVector);
+	  this.center[0] = (this.maxMins[0]* largestScale + this.maxMins[1]* largestScale)/2;
+    this.center[1] = (this.maxMins[2]* largestScale + this.maxMins[3]* largestScale)/2;
+    this.center[2] = (this.maxMins[4]* largestScale + this.maxMins[5]* largestScale)/2;
+   this.radius=c3dl.vectorLength(this.longestVector);
   }
 
   /**
@@ -209,11 +208,11 @@ c3dl.BoundingSphere = function ()
   {
     var copy = new c3dl.BoundingSphere();
     copy.longestVector = c3dl.copyVector(this.longestVector);
-	copy.original = c3dl.copyVector(this.original);
-	copy.position = c3dl.copyVector(this.position);
-	copy.center = c3dl.copyVector(this.center );
-	copy.center = c3dl.copyVector(this.center );
-	copy.maxMins = this.maxMins;
-	return copy;
+    copy.original = c3dl.copyVector(this.original);
+    copy.position = c3dl.copyVector(this.position);
+    copy.center = c3dl.copyVector(this.center );
+    copy.center = c3dl.copyVector(this.center );
+    copy.maxMins = this.maxMins;
+    return copy;
   }
 }

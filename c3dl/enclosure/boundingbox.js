@@ -1,4 +1,7 @@
-
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
 c3dl.BoundingBox = function ()
 {
   //x
@@ -16,10 +19,10 @@ c3dl.BoundingBox = function ()
   this.init = function (vertices)
   {
     if (vertices) {
-	  vertices = new C3DL_FLOAT_ARRAY(vertices);
+	    vertices = new C3DL_FLOAT_ARRAY(vertices);
       var lengthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), j = 0;
       var j = 0;
-	  for (var i = 0; i < vertices.length/3; i++) {
+	    for (var i = 0; i < vertices.length/3; i++) {
         lengthVerts[i] = vertices[j];
         heightVerts[i] = vertices[j+1];
         widthVerts[i] = vertices[j+2];
@@ -61,7 +64,6 @@ c3dl.BoundingBox = function ()
     this.boxverts[6] =[ this.maxMins[0], this.maxMins[2],  this.maxMins[5]]; 
     //B bottom right  
     this.boxverts[7] =[ this.maxMins[0], this.maxMins[2], this.maxMins[4]];
-
   }
   
   this.setPosition = function (position)
@@ -74,19 +76,21 @@ c3dl.BoundingBox = function ()
     for (var i = 0; i <8; i++) {
       this.boxverts[i] = c3dl.addVectors(this.boxverts[i], this.position);
     }
-    
   }
   this.scale = function (scaleVec)
   {
     this.length = this.length * scaleVec[0];
     this.height = this.height * scaleVec[1];
     this.width = this.width * scaleVec[2];
-    for (var i = 0; i <8; i++) 
+    for (var i = 0; i <8; i++){
       this.boxverts[i] = c3dl.subtractVectors(this.boxverts[i], this.position);
-    for (var i = 0; i <8; i++) 
+    }
+    for (var i = 0; i <8; i++){
       this.boxverts[i] = c3dl.multiplyVectorByVector(this.boxverts[i], scaleVec);
-    for (var i = 0; i <8; i++) 
+    }
+    for (var i = 0; i <8; i++){
       this.boxverts[i] = c3dl.addVectors(this.boxverts[i], this.position);
+    }
   }
   
   this.rotateOnAxis = function (axisVec, angle)
@@ -120,10 +124,12 @@ c3dl.BoundingBox = function ()
     for (var i = 0; i <8; i++) {
       this.boxverts[i] = c3dl.subtractVectors(this.boxverts[i], this.position);
     }
-    for (var i = 0; i <8; i++) 
+    for (var i = 0; i <8; i++){
       c3dl.multiplyMatrixByVector(rotateOnAxisMat, this.boxverts[i], this.boxverts[i]);
-    for (var i = 0; i <8; i++) 
+    }
+    for (var i = 0; i <8; i++){
       this.boxverts[i] = c3dl.addVectors(this.boxverts[i], this.position);
+    }
   }
   this.getHeight = function ()
   {
@@ -198,7 +204,7 @@ c3dl.BoundingBox = function ()
   }
   this.center = function () 
   {
-      //F top left 
+    //F top left 
     this.boxverts[0] =[ this.boxverts[0][0] - this.realposition[0] , this.boxverts[0][1] - this.realposition[1] , this.boxverts[0][2] - this.realposition[2] ];
     //B top left 
     this.boxverts[1] =[ this.boxverts[1][0] - this.realposition[0] , this.boxverts[1][1] - this.realposition[1],  this.boxverts[1][2] - this.realposition[2] ];                         
@@ -214,9 +220,5 @@ c3dl.BoundingBox = function ()
     this.boxverts[6] =[ this.boxverts[6][0]  - this.realposition[0], this.boxverts[6][1] - this.realposition[1],  this.boxverts[6][2] - this.realposition[2] ]; 
     //B bottom right  
     this.boxverts[7] =[ this.boxverts[7][0]  - this.realposition[0], this.boxverts[7][1] - this.realposition[1] , this.boxverts[7][2] - this.realposition[2] ];
-
   }
 }
-
-
-

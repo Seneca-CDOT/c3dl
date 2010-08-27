@@ -32,9 +32,9 @@ c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
  @returns {String}
  */
 c3dl.Collada.prototype.getPath = function () {
-    if (this.isReady()) {
-        return this.path;
-    }
+  if (this.isReady()) {
+    return this.path;
+  }
 }
 
 /**
@@ -43,9 +43,9 @@ c3dl.Collada.prototype.getPath = function () {
  @returns 
  */
 c3dl.Collada.prototype.getAngularVel = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getAngularVel();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getAngularVel();
+  }
 }
 
 /**
@@ -54,9 +54,9 @@ c3dl.Collada.prototype.getAngularVel = function () {
  @returns
  */
 c3dl.Collada.prototype.getLinearVel = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getLinearVel();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getLinearVel();
+  }
 }
 
 /**
@@ -65,9 +65,9 @@ c3dl.Collada.prototype.getLinearVel = function () {
  @returns {Array}
  */
 c3dl.Collada.prototype.getPosition = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getPosition();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getPosition();
+  }
 }
 
 /**
@@ -76,9 +76,9 @@ c3dl.Collada.prototype.getPosition = function () {
  @param {Array} vec
  */
 c3dl.Collada.prototype.setAngularVel = function (vec) {
-    if (this.isReady()) {
-        this.sceneGraph.setAngularVel(vec);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setAngularVel(vec);
+  }
 }
 
 /**
@@ -87,9 +87,9 @@ c3dl.Collada.prototype.setAngularVel = function (vec) {
  @return {Array}
  */
 c3dl.Collada.prototype.getUp = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getUp();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getUp();
+  }
 }
 
 /**
@@ -98,9 +98,9 @@ c3dl.Collada.prototype.getUp = function () {
  @return {Array}
  */
 c3dl.Collada.prototype.getLeft = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getLeft();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getLeft();
+  }
 }
 
 /**
@@ -109,9 +109,9 @@ c3dl.Collada.prototype.getLeft = function () {
  @returns {Array} 
  */
 c3dl.Collada.prototype.getDirection = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getDirection();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getDirection();
+  }
 }
 
 /**
@@ -123,9 +123,9 @@ c3dl.Collada.prototype.getDirection = function () {
  @returns {bool} true if the object can be picked, false otherwise.
  */
 c3dl.Collada.prototype.getPickable = function () {
-    if (this.isReady()) {
-        return this.sceneGraph.getPickable();
-    }
+  if (this.isReady()) {
+    return this.sceneGraph.getPickable();
+  }
 }
 
 /**
@@ -136,9 +136,9 @@ c3dl.Collada.prototype.getPickable = function () {
  false otherwise.
  */
 c3dl.Collada.prototype.setPickable = function (isPickable) {
-    if (this.isReady()) {
-        this.sceneGraph.setPickable(isPickable);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setPickable(isPickable);
+  }
 }
 
 /**
@@ -147,9 +147,9 @@ c3dl.Collada.prototype.setPickable = function (isPickable) {
  @param {Array} vec
  */
 c3dl.Collada.prototype.setLinearVel = function (vec) {
-    if (this.isReady()) {
-        this.sceneGraph.setLinearVel(vec);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setLinearVel(vec);
+  }
 }
 
 /**
@@ -164,29 +164,29 @@ c3dl.Collada.prototype.setLinearVel = function (vec) {
  @param {string} daepath path of the collada file.
  */
 c3dl.Collada.prototype.init = function (daePath) {
-    this.path = daePath;
+  this.path = daePath;
 
-    // if the file is already in the manager, just get a copy of it now,
-    // otherwise put it in queue.
-    // Before the scene begins, the user must first specify all the collada files
-    // they will use during the lifetime of the scene.  When the scene begins, all
-    // the files they specified will be created and initialized.  Either it will 
-    // be the first time (they won't exist in the manager) or they want a new 
-    // object, in which case a copy must be created.
-    if (c3dl.ColladaManager.isFileLoaded(this.path)) {
-        this.sceneGraph = c3dl.ColladaManager.getSceneGraphCopy(this.path);
-    }
-    else {
-        // this will be called if the scene is being initialized and we are 
-        // placing collada objects in the manager.
-        c3dl.ColladaQueue.pushBack(this);
-    }
-    if (this.isReady()) {
-        c3dl.pushMatrix();
-        c3dl.loadIdentity();
-        this.boundingbox.init(this.sceneGraph.getAllVerts());
-        c3dl.popMatrix();
-    }
+  // if the file is already in the manager, just get a copy of it now,
+  // otherwise put it in queue.
+  // Before the scene begins, the user must first specify all the collada files
+  // they will use during the lifetime of the scene.  When the scene begins, all
+  // the files they specified will be created and initialized.  Either it will 
+  // be the first time (they won't exist in the manager) or they want a new 
+  // object, in which case a copy must be created.
+  if (c3dl.ColladaManager.isFileLoaded(this.path)) {
+    this.sceneGraph = c3dl.ColladaManager.getSceneGraphCopy(this.path);
+  }
+  else {
+    // this will be called if the scene is being initialized and we are 
+    // placing collada objects in the manager.
+    c3dl.ColladaQueue.pushBack(this);
+  }
+  if (this.isReady()) {
+    c3dl.pushMatrix();
+    c3dl.loadIdentity();
+    this.boundingbox.init(this.sceneGraph.getAllVerts());
+    c3dl.popMatrix();
+  }
 }
 
 /**
@@ -229,7 +229,7 @@ c3dl.Collada.prototype.update = function (timeStep) {
  @private
  */
 c3dl.Collada.prototype.setSceneGraph = function (sg) {
-    this.sceneGraph = sg;
+  this.sceneGraph = sg;
 }
 
 
@@ -244,14 +244,14 @@ c3dl.Collada.prototype.setSceneGraph = function (sg) {
  @param {Scene} scene
  */
 c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
-    if (this.sceneGraph && this.isVisible()) {
-        // tell the root to render. The render() calls
-        // will propogate down the graph.
-        this.sceneGraph.render(glCanvas3D, scene);
-        if (this.drawboundingbox) {
-            this.boundingbox.render(scene);
-        }
+  if (this.sceneGraph && this.isVisible()) {
+    // tell the root to render. The render() calls
+    // will propogate down the graph.
+    this.sceneGraph.render(glCanvas3D, scene);
+    if (this.drawboundingbox) {
+      this.boundingbox.render(scene);
     }
+  }
 }
 
 /**
@@ -260,10 +260,10 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
  @param {Array} scaleVec 
  */
 c3dl.Collada.prototype.scale = function (scaleVec) {
-    if (this.isReady()) {
-        this.boundingbox.scale(scaleVec);
-        this.sceneGraph.scale(scaleVec);
-    }
+  if (this.isReady()) {
+    this.boundingbox.scale(scaleVec);
+    this.sceneGraph.scale(scaleVec);
+  }
 }
 
 /**
@@ -273,10 +273,10 @@ c3dl.Collada.prototype.scale = function (scaleVec) {
  @param {Array} trans
  */
 c3dl.Collada.prototype.translate = function (trans) {
-    if (this.isReady()) {
-        this.sceneGraph.translate(trans);
-        this.boundingbox.setPosition(trans);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.translate(trans);
+    this.boundingbox.setPosition(trans);
+  }
 }
 
 /**
@@ -285,10 +285,10 @@ c3dl.Collada.prototype.translate = function (trans) {
  @param {Array} pos 
  */
 c3dl.Collada.prototype.setPosition = function (pos) {
-    if (this.isReady()) {
-        this.sceneGraph.setPosition(pos);
-        this.boundingbox.setPosition(pos);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setPosition(pos);
+    this.boundingbox.setPosition(pos);
+  }
 }
 
 /**
@@ -297,7 +297,7 @@ c3dl.Collada.prototype.setPosition = function (pos) {
  @returns {c3dl.SceneNode} Root node of the Collada model's scenegraph.
  */
 c3dl.Collada.prototype.getSceneGraph = function () {
-    return this.sceneGraph;
+  return this.sceneGraph;
 }
 
 /**
@@ -307,9 +307,9 @@ c3dl.Collada.prototype.getSceneGraph = function () {
  @param {string} texturePath Path of the texture.
  */
 c3dl.Collada.prototype.setTexture = function (texturePath) {
-    if (this.isReady()) {
-        this.sceneGraph.setTexture(texturePath);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setTexture(texturePath);
+  }
 }
 
 /**
@@ -320,9 +320,9 @@ c3dl.Collada.prototype.setTexture = function (texturePath) {
  @param {c3dl.Material} material
  */
 c3dl.Collada.prototype.setMaterial = function (material) {
-    if (this.isReady()) {
-        this.sceneGraph.setMaterial(material);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.setMaterial(material);
+  }
 }
 
 /**
@@ -336,8 +336,8 @@ c3dl.Collada.prototype.setMaterial = function (material) {
  @param {c3dl.Effect} effect
  */
 c3dl.Collada.prototype.setEffect = function (effect) {
-    // add type checking?
-    this.sceneGraph.setEffect(effect);
+  // add type checking?
+  this.sceneGraph.setEffect(effect);
 }
 
 /**
@@ -346,10 +346,10 @@ c3dl.Collada.prototype.setEffect = function (effect) {
  @param {float} angle in radians.
  */
 c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
-    if (this.isReady()) {
-        this.sceneGraph.rotateOnAxis(axisVec, angle);
-        this.boundingbox.rotateOnAxis(axisVec, angle);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.rotateOnAxis(axisVec, angle);
+    this.boundingbox.rotateOnAxis(axisVec, angle);
+  }
 }
 
 
@@ -359,10 +359,10 @@ c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
  @param {float} angle in radians.
  */
 c3dl.Collada.prototype.yaw = function (angle) {
-    if (this.isReady()) {
-        this.sceneGraph.yaw(angle);
-        this.boundingbox.rotateOnAxis(this.sceneGraph.up, angle);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.yaw(angle);
+    this.boundingbox.rotateOnAxis(this.sceneGraph.up, angle);
+  }
 }
 
 /**
@@ -371,17 +371,17 @@ c3dl.Collada.prototype.yaw = function (angle) {
  @param {float} angle in radians.
  */
 c3dl.Collada.prototype.pitch = function (angle) {
-    if (this.isReady()) {
-        this.sceneGraph.pitch(angle);
-        this.boundingbox.rotateOnAxis(this.sceneGraph.left, angle);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.pitch(angle);
+    this.boundingbox.rotateOnAxis(this.sceneGraph.left, angle);
+  }
 }
 
 /**
  @private
  */
 c3dl.Collada.prototype.isReady = function () {
-    return this.sceneGraph != null ? true : false;
+  return this.sceneGraph != null ? true : false;
 }
 
 /**
@@ -390,35 +390,35 @@ c3dl.Collada.prototype.isReady = function () {
  @param {float} angle in radians.
  */
 c3dl.Collada.prototype.roll = function (angle) {
-    if (this.isReady()) {
-        this.sceneGraph.roll(angle);
-        this.boundingbox.rotateOnAxis(this.sceneGraph.dir, angle);
-    }
+  if (this.isReady()) {
+    this.sceneGraph.roll(angle);
+    this.boundingbox.rotateOnAxis(this.sceneGraph.dir, angle);
+  }
 }
 
 /**
  @private
  */
 c3dl.Collada.prototype.getCopy = function () {
-    var collada = new Collada();
-    collada.clone(this);
-    return collada;
+  var collada = new Collada();
+  collada.clone(this);
+  return collada;
 }
 
 c3dl.Collada.prototype.getTransform = function () {
-    if (this.sceneGraph) {
-        return this.sceneGraph.getTransform();
-    }
+  if (this.sceneGraph) {
+    return this.sceneGraph.getTransform();
+  }
 }
 /**
  @private
  */
 c3dl.Collada.prototype.clone = function (other) {
-    c3dl._super(this, arguments, "clone");
+  c3dl._super(this, arguments, "clone");
 
-    this.path = other.path;
-    this.sceneGraph = other.sceneGraph.getCopy();
-    this.boundingbox = other.boundingbox.getCopy();
+  this.path = other.path;
+  this.sceneGraph = other.sceneGraph.getCopy();
+  this.boundingbox = other.boundingbox.getCopy();
 }
 
 /**
@@ -434,12 +434,12 @@ c3dl.Collada.prototype.clone = function (other) {
  in the scenegraph.
  */
 c3dl.Collada.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
-    var result = this.sceneGraph.rayIntersectsEnclosures(rayOrigin, rayDir);
-    return result;
+  var result = this.sceneGraph.rayIntersectsEnclosures(rayOrigin, rayDir);
+  return result;
 }
 
 c3dl.Collada.prototype.getObjectType = function () {
-    return c3dl.COLLADA;
+  return c3dl.COLLADA;
 }
 
 /**
@@ -452,136 +452,136 @@ c3dl.Collada.prototype.getObjectType = function () {
  @returns {bool} true if the ray intersects with any triangle in the object.
  */
 c3dl.Collada.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
-    // Use the matrix stack, but clear it out first
-    c3dl.pushMatrix();
-    c3dl.loadIdentity();
+  // Use the matrix stack, but clear it out first
+  c3dl.pushMatrix();
+  c3dl.loadIdentity();
 
-    var result = this.sceneGraph.rayIntersectsTriangles(rayOrigin, rayDir);
+  var result = this.sceneGraph.rayIntersectsTriangles(rayOrigin, rayDir);
 
-    // restore the stack to its previous state.
-    c3dl.popMatrix();
-    return result;
+  // restore the stack to its previous state.
+  c3dl.popMatrix();
+  return result;
 }
 c3dl.Collada.prototype.getBoundingSpheres = function () {
-    return this.sceneGraph.getBoundingSpheres();
+  return this.sceneGraph.getBoundingSpheres();
 }
 
 c3dl.Collada.prototype.getHeight = function () {
-    if (this.isReady()) {
-        return this.boundingbox.getHeight();
-    }
+  if (this.isReady()) {
+    return this.boundingbox.getHeight();
+  }
 }
 c3dl.Collada.prototype.getWidth = function () {
-    if (this.isReady()) {
-        return this.boundingbox.getWidth();
-    }
+  if (this.isReady()) {
+    return this.boundingbox.getWidth();
+  }
 }
 c3dl.Collada.prototype.getLength = function () {
-    if (this.isReady()) {
-        return this.boundingbox.getLength();
-    }
+  if (this.isReady()) {
+    return this.boundingbox.getLength();
+  }
 }
 c3dl.Collada.prototype.setHeight = function (height) {
-    var curheight = this.getHeight();
-    var scaleVec = [];
-    if (curheight > height) {
-        scaleVec = [1, (1 / (curheight / height)), 1];
-    }
-    else if (curheight < height) {
-        scaleVec = [1, (height / curheight), 1];
-    }
-    else {
-        scaleVec[1, 1, 1];
-    }
-    this.boundingbox.scale(scaleVec);
-    this.sceneGraph.scale(scaleVec);
+  var curheight = this.getHeight();
+  var scaleVec = [];
+  if (curheight > height) {
+    scaleVec = [1, (1 / (curheight / height)), 1];
+  }
+  else if (curheight < height) {
+    scaleVec = [1, (height / curheight), 1];
+  }
+  else {
+    scaleVec[1, 1, 1];
+  }
+  this.boundingbox.scale(scaleVec);
+  this.sceneGraph.scale(scaleVec);
 }
 
 c3dl.Collada.prototype.setLength = function (length) {
-    var curlength = this.getLength();
-    var scaleVec = [];
-    if (curlength > length) {
-        scaleVec = [(1 / (curlength / length)), 1, 1];
-    }
-    else if (curlength < length) {
-        scaleVec = [(length / curlength), 1, 1];
-    }
-    else {
-        scaleVec[1, 1, 1];
-    }
-    this.boundingbox.scale(scaleVec);
-    this.sceneGraph.scale(scaleVec);
+  var curlength = this.getLength();
+  var scaleVec = [];
+  if (curlength > length) {
+    scaleVec = [(1 / (curlength / length)), 1, 1];
+  }
+  else if (curlength < length) {
+    scaleVec = [(length / curlength), 1, 1];
+  }
+  else {
+    scaleVec[1, 1, 1];
+  }
+  this.boundingbox.scale(scaleVec);
+  this.sceneGraph.scale(scaleVec);
 }
 
 c3dl.Collada.prototype.setWidth = function (width) {
-    var curwidth = this.getWidth();
-    var scaleVec = [];
-    if (curwidth > width) {
-        scaleVec = [1, 1, (1 / (curwidth / width))];
-    }
-    else if (curwidth < width) {
-        scaleVec = [1, 1, (width / curwidth)];
-    }
-    else {
-        scaleVec[1, 1, 1];
-    }
-    this.boundingbox.scale(scaleVec);
-    this.sceneGraph.scale(scaleVec);
+  var curwidth = this.getWidth();
+  var scaleVec = [];
+  if (curwidth > width) {
+    scaleVec = [1, 1, (1 / (curwidth / width))];
+  }
+  else if (curwidth < width) {
+    scaleVec = [1, 1, (width / curwidth)];
+  }
+  else {
+    scaleVec[1, 1, 1];
+  }
+  this.boundingbox.scale(scaleVec);
+  this.sceneGraph.scale(scaleVec);
 }
 
 c3dl.Collada.prototype.setSize = function (length, width, height) {
-    length = parseFloat(length);
-    width = parseFloat(width);
-    height = parseFloat(height);
-    var curlength = this.boundingbox.getLength();
-    var curwidth = this.boundingbox.getWidth();
-    var curheight = this.boundingbox.getHeight();
-    var scaleVec = [];
-    var vecL, vecW, vecH;
-    if (curlength > length) {
-        vecL = (1 / (curlength / length));
-    }
-    else if (curlength < length) {
-        vecL = length / curlength;
-    }
-    else {
-        vecL = 1;
-    }
-    if (curheight > height) {
-        vecH = (1 / (curheight / height));
-    }
-    else if (curheight < height) {
-        vecH = (height / curheight);
-    }
-    else {
-        vecH = 1;
-    }
-    if (curwidth > width) {
-        vecW = (1 / (curwidth / width));
-    }
-    else if (curwidth < width) {
-        vecW = (width / curwidth);
-    }
-    else {
-        vecW = 1;
-    }
-    scaleVec = [vecL, vecH, vecW];
-    this.scale(scaleVec);
+  length = parseFloat(length);
+  width = parseFloat(width);
+  height = parseFloat(height);
+  var curlength = this.boundingbox.getLength();
+  var curwidth = this.boundingbox.getWidth();
+  var curheight = this.boundingbox.getHeight();
+  var scaleVec = [];
+  var vecL, vecW, vecH;
+  if (curlength > length) {
+    vecL = (1 / (curlength / length));
+  }
+  else if (curlength < length) {
+    vecL = length / curlength;
+  }
+  else {
+    vecL = 1;
+  }
+  if (curheight > height) {
+    vecH = (1 / (curheight / height));
+  }
+  else if (curheight < height) {
+    vecH = (height / curheight);
+  }
+  else {
+    vecH = 1;
+  }
+  if (curwidth > width) {
+    vecW = (1 / (curwidth / width));
+  }
+  else if (curwidth < width) {
+    vecW = (width / curwidth);
+  }
+  else {
+    vecW = 1;
+  }
+  scaleVec = [vecL, vecH, vecW];
+  this.scale(scaleVec);
 }
 
 c3dl.Collada.prototype.setDrawBoundingBox = function (drawboundingbox) {
-    this.drawboundingbox = drawboundingbox;
+  this.drawboundingbox = drawboundingbox;
 }
 
 c3dl.Collada.prototype.getBoundingBox = function () {
-    return this.boundingbox;
+  return this.boundingbox;
 }
 
 c3dl.Collada.prototype.getBoundingBoxCorners = function () {
-    return this.boundingbox.getCorners();
+  return this.boundingbox.getCorners();
 }
 
 c3dl.Collada.prototype.centerObject = function () {
-    this.sceneGraph.center(this.boundingbox.realposition);
-    this.boundingbox.center();
+  this.sceneGraph.center(this.boundingbox.realposition);
+  this.boundingbox.center();
 }

@@ -194,7 +194,7 @@ c3dl.FreeCamera.prototype.toString = function (delimiter)
   // get the c3dl.Camera's toString()
   var cameraToStr = c3dl._super(this, arguments, "toString");
   var FreeCameraToStr = "c3dl.FreeCamera: " + delimiter + "angular velocity = " +
-    this.getAngularVel() + delimiter + "linear velocity = " + this.getLinearVel() + delimiter;
+  this.getAngularVel() + delimiter + "linear velocity = " + this.getLinearVel() + delimiter;
   return cameraToStr + FreeCameraToStr;
 }
 

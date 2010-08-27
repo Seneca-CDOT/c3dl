@@ -64,7 +64,6 @@ c3dl.Effect = function ()
    */
   this.init = function (effectTemplate)
   {
-    //c3dl.debug.logWarning(effectTemplate);
     var check = true;
 
     if (check || effectTemplate instanceof c3dl.EffectTemplate)

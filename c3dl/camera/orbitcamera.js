@@ -376,7 +376,7 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
     this.pos = c3dl.copyObj(position);
     var camPosToOrbitPoint = c3dl.subtractVectors(this.orbitPoint, this.pos);
 
-	// if the position was set such that the direction vector is parallel to the global
+    // if the position was set such that the direction vector is parallel to the global
     // up axis, the cross product won't work. In that case, leave the left vector as it was.
     if (c3dl.isVectorEqual([0, 0, 0], c3dl.vectorCrossProduct(camPosToOrbitPoint, [0, 1, 0])))
     {
