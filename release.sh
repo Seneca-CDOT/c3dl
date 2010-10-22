@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRCNAME=canvas3dapi
+SRCNAME=c3dl
 ZIPFILENAME=$SRCNAME-$1.zip
 UNCZIPFILENAME=$SRCNAME-$1-uncompressed.zip
 
@@ -25,18 +25,15 @@ fi
 
 rm -rf /tmp/$SRCNAME
 
-# don't need all the .svn files
-svn export $SRCNAME /tmp/$SRCNAME
-if [ $? -ne 0 ]
-then
-  echo "svn export failed, giving up"
-  exit 1
-fi
+# make a temporary copy of the api into /tmp
+cp -r $SRCNAME /tmp/$SRCNAME
 
 OLDDIR=`pwd`
 cd /tmp
 
 # create 'uncompressed' zip
+echo "zip -r $UNCZIPFILENAME $SRCNAME"
+
 zip -r $UNCZIPFILENAME $SRCNAME
 if [ $? -ne 0 ]
 then
@@ -51,7 +48,7 @@ then
   exit 1
 fi
 
-cc $OLDDIR/jsmin.c -o jsmin
+cc $OLDDIR/tools/jsmin.c -o jsmin
 if [ $? -ne 0 ]
 then
   echo "Failed to compile jsmin, giving up"
