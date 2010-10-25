@@ -14,10 +14,10 @@ Patch Review and Submission Process:
 
 * Each patch submitted must have a corresponding ticket number
 * Pull the most recent commit off the review branch and merge your code into it.
+* Test
 * Request a peer review
-* 
-
-
+* Request a super review
+* Request merge into Review Branch
 
 File Organization:
 
