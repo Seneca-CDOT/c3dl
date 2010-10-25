@@ -1,4 +1,25 @@
-This is the organization of the files you will find in this repo
+Branches:
+
+Master Branch - As of Oct.20, 2010 the cathyatseneca/master branch will be the official release branch for c3dl.  Each commit to the master branch will represent a release version of the library
+
+Review Branch - As of Oct. 20, 2010 the cathyatseneca/review branch will be the development branch of the library.  Commits to this branch have gone through a review but are not part of the library's release
+
+Bug tracker:
+
+c3dl usese lighthouse for bug tracking:
+
+http://c3dl.lighthouseapp.com/projects/42081-c3dl/overview
+
+Patch Review and Submission Process:
+
+* Each patch submitted must have a corresponding ticket number
+* Pull the most recent commit off the review branch and merge your code into it.
+* Request a peer review
+* 
+
+
+
+File Organization:
 
 /c3dl:  This folder contains the library itself.
 
