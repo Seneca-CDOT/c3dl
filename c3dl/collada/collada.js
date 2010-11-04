@@ -18,8 +18,8 @@
  */
 c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
     c3dl._superc(this);
-    this.obb = new c3dl.OBB();
-    this.drawObb = false;
+    this.obb = new c3dl.AABB();
+    this.drawObb = true;
     this.path = null;
     this.sceneGraph = null;
 });
