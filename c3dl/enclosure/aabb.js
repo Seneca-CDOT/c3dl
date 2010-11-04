@@ -70,11 +70,17 @@ c3dl.AABB = function ()
   
   this.setPosition = function (position) {
     this.position = [position[0], position[1], position[2]];
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   this.scale = function (scaleVec) {
     this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
 	  this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   
   this.rotateOnAxis = function (axisVec, angle) {
@@ -88,14 +94,13 @@ c3dl.AABB = function ()
       c3dl.multiplyMatrixByVector(rotateOnAxisMat, this.axis[i], this.axis[i]);
       c3dl.normalizeVector(this.axis[i]);
     }
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   
   //draw a box using lines
   this.render = function(scene) {
-    for (var i = 0; i < 8; i++) {
-      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
-    } 
-    
     this.calcBoxVerts();
     //front of box
     //top left to top right
