@@ -9,6 +9,7 @@ c3dl.OBB = function ()
   this.width = 0;
   
   this.boxverts = [];
+  this.newboxverts = [];
   this.lineList =[];
   this.maxMins= [];
   this.realposition = [];
@@ -66,56 +67,53 @@ c3dl.OBB = function ()
     this.boxverts[6] =[ this.maxMins[0], this.maxMins[2],  this.maxMins[5]]; 
     //B bottom right  
     this.boxverts[7] =[ this.maxMins[0], this.maxMins[2], this.maxMins[4]];
+    
+    this.newboxverts[0] = this.boxverts[0];
+    this.newboxverts[1] = this.boxverts[1];
+    this.newboxverts[2] = this.boxverts[2];
+    this.newboxverts[3] = this.boxverts[3];
+    this.newboxverts[4] = this.boxverts[4];
+    this.newboxverts[5] = this.boxverts[5];
+    this.newboxverts[6] = this.boxverts[6];
+    this.newboxverts[7] = this.boxverts[7];
 
   }
   
   this.setPosition = function (position)
   {
-    for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.subtractVectors(this.boxverts[i], this.position);
-    }
     this.position = [position[0], position[1], position[2]];
-    for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.addVectors(this.boxverts[i], this.position);
-    }
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   this.scale = function (scaleVec)
   {
-  	for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(this.getTransform()), this.boxverts[i]);
-	  }
     this.length = this.length * scaleVec[0];
     this.height = this.height * scaleVec[1];
     this.width = this.width * scaleVec[2];
     this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
 	  this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
-
-    for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
-    }
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   
   this.rotateOnAxis = function (axisVec, angle)
   {
     var rotateOnAxisQuat = c3dl.makeQuat(0, 0, 0, 0);
-    var rotateOnAxisMat = c3dl.makeZeroMatrix();
-    
     // Create a proper Quaternion based on location and angle
     c3dl.axisAngleToQuat(axisVec, angle, rotateOnAxisQuat);
     // Create a rotation Matrix out of this quaternion
-    rotateOnAxisMat = c3dl.quatToMatrix(rotateOnAxisQuat);
-    for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(this.getTransform()), this.boxverts[i]);
-    }
+    var rotateOnAxisMat = c3dl.quatToMatrix(rotateOnAxisQuat);
     // Apply changes to the remaining vectors
     for (var i = 0; i <3; i++) {
       c3dl.multiplyMatrixByVector(rotateOnAxisMat, this.axis[i], this.axis[i]);
       c3dl.normalizeVector(this.axis[i]);
     }
-    for (var i = 0; i <8; i++) {
-      this.boxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
-    }
+    for (var i = 0; i < 8; i++) {
+      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+    } 
   }
   this.getHeight = function () {
     return this.height;
@@ -140,33 +138,33 @@ c3dl.OBB = function ()
   this.render = function(scene) {
     //front of box
     //top left to top right
-    this.lineList[0].setCoordinates(this.boxverts[0],this.boxverts[2]);
+    this.lineList[0].setCoordinates(this.newboxverts[0],this.newboxverts[2]);
     //top left to bottom left                            
-    this.lineList[1].setCoordinates(this.boxverts[0],this.boxverts[4]); 
+    this.lineList[1].setCoordinates(this.newboxverts[0],this.newboxverts[4]); 
     //bottom left to bottom right 
-    this.lineList[2].setCoordinates(this.boxverts[4],this.boxverts[6]);
+    this.lineList[2].setCoordinates(this.newboxverts[4],this.newboxverts[6]);
     //bottom right to top right
-    this.lineList[3].setCoordinates(this.boxverts[6],this.boxverts[2]);
+    this.lineList[3].setCoordinates(this.newboxverts[6],this.newboxverts[2]);
 
     //back of box
     //top left to top right
-    this.lineList[4].setCoordinates(this.boxverts[1],this.boxverts[3]);
+    this.lineList[4].setCoordinates(this.newboxverts[1],this.newboxverts[3]);
     //top left to bottom left                            
-    this.lineList[5].setCoordinates(this.boxverts[1],this.boxverts[5]); 
+    this.lineList[5].setCoordinates(this.newboxverts[1],this.newboxverts[5]); 
     //bottom left to bottom right 
-    this.lineList[6].setCoordinates(this.boxverts[5],this.boxverts[7]);
+    this.lineList[6].setCoordinates(this.newboxverts[5],this.newboxverts[7]);
     //bottom right to top right
-    this.lineList[7].setCoordinates(this.boxverts[7],this.boxverts[3]);
+    this.lineList[7].setCoordinates(this.newboxverts[7],this.newboxverts[3]);
     
     //connectors
     //F top left to B top left
-    this.lineList[8].setCoordinates(this.boxverts[0],this.boxverts[1]);
+    this.lineList[8].setCoordinates(this.newboxverts[0],this.newboxverts[1]);
     //F top right to B top right                           
-    this.lineList[9].setCoordinates(this.boxverts[2],this.boxverts[3]); 
+    this.lineList[9].setCoordinates(this.newboxverts[2],this.newboxverts[3]); 
     //F bottom left to B bottom left 
-    this.lineList[10].setCoordinates(this.boxverts[4],this.boxverts[5]);
+    this.lineList[10].setCoordinates(this.newboxverts[4],this.newboxverts[5]);
     //F bottom right to B bottom right  
-    this.lineList[11].setCoordinates(this.boxverts[6],this.boxverts[7]);  
+    this.lineList[11].setCoordinates(this.newboxverts[6],this.newboxverts[7]); 
     scene.getRenderer().renderLines(this.lineList);
   }
   
