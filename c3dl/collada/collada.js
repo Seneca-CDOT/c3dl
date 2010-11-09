@@ -20,7 +20,7 @@ c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
     c3dl._superc(this);
     this.aabb = new c3dl.AABB();
     this.obb = new c3dl.OBB();
-    this.drawObb = false;
+    this.drawObb = true;
     this.drawAabb = false;
     this.path = null;
     this.sceneGraph = null;
@@ -190,6 +190,7 @@ c3dl.Collada.prototype.init = function (daePath) {
     this.obb.init(allVerts);
     this.aabb.init(allVerts);
     c3dl.popMatrix();
+    this.centerObject();
   }
 }
 
@@ -210,9 +211,9 @@ c3dl.Collada.prototype.update = function (timeStep) {
         this.sceneGraph.update(timeStep);
         c3dl.popMatrix();
         var angVel = this.sceneGraph.getAngularVel();
-        this.obb.rotateOnAxis(this.sceneGraph.left, angVel[0] * timeStep);
-        this.obb.rotateOnAxis(this.sceneGraph.up, angVel[1] * timeStep);
-        this.obb.rotateOnAxis(this.sceneGraph.dir, angVel[2] * timeStep);
+        this.obb.rotateOnAxis(this.obb.axis[0], angVel[0] * timeStep);
+        this.obb.rotateOnAxis(this.obb.axis[1], angVel[1] * timeStep);
+        this.obb.rotateOnAxis(this.obb.axis[2], angVel[2] * timeStep);
         this.aabb.rotateOnAxis(this.sceneGraph.left, angVel[0] * timeStep);
         this.aabb.rotateOnAxis(this.sceneGraph.up, angVel[1] * timeStep);
         this.aabb.rotateOnAxis(this.sceneGraph.dir, angVel[2] * timeStep);
@@ -604,7 +605,10 @@ c3dl.Collada.prototype.getAabb = function () {
   return this.aabb;
 }
 c3dl.Collada.prototype.centerObject = function () {
-  this.sceneGraph.center(this.obb.realposition);
+  c3dl.pushMatrix();
+  c3dl.loadIdentity();
+  this.sceneGraph.center(this.obb.vertices);
   this.obb.center();
   this.aabb.center();
+  c3dl.popMatrix();
 }

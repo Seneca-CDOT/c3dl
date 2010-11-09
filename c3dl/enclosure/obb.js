@@ -22,7 +22,7 @@ c3dl.OBB = function ()
   this.init = function (vertices)
   {
     if (vertices) {
-      vertices = new C3DL_FLOAT_ARRAY(vertices);
+      this.vertices = new C3DL_FLOAT_ARRAY(vertices);
       var lengthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), j = 0;
       var j = 0;
       for (var i = 0; i < vertices.length/3; i++) {
@@ -206,6 +206,8 @@ c3dl.OBB = function ()
                    this.scaleVec[2], 0, 0, 0, 0, 1);
     mat = c3dl.multiplyMatrixByMatrix(mat, smat);
     return mat;
+  }
+  this.update = function () {
   }
 }
 
