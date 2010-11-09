@@ -17,13 +17,13 @@
  @augments c3dl.Primitive
  */
 c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
-    c3dl._superc(this);
-    this.aabb = new c3dl.AABB();
-    this.obb = new c3dl.OBB();
-    this.drawObb = true;
-    this.drawAabb = false;
-    this.path = null;
-    this.sceneGraph = null;
+  c3dl._superc(this);
+  this.aabb = new c3dl.AABB();
+  this.obb = new c3dl.OBB();
+  this.renderObb = true;
+  this.renderAabb = false;
+  this.path = null;
+  this.sceneGraph = null;
 });
 
 
@@ -190,7 +190,6 @@ c3dl.Collada.prototype.init = function (daePath) {
     this.obb.init(allVerts);
     this.aabb.init(allVerts);
     c3dl.popMatrix();
-    this.centerObject();
   }
 }
 
@@ -204,34 +203,32 @@ c3dl.Collada.prototype.init = function (daePath) {
  @param {float} timeStep
  */
 c3dl.Collada.prototype.update = function (timeStep) {
-    // keep checking to see if the file is done being loaded.
-    if (this.isReady()) {
-        c3dl.pushMatrix();
-        c3dl.loadIdentity();
-        this.sceneGraph.update(timeStep);
-        c3dl.popMatrix();
-        var angVel = this.sceneGraph.getAngularVel();
-        this.obb.rotateOnAxis(this.obb.axis[0], angVel[0] * timeStep);
-        this.obb.rotateOnAxis(this.obb.axis[1], angVel[1] * timeStep);
-        this.obb.rotateOnAxis(this.obb.axis[2], angVel[2] * timeStep);
-        this.aabb.rotateOnAxis(this.sceneGraph.left, angVel[0] * timeStep);
-        this.aabb.rotateOnAxis(this.sceneGraph.up, angVel[1] * timeStep);
-        this.aabb.rotateOnAxis(this.sceneGraph.dir, angVel[2] * timeStep);
-        var linVel = this.sceneGraph.getLinearVel();
-        linVel = c3dl.multiplyVector(linVel, timeStep);
-        var tempPos = c3dl.addVectors(this.sceneGraph.getPosition(), linVel);
-        this.obb.setPosition(tempPos);
-        this.aabb.setPosition(tempPos);
-
+  // keep checking to see if the file is done being loaded.
+  if (this.isReady()) {
+    c3dl.pushMatrix();
+    c3dl.loadIdentity();
+    this.sceneGraph.update(timeStep);
+    c3dl.popMatrix();
+    var angVel = this.sceneGraph.getAngularVel();
+    this.obb.rotateOnAxis(this.obb.axis[0], angVel[0] * timeStep);
+    this.obb.rotateOnAxis(this.obb.axis[1], angVel[1] * timeStep);
+    this.obb.rotateOnAxis(this.obb.axis[2], angVel[2] * timeStep);
+    this.aabb.rotateOnAxis(this.aabb.axis[0], angVel[0] * timeStep);
+    this.aabb.rotateOnAxis(this.aabb.axis[1], angVel[1] * timeStep);
+    this.aabb.rotateOnAxis(this.aabb.axis[2], angVel[2] * timeStep);
+    var linVel = this.sceneGraph.getLinearVel();
+    linVel = c3dl.multiplyVector(linVel, timeStep);
+    var tempPos = c3dl.addVectors(this.sceneGraph.getPosition(), linVel);
+    this.obb.setPosition(tempPos);
+     this.aabb.setPosition(tempPos);
+  }
+  else {
+    c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
+    if (c3dl.ColladaManager.isFileLoaded(this.path)) {
+      // get a copy of the scenegraph so we can modify it.
+      this.sceneGraph = c3dl.ColladaManager.getSceneGraphCopy(this.path);
     }
-    else {
-        c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
-
-        if (c3dl.ColladaManager.isFileLoaded(this.path)) {
-            // get a copy of the scenegraph so we can modify it.
-            this.sceneGraph = c3dl.ColladaManager.getSceneGraphCopy(this.path);
-        }
-    }
+  }
 }
 
 /**
@@ -257,10 +254,10 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
     // tell the root to render. The render() calls
     // will propogate down the graph.
     this.sceneGraph.render(glCanvas3D, scene);
-    if (this.drawObb) {
+    if (this.renderObb) {
       this.obb.render(scene);
     }
-    if (this.drawAabb) {
+    if (this.renderAabb) {
       this.aabb.render(scene);
     }
   }
@@ -592,11 +589,11 @@ c3dl.Collada.prototype.setSize = function (length, width, height) {
   this.scale(scaleVec);
 }
 
-c3dl.Collada.prototype.setDrawObb = function (drawObb) {
-  this.drawObb = drawObb;
+c3dl.Collada.prototype.setRenderObb = function (renderObb) {
+  this.renderObb = renderObb;
 }
-c3dl.Collada.prototype.setDrawAabb = function (drawAabb) {
-  this.drawAabb = drawAabb;
+c3dl.Collada.prototype.setRenderAabb = function (renderAabb) {
+  this.renderAabb = renderAabb;
 }
 c3dl.Collada.prototype.getObb = function () {
   return this.obb;
@@ -607,7 +604,7 @@ c3dl.Collada.prototype.getAabb = function () {
 c3dl.Collada.prototype.centerObject = function () {
   c3dl.pushMatrix();
   c3dl.loadIdentity();
-  this.sceneGraph.center(this.obb.vertices);
+  this.sceneGraph.center(this.obb.centerPosition);
   this.obb.center();
   this.aabb.center();
   c3dl.popMatrix();

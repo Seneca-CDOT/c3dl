@@ -266,8 +266,6 @@ c3dl.SceneNode.prototype.getAllVerts = function () {
         if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
           var temp = this.children[i].getPrimitiveSets()[j].getBoundingSphere().getMaxMins();
           c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[0], temp[2], temp[4]], temp2);
-          //temp2 = [temp[0], temp[2], temp[4]];
-          //temp3 = [temp[1], temp[3], temp[5]];
           c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[1], temp[3], temp[5]], temp3);
           allverts = allverts.concat(temp2);
           allverts = allverts.concat(temp3);
@@ -279,74 +277,12 @@ c3dl.SceneNode.prototype.getAllVerts = function () {
   return allverts;
 }
 
-c3dl.SceneNode.prototype.center = function (vertices) {  
-   var temp = new c3dl.SceneNode();
-   for (var j = 0; j < this.children.length; j++) {
-      temp.addChild(this.children[j]);
-    }
-    this.children = [];
-    this.children[0] = temp;
-       var lengthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), j = 0;
-      var j = 0, transvertices;
-      for (var k = 0; k < vertices.length/3; k++) {
-        //transvertices = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.peekMatrix()), [vertices[j],vertices[j+1],vertices[j+2]]);
-        transvertices =[vertices[j],vertices[j+1],vertices[j+2]]
-        lengthVerts[k] = transvertices[0];
-        heightVerts[k] = transvertices[1];
-        widthVerts[k] = transvertices[2];
-        j+=3
-      }    
-      var maxMins = [];
-      maxMins[0] = c3dl.findMax(lengthVerts); 
-      maxMins[1] = c3dl.findMin(lengthVerts);
-      maxMins[2] = c3dl.findMax(heightVerts);
-      maxMins[3] = c3dl.findMin(heightVerts); 
-      maxMins[4] = c3dl.findMax(widthVerts); 
-      maxMins[5] = c3dl.findMin(widthVerts);     
-      var realposition = [];
-      realposition[0] = (maxMins[0] + maxMins[1])/2;
-      realposition[1] = (maxMins[2] + maxMins[3])/2;
-      realposition[2] = (maxMins[4] + maxMins[5])/2;
-    temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
-  
-  
-  /*c3dl.pushMatrix();
-  c3dl.multMatrix(this.getTransform());
-  for (var i = 0; i < this.children.length; i++) {
-    if (this.children[i] instanceof c3dl.SceneNode) {
-      this.children[i].center(vertices);
-    }
-    else if (this.children[i] instanceof c3dl.Geometry) {
-
-      var lengthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), j = 0;
-      var j = 0, transvertices;
-      for (var k = 0; k < vertices.length/3; k++) {
-        //transvertices = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.peekMatrix()), [vertices[j],vertices[j+1],vertices[j+2]]);
-        transvertices =[vertices[j],vertices[j+1],vertices[j+2]]
-        lengthVerts[k] = transvertices[0];
-        heightVerts[k] = transvertices[1];
-        widthVerts[k] = transvertices[2];
-        j+=3
-      }    
-      var maxMins = [];
-      maxMins[0] = c3dl.findMax(lengthVerts); 
-      maxMins[1] = c3dl.findMin(lengthVerts);
-      maxMins[2] = c3dl.findMax(heightVerts);
-      maxMins[3] = c3dl.findMin(heightVerts); 
-      maxMins[4] = c3dl.findMax(widthVerts); 
-      maxMins[5] = c3dl.findMin(widthVerts);     
-      var realposition = [];
-      realposition[0] = (maxMins[0] + maxMins[1])/2;
-      realposition[1] = (maxMins[2] + maxMins[3])/2;
-      realposition[2] = (maxMins[4] + maxMins[5])/2;
-      
-      
-      
-      var temp = new c3dl.SceneNode();
-      temp.addChild(this.children[i]);
-      this.children[i] = temp;
-      temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
-    }
-  }
-  c3dl.popMatrix(); */
+c3dl.SceneNode.prototype.center = function (realposition) {  
+  var temp = new c3dl.SceneNode();
+  for (var j = 0; j < this.children.length; j++) {
+    temp.addChild(this.children[j]);
+  }   
+  this.children = [];   
+  this.children[0] = temp;
+  temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
 }

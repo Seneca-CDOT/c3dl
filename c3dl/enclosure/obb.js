@@ -1,26 +1,23 @@
 
-c3dl.OBB = function ()
-{
+c3dl.OBB = function () {
   //x
   this.length = 0;
   //y
   this.height = 0;
   //z
   this.width = 0;
-  
-  this.boxverts = [];
-  this.newboxverts = [];
+  this.originalBoxVerts = [];
+  this.boxVerts = [];
   this.lineList =[];
   this.maxMins= [];
-  this.realposition = [];
+  this.centerPosition = [];
   this.position = [0,0,0];
   this.axis=[3];
   this.axis[0]= [1,0,0];
   this.axis[1]= [0,1,0];
   this.axis[2]= [0,0,1];
   this.scaleVec = [1,1,1];
-  this.init = function (vertices)
-  {
+  this.init = function (vertices) {
     if (vertices) {
       this.vertices = new C3DL_FLOAT_ARRAY(vertices);
       var lengthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts=new C3DL_FLOAT_ARRAY(vertices.length/3), j = 0;
@@ -31,7 +28,7 @@ c3dl.OBB = function ()
         widthVerts[i] = vertices[j+2];
         j+=3
       }    
-       
+  
       this.maxMins[0] = c3dl.findMax(lengthVerts); 
       this.maxMins[1] = c3dl.findMin(lengthVerts);
       this.maxMins[2] = c3dl.findMax(heightVerts);
@@ -39,9 +36,9 @@ c3dl.OBB = function ()
       this.maxMins[4] = c3dl.findMax(widthVerts); 
       this.maxMins[5] = c3dl.findMin(widthVerts);     
      
-      this.realposition[0] = (this.maxMins[0] + this.maxMins[1])/2;
-      this.realposition[1] = (this.maxMins[2] + this.maxMins[3])/2;
-      this.realposition[2] = (this.maxMins[4] + this.maxMins[5])/2;
+      this.centerPosition[0] = (this.maxMins[0] + this.maxMins[1])/2;
+      this.centerPosition[1] = (this.maxMins[2] + this.maxMins[3])/2;
+      this.centerPosition[2] = (this.maxMins[4] + this.maxMins[5])/2;
       this.length=this.maxMins[0]-this.maxMins[1];
       this.height=this.maxMins[2]-this.maxMins[3];
       this.width=this.maxMins[4]-this.maxMins[5];
@@ -52,42 +49,39 @@ c3dl.OBB = function ()
     }  
 
     //F top left 
-    this.boxverts[0] =[ this.maxMins[1], this.maxMins[3],  this.maxMins[5]];
+    this.originalBoxVerts[0] =[ this.maxMins[1], this.maxMins[3],  this.maxMins[5]];
     //B top left 
-    this.boxverts[1] =[ this.maxMins[1], this.maxMins[3],  this.maxMins[4]];                         
+    this.originalBoxVerts[1] =[ this.maxMins[1], this.maxMins[3],  this.maxMins[4]];                         
     //F top right                       
-    this.boxverts[2] =[ this.maxMins[0], this.maxMins[3],  this.maxMins[5]]; 
+    this.originalBoxVerts[2] =[ this.maxMins[0], this.maxMins[3],  this.maxMins[5]]; 
     //B top right    
-    this.boxverts[3] =[ this.maxMins[0], this.maxMins[3],  this.maxMins[4]];
+    this.originalBoxVerts[3] =[ this.maxMins[0], this.maxMins[3],  this.maxMins[4]];
     //F bottom left 
-    this.boxverts[4] =[ this.maxMins[1], this.maxMins[2],  this.maxMins[5]];
+    this.originalBoxVerts[4] =[ this.maxMins[1], this.maxMins[2],  this.maxMins[5]];
     //B bottom left
-    this.boxverts[5] =[ this.maxMins[1], this.maxMins[2],  this.maxMins[4]];
+    this.originalBoxVerts[5] =[ this.maxMins[1], this.maxMins[2],  this.maxMins[4]];
     //F bottom right
-    this.boxverts[6] =[ this.maxMins[0], this.maxMins[2],  this.maxMins[5]]; 
+    this.originalBoxVerts[6] =[ this.maxMins[0], this.maxMins[2],  this.maxMins[5]]; 
     //B bottom right  
-    this.boxverts[7] =[ this.maxMins[0], this.maxMins[2], this.maxMins[4]];
+    this.originalBoxVerts[7] =[ this.maxMins[0], this.maxMins[2], this.maxMins[4]];
     
-    this.newboxverts[0] = this.boxverts[0];
-    this.newboxverts[1] = this.boxverts[1];
-    this.newboxverts[2] = this.boxverts[2];
-    this.newboxverts[3] = this.boxverts[3];
-    this.newboxverts[4] = this.boxverts[4];
-    this.newboxverts[5] = this.boxverts[5];
-    this.newboxverts[6] = this.boxverts[6];
-    this.newboxverts[7] = this.boxverts[7];
-
+    this.boxVerts[0] = this.originalBoxVerts[0];
+    this.boxVerts[1] = this.originalBoxVerts[1];
+    this.boxVerts[2] = this.originalBoxVerts[2];
+    this.boxVerts[3] = this.originalBoxVerts[3];
+    this.boxVerts[4] = this.originalBoxVerts[4];
+    this.boxVerts[5] = this.originalBoxVerts[5];
+    this.boxVerts[6] = this.originalBoxVerts[6];
+    this.boxVerts[7] = this.originalBoxVerts[7];
   }
   
-  this.setPosition = function (position)
-  {
+  this.setPosition = function (position) {
     this.position = [position[0], position[1], position[2]];
     for (var i = 0; i < 8; i++) {
-      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+      this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
   }
-  this.scale = function (scaleVec)
-  {
+  this.scale = function (scaleVec) {
     this.length = this.length * scaleVec[0];
     this.height = this.height * scaleVec[1];
     this.width = this.width * scaleVec[2];
@@ -95,12 +89,11 @@ c3dl.OBB = function ()
 	  this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
     for (var i = 0; i < 8; i++) {
-      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+      this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
   }
   
-  this.rotateOnAxis = function (axisVec, angle)
-  {
+  this.rotateOnAxis = function (axisVec, angle) {
     var rotateOnAxisQuat = c3dl.makeQuat(0, 0, 0, 0);
     // Create a proper Quaternion based on location and angle
     c3dl.axisAngleToQuat(axisVec, angle, rotateOnAxisQuat);
@@ -112,7 +105,7 @@ c3dl.OBB = function ()
       c3dl.normalizeVector(this.axis[i]);
     }
     for (var i = 0; i < 8; i++) {
-      this.newboxverts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.boxverts[i]);
+      this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
   }
   this.getHeight = function () {
@@ -138,33 +131,33 @@ c3dl.OBB = function ()
   this.render = function(scene) {
     //front of box
     //top left to top right
-    this.lineList[0].setCoordinates(this.newboxverts[0],this.newboxverts[2]);
+    this.lineList[0].setCoordinates(this.boxVerts[0],this.boxVerts[2]);
     //top left to bottom left                            
-    this.lineList[1].setCoordinates(this.newboxverts[0],this.newboxverts[4]); 
+    this.lineList[1].setCoordinates(this.boxVerts[0],this.boxVerts[4]); 
     //bottom left to bottom right 
-    this.lineList[2].setCoordinates(this.newboxverts[4],this.newboxverts[6]);
+    this.lineList[2].setCoordinates(this.boxVerts[4],this.boxVerts[6]);
     //bottom right to top right
-    this.lineList[3].setCoordinates(this.newboxverts[6],this.newboxverts[2]);
+    this.lineList[3].setCoordinates(this.boxVerts[6],this.boxVerts[2]);
 
     //back of box
     //top left to top right
-    this.lineList[4].setCoordinates(this.newboxverts[1],this.newboxverts[3]);
+    this.lineList[4].setCoordinates(this.boxVerts[1],this.boxVerts[3]);
     //top left to bottom left                            
-    this.lineList[5].setCoordinates(this.newboxverts[1],this.newboxverts[5]); 
+    this.lineList[5].setCoordinates(this.boxVerts[1],this.boxVerts[5]); 
     //bottom left to bottom right 
-    this.lineList[6].setCoordinates(this.newboxverts[5],this.newboxverts[7]);
+    this.lineList[6].setCoordinates(this.boxVerts[5],this.boxVerts[7]);
     //bottom right to top right
-    this.lineList[7].setCoordinates(this.newboxverts[7],this.newboxverts[3]);
+    this.lineList[7].setCoordinates(this.boxVerts[7],this.boxVerts[3]);
     
     //connectors
     //F top left to B top left
-    this.lineList[8].setCoordinates(this.newboxverts[0],this.newboxverts[1]);
+    this.lineList[8].setCoordinates(this.boxVerts[0],this.boxVerts[1]);
     //F top right to B top right                           
-    this.lineList[9].setCoordinates(this.newboxverts[2],this.newboxverts[3]); 
+    this.lineList[9].setCoordinates(this.boxVerts[2],this.boxVerts[3]); 
     //F bottom left to B bottom left 
-    this.lineList[10].setCoordinates(this.newboxverts[4],this.newboxverts[5]);
+    this.lineList[10].setCoordinates(this.boxVerts[4],this.boxVerts[5]);
     //F bottom right to B bottom right  
-    this.lineList[11].setCoordinates(this.newboxverts[6],this.newboxverts[7]); 
+    this.lineList[11].setCoordinates(this.boxVerts[6],this.boxVerts[7]); 
     scene.getRenderer().renderLines(this.lineList);
   }
   
@@ -173,30 +166,33 @@ c3dl.OBB = function ()
     copy.length = this.length;
     copy.height = this.height;
     copy.width = this.width;
-    copy.boxverts = c3dl.copyObj(this.boxverts);
+    copy.originalBoxVerts = c3dl.copyObj(this.originalBoxVerts);
     copy.lineList = c3dl.copyObj(this.lineList);
     copy.maxMins= c3dl.copyObj(this.maxMins);
-    copy.realposition = c3dl.copyObj(this.realposition);
+    copy.centerPosition = c3dl.copyObj(this.centerPosition);
     copy.position = c3dl.copyObj(this.position);
+    copy.axis = c3dl.copyObj(this.axis);
+    copy.scaleVec = c3dl.copyObj(this.scaleVec);
+    
     return copy;
   }
   this.center = function () {
     //F top left 
-    this.boxverts[0] =[ this.boxverts[0][0] - this.realposition[0] , this.boxverts[0][1] - this.realposition[1] , this.boxverts[0][2] - this.realposition[2] ];
+    this.originalBoxVerts[0] =[ this.originalBoxVerts[0][0] - this.centerPosition[0] , this.originalBoxVerts[0][1] - this.centerPosition[1] , this.originalBoxVerts[0][2] - this.centerPosition[2] ];
     //B top left 
-    this.boxverts[1] =[ this.boxverts[1][0] - this.realposition[0] , this.boxverts[1][1] - this.realposition[1],  this.boxverts[1][2] - this.realposition[2] ];                         
+    this.originalBoxVerts[1] =[ this.originalBoxVerts[1][0] - this.centerPosition[0] , this.originalBoxVerts[1][1] - this.centerPosition[1],  this.originalBoxVerts[1][2] - this.centerPosition[2] ];                         
     //F top right                       
-    this.boxverts[2] =[ this.boxverts[2][0] - this.realposition[0] , this.boxverts[2][1] - this.realposition[1],  this.boxverts[2][2] - this.realposition[2] ]; 
+    this.originalBoxVerts[2] =[ this.originalBoxVerts[2][0] - this.centerPosition[0] , this.originalBoxVerts[2][1] - this.centerPosition[1],  this.originalBoxVerts[2][2] - this.centerPosition[2] ]; 
     //B top right    
-    this.boxverts[3] =[ this.boxverts[3][0]  - this.realposition[0], this.boxverts[3][1] - this.realposition[1],  this.boxverts[3][2] - this.realposition[2] ];
+    this.originalBoxVerts[3] =[ this.originalBoxVerts[3][0]  - this.centerPosition[0], this.originalBoxVerts[3][1] - this.centerPosition[1],  this.originalBoxVerts[3][2] - this.centerPosition[2] ];
     //F bottom left 
-    this.boxverts[4] =[ this.boxverts[4][0]  - this.realposition[0], this.boxverts[4][1] - this.realposition[1],  this.boxverts[4][2] - this.realposition[2] ];
+    this.originalBoxVerts[4] =[ this.originalBoxVerts[4][0]  - this.centerPosition[0], this.originalBoxVerts[4][1] - this.centerPosition[1],  this.originalBoxVerts[4][2] - this.centerPosition[2] ];
     //B bottom left
-    this.boxverts[5] =[ this.boxverts[5][0]  - this.realposition[0], this.boxverts[5][1] - this.realposition[1],  this.boxverts[5][2] - this.realposition[2] ];
+    this.originalBoxVerts[5] =[ this.originalBoxVerts[5][0]  - this.centerPosition[0], this.originalBoxVerts[5][1] - this.centerPosition[1],  this.originalBoxVerts[5][2] - this.centerPosition[2] ];
     //F bottom right
-    this.boxverts[6] =[ this.boxverts[6][0]  - this.realposition[0], this.boxverts[6][1] - this.realposition[1],  this.boxverts[6][2] - this.realposition[2] ]; 
+    this.originalBoxVerts[6] =[ this.originalBoxVerts[6][0]  - this.centerPosition[0], this.originalBoxVerts[6][1] - this.centerPosition[1],  this.originalBoxVerts[6][2] - this.centerPosition[2] ]; 
     //B bottom right  
-    this.boxverts[7] =[ this.boxverts[7][0]  - this.realposition[0], this.boxverts[7][1] - this.realposition[1] , this.boxverts[7][2] - this.realposition[2] ];
+    this.originalBoxVerts[7] =[ this.originalBoxVerts[7][0]  - this.centerPosition[0], this.originalBoxVerts[7][1] - this.centerPosition[1] , this.originalBoxVerts[7][2] - this.centerPosition[2] ];
 
   }
   this.getTransform = function () {
@@ -206,8 +202,6 @@ c3dl.OBB = function ()
                    this.scaleVec[2], 0, 0, 0, 0, 1);
     mat = c3dl.multiplyMatrixByMatrix(mat, smat);
     return mat;
-  }
-  this.update = function () {
   }
 }
 
