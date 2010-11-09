@@ -47,6 +47,8 @@ function gun(canvasName)
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/gun.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
 	obj.setAngularVel([-0.001,0.001,0.001]);
 
 	scn.addObjectToScene(obj);
@@ -75,6 +77,8 @@ function firehall(canvasName)
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/firehall.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
 	obj.setAngularVel([0.001,0.001,0.001]);
 	scn.addObjectToScene(obj);
 	scn.setAmbientLight([.3,.3,.3]);
@@ -102,6 +106,8 @@ function teapot(canvasName)
 
 	var obj = new c3dl.Collada();
 	obj.init("models/teapot.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.setTexture("models/images/teapot/teapot.png");
 	obj.setAngularVel([0,0.001,0.001]);
 	scn.addObjectToScene(obj);
@@ -131,6 +137,8 @@ function gingerbread_house(canvasName)
 
 	var obj = new c3dl.Collada();
 	obj.init("models/gingerbread_house.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
 	obj.setAngularVel([0.001,0,0.001]);
 	scn.addObjectToScene(obj);
 
@@ -159,6 +167,8 @@ function swiss_army_usb(canvasName)
 
 	var obj = new c3dl.Collada();
 	obj.init("models/swiss_army_usb.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
 	obj.setAngularVel([0.001,0.001,0]);
 	scn.addObjectToScene(obj);
 
@@ -187,6 +197,8 @@ function duck(canvasName)
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/duck.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.scale([.2,.2,.2]);
 	obj.setAngularVel([-0.001,-0.001,-0.001]);
 
@@ -217,6 +229,8 @@ function old_cottage(canvasName)
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/old_cottage.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.setAngularVel([0.001,-0.001,-0.001]);
 
 	scn.addObjectToScene(obj);
@@ -248,6 +262,8 @@ function transform_test(canvasName)
 
 	var obj = new c3dl.Collada();
 	obj.init("models/transform_test.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.setAngularVel([-0.001,-0.001,0.001]);
 
 	scn.addObjectToScene(obj);
@@ -278,6 +294,8 @@ function fly_plane_polylist(canvasName)
 
 	var obj = new c3dl.Collada();
   obj.init("models/fly_plane_polylist.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.setAngularVel([0.001,0.001,-0.001]);
 
 	scn.addObjectToScene(obj);
@@ -307,6 +325,8 @@ function move_widget(canvasName)
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/move_widget.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
   obj.scale([3,3,3]);
 	obj.setAngularVel([0,0.001,0]);
 
@@ -335,6 +355,8 @@ function parallelogram(canvasName){
 	
 	var obj = new c3dl.Collada();
 	obj.init("models/parallelogram.dae");
+  obj.centerObject();
+  obj.setRenderObb(true);
 	obj.setAngularVel([0.001,-0.001,0.001]);
 
 	scn.addObjectToScene(obj);

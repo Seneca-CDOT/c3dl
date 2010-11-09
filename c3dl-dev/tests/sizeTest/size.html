@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Set Size Test</title>
+    <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+    <script type="application/javascript" src="test.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+  </head>
+
+  <body>    
+    <h1><a href="http://www.c3dl.org/">C3DL</a> AABB Test</h1>
+
+    <p>Display the AABBs of objects that are have been moved, scaled and are rotating<br />
+      Can Change the view to in the X axis or Y axis<br/>
+      Displaying the objects obb can be toggled.<br/>
+    </p>
+
+    <p>
+    <form>
+      <table>
+        <tr>  
+          <td>Length:</td>
+          <td><input type="text" id="length" onfocus="setCurLength()" onchange="maintainAspectRatioLength()"/></td> 
+        </tr>
+        <tr>       
+          <td>Width:</td>
+          <td><input type="text" id="width" onfocus="setCurWidth()" onchange="maintainAspectRatioWidth()"/></td>      
+        </tr>
+        <tr>
+          <td>Hieght:</td>
+          <td><input type="text" id="height" onfocus="setCurHeigth()" onchange="maintainAspectRatioHeight()" /> </td>
+        </tr>
+      </table>
+      <input type="checkbox" checked=checked id="mar" /> Maintain Aspect Ratio<br />
+      <input type="button" value="OK" onclick="ok()"/>
+    </form>
+    </p>
+
+    <p>
+      <canvas id="size" style="border: 2px solid blue" width="500" height="500"></canvas>
+    </p>
+
+  </body>
+</html>

@@ -20,7 +20,7 @@ c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
   c3dl._superc(this);
   this.aabb = new c3dl.AABB();
   this.obb = new c3dl.OBB();
-  this.renderObb = true;
+  this.renderObb = false;
   this.renderAabb = false;
   this.path = null;
   this.sceneGraph = null;
@@ -496,6 +496,11 @@ c3dl.Collada.prototype.getWidth = function () {
 c3dl.Collada.prototype.getLength = function () {
   if (this.isReady()) {
     return this.obb.getLength();
+  }
+}
+c3dl.Collada.prototype.getSize = function () {
+  if (this.isReady()) {
+    return [this.obb.getLength(),this.obb.getWidth(),this.obb.getHeight()];
   }
 }
 c3dl.Collada.prototype.setHeight = function (height) {
