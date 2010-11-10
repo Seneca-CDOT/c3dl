@@ -20,8 +20,10 @@ c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
   c3dl._superc(this);
   this.aabb = new c3dl.AABB();
   this.obb = new c3dl.OBB();
+  this.boundingSphere = new c3dl.BoundingSphere();
   this.renderObb = false;
   this.renderAabb = false;
+  this.renderBoundingSphere = true;
   this.path = null;
   this.sceneGraph = null;
 });
@@ -189,6 +191,7 @@ c3dl.Collada.prototype.init = function (daePath) {
     var allVerts = this.sceneGraph.getAllVerts();
     this.obb.init(allVerts);
     this.aabb.init(allVerts);
+    this.boundingSphere.init(allVerts);
     c3dl.popMatrix();
   }
 }
@@ -216,11 +219,14 @@ c3dl.Collada.prototype.update = function (timeStep) {
     this.aabb.rotateOnAxis(this.aabb.axis[0], angVel[0] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[1], angVel[1] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[2], angVel[2] * timeStep);
+    this.boundingSphere.scale([1,1,1]);
+    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
     var linVel = this.sceneGraph.getLinearVel();
     linVel = c3dl.multiplyVector(linVel, timeStep);
     var tempPos = c3dl.addVectors(this.sceneGraph.getPosition(), linVel);
     this.obb.setPosition(tempPos);
-     this.aabb.setPosition(tempPos);
+    this.aabb.setPosition(tempPos);
+    this.boundingSphere.setPosition(tempPos);
   }
   else {
     c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
@@ -260,6 +266,9 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
     if (this.renderAabb) {
       this.aabb.render(scene);
     }
+    if (this.renderBoundingSphere) {
+      this.boundingSphere.render2(scene);
+    }
   }
 }
 
@@ -270,9 +279,10 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
  */
 c3dl.Collada.prototype.scale = function (scaleVec) {
   if (this.isReady()) {
+    this.sceneGraph.scale(scaleVec);
     this.obb.scale(scaleVec);
     this.aabb.scale(scaleVec);
-    this.sceneGraph.scale(scaleVec);
+    this.boundingSphere.scale(scaleVec);
   }
 }
 
@@ -287,6 +297,7 @@ c3dl.Collada.prototype.translate = function (trans) {
     this.sceneGraph.translate(trans);
     this.obb.setPosition(trans);
     this.aabb.setPosition(trans);
+    this.boundingSphere.setPosition(trans);
   }
 }
 
@@ -300,6 +311,7 @@ c3dl.Collada.prototype.setPosition = function (pos) {
     this.sceneGraph.setPosition(pos);
     this.obb.setPosition(pos);
     this.aabb.setPosition(pos);
+    this.boundingSphere.setPosition(pos);
   }
 }
 
@@ -362,6 +374,7 @@ c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
     this.sceneGraph.rotateOnAxis(axisVec, angle);
     this.obb.rotateOnAxis(axisVec, angle);
     this.aabb.rotateOnAxis(axisVec, angle);
+    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
   }
 }
 
@@ -376,6 +389,7 @@ c3dl.Collada.prototype.yaw = function (angle) {
     this.sceneGraph.yaw(angle);
     this.obb.rotateOnAxis(this.sceneGraph.up, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.up, angle);
+    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
   }
 }
 
@@ -389,6 +403,7 @@ c3dl.Collada.prototype.pitch = function (angle) {
     this.sceneGraph.pitch(angle);
     this.obb.rotateOnAxis(this.sceneGraph.left, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.left, angle);
+    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
   }
 }
 
@@ -409,6 +424,7 @@ c3dl.Collada.prototype.roll = function (angle) {
     this.sceneGraph.roll(angle);
     this.obb.rotateOnAxis(this.sceneGraph.dir, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.dir, angle);
+    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
   }
 }
 
@@ -436,6 +452,7 @@ c3dl.Collada.prototype.clone = function (other) {
   this.sceneGraph = other.sceneGraph.getCopy();
   this.obb = other.obb.getCopy();
   this.aabb = other.aabb.getCopy();
+  this.boundingSphere = other.boundingSphere.getCopy();
 }
 
 /**
@@ -517,6 +534,7 @@ c3dl.Collada.prototype.setHeight = function (height) {
   }
   this.obb.scale(scaleVec);
   this.aabb.scale(scaleVec);
+  this.boundingSphere.scale(scaleVec);
   this.sceneGraph.scale(scaleVec);
 }
 
@@ -534,6 +552,7 @@ c3dl.Collada.prototype.setLength = function (length) {
   }
   this.obb.scale(scaleVec);
   this.aabb.scale(scaleVec);
+  this.boundingSphere.scale(scaleVec);
   this.sceneGraph.scale(scaleVec);
 }
 
@@ -551,6 +570,7 @@ c3dl.Collada.prototype.setWidth = function (width) {
   }
   this.obb.scale(scaleVec);
   this.aabb.scale(scaleVec);
+  this.boundingSphere.scale(scaleVec);
   this.sceneGraph.scale(scaleVec);
 }
 
@@ -600,11 +620,17 @@ c3dl.Collada.prototype.setRenderObb = function (renderObb) {
 c3dl.Collada.prototype.setRenderAabb = function (renderAabb) {
   this.renderAabb = renderAabb;
 }
+c3dl.Collada.prototype.setRenderBoundingSphere = function (renderBoundingSphere) {
+  this.renderBoundingSphere = renderBoundingSphere;
+}
 c3dl.Collada.prototype.getObb = function () {
   return this.obb;
 }
 c3dl.Collada.prototype.getAabb = function () {
   return this.aabb;
+}
+c3dl.Collada.prototype.getBoundingSphere = function () {
+  return this.boundingSphere;
 }
 c3dl.Collada.prototype.centerObject = function () {
   c3dl.pushMatrix();
@@ -612,5 +638,7 @@ c3dl.Collada.prototype.centerObject = function () {
   this.sceneGraph.center(this.obb.centerPosition);
   this.obb.center();
   this.aabb.center();
+  this.boundingSphere.centerSphere(this.sceneGraph.getPosition());
+  this.boundingSphere.setPosition(this.sceneGraph.getPosition());
   c3dl.popMatrix();
 }

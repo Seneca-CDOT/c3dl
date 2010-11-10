@@ -20,6 +20,7 @@ c3dl.BoundingSphere = function ()
   // position of the boundingSphere in world space.
   this.position = c3dl.makeVector(0, 0, 0);
   this.center = c3dl.makeVector(0, 0, 0);
+  this.centered = false;
   this.radius = 0;
   this.maxMins = new C3DL_FLOAT_ARRAY(6)
   // This varialbe exists here to solve the problem of the Model and Bounding Sphere
@@ -52,8 +53,7 @@ c3dl.BoundingSphere = function ()
    [-0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, .... ]<br />
    in which case values at 0,1 and 2 are x,y,z coordinates.
    */
-  this.init = function (vertices)
-  {
+  this.init = function (vertices) {
     // start the longest to zero, so it will be overritten probably by the first
     // vector found.
     var longestLengthFound = 0;
@@ -113,20 +113,17 @@ c3dl.BoundingSphere = function ()
    @param {Array} position An three element array which contains the x,y,z values
    of the new position of the bounding sphere.
    */
-  this.setPosition = function (position)
-  {
-  this.position[0] = position[0]+this.center[0];
-	this.position[1] = position[1]+this.center[1];
-	this.position[2] = position[2]+this.center[2];
-  }
-  
-  this.getTransform = function ()
-  {
-    var mat = c3dl.makePoseMatrix([1,0,0],[0,1,0],[0,0,1], this.position);
-    var smat = c3dl.makeMatrix();
-    c3dl.setMatrix(smat, this.radius, 0, 0, 0, 0, this.radius, 0, 0, 0, 0, this.radius, 0, 0, 0, 0, 1);
-    mat = c3dl.multiplyMatrixByMatrix(mat, smat);
-    return mat;
+  this.setPosition = function (position) {
+    if (this.centered) {
+      this.position[0] = position[0];
+      this.position[1] = position[1];
+      this.position[2] = position[2];
+    }
+    else {
+      this.position[0] = position[0]+this.center[0];
+      this.position[1] = position[1]+this.center[1];
+      this.position[2] = position[2]+this.center[2];
+    }
   }
   
   /**
@@ -137,8 +134,7 @@ c3dl.BoundingSphere = function ()
    
    @param {Array} scaleVec
    */
-  this.scale = function (scaleVec)
-  {
+  this.scale = function (scaleVec) {
     // The object could have been scaled non-uniformly, so we have to get the component
     // which has the greatest scaling factor.  We will use that to recalculate the 
     // bounding sphere's radius.
@@ -147,10 +143,10 @@ c3dl.BoundingSphere = function ()
     this.longestVector[0] = this.original[0] * largestScale;
     this.longestVector[1] = this.original[1] * largestScale;
     this.longestVector[2] = this.original[2] * largestScale;
-	  this.center[0] = (this.maxMins[0]* largestScale + this.maxMins[1]* largestScale)/2;
+    this.center[0] = (this.maxMins[0]* largestScale + this.maxMins[1]* largestScale)/2;
     this.center[1] = (this.maxMins[2]* largestScale + this.maxMins[3]* largestScale)/2;
     this.center[2] = (this.maxMins[4]* largestScale + this.maxMins[5]* largestScale)/2;
-   this.radius=c3dl.vectorLength(this.longestVector);
+    this.radius=c3dl.vectorLength(this.longestVector);
   }
 
   /**
@@ -159,17 +155,21 @@ c3dl.BoundingSphere = function ()
    
    @param {c3dl.Scene} scene
    */
-  this.render = function (scene)
-  {
+  this.render = function (scene) {
     if (scene.getBoundingVolumeVisibility())
     {
       scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix());
     }
   }
-
+  this.render2 = function (scene)
+  {
+    scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix());
+  }
   this.moveCenter = function (rotateMat)
   {
-    this.center=c3dl.multiplyMatrixByVector(rotateMat, this.center);
+    if (!this.centered) {
+      this.center=c3dl.multiplyMatrixByVector(rotateMat, this.center);
+    }
   }
   /**
    @private
@@ -196,21 +196,19 @@ c3dl.BoundingSphere = function ()
   {
     return c3dl.copyVector(this.position);
   }
-  this.getCenter = function ()
+  this.centerSphere = function (position)
   {
-    return c3dl.copyVector(this.center);
-  }
-  this.getLongestVector = function ()
-  {
-    return c3dl.copyVector(this.longestVector);
-  }
+    this.position[0] =  position[0];
+    this.position[1] =  position[1];
+    this.position[2] =  position[2];
+    this.centered = true;
+ }
   this.getCopy = function ()
   {
     var copy = new c3dl.BoundingSphere();
     copy.longestVector = c3dl.copyVector(this.longestVector);
     copy.original = c3dl.copyVector(this.original);
     copy.position = c3dl.copyVector(this.position);
-    copy.center = c3dl.copyVector(this.center );
     copy.center = c3dl.copyVector(this.center );
     copy.maxMins = this.maxMins;
     return copy;

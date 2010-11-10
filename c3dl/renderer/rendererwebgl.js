@@ -623,18 +623,17 @@ c3dl.WebGL = function ()
       // create VBO and set the data
       this.pointSphereRenderSetup();
     }
-    else
-    {
-	  var sphereMatrix = c3dl.makeIdentityMatrix();
-	  c3dl.matrixMode(c3dl.PROJECTION);
+    else {
+      var sphereMatrix = c3dl.makeIdentityMatrix();
+      c3dl.matrixMode(c3dl.PROJECTION);
       var projMatrix = c3dl.peekMatrix();
       c3dl.matrixMode(c3dl.MODELVIEW); 
       // set the bounding sphere's position
-	  var pos =boundingSphere.getPosition();
-	  sphereMatrix[12] = pos[0];
+      var pos =boundingSphere.getPosition();
+      sphereMatrix[12] = pos[0];
       sphereMatrix[13] = pos[1];
       sphereMatrix[14] = pos[2];
-	  sphereMatrix[0] = sphereMatrix[5] = sphereMatrix[10] = boundingSphere.getRadius();
+      sphereMatrix[0] = sphereMatrix[5] = sphereMatrix[10] = boundingSphere.getRadius();
 
       // create a modelviewprojection matrix.  By doing this, we can multiply
       // 3 matrices together once per model instead of once per vertex.
