@@ -107,6 +107,23 @@ c3dl.OBB = function () {
     for (var i = 0; i < 8; i++) {
       this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
+    
+  }
+  
+  this.set = function (pos,rotM, scaleVec) {
+    this.position = [pos[0], pos[1], pos[2]];
+    this.scaleVec = [scaleVec[0],scaleVec[1],scaleVec[2]]; 
+    this.axis[0]= [1,0,0];
+    this.axis[1]= [0,1,0];
+    this.axis[2]= [0,0,1];    
+    for (var i = 0; i <3; i++) {
+      c3dl.multiplyMatrixByVector(rotM, this.axis[i], this.axis[i]);
+      c3dl.normalizeVector(this.axis[i]);
+    }
+    
+    for (var i = 0; i < 8; i++) {
+      this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
+    } 
   }
   this.getHeight = function () {
     return this.height;
@@ -162,7 +179,7 @@ c3dl.OBB = function () {
   }
   
   this.getCopy = function () {
-    var copy = new c3dl.BoundingBox();
+    var copy = new c3dl.OBB();
     copy.length = this.length;
     copy.height = this.height;
     copy.width = this.width;

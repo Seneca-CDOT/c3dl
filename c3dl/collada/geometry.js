@@ -162,17 +162,24 @@ c3dl.Geometry = function () {
       }
 
       scene.getRenderer().renderGeometry(this);
-
-      if (scene.getBoundingVolumeVisibility()) {
-        // tell all the collation elements/ primitive sets to render their bounding spheres.
-        for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
-          var bs = this.primitiveSets[i].getBoundingSphere();
-          if (bs) {
-            bs.render(scene);
-          }
-        }
-      }
     }
+  }
+  this.renderBoundingVolumes = function (scene) {
+    // tell all the collation elements/ primitive sets to render their bounding spheres.
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+      var bs = this.primitiveSets[i].getBoundingSphere();
+      if (bs) {
+        bs.render(scene);
+      }
+      var aabb = this.primitiveSets[i].getAabb();
+      if (aabb) {
+        aabb.render(scene);
+      }
+      var obb = this.primitiveSets[i].getObb();
+      if (obb) {
+        obb.render(scene);
+      }
+    }   
   }
 
   /**
@@ -219,11 +226,19 @@ c3dl.Geometry = function () {
   this.update = function (timeStep, scaleVec, rotateMat) {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
       var bs = this.primitiveSets[i].getBoundingSphere();
+      var test = c3dl.peekMatrix();
       if (bs) {
-        var test = c3dl.peekMatrix();
         bs.setPosition([test[12], test[13], test[14]]);
         bs.scale(scaleVec);
         bs.moveCenter(rotateMat);
+      }
+      var aabb = this.primitiveSets[i].getAabb();
+      if (aabb) {
+        aabb.set([test[12], test[13], test[14]],rotateMat,scaleVec);
+      }
+      var obb = this.primitiveSets[i].getObb();
+      if (obb) {
+        obb.set([test[12], test[13], test[14]],rotateMat,scaleVec);
       }
     }
   }

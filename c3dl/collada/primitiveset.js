@@ -30,6 +30,8 @@ c3dl.PrimitiveSet = function ()
   this.type = null;
   this.lineList = null;
   this.boundingSphere = null;
+  this.aabb = null;
+  this.obb = null;
   this.buffers =
   {
   };
@@ -47,10 +49,14 @@ c3dl.PrimitiveSet = function ()
     this.normals = normals;
     this.texCoords = texCoords;
     this.boundingSphere = new c3dl.BoundingSphere();
+    this.aabb = new c3dl.AABB();
+    this.obb = new c3dl.OBB();
 	  this.type = type;
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
-    this.boundingSphere.init(this.vertices);
+    this.boundingSphere.init(this.vertices);  
+    this.aabb.init(this.vertices);
+    this.obb.init(this.vertices); 
   }
   this.initLine = function (vertices, faces, type)
   {
@@ -133,6 +139,12 @@ c3dl.PrimitiveSet = function ()
     if (this.boundingSphere){
       copy.boundingSphere = this.boundingSphere.getCopy();
     }
+    if (this.aabb){
+      copy.aabb = this.aabb.getCopy();
+    }
+    if (this.obb){
+      copy.obb = this.obb.getCopy();
+    }
     return copy;
   }
 
@@ -198,8 +210,14 @@ c3dl.PrimitiveSet = function ()
   {
     return this.boundingSphere;
   }
-
-
+  this.getAabb = function ()
+  {
+    return this.aabb;
+  }
+  this.getObb = function ()
+  {
+    return this.obb;
+  }
   /**
    @private
    Set the material of this primitive set. The material can't be directly

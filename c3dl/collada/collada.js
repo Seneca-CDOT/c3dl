@@ -23,7 +23,7 @@ c3dl.Collada = c3dl.inherit(c3dl.Primitive, function () {
   this.boundingSphere = new c3dl.BoundingSphere();
   this.renderObb = false;
   this.renderAabb = false;
-  this.renderBoundingSphere = true;
+  this.renderBoundingSphere = false;
   this.path = null;
   this.sceneGraph = null;
 });
@@ -212,6 +212,12 @@ c3dl.Collada.prototype.update = function (timeStep) {
     c3dl.loadIdentity();
     this.sceneGraph.update(timeStep);
     c3dl.popMatrix();
+    var linVel = this.sceneGraph.getLinearVel();
+    linVel = c3dl.multiplyVector(linVel, timeStep);
+    var tempPos = c3dl.addVectors(this.sceneGraph.getPosition(), linVel);
+    this.obb.setPosition(tempPos);
+    this.aabb.setPosition(tempPos);
+    this.boundingSphere.setPosition(tempPos);
     var angVel = this.sceneGraph.getAngularVel();
     this.obb.rotateOnAxis(this.obb.axis[0], angVel[0] * timeStep);
     this.obb.rotateOnAxis(this.obb.axis[1], angVel[1] * timeStep);
@@ -219,14 +225,8 @@ c3dl.Collada.prototype.update = function (timeStep) {
     this.aabb.rotateOnAxis(this.aabb.axis[0], angVel[0] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[1], angVel[1] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[2], angVel[2] * timeStep);
-    this.boundingSphere.scale([1,1,1]);
+    this.boundingSphere.scale(this.sceneGraph.scaleVec);
     this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
-    var linVel = this.sceneGraph.getLinearVel();
-    linVel = c3dl.multiplyVector(linVel, timeStep);
-    var tempPos = c3dl.addVectors(this.sceneGraph.getPosition(), linVel);
-    this.obb.setPosition(tempPos);
-    this.aabb.setPosition(tempPos);
-    this.boundingSphere.setPosition(tempPos);
   }
   else {
     c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
@@ -260,6 +260,9 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
     // tell the root to render. The render() calls
     // will propogate down the graph.
     this.sceneGraph.render(glCanvas3D, scene);
+    if (scene.getBoundingVolumeVisibility()) {
+      this.sceneGraph.renderBoundingVolumes(scene);
+    }
     if (this.renderObb) {
       this.obb.render(scene);
     }
@@ -267,7 +270,7 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
       this.aabb.render(scene);
     }
     if (this.renderBoundingSphere) {
-      this.boundingSphere.render2(scene);
+      this.boundingSphere.render(scene);
     }
   }
 }
@@ -498,6 +501,12 @@ c3dl.Collada.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
 }
 c3dl.Collada.prototype.getBoundingSpheres = function () {
   return this.sceneGraph.getBoundingSpheres();
+}
+c3dl.Collada.prototype.getAabbs = function () {
+  return this.sceneGraph.getAabbs();
+}
+c3dl.Collada.prototype.getObbs = function () {
+  return this.sceneGraph.getObbs();
 }
 
 c3dl.Collada.prototype.getHeight = function () {

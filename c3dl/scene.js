@@ -28,7 +28,7 @@ c3dl.Scene = function ()
 
   // This is off by default since users will likely only need it when
   // trying to debug something.
-  this.boundingVolumesVisible = false;
+  this.boundingVolumesVisible = true;
 
   // A reference to a model which will actually act as a 
   // SkyBox, except any Model can be used, not just a box.
@@ -80,7 +80,10 @@ c3dl.Scene = function ()
   var pointPositions = null;
   //type of culling 
   var culling = "BoundingSphere"
-
+  //Collision
+  var collision = false;
+  var collisionList = [];
+  var collisionDetection = new c3dl.CollisionDetection();
   // -------------------------------------------------------
   /**
    Add a texture to this scene to be used used for assigning to a model,
@@ -1060,6 +1063,23 @@ c3dl.Scene = function ()
    */
   this.updateObjects = function (timeElapsed)
   {
+    //Collision
+    if (collision) {
+      collisionList=[];
+      for (var i = 0, len = objList.length; i < len; i++) {
+          if (objList[i].getObjectType() == c3dl.COLLADA) {
+          for (var j = i, len2 = objList.length; j < len2; j++) {
+            if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
+              if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed)) {
+                collisionList.push(objList[i]);
+                collisionList.push(objList[j]);
+              }
+            }
+          }
+        }
+      }
+    }
+  
     // Call the User's update callback
     if (updateHandler != null)
     {
@@ -1286,6 +1306,12 @@ c3dl.Scene = function ()
     this.pauseScene = function ()
   {
     pauseFlag = true;
+  }
+  this.getCollision = function () {
+    return collisionList;
+  }
+  this.setCollision = function (truefalse) {
+    collision = truefalse;
   }
   /**
    @private

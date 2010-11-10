@@ -159,5 +159,6 @@ c3dl_require('particle_system/particle.js');
 c3dl_require('init.js');
 
 //interaction
+c3dl_require('interaction/collision.js');
 c3dl_require('interaction/picking.js');
 c3dl_require('interaction/pickingresult.js');

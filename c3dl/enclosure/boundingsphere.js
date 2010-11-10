@@ -156,13 +156,6 @@ c3dl.BoundingSphere = function ()
    @param {c3dl.Scene} scene
    */
   this.render = function (scene) {
-    if (scene.getBoundingVolumeVisibility())
-    {
-      scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix());
-    }
-  }
-  this.render2 = function (scene)
-  {
     scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix());
   }
   this.moveCenter = function (rotateMat)

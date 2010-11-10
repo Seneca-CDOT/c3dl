@@ -101,6 +101,23 @@ c3dl.AABB = function () {
     this.calcBoxVerts();
   }
   
+ this.set = function (pos,rotM, scaleVec) {
+    this.position = [pos[0], pos[1], pos[2]];
+    this.scaleVec = [scaleVec[0],scaleVec[1],scaleVec[2]]; 
+    this.axis[0]= [1,0,0];
+    this.axis[1]= [0,1,0];
+    this.axis[2]= [0,0,1];    
+    for (var i = 0; i <3; i++) {
+      c3dl.multiplyMatrixByVector(rotM, this.axis[i], this.axis[i]);
+      c3dl.normalizeVector(this.axis[i]);
+    }
+    
+    for (var i = 0; i < 8; i++) {
+      this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
+    } 
+    this.calcBoxVerts();
+  }
+  
   //draw a box using lines
   this.render = function(scene) {
     //front of box
@@ -136,7 +153,7 @@ c3dl.AABB = function () {
   }
   
   this.getCopy = function () {
-    var copy = new c3dl.BoundingBox();
+    var copy = new c3dl.AABB();
     copy.originalBoxVerts = c3dl.copyObj(this.originalBoxVerts);
     copy.lineList = c3dl.copyObj(this.lineList);
     copy.maxMins= c3dl.copyObj(this.maxMins);

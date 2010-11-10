@@ -142,6 +142,11 @@ c3dl.SceneNode.prototype.render = function (glCanvas3D, scene) {
 
   c3dl.popMatrix();
 }
+c3dl.SceneNode.prototype.renderBoundingVolumes = function (scene) {
+  for (var i = 0, len = this.children.length; i < len; i++) {
+    this.children[i].renderBoundingVolumes(scene);
+  }
+}
 
 /**
  @private
@@ -231,6 +236,57 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) 
     }
   }
   return passed;
+}
+
+c3dl.SceneNode.prototype.getBoundingSpheres = function () {
+  var boundingSpheres = [];
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i] instanceof c3dl.SceneNode) {
+      boundingSpheres = boundingSpheres.concat(this.children[i].getBoundingSpheres());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) {
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
+          boundingSpheres = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());
+        }
+      }
+    }
+  }
+  return boundingSpheres;
+}
+
+c3dl.SceneNode.prototype.getAabbs = function () {
+  var aabbs = [];
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i] instanceof c3dl.SceneNode) {
+      aabbs = aabbs.concat(this.children[i].getAabbs());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) {
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
+          aabbs = aabbs.concat(this.children[i].getPrimitiveSets()[j].getAabb());
+        }
+      }
+    }
+  }
+  return aabbs;
+}
+
+c3dl.SceneNode.prototype.getObbs = function () {
+  var obbs = [];
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i] instanceof c3dl.SceneNode) {
+      obbs = obbs.concat(this.children[i].getObbs());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) {
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
+          obbs = obbs.concat(this.children[i].getPrimitiveSets()[j].getObb());
+        }
+      }
+    }
+  }
+  return obbs;
 }
 
 c3dl.SceneNode.prototype.getBoundingSpheres = function () {
