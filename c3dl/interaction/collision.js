@@ -1,5 +1,5 @@
 c3dl.CollisionDetection = function () {	
-  this.checkObjectCollision= function(obj1, obj2,timeElapsed) {
+  this.checkObjectCollision= function(obj1, obj2,timeElapsed, collisionType) {
     this.obj1 = obj1;
     this.obj2 = obj2;
     var collision = this.sphereCollision(obj1.getBoundingSphere(),obj2.getBoundingSphere());
@@ -9,7 +9,7 @@ c3dl.CollisionDetection = function () {
     if (collision) {
       collision = this.obbobbCollision(obj1.getObb(),obj2.getObb());
     }
-    if (collision) {
+    if (collision && collisionType == "Geometry") {
       var obj1bs = obj1.getBoundingSpheres();
       var obj2bs = obj2.getBoundingSpheres();
       var obj1aabb = obj1.getAabbs();
@@ -26,12 +26,12 @@ c3dl.CollisionDetection = function () {
             collision = this.obbobbCollision(obj1obb[i],obj2obb[j]);
           }
           if (collision) {
-            return true;
+            return collision;
           }
         }
       }
     }
-    return false;
+    return collision;
   }
   this.sphereCollision = function(obj1, obj2,timeElapsed) {
     //relative motion of sphere1 with respect to sphere0
@@ -99,12 +99,13 @@ c3dl.CollisionDetection = function () {
 
     var t = c3dl.subtractVectors(bCenter,aCenter);
     t = [c3dl.vectorDotProduct(t,aAxis[0]),c3dl.vectorDotProduct(t,aAxis[1]),c3dl.vectorDotProduct(t,aAxis[2])];
-      for (var i = 0; i <3;i++) {
+    for (var i = 0; i <3;i++) {
       for (var j = 0; j <3;j++) {
         absR[i][j]= Math.abs(R[i][j]);
       }
     }
     
+    ////////
     for (var i = 0; i <3;i++) {
       ra = aSize[i];
       rb = bSize[0] * absR[i][0] + bSize[1] * absR[i][1] + bSize[2] * absR[i][2];
@@ -112,6 +113,7 @@ c3dl.CollisionDetection = function () {
         return false;
       }
     }
+   
     for (var i = 0; i <3;i++) {
       ra = aSize[0] * absR[0][i] + aSize[1] * absR[1][i] + aSize[2] * absR[2][i];
       rb = bSize[i];
@@ -119,7 +121,6 @@ c3dl.CollisionDetection = function () {
         return false;
       }
     }
-    
     //
     ra = aSize[1] * absR[2][0] + aSize[2] * absR[1][0];
     rb = bSize[1] * absR[0][2] + bSize[2] * absR[0][1];
@@ -145,7 +146,7 @@ c3dl.CollisionDetection = function () {
       return false;
     }
     
-      ra = aSize[0] * absR[2][1] + aSize[2] * absR[0][1];
+    ra = aSize[0] * absR[2][1] + aSize[2] * absR[0][1];
     rb = bSize[0] * absR[1][2] + bSize[2] * absR[1][0];
     if (Math.abs(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb) {
       return false;

@@ -39,9 +39,9 @@ c3dl.OBB = function () {
       this.centerPosition[0] = (this.maxMins[0] + this.maxMins[1])/2;
       this.centerPosition[1] = (this.maxMins[2] + this.maxMins[3])/2;
       this.centerPosition[2] = (this.maxMins[4] + this.maxMins[5])/2;
-      this.length=this.maxMins[0]-this.maxMins[1];
-      this.height=this.maxMins[2]-this.maxMins[3];
-      this.width=this.maxMins[4]-this.maxMins[5];
+      this.originalLength = this.length=this.maxMins[0]-this.maxMins[1];
+      this.originalHeight = this.height=this.maxMins[2]-this.maxMins[3];
+      this.originalWidth = this.width=this.maxMins[4]-this.maxMins[5];
     }
     for (var i = 0; i <12; i++) {
       this.lineList[i] = new c3dl.Line();
@@ -113,12 +113,14 @@ c3dl.OBB = function () {
   this.set = function (pos,rotM, scaleVec) {
     this.position = [pos[0], pos[1], pos[2]];
     this.scaleVec = [scaleVec[0],scaleVec[1],scaleVec[2]]; 
+    this.length = this.originalLength * scaleVec[0];
+    this.height = this.originalHeight * scaleVec[1];
+    this.width = this.originalWidth * scaleVec[2];
     this.axis[0]= [1,0,0];
     this.axis[1]= [0,1,0];
     this.axis[2]= [0,0,1];    
     for (var i = 0; i <3; i++) {
       c3dl.multiplyMatrixByVector(rotM, this.axis[i], this.axis[i]);
-      c3dl.normalizeVector(this.axis[i]);
     }
     
     for (var i = 0; i < 8; i++) {
@@ -183,6 +185,9 @@ c3dl.OBB = function () {
     copy.length = this.length;
     copy.height = this.height;
     copy.width = this.width;
+    copy.originalLength = this.originalLength;
+    copy.originalHeight = this.originalHeight;
+    copy.originalWidth = this.originalWidth;
     copy.originalBoxVerts = c3dl.copyObj(this.originalBoxVerts);
     copy.lineList = c3dl.copyObj(this.lineList);
     copy.maxMins= c3dl.copyObj(this.maxMins);

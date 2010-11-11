@@ -28,7 +28,7 @@ c3dl.Scene = function ()
 
   // This is off by default since users will likely only need it when
   // trying to debug something.
-  this.boundingVolumesVisible = true;
+  this.boundingVolumesVisible = false;
 
   // A reference to a model which will actually act as a 
   // SkyBox, except any Model can be used, not just a box.
@@ -84,6 +84,9 @@ c3dl.Scene = function ()
   var collision = false;
   var collisionList = [];
   var collisionDetection = new c3dl.CollisionDetection();
+  //can detect collision between the entire model or the geometries making up the model
+  //collisionType = "Collada" or "Geometry"
+  var collisionType = "Collada"; 
   // -------------------------------------------------------
   /**
    Add a texture to this scene to be used used for assigning to a model,
@@ -1070,7 +1073,7 @@ c3dl.Scene = function ()
           if (objList[i].getObjectType() == c3dl.COLLADA) {
           for (var j = i, len2 = objList.length; j < len2; j++) {
             if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
-              if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed)) {
+              if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
                 collisionList.push(objList[i]);
                 collisionList.push(objList[j]);
               }
@@ -1312,6 +1315,9 @@ c3dl.Scene = function ()
   }
   this.setCollision = function (truefalse) {
     collision = truefalse;
+  }
+  this.setCollisionType = function (type) {
+    collisionType = type;
   }
   /**
    @private

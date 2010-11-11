@@ -169,11 +169,11 @@ c3dl.Geometry = function () {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
       var bs = this.primitiveSets[i].getBoundingSphere();
       if (bs) {
-        bs.render(scene);
+        //bs.render(scene);
       }
       var aabb = this.primitiveSets[i].getAabb();
       if (aabb) {
-        aabb.render(scene);
+        //aabb.render(scene);
       }
       var obb = this.primitiveSets[i].getObb();
       if (obb) {
