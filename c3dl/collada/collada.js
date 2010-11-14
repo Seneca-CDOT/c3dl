@@ -225,8 +225,9 @@ c3dl.Collada.prototype.update = function (timeStep) {
     this.aabb.rotateOnAxis(this.aabb.axis[0], angVel[0] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[1], angVel[1] * timeStep);
     this.aabb.rotateOnAxis(this.aabb.axis[2], angVel[2] * timeStep);
-    this.boundingSphere.scale(this.sceneGraph.scaleVec);
-    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
+    this.boundingSphere.rotateOnAxis(this.boundingSphere.axis[0], angVel[0] * timeStep);
+    this.boundingSphere.rotateOnAxis(this.boundingSphere.axis[1], angVel[1] * timeStep);
+    this.boundingSphere.rotateOnAxis(this.boundingSphere.axis[2], angVel[2] * timeStep);
   }
   else {
     c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
@@ -377,7 +378,7 @@ c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
     this.sceneGraph.rotateOnAxis(axisVec, angle);
     this.obb.rotateOnAxis(axisVec, angle);
     this.aabb.rotateOnAxis(axisVec, angle);
-    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
+    this.boundingSphere.rotateOnAxis(axisVec, angle);
   }
 }
 
@@ -392,7 +393,7 @@ c3dl.Collada.prototype.yaw = function (angle) {
     this.sceneGraph.yaw(angle);
     this.obb.rotateOnAxis(this.sceneGraph.up, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.up, angle);
-    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
+    this.boundingSphere.rotateOnAxis(this.sceneGraph.up, angle);
   }
 }
 
@@ -406,7 +407,7 @@ c3dl.Collada.prototype.pitch = function (angle) {
     this.sceneGraph.pitch(angle);
     this.obb.rotateOnAxis(this.sceneGraph.left, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.left, angle);
-    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
+    this.boundingSphere.rotateOnAxis(this.sceneGraph.left, angle);
   }
 }
 
@@ -427,7 +428,7 @@ c3dl.Collada.prototype.roll = function (angle) {
     this.sceneGraph.roll(angle);
     this.obb.rotateOnAxis(this.sceneGraph.dir, angle);
     this.aabb.rotateOnAxis(this.sceneGraph.dir, angle);
-    this.boundingSphere.moveCenter(this.sceneGraph.getRotateMat());
+    this.boundingSphere.rotateOnAxis(this.sceneGraph.dir, angle);
   }
 }
 

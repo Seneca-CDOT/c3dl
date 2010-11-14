@@ -26,7 +26,8 @@ function canvasMain(canvasName){
     obj2 = new c3dl.Collada();
     obj2.init("duck.dae");
     obj2.setSize(5,5,5);
-    obj2.setPosition([15,-5,0]);
+    obj2.roll(-0.7);
+    obj2.setPosition([15,0,0]);
     obj2.centerObject();
     obj2.setLinearVel([-0.001,0,0]);
     obj2.setName("MovingDuck")
@@ -38,7 +39,7 @@ function canvasMain(canvasName){
     obj3.setSize(1,1,1);
 
     obj3.setName("SmallDuck")
-    //scn.addObjectToScene(obj3);
+    scn.addObjectToScene(obj3);
     cam = new c3dl.FreeCamera();
     cam.setPosition([0.0, 0.0, 20.0]);
     cam.setLookAtPoint([0.0, 0.0, 0.0]);

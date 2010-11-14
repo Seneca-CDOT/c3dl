@@ -169,11 +169,11 @@ c3dl.Geometry = function () {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
       var bs = this.primitiveSets[i].getBoundingSphere();
       if (bs) {
-        //bs.render(scene);
+        bs.render(scene);
       }
       var aabb = this.primitiveSets[i].getAabb();
       if (aabb) {
-        //aabb.render(scene);
+        aabb.render(scene);
       }
       var obb = this.primitiveSets[i].getObb();
       if (obb) {
@@ -228,9 +228,7 @@ c3dl.Geometry = function () {
       var bs = this.primitiveSets[i].getBoundingSphere();
       var test = c3dl.peekMatrix();
       if (bs) {
-        bs.setPosition([test[12], test[13], test[14]]);
-        bs.scale(scaleVec);
-        bs.moveCenter(rotateMat);
+        bs.set([test[12], test[13], test[14]],rotateMat,scaleVec);
       }
       var aabb = this.primitiveSets[i].getAabb();
       if (aabb) {

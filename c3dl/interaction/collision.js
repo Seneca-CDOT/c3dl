@@ -105,7 +105,6 @@ c3dl.CollisionDetection = function () {
       }
     }
     
-    ////////
     for (var i = 0; i <3;i++) {
       ra = aSize[i];
       rb = bSize[0] * absR[i][0] + bSize[1] * absR[i][1] + bSize[2] * absR[i][2];

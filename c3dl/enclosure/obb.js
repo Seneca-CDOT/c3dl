@@ -16,6 +16,7 @@ c3dl.OBB = function () {
   this.axis[0]= [1,0,0];
   this.axis[1]= [0,1,0];
   this.axis[2]= [0,0,1];
+  this.centered = false;
   this.scaleVec = [1,1,1];
   this.init = function (vertices) {
     if (vertices) {
@@ -47,7 +48,6 @@ c3dl.OBB = function () {
       this.lineList[i] = new c3dl.Line();
       this.lineList[i].setWidth(2);
     }  
-
     //F top left 
     this.originalBoxVerts[0] =[ this.maxMins[1], this.maxMins[3],  this.maxMins[5]];
     //B top left 
@@ -76,11 +76,14 @@ c3dl.OBB = function () {
   }
   
   this.setPosition = function (position) {
-    this.position = [position[0], position[1], position[2]];
+    this.position[0] = position[0];
+    this.position[1] = position[1];
+    this.position[2] = position[2];
     for (var i = 0; i < 8; i++) {
       this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
   }
+  
   this.scale = function (scaleVec) {
     this.length = this.length * scaleVec[0];
     this.height = this.height * scaleVec[1];
@@ -107,7 +110,6 @@ c3dl.OBB = function () {
     for (var i = 0; i < 8; i++) {
       this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
-    
   }
   
   this.set = function (pos,rotM, scaleVec) {
@@ -122,7 +124,6 @@ c3dl.OBB = function () {
     for (var i = 0; i <3; i++) {
       c3dl.multiplyMatrixByVector(rotM, this.axis[i], this.axis[i]);
     }
-    
     for (var i = 0; i < 8; i++) {
       this.boxVerts[i] = c3dl.multiplyMatrixByVector(this.getTransform(), this.originalBoxVerts[i]);
     } 
@@ -137,7 +138,12 @@ c3dl.OBB = function () {
     return this.width;
   }
   this.getPosition = function () {
-    return this.position
+    if (this.centered) {
+      return this.position;
+    }
+    else {
+      return c3dl.multiplyMatrixByVector(this.getTransform(), this.centerPosition);
+    }
   }
   this.getAxis = function () {
     return this.axis;
@@ -199,6 +205,7 @@ c3dl.OBB = function () {
     return copy;
   }
   this.center = function () {
+    this.centered = true;
     //F top left 
     this.originalBoxVerts[0] =[ this.originalBoxVerts[0][0] - this.centerPosition[0] , this.originalBoxVerts[0][1] - this.centerPosition[1] , this.originalBoxVerts[0][2] - this.centerPosition[2] ];
     //B top left 
