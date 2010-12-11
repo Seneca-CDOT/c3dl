@@ -28,7 +28,7 @@ c3dl.Scene = function ()
 
   // This is off by default since users will likely only need it when
   // trying to debug something.
-  this.boundingVolumesVisible = true;
+  this.boundingVolumesVisible = false;
 
   // A reference to a model which will actually act as a 
   // SkyBox, except any Model can be used, not just a box.
