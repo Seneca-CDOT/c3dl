@@ -63,6 +63,7 @@ c3dl_require('camera/orbitcamera.js');
 
 //bounding volumes
 c3dl_require('enclosure/boundingsphere.js');
+c3dl_require('enclosure/boundingvolume.js');
 c3dl_require('enclosure/visualboundingsphere.js');
 c3dl_require('enclosure/obb.js');
 c3dl_require('enclosure/aabb.js');

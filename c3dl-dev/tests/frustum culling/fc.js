@@ -55,7 +55,7 @@ function test() {
   var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix, viewMatrix);
   var frustumCulling = new Frustum(frustumMatrix);
   //Culling using spheres
-  var boundingSpheres = obj.getBoundingSpheres();
+  var boundingSpheres = obj.getBoundingVolumes();
   for (var j = 0; j < boundingSpheres.length; j++) {
     checker = frustumCulling.sphereInFrustum(boundingSpheres[j]);
     if (checker === "INSIDE") {

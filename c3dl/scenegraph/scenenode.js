@@ -110,8 +110,7 @@ c3dl.SceneNode.prototype.update = function (timeStep, scaleVec, rotateMat) {
   }
   c3dl.multMatrix(this.getTransform());
   var velVec = c3dl.multiplyVector(this.linVel, timeStep);
-  c3dl.addVectors(this.pos, velVec, this.pos);
-  totalPos = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), this.pos);
+  this.pos = c3dl.addVectors(this.pos, velVec);
   for (var i = 0; i < this.children.length; i++) {
     this.children[i].update(timeStep, scaleVec, rotateMat);
   }
@@ -160,6 +159,14 @@ c3dl.SceneNode.prototype.renderBoundingVolumes = function (scene) {
 c3dl.SceneNode.prototype.setTexture = function (textureName) {
   for (var i = 0, len = this.children.length; i < len; i++) {
     this.children[i].setTexture(textureName);
+  }
+}
+
+c3dl.SceneNode.prototype.updateTextureByName = function (oldTexturePath,newTexturePath)
+{
+  for (var i = 0, len = this.children.length; i < len; i++)
+  {
+    this.children[i].updateTextureByName(oldTexturePath,newTexturePath);
   }
 }
 
@@ -238,72 +245,21 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) 
   return passed;
 }
 
-c3dl.SceneNode.prototype.getBoundingSpheres = function () {
-  var boundingSpheres = [];
+c3dl.SceneNode.prototype.getBoundingVolumes = function () {
+  var boundingVolumes = [];
   for (var i = 0; i < this.children.length; i++) {
     if (this.children[i] instanceof c3dl.SceneNode) {
-      boundingSpheres = boundingSpheres.concat(this.children[i].getBoundingSpheres());
+      boundingVolumes = boundingVolumes.concat(this.children[i].getBoundingVolumes());
     }
     else if (this.children[i] instanceof c3dl.Geometry) {
       for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
-          boundingSpheres = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());
+        if (this.children[i].getPrimitiveSets()[j].getBoundingVolume()) {
+          boundingVolumes = boundingVolumes.concat(this.children[i].getPrimitiveSets()[j].getBoundingVolume());
         }
       }
     }
   }
-  return boundingSpheres;
-}
-
-c3dl.SceneNode.prototype.getAabbs = function () {
-  var aabbs = [];
-  for (var i = 0; i < this.children.length; i++) {
-    if (this.children[i] instanceof c3dl.SceneNode) {
-      aabbs = aabbs.concat(this.children[i].getAabbs());
-    }
-    else if (this.children[i] instanceof c3dl.Geometry) {
-      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
-          aabbs = aabbs.concat(this.children[i].getPrimitiveSets()[j].getAabb());
-        }
-      }
-    }
-  }
-  return aabbs;
-}
-
-c3dl.SceneNode.prototype.getObbs = function () {
-  var obbs = [];
-  for (var i = 0; i < this.children.length; i++) {
-    if (this.children[i] instanceof c3dl.SceneNode) {
-      obbs = obbs.concat(this.children[i].getObbs());
-    }
-    else if (this.children[i] instanceof c3dl.Geometry) {
-      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
-          obbs = obbs.concat(this.children[i].getPrimitiveSets()[j].getObb());
-        }
-      }
-    }
-  }
-  return obbs;
-}
-
-c3dl.SceneNode.prototype.getBoundingSpheres = function () {
-  var boundingSpheres = [];
-  for (var i = 0; i < this.children.length; i++) {
-    if (this.children[i] instanceof c3dl.SceneNode) {
-      boundingSpheres = boundingSpheres.concat(this.children[i].getBoundingSpheres());
-    }
-    else if (this.children[i] instanceof c3dl.Geometry) {
-      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
-          boundingSpheres = boundingSpheres.concat(this.children[i].getPrimitiveSets()[j].getBoundingSphere());
-        }
-      }
-    }
-  }
-  return boundingSpheres;
+  return boundingVolumes;
 }
 
 c3dl.SceneNode.prototype.getAllVerts = function () {
@@ -319,12 +275,16 @@ c3dl.SceneNode.prototype.getAllVerts = function () {
     }
     else if (this.children[i] instanceof c3dl.Geometry) {
       for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
-        if (this.children[i].getPrimitiveSets()[j].getBoundingSphere()) {
-          var temp = this.children[i].getPrimitiveSets()[j].getBoundingSphere().getMaxMins();
-          c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[0], temp[2], temp[4]], temp2);
-          c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[1], temp[3], temp[5]], temp3);
-          allverts = allverts.concat(temp2);
-          allverts = allverts.concat(temp3);
+        if (this.children[i].getPrimitiveSets()[j].getBoundingVolume()) {
+          var temp = this.children[i].getPrimitiveSets()[j].getBoundingVolume().getMaxMins();
+          temp2 = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[0], temp[2], temp[4]]);
+          temp3 = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), [temp[1], temp[3], temp[5]]);
+          allverts.push(temp2[0]);
+          allverts.push(temp2[1]);
+          allverts.push(temp2[2]);
+          allverts.push(temp3[0]);
+          allverts.push(temp3[1]);
+          allverts.push(temp3[2]);
         }
       }
     }

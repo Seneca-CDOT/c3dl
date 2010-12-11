@@ -81,10 +81,11 @@ c3dl.Geometry = function () {
   this.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
       if (this.getPrimitiveSets()[i].getType() !== "lines") {
-        var bs = this.primitiveSets[i].getBoundingSphere();
-        var pos = bs.getPosition();
-        var radius = bs.getRadius();
-        if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, pos, radius)) {
+        var bv = this.primitiveSets[i].getBoundingVolume();
+        var pos = bv.getPosition();
+        var radius = bv.getRadius();
+        if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, pos, radius) && c3dl.rayAABBIntersect(rayOrigin, rayDir, bv.aabb.maxMins) && 
+        c3dl.rayOBBIntersect(rayOrigin, rayDir, pos, bv.getAxis(),bv.getSizeInAxis())) {
           return true;
         }
       }
@@ -149,7 +150,7 @@ c3dl.Geometry = function () {
       return false;
     }
     if (this.getPrimitiveSets()[0].getType() === "lines") {
-      scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
+      //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
     }
     else {
       // The first time this is rendered, setup VBOs.
@@ -160,24 +161,21 @@ c3dl.Geometry = function () {
         }
         this.firstTimeRender = false;
       }
-
+      for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+        scene.getRenderer().texManager.updateTexture(this.primitiveSets[i].texture);
+      }
+      
       scene.getRenderer().renderGeometry(this);
     }
   }
   this.renderBoundingVolumes = function (scene) {
     // tell all the collation elements/ primitive sets to render their bounding spheres.
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
-      var bs = this.primitiveSets[i].getBoundingSphere();
-      if (bs) {
-        bs.render(scene);
-      }
-      var aabb = this.primitiveSets[i].getAabb();
-      if (aabb) {
-        aabb.render(scene);
-      }
-      var obb = this.primitiveSets[i].getObb();
-      if (obb) {
-        obb.render(scene);
+      var bv = this.primitiveSets[i].getBoundingVolume();
+      if (bv) {
+        bv.renderAabb(scene);
+        bv.renderObb(scene);
+        bv.renderSphere(scene);
       }
     }   
   }
@@ -217,6 +215,18 @@ c3dl.Geometry = function () {
       this.primitiveSets[i].setTexture(texture);
     }
   }
+    /**
+   @private
+   
+   @param {} oldTexturePath,newTexturePath
+   */
+  this.updateTextureByName = function (oldTexturePath,newTexturePath)
+  {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
+      this.primitiveSets[i].updateTextureByName(oldTexturePath,newTexturePath);
+    }
+  }
 
   /**
    @private
@@ -225,18 +235,10 @@ c3dl.Geometry = function () {
    */
   this.update = function (timeStep, scaleVec, rotateMat) {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
-      var bs = this.primitiveSets[i].getBoundingSphere();
+      var bv = this.primitiveSets[i].getBoundingVolume();
       var test = c3dl.peekMatrix();
-      if (bs) {
-        bs.set([test[12], test[13], test[14]],rotateMat,scaleVec);
-      }
-      var aabb = this.primitiveSets[i].getAabb();
-      if (aabb) {
-        aabb.set([test[12], test[13], test[14]],rotateMat,scaleVec);
-      }
-      var obb = this.primitiveSets[i].getObb();
-      if (obb) {
-        obb.set([test[12], test[13], test[14]],rotateMat,scaleVec);
+      if (bv) {
+        bv.set(new C3DL_FLOAT_ARRAY([test[12], test[13], test[14]]),rotateMat,scaleVec);
       }
     }
   }

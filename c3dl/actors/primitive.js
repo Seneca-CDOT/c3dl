@@ -6,13 +6,13 @@
 /*
  @class
 */
-c3dl.Primitive = c3dl.inherit(c3dl.Actor, function ()
-{
+c3dl.Primitive = c3dl.inherit(c3dl.Actor, function () {
   c3dl._superc(this);
 
   // Member Variables
   this.isPickable = true;
   this.visible = true;
+  this.insideFrustum = false;
 });
 
 
@@ -26,8 +26,7 @@ c3dl.Primitive = c3dl.inherit(c3dl.Actor, function ()
  
  @returns {bool} true if the object can be picked, false otherwise.
  */
-c3dl.Primitive.prototype.getPickable = function ()
-{
+c3dl.Primitive.prototype.getPickable = function () {
   return this.isPickable;
 }
 
@@ -36,11 +35,12 @@ c3dl.Primitive.prototype.getPickable = function ()
  
  @returns {boolean} true if the object is rendered.
  */
-c3dl.Primitive.prototype.isVisible = function ()
-{
+c3dl.Primitive.prototype.isVisible = function () {
   return this.visible;
 }
-
+c3dl.Primitive.prototype.isInsideFrustum = function () {
+  return this.insideFrustum;
+}
 // -------------------------------------------------------
 // Setters	
 /**
@@ -49,11 +49,12 @@ c3dl.Primitive.prototype.isVisible = function ()
  @param {boolean} show Either a true or false value which will 
  show or hide the object when rendering.
  */
-c3dl.Primitive.prototype.setVisible = function (show)
-{
+c3dl.Primitive.prototype.setVisible = function (show) {
   this.visible = show;
 }
-
+c3dl.Primitive.prototype.setInsideFrustum = function (inside) {
+  this.insideFrustum = inside;
+}
 /*
   Set whether this object should be included in picking tests.  By omitting
   objects which should not be interacted with, it can increase performance.
@@ -61,16 +62,14 @@ c3dl.Primitive.prototype.setVisible = function (show)
   @param {bool} isPickable true if the object should be included in pikcing tests,
   false otherwise.
 */
-c3dl.Primitive.prototype.setPickable = function (isPickable)
-{
+c3dl.Primitive.prototype.setPickable = function (isPickable) {
   this.isPickable = isPickable;
 }
 
 /*
   @private
 */
-c3dl.Primitive.prototype.getCopy = function ()
-{
+c3dl.Primitive.prototype.getCopy = function () {
   var primitive = new c3dl.Primitive();
   primitive.clone(this);
   return primitive;
@@ -79,8 +78,7 @@ c3dl.Primitive.prototype.getCopy = function ()
 /**
  @private
  */
-c3dl.Primitive.prototype.clone = function (other)
-{
+c3dl.Primitive.prototype.clone = function (other) {
   c3dl._super(this, arguments, "clone");
 
   this.visible = other.visible;
@@ -91,6 +89,5 @@ c3dl.Primitive.prototype.clone = function (other)
 /**
  @private
  */
-c3dl.Primitive.prototype.render = function (glCanvas3D, scene)
-{
+c3dl.Primitive.prototype.render = function (glCanvas3D, scene) {
 }

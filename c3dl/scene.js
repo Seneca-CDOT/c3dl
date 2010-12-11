@@ -840,22 +840,22 @@ c3dl.Scene = function ()
     return false;
   }
 
-  /**
+ /**
    Remove a light from the scene. The first light found matching the name 
-   lightName will be removed.
+   light or object light will be removed.
    
-   @param {String} lightName the name of the light
+   @param {String || c3dl.Light } light the name of the light or the c3dl object light
    */
-  this.removeLight = function (lightName)
+  this.removeLight = function (light)
   {
     // There are 2 copies of the light, one in our js code and one in the WebGL
     // state variable.  We need to remove the light object from our list and set
     // the WebGL state variable to all zeros so it will no longer affect the scene.
     // first find the index of the light in our array.
     var lightID = -1;
-    for (var i = 0, len = lightList.length; i < len && lightID == -1; i++)
+    for (var i = 0; i < lightList.length && lightID == -1; i++)
     {
-      if (lightList[i] && lightList[i].getName() == lightName)
+      if (lightList[i] && (lightList[i].getName() == light || lightList[i] === light))
       {
         lightID = i;
       }
@@ -878,10 +878,10 @@ c3dl.Scene = function ()
     }
     return (lightID == -1 ? false : true);
   }
-
+  
   /**
    @private
-   Update the WebGL light state variables with our list of lights
+   Update the boundingVolume light state variables with our list of lights
    This happens every frame.
    */
   this.updateLights = function ()
@@ -1066,51 +1066,42 @@ c3dl.Scene = function ()
    */
   this.updateObjects = function (timeElapsed)
   {
-    //Collision
-    if (collision) {
-      collisionList=[];
-      for (var i = 0, len = objList.length; i < len; i++) {
-          if (objList[i].getObjectType() == c3dl.COLLADA) {
-          for (var j = i, len2 = objList.length; j < len2; j++) {
-            if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
-              if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
-                collisionList.push(objList[i]);
-                collisionList.push(objList[j]);
-              }
-            }
-          }
-        }
-      }
-    }
-  
     // Call the User's update callback
     if (updateHandler != null)
     {
       updateHandler(timeElapsed);
     }
-
+   collisionList=[];
     // update the rest of the objects individually
     for (var i = 0, len = objList.length; i < len; i++)
     {
       // we don't need to update lines or points since their
       // positions/coords are controlled by the user in the
       // update callback they write.
-      switch (objList[i].getObjectType())
-      {
-      case c3dl.PARTICLE_SYSTEM:
-      case c3dl.COLLADA:
-        objList[i].update(timeElapsed);
+   
+      switch (objList[i].getObjectType()) {
+        case c3dl.PARTICLE_SYSTEM:
+          objList[i].update(timeElapsed);
+          break;
+        case c3dl.COLLADA:
+          objList[i].update(timeElapsed);
+          //Collision
+          if (collision) {
+            for (var j = i, len2 = objList.length; j < len2; j++) {
+              if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
+                if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
+                  collisionList.push(objList[i]);
+                  collisionList.push(objList[j]);
+                }
+              }
+            }
+          }
+          break;
       }
-
-
     }
-
     // update the SkyModel
-    if (skyModel)
-    {
-      //
+    if (skyModel) {
       skyModel.update(timeElapsed);
-
       // move skymodel so the camera is at its center.
       // Let the user scale it and rotate it if they wish.
       skyModel.setPosition(camera.getPosition());
@@ -1169,7 +1160,6 @@ c3dl.Scene = function ()
     glCanvas3D.enable(glCanvas3D.CULL_FACE);
     glCanvas3D.frontFace(glCanvas3D.CCW);
     glCanvas3D.cullFace(glCanvas3D.BACK);
-
     // particle systems need to be rendered last, so first render
     // all opaque objects, then render particle systems. This is a bit
     // wasteful since we could have reordered the object list when the 
@@ -1186,44 +1176,52 @@ c3dl.Scene = function ()
       if (objList[i].getObjectType() == c3dl.COLLADA)
       {
         var checker;	
-		var cam = this.getCamera();
-		var projMatrix = cam.getProjectionMatrix();		
+        var cam = this.getCamera();
+        var projMatrix = cam.getProjectionMatrix();		
         var viewMatrix = cam.getViewMatrix();
-		var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix);
-		var frustumCulling = new Frustum(frustumMatrix);
-		//Culling using spheres
-		if (culling === "BoundingSphere") {
-		  var boundingSpheres = objList[i].getBoundingSpheres();
-		  for (var j = 0; j < boundingSpheres.length; j++) {
-			checker = frustumCulling.sphereInFrustum(boundingSpheres[j]);
-			if (checker === "INSIDE") {	
-			  break;
-			}
-		  }
-		  if (checker === "INSIDE") {		
-			objList[i].render(glCanvas3D, this);
-		  }
-        }		  
-		//Culling Boxes
-		else if (culling === "BoundingBox") {
-		  for (var j = 0; j < 3; j++) {
-		    box = objList[i].getBoundingBox();
-		    sizes = [];
-		    sizes[0]= box.getHeight();
-		    sizes[1]= box.getLength();
-		    sizes[2]= box.getWidth();
-	        checker = frustumCulling.boundingBoxInfrustumPlane(box.getPosition(),sizes[j]);
-			if (checker === "INSIDE") {	
-			  break;
-			}
-		  }
-		  if (checker === "INSIDE") {		
-			objList[i].render(glCanvas3D, this);
-		  }
-	    }
-		else {
-		  objList[i].render(glCanvas3D, this);
-		}
+        var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix);
+        var frustumCulling = new Frustum(frustumMatrix);
+        var boundingVolume = objList[i].getBoundingVolume();
+        //Culling using spheres
+        if (culling === "BoundingSphere") {
+          if (frustumCulling.sphereInFrustum(boundingVolume)) {		
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "AABB") {
+          if (frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins)) {	
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "OBB") {
+          if (frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {	
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "All") {
+          if (frustumCulling.sphereInFrustum(boundingVolume) && frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins) && frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {		
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        else {
+          objList[i].render(glCanvas3D, this);
+        }
       }
     }
     // POINTS
@@ -1318,6 +1316,9 @@ c3dl.Scene = function ()
   }
   this.setCollisionType = function (type) {
     collisionType = type;
+  }
+  this.setCulling = function (type) {
+    culling = type;
   }
   /**
    @private

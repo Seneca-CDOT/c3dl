@@ -1,0 +1,28 @@
+﻿<html>
+    <head>
+        <title>Texture</title>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="texture.js"></script>
+        <script type="application/javascript" src="canvasclock.js"></script>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+    </head>
+    <body onload="canvasclock_start('clock');">
+      <h1><a href="http://www.c3dl.org/">C3DL</a> Texture Test</h1>
+      <p>
+        This test sets the texture of the cube to a image, video, and canvas tag<br />
+        The tags are displayed below the scene<br/>
+        <br />
+      </p>
+      <p>
+        Result: <span id="res"></span>
+      </p>
+      <p>
+        <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
+        <br/>
+        <img id="webimage" src="webgltoronto.jpg" width="300" height="200"></img>
+        <video id="video" src="wmmjuly6.ogv" autoPlay="true" > </video>
+        <canvas id="clock" width="200" height="200"></canvas>
+      </p>
+    </body>
+</html>
+

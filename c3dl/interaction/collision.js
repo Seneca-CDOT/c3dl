@@ -2,28 +2,26 @@ c3dl.CollisionDetection = function () {
   this.checkObjectCollision= function(obj1, obj2,timeElapsed, collisionType) {
     this.obj1 = obj1;
     this.obj2 = obj2;
-    var collision = this.sphereCollision(obj1.getBoundingSphere(),obj2.getBoundingSphere());
+    var bv1= obj1.getBoundingVolume();
+    var bv2= obj2.getBoundingVolume();
+    var collision = this.sphereCollision(bv1,bv2);
     if (collision) {
-      collision = this.aabbaabbCollision(obj1.getAabb(),obj2.getAabb());
+     collision = this.aabbaabbCollision(bv1.aabb,bv2.aabb);
     }
     if (collision) {
-      collision = this.obbobbCollision(obj1.getObb(),obj2.getObb());
+      collision = this.obbobbCollision(bv1,bv2);
     }
     if (collision && collisionType == "Geometry") {
-      var obj1bs = obj1.getBoundingSpheres();
-      var obj2bs = obj2.getBoundingSpheres();
-      var obj1aabb = obj1.getAabbs();
-      var obj2aabb = obj2.getAabbs();
-      var obj1obb = obj1.getObbs();
-      var obj2obb = obj2.getObbs();
-      for (var i = 0, len = obj1bs.length; i < len; i++) { 
-        for (var j = 0, len2 = obj2bs.length; j < len2; j++) {
-          collision= this.sphereCollision(obj1bs[i],obj2bs[j],timeElapsed);
+      var obj1bvs = obj1.getBoundingVolumes();
+      var obj2bvs = obj2.getBoundingVolumes();
+      for (var i = 0, len = obj1bvs.length; i < len; i++) { 
+        for (var j = 0, len2 = obj2bvs.length; j < len2; j++) {
+          collision= this.sphereCollision(obj1bvs[i],obj2bvs[j],timeElapsed);
           if (collision) {
-            collision = this.aabbaabbCollision(obj1aabb[i],obj2aabb[j]);
+            collision = this.aabbaabbCollision(obj1bvs[i].aabb,obj2bvs[j].aabb);
           }
           if (collision) {
-            collision = this.obbobbCollision(obj1obb[i],obj2obb[j]);
+            collision = this.obbobbCollision(obj1bvs[i],obj2bvs[j]);
           }
           if (collision) {
             return collision;

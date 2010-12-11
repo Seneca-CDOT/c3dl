@@ -1,35 +1,35 @@
 c3dl.addModel("models/gun.dae");
-//c3dl.addMainCallBack(gun, "gun");
+c3dl.addMainCallBack(gun, "gun");
 
 c3dl.addModel("models/teapot.dae");
-//c3dl.addMainCallBack(teapot, "teapot");
+c3dl.addMainCallBack(teapot, "teapot");
 
 c3dl.addModel("models/gingerbread_house.dae");
-//c3dl.addMainCallBack(gingerbread_house, "gingerbread_house");
+c3dl.addMainCallBack(gingerbread_house, "gingerbread_house");
 
 c3dl.addModel("models/swiss_army_usb.dae");
-//c3dl.addMainCallBack(swiss_army_usb, "swiss_army_usb");
+c3dl.addMainCallBack(swiss_army_usb, "swiss_army_usb");
 
 c3dl.addModel("models/firehall.dae");
-//c3dl.addMainCallBack(firehall, "firehall");
+c3dl.addMainCallBack(firehall, "firehall");
 
 c3dl.addModel("models/duck.dae");
-//c3dl.addMainCallBack(duck, "duck");
+c3dl.addMainCallBack(duck, "duck");
 
 c3dl.addModel("models/old_cottage.dae");
-//c3dl.addMainCallBack(old_cottage, "old_cottage");
+c3dl.addMainCallBack(old_cottage, "old_cottage");
 
 c3dl.addModel("models/transform_test.dae");
 c3dl.addMainCallBack(transform_test, "transform_test");
 
 c3dl.addModel("models/fly_plane_polylist.dae");
-//c3dl.addMainCallBack(fly_plane_polylist, "fly_plane_polylist");
+c3dl.addMainCallBack(fly_plane_polylist, "fly_plane_polylist");
 
 c3dl.addModel("models/move_widget.dae");
-//c3dl.addMainCallBack(move_widget, "move_widget");
+c3dl.addMainCallBack(move_widget, "move_widget");
 
 c3dl.addModel("models/parallelogram.dae");
-//c3dl.addMainCallBack(parallelogram, "maxobject");
+c3dl.addMainCallBack(parallelogram, "maxobject");
 
 function gun(canvasName)
 {
