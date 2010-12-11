@@ -41,36 +41,71 @@ function Frustum(frustumMatrix) {
   }		
   this.sphereInFrustum = function(boundingSphere) {
     for(var i = 0; i < 6; i++) {
-	  var pos = boundingSphere.getPosition();					
-	  var d = this.frustumPlane[i].normal[0] * pos[0] + this.frustumPlane[i].normal[1]* pos[1] +
-              this.frustumPlane[i].normal[2]* pos[2] + this.frustumPlane[i].offset;
-	  if(d <=-boundingSphere.getRadius()) {
-		return "OUTSIDE"; 
-	  }
+      var pos = boundingSphere.getPosition();					
+      var d = this.frustumPlane[i].normal[0] * pos[0] + this.frustumPlane[i].normal[1]* pos[1] +
+                this.frustumPlane[i].normal[2]* pos[2] + this.frustumPlane[i].offset;
+      if(d <=-boundingSphere.getRadius()) {
+        return false; 
+      }
     }
-    return "INSIDE";
+    return true;
   } 
-  this.boundingBoxInfrustumPlane= function(pos, size)
-  {
-    for(var i = 0; i < 6; i++ )
-    {
-      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] - size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] - size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] - size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
-      if( this.frustumPlane[i].normal[0] * (pos[0] + size) + this.frustumPlane[i].normal[1] * (pos[1] + size) + this.frustumPlane[i].normal[2] * (pos[2] + size) + this.frustumPlane[i].offset < 0 )
-        return "OUTSIDE";
+  
+  this.obbInfrustum= function(boxVerts) {
+    for(var i = 0; i < 6; i++) { 
+      var count =8; 
+      for(var j = 0; j < 8; j++) {
+        if(c3dl.vectorDotProduct(this.frustumPlane[i].normal, boxVerts[j]) + this.frustumPlane[i].offset <= 0) {
+          count--; 
+        }
+      }
+      if (count == 0) {
+        return false
+      }
     }
-    return "INSIDE";
+    return true;  
+  }
+  
+  this.aabbInfrustum= function(MaxMins) {
+    var vmin=[], vmax=[]; 
+    for(var i = 0; i < 6; ++i) { 
+      var norm = c3dl.multiplyVector(this.frustumPlane[i].normal,-1,c3dl.vec1);
+      // X axis 
+      if(norm[0] > 0) { 
+        vmin[0] = MaxMins[1]; 
+        vmax[0] = MaxMins[0]; 
+      } 
+      else { 
+        vmin[0] = MaxMins[0]; 
+        vmax[0] = MaxMins[1]; 
+      } 
+
+      // Y axis 
+      if(norm[1] > 0) { 
+        vmin[1] = MaxMins[3]; 
+        vmax[1] = MaxMins[2]; 
+      } 
+      else { 
+        vmin[1] = MaxMins[2]; 
+        vmax[1] = MaxMins[3]; 
+      } 
+
+      // Z axis 
+      if(norm[2] > 0) { 
+        vmin[2] = MaxMins[5]; 
+        vmax[2] = MaxMins[4]; 
+      } 
+      else { 
+        vmin[2] = MaxMins[4]; 
+        vmax[2] = MaxMins[5]; 
+      } 
+
+      if(c3dl.vectorDotProduct(norm, vmin) - this.frustumPlane[i].offset > 0) {
+        return false; 
+      }
+    }
+    return true;  
   }
 }
+  
+  

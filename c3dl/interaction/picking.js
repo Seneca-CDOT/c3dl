@@ -102,7 +102,7 @@ c3dl.Picking = function (scene)
 
       // Make sure the object is a Collada before calling getPickable() since
       // not all objects in the scene will have that function.
-      if (currObj instanceof c3dl.Collada && currObj.getPickable())
+      if (currObj instanceof c3dl.Collada && currObj.getPickable() && currObj.isVisible() && currObj.isInsideFrustum())
       {
         // do the bounding volumes of the geometry nodes intersect with the given ray?
         if (currObj.rayIntersectsEnclosures(rayInitialPoint, rayDir))
@@ -570,4 +570,104 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   // since we have done quite a few calculations on floats, 
   // allow a small margin of error.
   return (Math.abs(diff) <= 0.0001);
+}
+
+c3dl.rayAABBIntersect = function (orig, dir, maxMins) {
+  var tmin, tmax, tymin, tymax, tzmin, tzmax;
+  var divx = 1 / dir[0];
+  var divy = 1 / dir[1];
+  var divz = 1 / dir[2];
+  if (divx >= 0) {
+    tmin = (maxMins[1] - orig[0]) * divx;
+    tmax = (maxMins[0] - orig[0]) * divx;
+  }
+  else {
+    tmin = (maxMins[0] - orig[0]) * divx;
+    tmax = (maxMins[1] - orig[0]) * divx;
+  }
+  if (divy >= 0) {
+    tymin = (maxMins[3] - orig[1]) * divy;
+    tymax = (maxMins[2] - orig[1]) * divy;
+  }
+  else {
+    tymin = (maxMins[2] - orig[1]) * divy;
+    tymax = (maxMins[3] - orig[1]) * divy;
+  }
+  if ( (tmin > tymax) || (tymin > tmax) ) {
+    return false;
+  }
+  if (tymin > tmin) {
+    tmin = tymin;
+  }
+  if (tymax < tmax){
+    tmax = tymax;
+  }
+  if (divz >= 0) {
+    tzmin = (maxMins[5] - orig[2]) * divz;
+    tzmax = (maxMins[4] - orig[2]) * divz;
+  }
+  else {
+    tzmin = (maxMins[4] - orig[2]) * divz;
+    tzmax = (maxMins[5] - orig[2]) * divz;
+  }
+  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+    return false;
+  }
+  if (tzmin > tmin) {
+    tmin = tzmin;
+  }
+  if (tzmax < tmax) {
+    tmax = tzmax;
+  }
+  return true;
+}
+
+c3dl.rayOBBIntersect = function (orig, dir , pos, axis, sizes){
+  var tmin, tmax, tymin, tymax, tzmin, tzmax;
+  var divx = 1 / dir[0]*axis[0];
+  var divy = 1 / dir[1]*axis[1];
+  var divz = 1 / dir[2]*axis[2];
+  if (divx >= 0) {
+    tmin = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
+    tmax = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
+  }
+  else {
+    tmin = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
+    tmax = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
+  }
+  if (divy >= 0) {
+    tymin = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
+    tymax = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
+  }
+  else {
+    tymin = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
+    tymax = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
+  }
+  if ( (tmin > tymax) || (tymin > tmax) ) {
+    return false;
+  }
+  if (tymin > tmin) {
+    tmin = tymin;
+  }
+  if (tymax < tmax){
+    tmax = tymax;
+  }
+  if (divz >= 0) {
+    tzmin = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
+    tzmax = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
+  }
+  else {
+    tzmin = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
+    tzmax = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
+  }
+  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+    return false;
+  }
+  if (tzmin > tmin) {
+    tmin = tzmin;
+  }
+  if (tzmax < tmax) {
+    tmax = tzmax;
+  }
+  return true;
 }
