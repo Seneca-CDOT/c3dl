@@ -7,8 +7,8 @@
  @class WebGL context.
  @augments c3dl.Renderer
  */
-c3dl.WebGL = function ()
-{
+c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
+  c3dl._superc(this);
   var glCanvas3D = null; // GL Context; 
   this.texManager = null;
 
@@ -1247,6 +1247,4 @@ c3dl.WebGL = function ()
       c3dl.debug.logWarning("disable command passed undefined value.");
     }
   }
-}
-
-c3dl.WebGL.prototype = new c3dl.Renderer;
+});

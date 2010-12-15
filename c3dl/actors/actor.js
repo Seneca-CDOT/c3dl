@@ -18,6 +18,8 @@ c3dl.Actor = function ()
   this.linVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animation of positions
   this.angVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animations of rotation around (side Vector, up Vector, dir Vector)
   this.name = "unnamed";
+  this.rotMat = c3dl.makeMatrix();
+  this.transMat = c3dl.makeMatrix();
 }
 
 // -------------------------------------------------------
@@ -96,19 +98,47 @@ c3dl.Actor.prototype.getScale = function () {
  @return {Array}
  */
 c3dl.Actor.prototype.getTransform = function () {
-  var mat = c3dl.makePoseMatrix(this.left, this.up, this.dir, this.pos);
-  var smat = c3dl.makeMatrix();
-  c3dl.setMatrix(smat, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, 
-  this.scaleVec[2], 0, 0, 0, 0, 1);
-  mat = c3dl.multiplyMatrixByMatrix(mat, smat);
-  return mat; 
+  c3dl.mat1[0] = this.left[0];
+  c3dl.mat1[1] = this.left[1];
+  c3dl.mat1[2] = this.left[2];
+  c3dl.mat1[3] = 0.0;
+  c3dl.mat1[4] = this.up[0];
+  c3dl.mat1[5] = this.up[1];
+  c3dl.mat1[6] = this.up[2];
+  c3dl.mat1[7] = 0.0;
+  c3dl.mat1[8] = this.dir[0];
+  c3dl.mat1[9] = this.dir[1];
+  c3dl.mat1[10] = this.dir[2];
+  c3dl.mat1[11] = 0.0;
+  c3dl.mat1[12] = this.pos[0];
+  c3dl.mat1[13] = this.pos[1];
+  c3dl.mat1[14] = this.pos[2];
+  c3dl.mat1[15] = 1.0;
+  c3dl.setMatrix(c3dl.mat2, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, this.scaleVec[2], 0, 0, 0, 0, 1);
+  return c3dl.multiplyMatrixByMatrix(c3dl.mat1, c3dl.mat2, this.transMat); 
 }
 
 
-c3dl.Actor.prototype.getRotateMat = function () {
-  return c3dl.makePoseMatrix(this.left, this.up, this.dir, [0,0,0]);
+c3dl.Actor.prototype.getRotateMat = function ()
+{ 
+  this.rotMat[0] = this.left[0];
+  this.rotMat[1] = this.left[1];
+  this.rotMat[2] = this.left[2];
+  this.rotMat[3] = 0.0;
+  this.rotMat[4] = this.up[0];
+  this.rotMat[5] = this.up[1];
+  this.rotMat[6] = this.up[2];
+  this.rotMat[7] = 0.0;
+  this.rotMat[8] = this.dir[0];
+  this.rotMat[9] = this.dir[1];
+  this.rotMat[10] = this.dir[2];
+  this.rotMat[11] = 0.0;
+  this.rotMat[12] = 0;
+  this.rotMat[13] = 0;
+  this.rotMat[14] = 0;
+  this.rotMat[15] = 1.0;
+  return this.rotMat; 
 }
-
 /**
  Get the name of this actor.
  

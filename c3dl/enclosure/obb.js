@@ -36,7 +36,7 @@ c3dl.OBB = function () {
   
   this.set = function (transform) {
     for (var i = 0; i < 8; i++) {
-      this.boxVerts[i] = c3dl.multiplyMatrixByVector(transform, this.originalBoxVerts[i]);
+      c3dl.multiplyMatrixByVector(transform, this.originalBoxVerts[i],this.boxVerts[i]);
     } 
   }
 
@@ -76,8 +76,10 @@ c3dl.OBB = function () {
   
   this.getCopy = function () {
     var copy = new c3dl.OBB();
-    copy.originalBoxVerts = c3dl.copyObj(this.originalBoxVerts);
-    copy.boxVerts = c3dl.copyObj(this.boxVerts);
+    for (var i = 0; i <8; i++) {
+      copy.originalBoxVerts[i] = c3dl.copyVector(this.originalBoxVerts[i]);
+      copy.boxVerts[i] = c3dl.copyVector(this.boxVerts[i]);
+    }
     return copy;
   }
   this.center = function (centerPosition) {

@@ -168,6 +168,7 @@ c3dl.Geometry = function () {
       scene.getRenderer().renderGeometry(this);
     }
   }
+  
   this.renderBoundingVolumes = function (scene) {
     // tell all the collation elements/ primitive sets to render their bounding spheres.
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
@@ -233,12 +234,15 @@ c3dl.Geometry = function () {
    
    Called automatically
    */
-  this.update = function (timeStep, scaleVec, rotateMat) {
+  this.update = function (timeStep, scaleVec) {
     for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
       var bv = this.primitiveSets[i].getBoundingVolume();
-      var test = c3dl.peekMatrix();
+      var trans = c3dl.peekMatrix();
+      c3dl.matrixMode(c3dl.PROJECTION);
+      var rot = c3dl.peekMatrix();
+      c3dl.matrixMode(c3dl.MODELVIEW);
       if (bv) {
-        bv.set(new C3DL_FLOAT_ARRAY([test[12], test[13], test[14]]),rotateMat,scaleVec);
+        bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
       }
     }
   }

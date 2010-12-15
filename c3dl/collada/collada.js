@@ -201,13 +201,23 @@ c3dl.Collada.prototype.init = function (daePath) {
  
  @param {float} timeStep
  */
+
 c3dl.Collada.prototype.update = function (timeStep) {
   // keep checking to see if the file is done being loaded.
   if (this.isReady()) {
+    //ModelView stack will be used for trasform mat
     c3dl.pushMatrix();
     c3dl.loadIdentity();
-    this.sceneGraph.update(timeStep);
+     //ModelView stack will be used for rotation mat
+    c3dl.matrixMode(c3dl.PROJECTION);
+    c3dl.pushMatrix();
+    c3dl.loadIdentity();
+    c3dl.matrixMode(c3dl.MODELVIEW);
+    this.sceneGraph.update(timeStep, this.scaleVec);
     c3dl.popMatrix();
+    c3dl.matrixMode(c3dl.PROJECTION);
+    c3dl.popMatrix();
+    c3dl.matrixMode(c3dl.MODELVIEW);
     var pos = this.sceneGraph.getPosition();
     var rotateMat = this.sceneGraph.getRotateMat();
     var scaleVec = this.boundingVolume.scaleVec;
@@ -240,6 +250,7 @@ c3dl.Collada.prototype.setSceneGraph = function (sg) {
  @param {context} glCanvas3D
  @param {Scene} scene
  */
+
 c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
   if (this.sceneGraph && this.isVisible()) {
     // tell the root to render. The render() calls
@@ -260,6 +271,7 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
   }
 }
 
+*/
 /**
  Scale the the scenegraph's root node.
  

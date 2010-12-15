@@ -551,15 +551,15 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   var POI = c3dl.addVectors(orig, scaledDir);
 
   // area of smaller triangles formed by the 3 vertices and the point of intersection	
-  edge1 = c3dl.subtractVectors(vert0, POI);
-  edge2 = c3dl.subtractVectors(vert1, POI);
+  c3dl.subtractVectors(vert0, POI,edge1);
+  c3dl.subtractVectors(vert1, POI,edge2);
   edge3 = c3dl.subtractVectors(vert2, POI);
 
   // get the area of the three triangles 'created' where the 
   // ray intersects the triangle's plane. 
-  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2));
-  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3));
-  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1));
+  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2,c3dl.vec1));
+  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3,c3dl.vec1));
+  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1,c3dl.vec1));
 
   // get the difference between the area of the triangle and the area of the three triangles
   // created where the user clicked. If the user clicked inside the triangle, the difference

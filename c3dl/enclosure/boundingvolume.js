@@ -19,6 +19,7 @@ c3dl.BoundingVolume = function () {
   this.centered = false;
   this.scaleVec = [1,1,1];
   this.vertices = null;
+  this.transMat = new C3DL_FLOAT_ARRAY(16);
   this.init = function (vertices) {
     this.vertices = new C3DL_FLOAT_ARRAY(vertices);
    	var lengthVerts = new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3);
@@ -104,10 +105,9 @@ c3dl.BoundingVolume = function () {
     this.axis[2][1]= 0;
     this.axis[2][2]= 1;
     for (var i = 0; i <3; i++) {
-      this.axis[i] = c3dl.multiplyMatrixByVector(rotateMat, this.axis[i]);
+      c3dl.multiplyMatrixByVector(rotateMat, this.axis[i], this.axis[i]);
       c3dl.normalizeVector(this.axis[i]);
     }
-    
     this.boundingSphere.set(scaleVec);  
     this.obb.set(this.getTransform()); 
     this.aabb.set(this.obb.boxVerts);
@@ -134,12 +134,24 @@ c3dl.BoundingVolume = function () {
     return this.maxMins;
   }
   this.getTransform = function () {
-    var mat = c3dl.makePoseMatrix(this.axis[0], this.axis[1], this.axis[2], this.position);
-    var smat = c3dl.makeMatrix();
-    c3dl.setMatrix(smat, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, 
-                  this.scaleVec[2], 0, 0, 0, 0, 1);
-    mat = c3dl.multiplyMatrixByMatrix(mat, smat);
-    return mat;
+    c3dl.mat1[0] = this.axis[0][0];
+    c3dl.mat1[1] = this.axis[0][1];
+    c3dl.mat1[2] = this.axis[0][2];
+    c3dl.mat1[3] = 0.0;
+    c3dl.mat1[4] = this.axis[1][0];
+    c3dl.mat1[5] = this.axis[1][1];
+    c3dl.mat1[6] = this.axis[1][2];
+    c3dl.mat1[7] = 0.0;
+    c3dl.mat1[8] = this.axis[2][0];
+    c3dl.mat1[9] = this.axis[2][1];
+    c3dl.mat1[10] = this.axis[2][2];
+    c3dl.mat1[11] = 0.0;
+    c3dl.mat1[12] = this.position[0];
+    c3dl.mat1[13] = this.position[1];
+    c3dl.mat1[14] = this.position[2];
+    c3dl.mat1[15] = 1.0;
+    c3dl.setMatrix(c3dl.mat2, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, this.scaleVec[2], 0, 0, 0, 0, 1);
+    return c3dl.multiplyMatrixByMatrix(c3dl.mat1, c3dl.mat2, this.transMat); 
   }
   this.getPosition = function () {
     if (this.centered) {
@@ -161,11 +173,18 @@ c3dl.BoundingVolume = function () {
     copy.originalLength = this.originalLength;
     copy.originalHeight = this.originalHeight;
     copy.originalWidth = this.originalWidth;
-    copy.maxMins= c3dl.copyObj(this.maxMins);
-    copy.centerPosition = c3dl.copyObj(this.centerPosition);
-    copy.position = c3dl.copyObj(this.position);
-    copy.axis = c3dl.copyObj(this.axis);
-    copy.scaleVec = c3dl.copyObj(this.scaleVec);
+    copy.maxMins[0] = this.maxMins[0] 
+    copy.maxMins[1] = this.maxMins[1] 
+    copy.maxMins[2] = this.maxMins[2] 
+    copy.maxMins[3] = this.maxMins[3]  
+    copy.maxMins[4] = this.maxMins[4] 
+    copy.maxMins[5] = this.maxMins[5];  
+    copy.centerPosition = c3dl.copyVector(this.centerPosition);
+    copy.position = c3dl.copyVector(this.position);
+    for (var i = 0; i <3; i++) {
+      copy.axis[i] = c3dl.copyVector(this.axis[i]);
+    }
+    copy.scaleVec = c3dl.copyVector(this.scaleVec);
     copy.centered = this.centered;
     return copy;
   }

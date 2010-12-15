@@ -548,7 +548,7 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest) {
   // make sure they passed us a 4 component vector before trying to write to that
   // element.
   if (len === 4) {
-    dest[3] = d
+    dest[3] = d;
   }
   return dest;
 }

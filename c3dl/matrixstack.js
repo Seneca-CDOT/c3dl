@@ -6,7 +6,11 @@
 // the stacks
 c3dl.ModelView = [];
 c3dl.Projection = [];
-
+var matrixList = [];
+for (var i = 0; i < 100; i++) {
+  matrixList[i] = c3dl.makeMatrix();
+}
+matrixListPos = 0;
 // to reduce code in the functions for cheking which stack we are 
 // changing, just keep a reference variable to the current one.
 // start with the modelview.
@@ -44,7 +48,9 @@ c3dl.matrixMode = function (mode)
  */
 c3dl.pushMatrix = function ()
 {
-  c3dl.CurrentStackPointer.push(c3dl.peekMatrix());
+  c3dl.copyMatrix(c3dl.peekMatrix(),matrixList[matrixListPos]);
+  c3dl.CurrentStackPointer.push(matrixList[matrixListPos]);
+   matrixListPos++;
 }
 
 
@@ -91,6 +97,7 @@ c3dl.popMatrix = function ()
   if (c3dl.getMatrixStackHeight() > 1)
   {
     c3dl.CurrentStackPointer.pop();
+    matrixListPos--;
   }
 }
 
@@ -104,7 +111,8 @@ c3dl.popMatrix = function ()
  */
 c3dl.multMatrix = function (matrix)
 {
-  c3dl.loadMatrix(c3dl.multiplyMatrixByMatrix(c3dl.peekMatrix(), matrix));
+  c3dl.copyMatrix(c3dl.peekMatrix(), c3dl.mat1);
+  c3dl.loadMatrix(c3dl.multiplyMatrixByMatrix(c3dl.mat1, matrix,c3dl.peekMatrix()));
 }
 
 

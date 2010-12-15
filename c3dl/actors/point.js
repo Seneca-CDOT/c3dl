@@ -53,7 +53,7 @@ c3dl.Point = function ()
    */
   this.getPosition = function ()
   {
-    return c3dl.copyObj(this.position);
+    return c3dl.copyVector(this.position);
   }
 
   /**
@@ -66,7 +66,9 @@ c3dl.Point = function ()
   {
     if (pos.length == 3)
     {
-      this.position = c3dl.copyObj(pos);
+      this.position[0] = pos[0];
+      this.position[1] = pos[1];
+      this.position[2] = pos[2];
     }
     else
     {
@@ -81,7 +83,7 @@ c3dl.Point = function ()
    */
   this.getColor = function ()
   {
-    return c3dl.copyObj(this.color);
+    return c3dl.copyVector(this.color);
   }
 
   /**
@@ -94,7 +96,9 @@ c3dl.Point = function ()
   {
     if (color.length == 3)
     {
-      this.color = c3dl.copyObj(color);
+      this.color[0] = color[0];
+      this.color[1] = color[1];
+      this.color[2] = color[2];
     }
     else
     {

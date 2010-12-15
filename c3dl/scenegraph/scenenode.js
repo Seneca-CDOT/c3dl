@@ -13,6 +13,7 @@ c3dl.SceneNode = c3dl.inherit(c3dl.Primitive, function () {
 
   // An array of c3dl.Actors
   this.children = [];
+  this.parent =null;
 });
 
 /**
@@ -47,6 +48,7 @@ c3dl.SceneNode.prototype.clone = function (other) {
  */
 c3dl.SceneNode.prototype.addChild = function (child) {
   this.children.push(child);
+  child.parent = this;
 }
 
 /**
@@ -93,32 +95,28 @@ c3dl.SceneNode.prototype.findNode = function (nodeName) {
  
  @param {float} timeStep
  */
-c3dl.SceneNode.prototype.update = function (timeStep, scaleVec, rotateMat) {
+c3dl.SceneNode.prototype.update = function (timeStep, scaleVec) {
   c3dl._super(this, arguments, "update");
+  c3dl.multiplyVectorByVector(scaleVec, this.scaleVec, scaleVec);
   c3dl.pushMatrix();
-  if (!scaleVec) {
-    scaleVec = this.scaleVec;
-  }
-  else if (this.scaleVec) {
-    scaleVec = c3dl.multiplyVectorByVector(scaleVec, this.scaleVec);
-  }
-  if (!rotateMat) {
-    rotateMat = this.getRotateMat();
-  }
-  else if (this.scaleVec) {
-    rotateMat = c3dl.multiplyMatrixByMatrix(rotateMat, this.getRotateMat());
-  }
   c3dl.multMatrix(this.getTransform());
-  var velVec = c3dl.multiplyVector(this.linVel, timeStep);
-  this.pos = c3dl.addVectors(this.pos, velVec);
+  c3dl.matrixMode(c3dl.PROJECTION);
+  c3dl.pushMatrix();
+  c3dl.multMatrix(this.getRotateMat());
+  c3dl.matrixMode(c3dl.MODELVIEW);
+  c3dl.multiplyVector(this.linVel, timeStep, c3dl.vec1);
+  c3dl.addVectors(this.pos, c3dl.vec1, this.pos);
   for (var i = 0; i < this.children.length; i++) {
-    this.children[i].update(timeStep, scaleVec, rotateMat);
+    this.children[i].update(timeStep, scaleVec);
   }
   // Apply some rotations to the orientation from the angular velocity
   this.pitch(this.angVel[0] * timeStep);
   this.yaw(this.angVel[1] * timeStep);
   this.roll(this.angVel[2] * timeStep);
   c3dl.popMatrix();
+  c3dl.matrixMode(c3dl.PROJECTION);
+  c3dl.popMatrix();
+  c3dl.matrixMode(c3dl.MODELVIEW);
 }
 
 
@@ -295,10 +293,12 @@ c3dl.SceneNode.prototype.getAllVerts = function () {
 
 c3dl.SceneNode.prototype.center = function (realposition) {  
   var temp = new c3dl.SceneNode();
+
   for (var j = 0; j < this.children.length; j++) {
     temp.addChild(this.children[j]);
+    
   }   
   this.children = [];   
-  this.children[0] = temp;
+  this.addChild(temp);
   temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
 }

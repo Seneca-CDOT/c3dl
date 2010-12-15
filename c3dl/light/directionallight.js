@@ -20,8 +20,8 @@
  to the scene.
  @augments c3dl.Light
  */
-c3dl.DirectionalLight = function ()
-{
+c3dl.DirectionalLight = c3dl.inherit(c3dl.Light, function () {
+  c3dl._superc(this);
   // WebGL will interpret the light as directional if
   // the last value specified for POSITION is 0 and
   // positional if the last value for POSITION is 1.
@@ -51,6 +51,4 @@ c3dl.DirectionalLight = function ()
   {
     this.direction = c3dl.normalizeVector(dir);
   }
-}
-
-c3dl.DirectionalLight.prototype = new c3dl.Light;
+});

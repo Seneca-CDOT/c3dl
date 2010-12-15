@@ -25,7 +25,14 @@ c3dl.Material = function ()
    */
   this.getCopy = function ()
   {
-    return c3dl.copyObj(this);
+    var copy = new c3dl.Material();
+    copy.emission = c3dl.copyVector(this.emission);
+    copy.ambient = c3dl.copyVector(this.ambient);
+    copy.diffuse = c3dl.copyVector(this.diffuse);
+    copy.specular = c3dl.copyVector(this.specular);
+    copy.shininess = this.shininess;
+    copy.name = this.name;
+    return copy;
   }
 
   /**

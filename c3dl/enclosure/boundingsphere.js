@@ -82,7 +82,7 @@ c3dl.BoundingSphere = function () {
   }
 
   this.set = function (scaleVec) {
-    this.longestVector =  c3dl.multiplyVectorByVector(scaleVec, this.originalLV)
+    c3dl.multiplyVectorByVector(scaleVec, this.originalLV, this.longestVector)
     this.radius = c3dl.vectorLength(this.longestVector);
   }
   /**
