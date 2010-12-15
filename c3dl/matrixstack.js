@@ -7,7 +7,8 @@
 c3dl.ModelView = [];
 c3dl.Projection = [];
 var matrixList = [];
-for (var i = 0; i < 100; i++) {
+//created as a buffer. Creating float arrays on every call is to low.
+for (var i = 0; i < 1000; i++) {
   matrixList[i] = c3dl.makeMatrix();
 }
 matrixListPos = 0;
@@ -50,6 +51,8 @@ c3dl.pushMatrix = function ()
 {
   c3dl.copyMatrix(c3dl.peekMatrix(),matrixList[matrixListPos]);
   c3dl.CurrentStackPointer.push(matrixList[matrixListPos]);
+  if (matrixListPos > 30)
+  alert(matrixListPos);
    matrixListPos++;
 }
 

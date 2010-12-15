@@ -201,7 +201,7 @@ c3dl.Collada.prototype.init = function (daePath) {
  
  @param {float} timeStep
  */
-
+/*
 c3dl.Collada.prototype.update = function (timeStep) {
   // keep checking to see if the file is done being loaded.
   if (this.isReady()) {
@@ -231,7 +231,95 @@ c3dl.Collada.prototype.update = function (timeStep) {
     }
   }
 }
-
+*/
+c3dl.Collada.prototype.update = function (timeStep) {
+  // keep checking to see if the file is done being loaded.
+  if (this.isReady()) {
+    var pos = this.sceneGraph.pos;
+    var rotateMat = this.sceneGraph.getRotateMat();
+    var scaleVec = this.boundingVolume.scaleVec;
+    this.boundingVolume.set(pos,rotateMat,scaleVec);
+    scaleVec=[1,1,1];
+    //ModelView stack will be used for trasform mat
+    c3dl.pushMatrix();
+    c3dl.loadIdentity();
+     //ModelView stack will be used for rotation mat
+    c3dl.matrixMode(c3dl.PROJECTION);
+    c3dl.pushMatrix();
+    c3dl.loadIdentity();
+    c3dl.matrixMode(c3dl.MODELVIEW);
+    var currNode = this.sceneGraph;
+    while(currNode) {
+      if(currNode.children && currNode.children.length) {
+        var flag = true;
+        if (!currNode.pushed) {
+          c3dl.multiplyVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
+          c3dl.pushMatrix();
+          c3dl.multMatrix(currNode.getTransform());
+          c3dl.matrixMode(c3dl.PROJECTION);
+          c3dl.pushMatrix();
+          c3dl.multMatrix(currNode.getRotateMat());
+          c3dl.matrixMode(c3dl.MODELVIEW);
+          currNode.pushed = true;
+        }
+        for (var i = 0, len = currNode.children.length; i < len; i++) {
+          if(!currNode.children[i].updated) {
+            currNode = currNode.children[i];
+            i = len;
+            flag = false;
+          }
+        }
+        if (flag) {
+          c3dl.popMatrix();
+          c3dl.matrixMode(c3dl.PROJECTION);
+          c3dl.popMatrix();
+          c3dl.matrixMode(c3dl.MODELVIEW);
+          c3dl.divideVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
+          for (var i = 0, len = currNode.children.length; i < len; i++) {
+            currNode.children[i].updated =null;
+          }
+          currNode.updated =true;
+          currNode.pushed = null;
+          c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
+          c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
+          currNode.pitch(currNode.angVel[0] * timeStep);
+          currNode.yaw(currNode.angVel[1] * timeStep);
+          currNode.roll(currNode.angVel[2] * timeStep);
+          currNode = currNode.parent;
+        }
+      }
+      else{
+        if (currNode.primitiveSets) {
+          for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+            var bv = currNode.primitiveSets[i].getBoundingVolume();
+            var trans = c3dl.peekMatrix();
+            c3dl.matrixMode(c3dl.PROJECTION);
+            var rot = c3dl.peekMatrix();
+            c3dl.matrixMode(c3dl.MODELVIEW);
+            if (bv) {
+              bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
+            }
+          }
+        }
+        currNode.updated =true;
+        currNode = currNode.parent;
+      }
+    }
+    c3dl.popMatrix();
+    c3dl.popMatrix();
+    c3dl.matrixMode(c3dl.PROJECTION);
+    c3dl.popMatrix();
+    c3dl.popMatrix();
+    c3dl.matrixMode(c3dl.MODELVIEW);
+  }
+  else {
+    c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
+    if (c3dl.ColladaManager.isFileLoaded(this.path)) {
+      // get a copy of the scenegraph so we can modify it.
+      this.sceneGraph = c3dl.ColladaManager.getSceneGraphCopy(this.path);
+    }
+  }
+}
 /**
  @private
  */
@@ -250,7 +338,7 @@ c3dl.Collada.prototype.setSceneGraph = function (sg) {
  @param {context} glCanvas3D
  @param {Scene} scene
  */
-
+ /*
 c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
   if (this.sceneGraph && this.isVisible()) {
     // tell the root to render. The render() calls
@@ -270,8 +358,79 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
     }
   }
 }
-
 */
+c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
+  if (this.sceneGraph && this.isVisible()) {
+    // tell the root to render. The render() calls
+    // will propogate down the graph.
+    var currNode = this.sceneGraph;
+    while(currNode) {
+      if(currNode.children && currNode.children.length) {
+        var flag = true;
+        if (!currNode.rpushed) {
+          c3dl.pushMatrix();
+          c3dl.multMatrix(currNode.getTransform());
+          currNode.rpushed = true;
+        }
+        for (var i = 0, len = currNode.children.length; i < len; i++) {
+          if(!currNode.children[i].rupdated) {
+            currNode = currNode.children[i];
+            i = len;
+            flag = false;
+          }
+        }
+        if (flag) {
+          c3dl.popMatrix();
+          for (var i = 0, len = currNode.children.length; i < len; i++) {
+            currNode.children[i].rupdated =null;
+          }
+          currNode.rupdated =true;
+          currNode.rpushed = null;
+          currNode = currNode.parent;
+        }
+      }
+      else{
+        if (currNode.primitiveSets) {
+          if (currNode.getPrimitiveSets()[0].getType() === "lines") {
+            //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
+          }
+          else {
+            // The first time this is rendered, setup VBOs.
+            if (currNode.firstTimeRender == true) {
+              // iterate over the primitive sets and setup their VBOs
+              for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+                currNode.primitiveSets[i].setupVBO(glCanvas3D);
+              }
+              currNode.firstTimeRender = false;
+            }
+            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+              scene.getRenderer().texManager.updateTexture(currNode.primitiveSets[i].texture);
+            }
+            scene.getRenderer().renderGeometry(currNode);
+          }
+        }
+        currNode.rupdated =true;
+        currNode = currNode.parent;
+      }
+    }
+    c3dl.popMatrix();
+
+    //this.sceneGraph.render(glCanvas3D, scene);
+    if (scene.getBoundingVolumeVisibility()) {
+      this.sceneGraph.renderBoundingVolumes(scene);
+    }
+    if (this.renderObb) {
+      this.boundingVolume.renderObb(scene);
+    }
+    if (this.renderAabb) {
+      this.boundingVolume.renderAabb(scene);
+    }
+    if (this.renderBoundingSphere) {
+      this.boundingVolume.renderSphere(scene);
+    }
+  }
+} 
+
 /**
  Scale the the scenegraph's root node.
  
