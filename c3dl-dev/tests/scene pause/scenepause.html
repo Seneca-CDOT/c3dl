@@ -1,12 +1,34 @@
 <html>
     <head>
-        <title>Scene Pause</title>
-        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
-        <script type="application/javascript" src="scenepause.js"></script>
+      <title>Scene Pause</title>
+      <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+      <script type="application/javascript" src="scenepause.js"></script>
+      <link rel="stylesheet" type="text/css" href="../style.css" />
     </head>
-    <body>    
-	<input type="button" value="Pause" onclick="pause();" />
-    <input type="button" value="Unpause" onclick="unpause();" />
-        <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
+    <body>   
+      <h1><a href="http://www.c3dl.org/">C3DL</a> Pause Test</h1>    
+      <p>
+	    This test will show and test the PauseScene, PauseRender, and PauseUpdate functions<br /><br/>
+      When the Render is paused the objects in the scene will still be updating but not redrawn<br/>
+      To test pause and unpause render and the duck will move as if it was rotating the entire time and<br/>
+      added objects will not be shown<br/>
+      <br/>
+      When the Update is paused the objects in the scene will not be updating but the scene will still be drawn<br />
+      To test pause update and click add duck the new duck will be added but neither will update their rotation<br/>
+      <br/>
+  	  When the Scene is paused the objects in the scene will not be updating or redrawn<br />
+      To test pause scene and click add duck and the new duck will be added but not drawn and neither will update their rotation<br/>
+      <br />
+      </p>
+      
+      <input type="button" value="Pause Render" onclick="pauseR();" />
+      <input type="button" value="Unpause Render" onclick="unpauseR();" />
+      <input type="button" value="Pause Update" onclick="pauseU();" />
+      <input type="button" value="Unpause Update" onclick="unpauseU();" />
+      <input type="button" value="Pause Scene" onclick="pause();" />
+      <input type="button" value="Unpause Scene" onclick="unpause();" />
+      <input type="button" value="Add Duck" onclick="addDuck();" /> <br/>
+      <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
+      <span id="res"></span>
     </body>
 </html>
