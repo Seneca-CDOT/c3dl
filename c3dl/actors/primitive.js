@@ -13,6 +13,8 @@ c3dl.Primitive = c3dl.inherit(c3dl.Actor, function () {
   this.isPickable = true;
   this.visible = true;
   this.insideFrustum = false;
+  this.dirtyFlag = true;
+  this.staticObject = false;
 });
 
 
@@ -41,6 +43,12 @@ c3dl.Primitive.prototype.isVisible = function () {
 c3dl.Primitive.prototype.isInsideFrustum = function () {
   return this.insideFrustum;
 }
+c3dl.Primitive.prototype.isStatic = function () {
+  return this.staticObject;
+}
+c3dl.Primitive.prototype.isDirty = function () {
+  return this.dirtyFlag;
+}
 // -------------------------------------------------------
 // Setters	
 /**
@@ -54,6 +62,12 @@ c3dl.Primitive.prototype.setVisible = function (show) {
 }
 c3dl.Primitive.prototype.setInsideFrustum = function (inside) {
   this.insideFrustum = inside;
+}
+c3dl.Primitive.prototype.setStatic = function (staticObject) {
+  this.staticObject = staticObject;
+}
+c3dl.Primitive.prototype.setDirty = function (dirty) {
+  this.dirtyFlag = dirty;
 }
 /*
   Set whether this object should be included in picking tests.  By omitting
@@ -83,7 +97,9 @@ c3dl.Primitive.prototype.clone = function (other) {
 
   this.visible = other.visible;
   this.isPickable = other.isPickable;
-  this.visible = other.visible;
+  this.insideFrustum = other.insideFrustum;
+  this.staticObject = other.staticObject;
+  this.dirtyFlag = other.dirtyFlag;
 }
 
 /**

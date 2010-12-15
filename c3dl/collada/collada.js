@@ -235,82 +235,87 @@ c3dl.Collada.prototype.update = function (timeStep) {
 c3dl.Collada.prototype.update = function (timeStep) {
   // keep checking to see if the file is done being loaded.
   if (this.isReady()) {
-    var pos = this.sceneGraph.pos;
-    var rotateMat = this.sceneGraph.getRotateMat();
-    var scaleVec = this.boundingVolume.scaleVec;
-    this.boundingVolume.set(pos,rotateMat,scaleVec);
-    scaleVec=[1,1,1];
-    //ModelView stack will be used for trasform mat
-    c3dl.pushMatrix();
-    c3dl.loadIdentity();
-     //ModelView stack will be used for rotation mat
-    c3dl.matrixMode(c3dl.PROJECTION);
-    c3dl.pushMatrix();
-    c3dl.loadIdentity();
-    c3dl.matrixMode(c3dl.MODELVIEW);
-    var currNode = this.sceneGraph;
-    while(currNode) {
-      if(currNode.children && currNode.children.length) {
-        var flag = true;
-        if (!currNode.pushed) {
-          c3dl.multiplyVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
-          c3dl.pushMatrix();
-          c3dl.multMatrix(currNode.getTransform());
-          c3dl.matrixMode(c3dl.PROJECTION);
-          c3dl.pushMatrix();
-          c3dl.multMatrix(currNode.getRotateMat());
-          c3dl.matrixMode(c3dl.MODELVIEW);
-          currNode.pushed = true;
-        }
-        for (var i = 0, len = currNode.children.length; i < len; i++) {
-          if(!currNode.children[i].updated) {
-            currNode = currNode.children[i];
-            i = len;
-            flag = false;
+    if (!this.isStatic() || this.isStatic() && this.isDirty()) {
+      var pos = this.sceneGraph.pos;
+      var rotateMat = this.sceneGraph.getRotateMat();
+      var scaleVec = this.boundingVolume.scaleVec;
+      this.boundingVolume.set(pos,rotateMat,scaleVec);
+      scaleVec=[1,1,1];
+      //ModelView stack will be used for trasform mat
+      c3dl.pushMatrix();
+      c3dl.loadIdentity();
+       //ModelView stack will be used for rotation mat
+      c3dl.matrixMode(c3dl.PROJECTION);
+      c3dl.pushMatrix();
+      c3dl.loadIdentity();
+      c3dl.matrixMode(c3dl.MODELVIEW);
+      var currNode = this.sceneGraph;
+      while(currNode) {
+        if(currNode.children && currNode.children.length) {
+          var flag = true;
+          if (!currNode.pushed) {
+            c3dl.multiplyVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
+            c3dl.pushMatrix();
+            c3dl.multMatrix(currNode.getTransform());
+            c3dl.matrixMode(c3dl.PROJECTION);
+            c3dl.pushMatrix();
+            c3dl.multMatrix(currNode.getRotateMat());
+            c3dl.matrixMode(c3dl.MODELVIEW);
+            currNode.pushed = true;
+          }
+          for (var i = 0, len = currNode.children.length; i < len; i++) {
+            if(!currNode.children[i].updated) {
+              currNode = currNode.children[i];
+              i = len;
+              flag = false;
+            }
+          }
+          if (flag) {
+            c3dl.popMatrix();
+            c3dl.matrixMode(c3dl.PROJECTION);
+            c3dl.popMatrix();
+            c3dl.matrixMode(c3dl.MODELVIEW);
+            c3dl.divideVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
+            for (var i = 0, len = currNode.children.length; i < len; i++) {
+              currNode.children[i].updated =null;
+            }
+            currNode.updated =true;
+            currNode.pushed = null;
+            c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
+            c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
+            currNode.pitch(currNode.angVel[0] * timeStep);
+            currNode.yaw(currNode.angVel[1] * timeStep);
+            currNode.roll(currNode.angVel[2] * timeStep);
+            currNode = currNode.parent;
           }
         }
-        if (flag) {
-          c3dl.popMatrix();
-          c3dl.matrixMode(c3dl.PROJECTION);
-          c3dl.popMatrix();
-          c3dl.matrixMode(c3dl.MODELVIEW);
-          c3dl.divideVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
-          for (var i = 0, len = currNode.children.length; i < len; i++) {
-            currNode.children[i].updated =null;
+        else{
+          if (currNode.primitiveSets) {
+            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+              var bv = currNode.primitiveSets[i].getBoundingVolume();
+              var trans = c3dl.peekMatrix();
+              c3dl.matrixMode(c3dl.PROJECTION);
+              var rot = c3dl.peekMatrix();
+              c3dl.matrixMode(c3dl.MODELVIEW);
+              if (bv) {
+                bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
+              }
+            }
           }
           currNode.updated =true;
-          currNode.pushed = null;
-          c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
-          c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
-          currNode.pitch(currNode.angVel[0] * timeStep);
-          currNode.yaw(currNode.angVel[1] * timeStep);
-          currNode.roll(currNode.angVel[2] * timeStep);
           currNode = currNode.parent;
         }
       }
-      else{
-        if (currNode.primitiveSets) {
-          for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
-            var bv = currNode.primitiveSets[i].getBoundingVolume();
-            var trans = c3dl.peekMatrix();
-            c3dl.matrixMode(c3dl.PROJECTION);
-            var rot = c3dl.peekMatrix();
-            c3dl.matrixMode(c3dl.MODELVIEW);
-            if (bv) {
-              bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
-            }
-          }
-        }
-        currNode.updated =true;
-        currNode = currNode.parent;
+      c3dl.popMatrix();
+      c3dl.popMatrix();
+      c3dl.matrixMode(c3dl.PROJECTION);
+      c3dl.popMatrix();
+      c3dl.popMatrix();
+      c3dl.matrixMode(c3dl.MODELVIEW);
+      if (this.isStatic()) {
+        this.setDirty(false);
       }
     }
-    c3dl.popMatrix();
-    c3dl.popMatrix();
-    c3dl.matrixMode(c3dl.PROJECTION);
-    c3dl.popMatrix();
-    c3dl.popMatrix();
-    c3dl.matrixMode(c3dl.MODELVIEW);
   }
   else {
     c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
@@ -440,6 +445,7 @@ c3dl.Collada.prototype.scale = function (scaleVec) {
   if (this.isReady()) {
     this.sceneGraph.scale(scaleVec);
     this.boundingVolume.scale(scaleVec);
+    this.setDirty(true);
   }
 }
 
@@ -453,6 +459,7 @@ c3dl.Collada.prototype.translate = function (trans) {
   if (this.isReady()) {
     this.sceneGraph.translate(trans);
     this.boundingVolume.setPosition(trans);
+    this.setDirty(true);
   }
 }
 
@@ -465,7 +472,9 @@ c3dl.Collada.prototype.setPosition = function (pos) {
   if (this.isReady()) {
     this.sceneGraph.setPosition(pos);
     this.boundingVolume.setPosition(pos);
+    this.setDirty(true);
   }
+  
 }
 
 /**
@@ -547,6 +556,7 @@ c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
   if (this.isReady()) {
     this.sceneGraph.rotateOnAxis(axisVec, angle);
     this.boundingVolume.rotateOnAxis(axisVec, angle);
+    this.setDirty(true);
   }
 }
 
@@ -560,6 +570,7 @@ c3dl.Collada.prototype.yaw = function (angle) {
   if (this.isReady()) {
     this.sceneGraph.yaw(angle);
     this.boundingVolume.rotateOnAxis(this.sceneGraph.up, angle);
+    this.setDirty(true);
   }
 }
 
@@ -572,6 +583,7 @@ c3dl.Collada.prototype.pitch = function (angle) {
   if (this.isReady()) {
     this.sceneGraph.pitch(angle);
     this.boundingVolume.rotateOnAxis(this.sceneGraph.left, angle);
+    this.setDirty(true);
   }
 }
 
@@ -591,6 +603,7 @@ c3dl.Collada.prototype.roll = function (angle) {
   if (this.isReady()) {
     this.sceneGraph.roll(angle);
     this.boundingVolume.rotateOnAxis(this.sceneGraph.dir, angle);
+    this.setDirty(true);
   }
 }
 
@@ -707,6 +720,7 @@ c3dl.Collada.prototype.setHeight = function (height) {
   }
   this.sceneGraph.scale(scaleVec);
   this.boundingVolume.scale(scaleVec);
+  this.setDirty(true);
 }
 
 c3dl.Collada.prototype.setLength = function (length) {
@@ -724,6 +738,7 @@ c3dl.Collada.prototype.setLength = function (length) {
   }
   this.sceneGraph.scale(scaleVec);
   this.boundingVolume.scale(scaleVec);
+  this.setDirty(true);
 }
 
 c3dl.Collada.prototype.setWidth = function (width) {
@@ -741,6 +756,7 @@ c3dl.Collada.prototype.setWidth = function (width) {
   }
   this.sceneGraph.scale(scaleVec);
   this.boundingVolume.scale(scaleVec);
+  this.setDirty(true);
 }
 
 c3dl.Collada.prototype.setSize = function (length, width, height) {
@@ -782,6 +798,7 @@ c3dl.Collada.prototype.setSize = function (length, width, height) {
   scaleVec = [vecL, vecH, vecW];
   this.sceneGraph.scale(scaleVec);
   this.boundingVolume.scale(scaleVec);
+  this.setDirty(true);
 }
 
 c3dl.Collada.prototype.setRenderObb = function (renderObb) {
@@ -802,4 +819,5 @@ c3dl.Collada.prototype.centerObject = function () {
   this.sceneGraph.center(this.boundingVolume.centerPosition);
   this.boundingVolume.center();
   c3dl.popMatrix();
+  this.setDirty(true);
 }
