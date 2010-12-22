@@ -58,8 +58,12 @@ function test() {
   var boundingSpheres = obj.getBoundingVolumes();
   for (var j = 0; j < boundingSpheres.length; j++) {
     checker = frustumCulling.sphereInFrustum(boundingSpheres[j]);
-    if (checker === "INSIDE") {
+    if (checker) {
+      checker = "INSIDE"
       break;
+    }
+    else {
+      checker = "OUTSIDE"
     }
   }
   document.getElementById('InOut').value = checker;
