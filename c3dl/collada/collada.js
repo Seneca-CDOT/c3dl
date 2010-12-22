@@ -236,10 +236,6 @@ c3dl.Collada.prototype.update = function (timeStep) {
   // keep checking to see if the file is done being loaded.
   if (this.isReady()) {
     if (!this.isStatic() || this.isStatic() && this.isDirty()) {
-      var pos = this.sceneGraph.pos;
-      var rotateMat = this.sceneGraph.getRotateMat();
-      var scaleVec = this.boundingVolume.scaleVec;
-      this.boundingVolume.set(pos,rotateMat,scaleVec);
       scaleVec=[1,1,1];
       //ModelView stack will be used for trasform mat
       c3dl.pushMatrix();
@@ -255,6 +251,11 @@ c3dl.Collada.prototype.update = function (timeStep) {
           var flag = true;
           if (!currNode.pushed) {
             c3dl.multiplyVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
+            c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
+            c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
+            currNode.pitch(currNode.angVel[0] * timeStep);
+            currNode.yaw(currNode.angVel[1] * timeStep);
+            currNode.roll(currNode.angVel[2] * timeStep);
             c3dl.pushMatrix();
             c3dl.multMatrix(currNode.getTransform());
             c3dl.matrixMode(c3dl.PROJECTION);
@@ -281,11 +282,6 @@ c3dl.Collada.prototype.update = function (timeStep) {
             }
             currNode.updated =true;
             currNode.pushed = null;
-            c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
-            c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
-            currNode.pitch(currNode.angVel[0] * timeStep);
-            currNode.yaw(currNode.angVel[1] * timeStep);
-            currNode.roll(currNode.angVel[2] * timeStep);
             currNode = currNode.parent;
           }
         }
@@ -315,6 +311,10 @@ c3dl.Collada.prototype.update = function (timeStep) {
       if (this.isStatic()) {
         this.setDirty(false);
       }
+      var pos = this.sceneGraph.pos;
+      var rotateMat = this.sceneGraph.getRotateMat();
+      var scaleVec = this.boundingVolume.scaleVec;
+      this.boundingVolume.set(pos,rotateMat,scaleVec);
     }
   }
   else {
@@ -419,7 +419,6 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
       }
     }
     c3dl.popMatrix();
-
     //this.sceneGraph.render(glCanvas3D, scene);
     if (scene.getBoundingVolumeVisibility()) {
       this.sceneGraph.renderBoundingVolumes(scene);
