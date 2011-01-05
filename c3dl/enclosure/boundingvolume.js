@@ -57,6 +57,7 @@ c3dl.BoundingVolume = function () {
     this.position[1] = position[1];
     this.position[2] = position[2];
     this.obb.set(this.getTransform()); 
+    this.aabb.set(this.obb.boxVerts); 
   }
   
   this.scale = function (scaleVec) {

@@ -794,7 +794,42 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       c3dl.std_callback(renderingObj);
     }
   }
+  this.renderShape = function (obj)
+  {
+      var renderingObj =
+      {
+      };
 
+      //
+      renderingObj["context"] = glCanvas3D;
+      renderingObj["getContext"] = function ()
+      {
+        return this.context;
+      };
+
+      //
+      renderingObj["renderer"] = this;
+      renderingObj["getRenderer"] = function ()
+      {
+        return this.renderer;
+      };
+
+      //
+      renderingObj['programObjectID'] = this.STANDARD_PROGRAM_ID;
+      renderingObj['getProgramObjectID'] = function ()
+      {
+        return this.programObjectID;
+      };
+
+      //
+      renderingObj['geometry'] = obj;
+      renderingObj['getGeometry'] = function ()
+      {
+        return this.geometry;
+      };
+      c3dl.std_callback(renderingObj);
+
+  }
   /**
    @private	
    Render a particle system.

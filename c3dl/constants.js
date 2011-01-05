@@ -152,6 +152,8 @@ c3dl.POINT = 2;
  */
 c3dl.PARTICLE_SYSTEM = 3;
 
+c3dl.SHAPE = 4;
+
 ////////////////////// SCENE /////////////////////////
 /**
  @constant
@@ -421,3 +423,5 @@ c3dl.mat3 = new C3DL_FLOAT_ARRAY(16);
 c3dl.vec1 = new C3DL_FLOAT_ARRAY(3);
 c3dl.vec2 = new C3DL_FLOAT_ARRAY(3);
 c3dl.vec3 = new C3DL_FLOAT_ARRAY(3);
+
+c3dl.SINCOS_LENGTH = parseInt(360 / 0.5, 10);

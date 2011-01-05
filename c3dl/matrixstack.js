@@ -51,9 +51,7 @@ c3dl.pushMatrix = function ()
 {
   c3dl.copyMatrix(c3dl.peekMatrix(),matrixList[matrixListPos]);
   c3dl.CurrentStackPointer.push(matrixList[matrixListPos]);
-  if (matrixListPos > 30)
-  alert(matrixListPos);
-   matrixListPos++;
+  matrixListPos++;
 }
 
 
