@@ -13,8 +13,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     this.cosLUT[i] = Math.cos(i * (Math.PI / 180) * 0.5);
   }
   this.sphereDetail(32,32);
-  var sphereArray = [];
+  var sphereArray = [], texCoords = [];
   var i;
+  
   for (i = 0; i < this.sphereDetailU; i++) {
         sphereArray.push(0);
         sphereArray.push(-1);
@@ -22,6 +23,8 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
         sphereArray.push(this.sphereX[i]);
         sphereArray.push(this.sphereY[i]);
         sphereArray.push(this.sphereZ[i]);
+        texCoords.push(0);
+        texCoords.push(i/this.sphereDetailU);
       }
       sphereArray.push(0);
       sphereArray.push(-1);
@@ -29,7 +32,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
       sphereArray.push(this.sphereX[0]);
       sphereArray.push(this.sphereY[0]);
       sphereArray.push(this.sphereZ[0]);
-
+      texCoords.push(0);
+      texCoords.push(1);
+      
       var v1, v11, v2;
 
       // middle rings
@@ -45,6 +50,8 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
           sphereArray.push(parseFloat(this.sphereX[v2]));
           sphereArray.push(parseFloat(this.sphereY[v2]));
           sphereArray.push(parseFloat(this.sphereZ[v2++]));
+          texCoords.push(i/this.sphereDetailV);
+          texCoords.push(j/this.sphereDetailU);
         }
 
         // close each ring
@@ -57,8 +64,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
         sphereArray.push(parseFloat(this.sphereX[v2]));
         sphereArray.push(parseFloat(this.sphereY[v2]));
         sphereArray.push(parseFloat(this.sphereZ[v2]));
+        texCoords.push(i/this.sphereDetailV);
+        texCoords.push(1);
       }
-
       // add the northern cap
       for (i = 0; i < this.sphereDetailU; i++) {
         v2 = voff + i;
@@ -69,6 +77,8 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
         sphereArray.push(0);
         sphereArray.push(1);
         sphereArray.push(0);
+        texCoords.push(i/this.sphereDetailU);
+        texCoords.push(0);
       }
 
       sphereArray.push(parseFloat(this.sphereX[voff]));
@@ -77,11 +87,17 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
       sphereArray.push(0);
       sphereArray.push(1);
       sphereArray.push(0);
-      alert("HHHHHHIIIIIII" + sphereArray.length)
+      texCoords.push(1);
+      texCoords.push(1);
+      for (i = texCoords.length; i > 0; i--) {
+        texCoords.push(texCoords[i]);
+      }
+
   var vertices = new C3DL_FLOAT_ARRAY(sphereArray);
   var normals = new C3DL_FLOAT_ARRAY(sphereArray);
-  var texCoords = new C3DL_FLOAT_ARRAY(sphereArray);
+  texCoords = new C3DL_FLOAT_ARRAY(texCoords);
   this.primitiveSets[0].init(vertices, normals, texCoords);
+  this.primitiveSets[0].sphere = true;
   this.boundingVolume.init(vertices);
   if (arguments.length == 1) {
     this.init(arguments[0])

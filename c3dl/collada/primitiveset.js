@@ -43,7 +43,7 @@ c3dl.PrimitiveSet = function ()
    */
   this.init = function (vertices, normals, texCoords,type)
   {
-  
+  /*
     var temp = [];
     alert("vertices");
     alert(vertices.length);
@@ -65,6 +65,7 @@ c3dl.PrimitiveSet = function ()
       temp.push(texCoords[i]);
     }
     alert(temp);
+    */
     this.vertices = vertices;
     this.normals = normals;
     this.texCoords = texCoords;

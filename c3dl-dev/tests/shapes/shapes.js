@@ -1,7 +1,7 @@
-//c3dl.addMainCallBack(boxMain, "box");
-//c3dl.addMainCallBack(planeMain, "plane");
+c3dl.addMainCallBack(boxMain, "box");
+c3dl.addMainCallBack(planeMain, "plane");
 c3dl.addMainCallBack(sphereMain, "sphere");
-//c3dl.addMainCallBack(custPlaneMain, "cplane");
+c3dl.addMainCallBack(custPlaneMain, "cplane");
 c3dl.addModel("sphere.dae");
 function boxMain(canvasName){
   scn = new c3dl.Scene();
@@ -53,14 +53,12 @@ function sphereMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-   //var sphere = new c3dl.Sphere(10);
-    var colladasphere = new c3dl.Collada();
-    colladasphere.init("sphere.dae");
-    scn.addObjectToScene(colladasphere);
+    var sphere = new c3dl.Sphere(10);
+    sphere.setTexture("testing.jpg"); 
     var cam = new c3dl.FreeCamera();
-    cam.setPosition([0.0, 0, 25.0]);
+    cam.setPosition([0.0, 0, 25]);
     cam.setLookAtPoint([0.0, 0.0, 0.0]);
-    //scn.addObjectToScene(sphere);
+    scn.addObjectToScene(sphere);
     scn.setCamera(cam);
     scn.startScene();
   }

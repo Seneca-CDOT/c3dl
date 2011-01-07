@@ -6,9 +6,9 @@
 c3dl.Plane = c3dl.inherit(c3dl.Shape, function () {
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
-  var vertices = new C3DL_FLOAT_ARRAY([-0.5,0,-0.5,-0.5,0,0.5,0.5,0,-0.5,0.5,0,0.5,0.5,0,-0.5,-0.5,0,0.5]);
+  var vertices = new C3DL_FLOAT_ARRAY([-0.5,0,-0.5, -0.5,0,0.5, 0.5,0,-0.5, 0.5,0,0.5, 0.5,0,-0.5, -0.5,0,0.5]);
   var normals = new C3DL_FLOAT_ARRAY([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0]);
-  var texCoords = new C3DL_FLOAT_ARRAY([0,0,0,1,1,0,1,1,1,0,0,1,0,0,0,0,0,0]);
+  var texCoords = new C3DL_FLOAT_ARRAY([0,0, 0,1, 1,0, 1,1, 1,0, 0,1, 0,0, 0,0, 0,0]);
   this.primitiveSets[0].init(vertices, normals, texCoords);
   this.boundingVolume.init(vertices);
   if (arguments.length == 2) {

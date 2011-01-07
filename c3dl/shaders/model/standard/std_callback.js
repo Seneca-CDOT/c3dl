@@ -114,6 +114,13 @@ c3dl.std_callback = function (renderingObj)
 
     // VERTICES
     renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices());
-    glCanvas3D.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
+    if (currColl.sphere) {
+      glCanvas3D.drawArrays(glCanvas3D.TRIANGLE_STRIP, 0, currColl.getVertices().length / 3);
+    }
+    else {
+      glCanvas3D.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
+    }
+    glCanvas3D.enable(glCanvas3D.POLYGON_OFFSET_FILL);
   }
 }
+
