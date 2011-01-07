@@ -12,7 +12,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     this.sinLUT[i] = Math.sin(i * (Math.PI / 180) * 0.5);
     this.cosLUT[i] = Math.cos(i * (Math.PI / 180) * 0.5);
   }
-  this.sphereDetail(30,30);
+  this.sphereDetail(32,32);
   var sphereArray = [];
   var i;
   for (i = 0; i < this.sphereDetailU; i++) {
@@ -77,6 +77,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
       sphereArray.push(0);
       sphereArray.push(1);
       sphereArray.push(0);
+      alert("HHHHHHIIIIIII" + sphereArray.length)
   var vertices = new C3DL_FLOAT_ARRAY(sphereArray);
   var normals = new C3DL_FLOAT_ARRAY(sphereArray);
   var texCoords = new C3DL_FLOAT_ARRAY(sphereArray);
