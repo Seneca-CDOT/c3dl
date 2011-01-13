@@ -7,9 +7,9 @@ c3dl.Shape = c3dl.inherit(c3dl.Primitive, function () {
   c3dl._superc(this);
   this.boundingVolume = new c3dl.BoundingVolume();
   this.boundingVolume.centered = true;
-  this.renderObb = true;
-  this.renderAabb = true;
-  this.renderBoundingSphere = true;
+  this.renderObb = false;
+  this.renderAabb = false;
+  this.renderBoundingSphere = false;
   this.shape = new c3dl.Actor();
   this.firstTimeRender = true;
   this.primitiveSets = [];

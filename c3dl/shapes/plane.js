@@ -14,8 +14,6 @@ c3dl.Plane = c3dl.inherit(c3dl.Shape, function () {
   if (arguments.length == 2) {
     this.init(arguments[0],arguments[1])
   }
-  else if (arguments.length >= 3) {
-  }
 });
 
 c3dl.Plane.prototype.init = function (length, width) {
