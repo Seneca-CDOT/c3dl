@@ -121,6 +121,7 @@ c3dl.Shape.prototype.render = function (glCanvas3D, scene) {
     if (this.renderBoundingSphere) {
       this.boundingVolume.renderSphere(scene);
     }
+    scene.getRenderer().texManager.updateTexture(this.primitiveSets[0].texture);
   }
 } 
 
