@@ -1,11 +1,12 @@
-c3dl.addMainCallBack(boxMain, "box");
+c3dl.addMainCallBack(cubeMain, "cube");
 c3dl.addMainCallBack(planeMain, "plane");
 c3dl.addMainCallBack(sphereMain, "sphere");
 c3dl.addMainCallBack(sphere2Main, "sphereDetail");
 c3dl.addMainCallBack(customMain, "custom");
 c3dl.addMainCallBack(custom2Main, "customWTexture");
+c3dl.addMainCallBack(customPlaneMain, "customPlane");
 c3dl.addModel("sphere.dae");
-function boxMain(canvasName){
+function cubeMain(canvasName){
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
   renderer = new c3dl.WebGL();
@@ -14,13 +15,13 @@ function boxMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-    var box = new c3dl.Box(5,5,5);
-    box.setAngularVel([0.0, -0.001, 0.0]);
-    box.setTexture("testing.jpg");
+    var cube = new c3dl.Cube(5,5,5);
+    cube.setAngularVel([0.0, -0.001, 0.0]);
+    cube.setTexture("testing.jpg");
     var cam = new c3dl.FreeCamera();
     cam.setPosition([0.0, 0.0, 15.0]);
     cam.setLookAtPoint([0.0, 0.0, 0.0]);
-    scn.addObjectToScene(box);
+    scn.addObjectToScene(cube);
     scn.setCamera(cam);
     scn.startScene();
   }
@@ -128,5 +129,96 @@ function custom2Main(canvasName){
     scn.addObjectToScene(customShapeWithTexture);
     scn.setCamera(cam);
     scn.startScene();
+  }
+}
+var cam;
+function customPlaneMain(canvasName){
+  scn = new c3dl.Scene();
+  scn.setCanvasTag(canvasName);
+  renderer = new c3dl.WebGL();
+  renderer.createRenderer(this);
+  scn.setRenderer(renderer);
+  scn.init(canvasName);
+  
+  if (renderer.isReady()) {
+    //var vert = [-5,-5, -5,5, 0,5, 0,0, 5,0, 5,-5]; //norm up
+    //var vert = [-5,-5, -5,5, 5,5, 5,-5]; //norm up
+   // var vert = [5,5, -5,5, -5,-5, 5,-5]; //norm down
+   
+    var vert= [0,0, 5,-5, 0,-5]; //norm up
+    //var vert= [0,-5, 0,0, 5,-5]; //norm up
+    //var vert= [5,-5, 0,-5, 0,0]; //norm up
+    //var vert= [0,0, 0,-5, 5,-5]; //norm down
+    //var vert= [0,-5, 5,-5, 0,0]; //norm down
+    //var vert= [5,-5, 0,0, 0,-5]; //norm down
+    var customPlane = new c3dl.CustomPlane(vert);
+    cam = new c3dl.FreeCamera();
+    cam.setPosition([0.0, 3, 10]);
+    cam.setLookAtPoint([0.0, 0.0, 0.0]);
+    scn.addObjectToScene(customPlane);
+    scn.setCamera(cam);
+    scn.startScene();
+    scn.setKeyboardCallback(onKeyUp, onKeyDown);
+  }
+}
+
+var keysDown = (
+function keysDown() {
+  var key_w = false,
+      key_a = false,
+      key_s = false,
+      key_d = false;
+  return {
+    "KEY_W": key_w,
+    "KEY_A": key_a,
+    "KEY_S": key_s,
+    "KEY_D": key_d,
+  };
+})();
+  
+//Keys
+const KEY_D = 68;
+const KEY_A = 65;
+const KEY_W = 87;
+const KEY_S = 83;
+
+function onKeyDown(event) {
+  switch (event.keyCode) {
+  case KEY_W:
+    cam.setPosition([cam.getPosition()[0],cam.getPosition()[1]-0.5,cam.getPosition()[2]]);
+       cam.setLookAtPoint([0.0, 0.0, 0.0]);
+    break;
+  case KEY_A:
+    keysDown.KEY_A = true;
+    break;
+  case KEY_S:
+      cam.setPosition([cam.getPosition()[0],cam.getPosition()[1]+0.5,cam.getPosition()[2]]);
+       cam.setLookAtPoint([0.0, 0.0, 0.0]);
+    break;
+  case KEY_D:
+    keysDown.KEY_D = true;
+    break;
+  default:
+    break;
+  }
+}
+
+//When a key is released down
+function onKeyUp(event) {
+  switch (event.keyCode) {
+  case KEY_W:
+    keysDown.KEY_W = false;
+    break;
+  case KEY_A:
+    keysDown.KEY_A = false;
+    break;
+  case KEY_S:
+    keysDown.KEY_S = false;
+    break;
+  case KEY_D:
+    keysDown.KEY_D = false;
+    break;
+  default:
+    break;
   }
 }

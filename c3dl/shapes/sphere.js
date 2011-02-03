@@ -107,7 +107,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   var normals = new C3DL_FLOAT_ARRAY(sphereArray);
   texCoords = new C3DL_FLOAT_ARRAY(texCoords);
   this.primitiveSets[0].init(vertices, normals, texCoords);
-  this.primitiveSets[0].sphere = true;
+  this.primitiveSets[0].fillType = "TRIANGLE_STRIP";
   this.boundingVolume.init(vertices);
   this.scale([0.5,0.5,0.5]);
   this.init(arguments[0])

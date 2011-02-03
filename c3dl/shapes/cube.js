@@ -3,7 +3,7 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-c3dl.Box = c3dl.inherit(c3dl.Shape, function () {
+c3dl.Cube = c3dl.inherit(c3dl.Shape, function () {
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
   var vertices = new C3DL_FLOAT_ARRAY([
@@ -38,7 +38,7 @@ c3dl.Box = c3dl.inherit(c3dl.Shape, function () {
   }
 });
 
-c3dl.Box.prototype.init = function (length, width, height) {
+c3dl.Cube.prototype.init = function (length, width, height) {
   length = parseFloat(length);
   width = parseFloat(width);
   height = parseFloat(height);

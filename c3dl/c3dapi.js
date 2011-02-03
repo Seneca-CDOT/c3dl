@@ -77,10 +77,11 @@ c3dl_require('actors/line.js');
 
 //shapes
 c3dl_require('shapes/shape.js');
-c3dl_require('shapes/box.js');
+c3dl_require('shapes/cube.js');
 c3dl_require('shapes/plane.js');
 c3dl_require('shapes/sphere.js');
 c3dl_require('shapes/custom.js');
+c3dl_require('shapes/customplane.js');
 
 //frustum culling
 c3dl_require('frustum_culling/frustum.js');
