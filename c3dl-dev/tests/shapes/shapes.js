@@ -141,84 +141,21 @@ function customPlaneMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-    //var vert = [-5,-5, -5,5, 0,5, 0,0, 5,0, 5,-5]; //norm up
-    //var vert = [-5,-5, -5,5, 5,5, 5,-5]; //norm up
-   // var vert = [5,5, -5,5, -5,-5, 5,-5]; //norm down
+    var vert = [-5,-5, -5,5, 0,5, 0,0, 5,0, 5,-5]; //norm up
    
-    var vert= [0,0, 5,-5, 0,-5]; //norm up
+    //var vert= [0,0, 5,-5, 0,-5]; //norm up
     //var vert= [0,-5, 0,0, 5,-5]; //norm up
     //var vert= [5,-5, 0,-5, 0,0]; //norm up
     //var vert= [0,0, 0,-5, 5,-5]; //norm down
     //var vert= [0,-5, 5,-5, 0,0]; //norm down
     //var vert= [5,-5, 0,0, 0,-5]; //norm down
     var customPlane = new c3dl.CustomPlane(vert);
+    customPlane.setTexture("testing.jpg");
     cam = new c3dl.FreeCamera();
-    cam.setPosition([0.0, 3, 10]);
+    cam.setPosition([0.0, 15, 0.01]);
     cam.setLookAtPoint([0.0, 0.0, 0.0]);
     scn.addObjectToScene(customPlane);
     scn.setCamera(cam);
     scn.startScene();
-    scn.setKeyboardCallback(onKeyUp, onKeyDown);
-  }
-}
-
-var keysDown = (
-function keysDown() {
-  var key_w = false,
-      key_a = false,
-      key_s = false,
-      key_d = false;
-  return {
-    "KEY_W": key_w,
-    "KEY_A": key_a,
-    "KEY_S": key_s,
-    "KEY_D": key_d,
-  };
-})();
-  
-//Keys
-const KEY_D = 68;
-const KEY_A = 65;
-const KEY_W = 87;
-const KEY_S = 83;
-
-function onKeyDown(event) {
-  switch (event.keyCode) {
-  case KEY_W:
-    cam.setPosition([cam.getPosition()[0],cam.getPosition()[1]-0.5,cam.getPosition()[2]]);
-       cam.setLookAtPoint([0.0, 0.0, 0.0]);
-    break;
-  case KEY_A:
-    keysDown.KEY_A = true;
-    break;
-  case KEY_S:
-      cam.setPosition([cam.getPosition()[0],cam.getPosition()[1]+0.5,cam.getPosition()[2]]);
-       cam.setLookAtPoint([0.0, 0.0, 0.0]);
-    break;
-  case KEY_D:
-    keysDown.KEY_D = true;
-    break;
-  default:
-    break;
-  }
-}
-
-//When a key is released down
-function onKeyUp(event) {
-  switch (event.keyCode) {
-  case KEY_W:
-    keysDown.KEY_W = false;
-    break;
-  case KEY_A:
-    keysDown.KEY_A = false;
-    break;
-  case KEY_S:
-    keysDown.KEY_S = false;
-    break;
-  case KEY_D:
-    keysDown.KEY_D = false;
-    break;
-  default:
-    break;
   }
 }
