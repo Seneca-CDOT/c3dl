@@ -19,8 +19,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     this.sphereDetail(32,32);
   }
   var sphereArray = [], texCoords = [];
+  var sectionX = 1/this.sphereDetailU;
+  var sectionY = 1/this.sphereDetailV;
   var i;
-  
   for (i = 0; i < this.sphereDetailU; i++) {
     sphereArray.push(0);
     sphereArray.push(-1);
@@ -28,10 +29,10 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     sphereArray.push(this.sphereX[i]);
     sphereArray.push(this.sphereY[i]);
     sphereArray.push(this.sphereZ[i]);
-    texCoords.push(0);
-    texCoords.push(1);
-    texCoords.push(this.sphereX[i]);
-    texCoords.push(-this.sphereY[i]);
+    texCoords.push(1-sectionX*i);
+    texCoords.push(0.999);
+    texCoords.push(1-sectionX*i);
+    texCoords.push(0.999);
   }
   sphereArray.push(0);
   sphereArray.push(-1);
@@ -39,11 +40,13 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   sphereArray.push(this.sphereX[0]);
   sphereArray.push(this.sphereY[0]);
   sphereArray.push(this.sphereZ[0]);
-  texCoords.push(0);
-  texCoords.push(1);
-  texCoords.push(this.sphereX[0]);
-  texCoords.push(-this.sphereY[0]);
+  texCoords.push(1-sectionX*this.sphereDetailU);
+  texCoords.push(0.999);
+  texCoords.push(1-sectionX*this.sphereDetailU);
+  texCoords.push(0.999);
+
   var v1, v11, v2;
+  
   // middle rings
   var voff = 0;
   var toff = 0;
@@ -54,28 +57,28 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     for (var j = 0; j < this.sphereDetailU; j++) {
       sphereArray.push(parseFloat(this.sphereX[v1]));
       sphereArray.push(parseFloat(this.sphereY[v1]));
-      sphereArray.push(parseFloat(this.sphereZ[v1]));
+      sphereArray.push(parseFloat(this.sphereZ[v1++]));
       sphereArray.push(parseFloat(this.sphereX[v2]));
       sphereArray.push(parseFloat(this.sphereY[v2]));
-      sphereArray.push(parseFloat(this.sphereZ[v2]));
-      texCoords.push(this.sphereX[v1]);
-      texCoords.push(-this.sphereY[v1++]);
-      texCoords.push(this.sphereX[v2]);
-      texCoords.push(-this.sphereY[v2++]);     
+      sphereArray.push(parseFloat(this.sphereZ[v2++]));
+      texCoords.push(1-sectionX*j);
+      texCoords.push(1-sectionY*(i-1));
+      texCoords.push(1-sectionX*j);
+      texCoords.push(1-sectionY*i);      
     }
     // close each ring
     v1 = v11;
     v2 = voff;
     sphereArray.push(parseFloat(this.sphereX[v1]));
     sphereArray.push(parseFloat(this.sphereY[v1]));
-    sphereArray.push(parseFloat(this.sphereZ[v1]));
+    sphereArray.push(parseFloat(this.sphereZ[v1++]));
     sphereArray.push(parseFloat(this.sphereX[v2]));
     sphereArray.push(parseFloat(this.sphereY[v2]));
-    sphereArray.push(parseFloat(this.sphereZ[v2]));
-    texCoords.push(this.sphereX[v1]);
-    texCoords.push(-this.sphereY[v1]);
-    texCoords.push(this.sphereX[v2]);
-    texCoords.push(-this.sphereY[v2]);
+    sphereArray.push(parseFloat(this.sphereZ[v2++]));
+    texCoords.push(1-sectionX*j);
+    texCoords.push(1-sectionY*(i-1));
+    texCoords.push(1-sectionX*j);
+    texCoords.push(1-sectionY*i);  
   }
   // add the northern cap
   for (i = 0; i < this.sphereDetailU; i++) {
@@ -86,10 +89,10 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     sphereArray.push(0);
     sphereArray.push(1);
     sphereArray.push(0);
-    texCoords.push(this.sphereX[v2]);
-    texCoords.push(-this.sphereY[v2]);
-    texCoords.push(0);
-    texCoords.push(-1);
+    texCoords.push(1-sectionX*i);
+    texCoords.push(1-sectionY*this.sphereDetailV);
+    texCoords.push(1-sectionX*i);
+    texCoords.push(1-sectionY*this.sphereDetailV);
   }
   sphereArray.push(parseFloat(this.sphereX[voff]));
   sphereArray.push(parseFloat(this.sphereY[voff]));
@@ -97,11 +100,10 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   sphereArray.push(0);
   sphereArray.push(1);
   sphereArray.push(0);
-  texCoords.push(this.sphereX[voff]);
-  texCoords.push(-this.sphereY[voff]);
-  texCoords.push(1);
-  texCoords.push(-1);
-
+  texCoords.push(1-sectionX*this.sphereDetailU);
+  texCoords.push(1-sectionY*this.sphereDetailV);
+  texCoords.push(1-sectionX*this.sphereDetailU);
+  texCoords.push(1-sectionY*this.sphereDetailV);
     
   var vertices = new C3DL_FLOAT_ARRAY(sphereArray);
   var normals = new C3DL_FLOAT_ARRAY(sphereArray);

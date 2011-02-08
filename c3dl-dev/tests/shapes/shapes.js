@@ -142,13 +142,6 @@ function customPlaneMain(canvasName){
   
   if (renderer.isReady()) {
     var vert = [-5,-5, -5,5, 0,5, 0,0, 5,0, 5,-5]; //norm up
-   
-    //var vert= [0,0, 5,-5, 0,-5]; //norm up
-    //var vert= [0,-5, 0,0, 5,-5]; //norm up
-    //var vert= [5,-5, 0,-5, 0,0]; //norm up
-    //var vert= [0,0, 0,-5, 5,-5]; //norm down
-    //var vert= [0,-5, 5,-5, 0,0]; //norm down
-    //var vert= [5,-5, 0,0, 0,-5]; //norm down
     var customPlane = new c3dl.CustomPlane(vert);
     customPlane.setTexture("testing.jpg");
     cam = new c3dl.FreeCamera();
