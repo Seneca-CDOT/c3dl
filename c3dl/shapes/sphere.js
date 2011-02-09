@@ -3,7 +3,7 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
+c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDetailV) {
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
   this.sinLUT = new Array(c3dl.SINCOS_LENGTH);
@@ -13,7 +13,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     this.cosLUT[i] = Math.cos(i * (Math.PI / 180) * 0.5);
   }
   if (arguments.length == 3) {
-    this.sphereDetail(arguments[1],arguments[2]);
+    this.sphereDetail(sphereDetailU,sphereDetailV);
   }
   else {
     this.sphereDetail(32,32);
@@ -30,9 +30,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     sphereArray.push(this.sphereY[i]);
     sphereArray.push(this.sphereZ[i]);
     texCoords.push(1-sectionX*i);
-    texCoords.push(0.999);
+    texCoords.push(1.0);
     texCoords.push(1-sectionX*i);
-    texCoords.push(0.999);
+    texCoords.push(sectionY*(this.sphereDetailV-1));
   }
   sphereArray.push(0);
   sphereArray.push(-1);
@@ -41,9 +41,9 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   sphereArray.push(this.sphereY[0]);
   sphereArray.push(this.sphereZ[0]);
   texCoords.push(1-sectionX*this.sphereDetailU);
-  texCoords.push(0.999);
+  texCoords.push(1.0);
   texCoords.push(1-sectionX*this.sphereDetailU);
-  texCoords.push(0.999);
+  texCoords.push(sectionY*(this.sphereDetailV-1));
 
   var v1, v11, v2;
   
@@ -90,7 +90,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
     sphereArray.push(1);
     sphereArray.push(0);
     texCoords.push(1-sectionX*i);
-    texCoords.push(1-sectionY*this.sphereDetailV);
+    texCoords.push(1-sectionY*(this.sphereDetailV-1));
     texCoords.push(1-sectionX*i);
     texCoords.push(1-sectionY*this.sphereDetailV);
   }
@@ -101,7 +101,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   sphereArray.push(1);
   sphereArray.push(0);
   texCoords.push(1-sectionX*this.sphereDetailU);
-  texCoords.push(1-sectionY*this.sphereDetailV);
+  texCoords.push(1-sectionY*(this.sphereDetailV-1));
   texCoords.push(1-sectionX*this.sphereDetailU);
   texCoords.push(1-sectionY*this.sphereDetailV);
     
@@ -112,7 +112,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function () {
   this.primitiveSets[0].fillType = "TRIANGLE_STRIP";
   this.boundingVolume.init(vertices);
   this.scale([0.5,0.5,0.5]);
-  this.init(arguments[0])
+  this.init(radius)
 });
 
 c3dl.Sphere.prototype.init = function (raduis) {

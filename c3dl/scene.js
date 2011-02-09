@@ -688,8 +688,7 @@ c3dl.Scene = function ()
   {
     if (bgColor.length >= 3)
     {
-      backgroundColor = bgColor.slice(0, 3);
-
+      backgroundColor = [bgColor[0], bgColor[1], bgColor[2]]; 
       if (renderer)
       {
         renderer.setClearColor(backgroundColor);

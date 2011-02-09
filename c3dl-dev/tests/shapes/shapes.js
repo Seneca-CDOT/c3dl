@@ -24,6 +24,7 @@ function cubeMain(canvasName){
     scn.addObjectToScene(cube);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 
@@ -44,6 +45,7 @@ function planeMain(canvasName){
     scn.addObjectToScene(plane);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 
@@ -65,6 +67,7 @@ function sphereMain(canvasName){
     scn.addObjectToScene(sphere);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 
@@ -86,6 +89,7 @@ function sphere2Main(canvasName){
     scn.addObjectToScene(sphere);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 function customMain(canvasName){
@@ -101,11 +105,12 @@ function customMain(canvasName){
     var norm = [0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0];
     var customShape = new c3dl.CustomShape(vert,norm);
     var cam = new c3dl.FreeCamera();
-    cam.setPosition([0.0, 25.0, 0.01]);
+    cam.setPosition([-10.0, 10.0, 15.01]);
     cam.setLookAtPoint([0.0, 0.0, 0.0]);
     scn.addObjectToScene(customShape);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 
@@ -129,6 +134,7 @@ function custom2Main(canvasName){
     scn.addObjectToScene(customShapeWithTexture);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
 var cam;
@@ -150,5 +156,15 @@ function customPlaneMain(canvasName){
     scn.addObjectToScene(customPlane);
     scn.setCamera(cam);
     scn.startScene();
+    scn.setPickingCallback(picking);
   }
 }
+
+function picking(pickingObj) {	
+	var objectsHit = pickingObj.getObjects();
+
+	if( objectsHit.length > 0 )	{
+    alert("hit");
+	}
+}
+

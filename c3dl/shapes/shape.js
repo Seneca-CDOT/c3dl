@@ -10,7 +10,7 @@ c3dl.Shape = c3dl.inherit(c3dl.Primitive, function () {
   this.renderObb = false;
   this.renderAabb = false;
   this.renderBoundingSphere = false;
-  this.shape = new c3dl.Actor();
+  this.shape = new c3dl.Primitive();
   this.firstTimeRender = true;
   this.primitiveSets = [];
 });
@@ -156,17 +156,6 @@ c3dl.Shape.prototype.setTexture = function (texturePath) {
   }
 }
 
-c3dl.Shape.prototype.setMaterial = function (material) {
-  if (this.isReady()) {
-    this.shape.setMaterial(material);
-  }
-}
-
-c3dl.Shape.prototype.setEffect = function (effect) {
-  // add type checking?
-  this.setEffect(effect);
-}
-
 c3dl.Shape.prototype.rotateOnAxis = function (axisVec, angle) {
   if (this.isReady()) {
     this.shape.rotateOnAxis(axisVec, angle);
@@ -247,26 +236,51 @@ c3dl.Shape.prototype.clone = function (other) {
  in the shape.
  */
 c3dl.Shape.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
-  var result;
   if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getRadius()) && 
     c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) &&
     c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getAxis(),this.boundingVolume.getSizeInAxis())) {
-    result = true;
+    return true;
   }
-  else {
-    result = false;
+  return false;
+}
+
+c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
+  c3dl.pushMatrix();
+  c3dl.multMatrix(this.getTransform());
+  var mat = c3dl.inverseMatrix(c3dl.peekMatrix());
+  var rayorigin = c3dl.multiplyMatrixByVector(mat, rayOrigin);
+  var raydir = c3dl.normalizeVector(c3dl.multiplyMatrixByDirection(mat, rayDir));
+  c3dl.popMatrix();
+  // allocate and resuse these vertices to prevent allocation and deletion every face.
+  var vert1 = new C3DL_FLOAT_ARRAY(3);
+  var vert2 = new C3DL_FLOAT_ARRAY(3);
+  var vert3 = new C3DL_FLOAT_ARRAY(3);
+  var vertices = this.primitiveSets[0].getVertices();
+  // Iterate over each face of the object and test it against the ray.
+  for (var j = 0, len2 = vertices.length; j < len2; j += 9) {
+    // 3 points of a triangle with the object's position offset
+    vert1[0] = vertices[j];
+    vert1[1] = vertices[j + 1]
+    vert1[2] = vertices[j + 2];
+ 
+    vert2[0] = vertices[j + 3];
+    vert2[1] = vertices[j + 4];
+    vert2[2] = vertices[j + 5];
+
+    vert3[0] = vertices[j + 6];
+    vert3[1] = vertices[j + 7];
+    vert3[2] = vertices[j + 8];
+    if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3)) {
+      return true;
+    }   
   }
-  return result;
+  return false;
 }
 
 c3dl.Shape.prototype.getObjectType = function () {
   return c3dl.SHAPE;
 }
 
-c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
-  var result = this.shape.rayIntersects(rayOrigin, rayDir);
-  return result;
-}
 c3dl.Shape.prototype.getBoundingVolumes = function () {
   return this.shape.getBoundingVolumes();
 }
