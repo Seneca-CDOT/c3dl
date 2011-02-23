@@ -338,5 +338,12 @@ c3dl.isVectorZero = function (vec)
 c3dl.getAngleBetweenVectors = function (vecOne, vecTwo)
 {
   var dot = c3dl.vectorDotProduct(vecOne, vecTwo);
+  //force dot into acceptable range.
+  if(dot > 1 && dot < 1+c3dl.TOLERANCE) {
+    dot = 1
+  }
+  else if(dot < -1 && dot > -1-c3dl.TOLERANCE) {
+    dot = -1;
+  }
   return c3dl.radiansToDegrees(Math.acos(dot));
 }

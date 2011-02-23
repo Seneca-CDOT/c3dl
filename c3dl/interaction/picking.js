@@ -551,23 +551,39 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   var POI = c3dl.addVectors(orig, scaledDir);
 
   // area of smaller triangles formed by the 3 vertices and the point of intersection	
-  edge1 = c3dl.subtractVectors(vert0, POI);
-  edge2 = c3dl.subtractVectors(vert1, POI);
+  c3dl.subtractVectors(vert0, POI,edge1);
+  c3dl.subtractVectors(vert1, POI,edge2);
   edge3 = c3dl.subtractVectors(vert2, POI);
 
   // get the area of the three triangles 'created' where the 
   // ray intersects the triangle's plane. 
-  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2));
-  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3));
-  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1));
+  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2,c3dl.vec1));
+  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3,c3dl.vec1));
+  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1,c3dl.vec1));
 
   // get the difference between the area of the triangle and the area of the three triangles
   // created where the user clicked. If the user clicked inside the triangle, the difference
   // should be near zero.
   var diff = area - (area1 + area2 + area3);
-
-  // delete edg1, edge2, edge3, area1, area2, area3, normDotDir, normDotRayorig, t, POI, area;
-  // since we have done quite a few calculations on floats, 
-  // allow a small margin of error.
-  return (Math.abs(diff) <= 0.0001);
+  if(Math.abs(diff) <= 0.0001) {
+    //get vector from ray origin to poi
+    var otherdir = c3dl.subtractVectors(POI,orig);
+    //get unit vector of that
+    var normOtherDir = c3dl.normalizeVector(otherdir);
+    
+    //get unit vector of original dir (uvd)
+    var normDir = c3dl.normalizeVector(dir);
+    //find the angle between those two vectors
+    var angle = c3dl.getAngleBetweenVectors(normOtherDir,normDir);
+    //if it is less than 90, the object is probably visible
+    if(angle < 90) {
+      return true;
+    }
+    else {//if it is greater than 90, this is behind the point of origin somewhere
+      return false;
+    } 
+  }
+  else {
+    return false;
+  }
 }
