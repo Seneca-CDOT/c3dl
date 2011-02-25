@@ -282,7 +282,7 @@ c3dl.Shape.prototype.getObjectType = function () {
 }
 
 c3dl.Shape.prototype.getBoundingVolumes = function () {
-  return this.shape.getBoundingVolumes();
+  return [this.boundingVolume];
 }
 
 c3dl.Shape.prototype.getHeight = function () {

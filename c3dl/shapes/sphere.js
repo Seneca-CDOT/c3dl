@@ -13,7 +13,7 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDe
     this.cosLUT[i] = Math.cos(i * (Math.PI / 180) * 0.5);
   }
   if (arguments.length == 3) {
-    this.sphereDetail(sphereDetailU,sphereDetailV);
+    this.sphereDetail(parseInt(sphereDetailU),parseInt(sphereDetailV));
   }
   else {
     this.sphereDetail(32,32);
