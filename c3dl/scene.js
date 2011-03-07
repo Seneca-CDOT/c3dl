@@ -941,41 +941,8 @@ c3dl.Scene = function ()
 
     return isFound;
   }
-
-  /**
-   Start scene sets a default ambient light to white with full 
-   intensity.  If this ambient lighting is not desired, call 
-   setAmbientLight(..) after this method, which will undo the
-   default ambient light values.
-   */
-  this.startScene = function ()
-  {
-    if (c3dl.debug.SHARK === true)
-    {
-      connectShark();
-      startShark();
-    }
-    numFramesSinceSceneStart = 0;
-    frameCounter = 0;
-
-    // Safety Checks
-    if (glCanvas3D == null) return false;
-    if (renderer == null) return false;
-    if (camera == null) return false;
-
-    // Start the timer
-    lastTimeTaken = Date.now();
-
-    // Benchmark hook:
-    if (typeof(benchmarkSetupDone) == "function") benchmarkSetupDone();
-
-    // Create a timer for this object
-    timerID = setInterval(this.render, 5);
-
-    this.setAmbientLight([ambientLight[0], ambientLight[1], ambientLight[2]]);
-  }
-
-  /**
+  
+/**
    @private
    Render Loop
    */
@@ -994,7 +961,7 @@ c3dl.Scene = function ()
     // If a user wants to stop rendering, this is where it happens
     if (exitFlag)
     {
-      timerID = clearInterval(timerID);
+      //timerID = clearInterval(timerID);
       if (c3dl.debug.SHARK === true)
       {
         stopShark();
@@ -1048,6 +1015,44 @@ c3dl.Scene = function ()
     //renderer.swapBuffers();
     numFramesSinceSceneStart++;
     FPS_Counter++;
+  }
+
+  this.refresh = function() {
+    thisScn.render();
+    requestAnimFrame(thisScn.refresh);
+  }
+  
+  /**
+   Start scene sets a default ambient light to white with full 
+   intensity.  If this ambient lighting is not desired, call 
+   setAmbientLight(..) after this method, which will undo the
+   default ambient light values.
+   */
+  this.startScene = function ()
+  {
+    if (c3dl.debug.SHARK === true)
+    {
+      connectShark();
+      startShark();
+    }
+    numFramesSinceSceneStart = 0;
+    frameCounter = 0;
+
+    // Safety Checks
+    if (glCanvas3D == null) return false;
+    if (renderer == null) return false;
+    if (camera == null) return false;
+
+    // Start the timer
+    lastTimeTaken = Date.now();
+
+    // Benchmark hook:
+    if (typeof(benchmarkSetupDone) == "function") benchmarkSetupDone();
+
+    // Create a timer for this object
+    this.refresh();
+
+    this.setAmbientLight([ambientLight[0], ambientLight[1], ambientLight[2]]);
   }
 
   /**
