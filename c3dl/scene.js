@@ -57,7 +57,6 @@ c3dl.Scene = function ()
   var updateHandler = null;
 
   // Performance variables
-  var timerID = 0;
   var lastTimeTaken = Date.now();
   var numFramesSinceSceneStart = 0;
 
@@ -961,7 +960,6 @@ c3dl.Scene = function ()
     // If a user wants to stop rendering, this is where it happens
     if (exitFlag)
     {
-      //timerID = clearInterval(timerID);
       if (c3dl.debug.SHARK === true)
       {
         stopShark();
@@ -1049,7 +1047,6 @@ c3dl.Scene = function ()
     // Benchmark hook:
     if (typeof(benchmarkSetupDone) == "function") benchmarkSetupDone();
 
-    // Create a timer for this object
     this.refresh();
 
     this.setAmbientLight([ambientLight[0], ambientLight[1], ambientLight[2]]);
