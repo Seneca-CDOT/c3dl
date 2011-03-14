@@ -310,7 +310,7 @@ c3dl.inverseMatrix = function (mat) {
   if (!mat) {
     return
   }
-  var kInv =  new C3DL_FLOAT_ARRAY(16);
+  var kInv =  c3dl.mat1;
 	var fA0 = mat[ 0] * mat[ 5] - mat[ 1] * mat[ 4];
  	var fA1 = mat[ 0] * mat[ 6] - mat[ 2] * mat[ 4];
  	var fA2 = mat[ 0] * mat[ 7] - mat[ 3] * mat[ 4];

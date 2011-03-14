@@ -79,6 +79,7 @@ c3dl.Scene = function ()
   var textureQueue = [];
   var pointPositions = null;
   //type of culling 
+  var frustumCulling = new c3dl.Frustum();
   var culling = "BoundingSphere"
   //Collision
   var collision = false;
@@ -956,12 +957,15 @@ c3dl.Scene = function ()
   {
     // calculate FPS. 
     // we update the FPS after a second or more has elapsed.
-    if (Date.now() - FPS_LastTimeTaken >= 1000)
+    var sec = (new Date().getTime() - FPS_LastTimeTaken) / 1000;
+    FPS_Counter++;
+    var fps = FPS_Counter / sec;
+    if (sec > 0.5)
     {
       // frames / seconds
-      FPS = FPS_Counter / (Date.now() - FPS_LastTimeTaken) * 1000;
+      FPS = fps;
       FPS_Counter = 0;
-      FPS_LastTimeTaken = Date.now();
+      FPS_LastTimeTaken = new Date().getTime();
     }
 
     // If a user wants to stop rendering, this is where it happens
@@ -1023,7 +1027,6 @@ c3dl.Scene = function ()
     // the front and back buffers.
     //renderer.swapBuffers();
     numFramesSinceSceneStart++;
-    FPS_Counter++;
   }
 
   this.refresh = function() {
@@ -1188,7 +1191,7 @@ c3dl.Scene = function ()
         var projMatrix = cam.projMatrix;		
         var viewMatrix = cam.viewMatrix;
         c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix, c3dl.mat1);
-        var frustumCulling = new Frustum(c3dl.mat1);
+        frustumCulling.init(c3dl.mat1);
         var boundingVolume = objList[i].getBoundingVolume();
         //Culling using spheres
         if (culling === "BoundingSphere") {

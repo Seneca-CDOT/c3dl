@@ -1,4 +1,4 @@
-function Plane() {
+c3dl.Plane = function () {
   this.normal = new C3DL_FLOAT_ARRAY(3);
   this.offset = null;
   this.init = function(normal, offset) {

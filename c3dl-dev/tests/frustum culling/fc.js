@@ -23,7 +23,7 @@ cam[5].setPosition([-50, 0, 0]);
 cam[5].setLookAtPoint([0.0, 0.0, 0.0]);
 var start = +new Date();
 var currentCam = 0;
-
+var frustumCulling = new c3dl.Frustum();
 function canvasMain(canvasName) {
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
@@ -53,7 +53,7 @@ function test() {
   var projMatrix = camera.getProjectionMatrix();
   var viewMatrix = camera.getViewMatrix();
   var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix, viewMatrix);
-  var frustumCulling = new Frustum(frustumMatrix);
+  frustumCulling.init(frustumMatrix);
   //Culling using spheres
   var boundingSpheres = obj.getBoundingVolumes();
   for (var j = 0; j < boundingSpheres.length; j++) {
