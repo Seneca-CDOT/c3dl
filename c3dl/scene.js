@@ -88,6 +88,8 @@ c3dl.Scene = function ()
   //can detect collision between the entire model or the geometries making up the model
   //collisionType = "Collada" or "Geometry"
   var collisionType = "Collada"; 
+  //cache attributes and location
+  this.curContextCache = { attributes: {}, locations: {} };
   // -------------------------------------------------------
   /**
    Add a texture to this scene to be used used for assigning to a model,
@@ -874,7 +876,7 @@ c3dl.Scene = function ()
       // we removed the light from our list, but WebGL still has
       // a light state which needs to be cleared.  Otherwise the
       // light will still affect the scene.
-      renderer.clearLight(lightID);
+      renderer.clearLight(lightID, this);
     }
     return (lightID == -1 ? false : true);
   }
@@ -886,8 +888,8 @@ c3dl.Scene = function ()
    */
   this.updateLights = function ()
   {
-    renderer.updateAmbientLight(this.getAmbientLight());
-    renderer.updateLights(lightList);
+    renderer.updateAmbientLight(this.getAmbientLight(), this);
+    renderer.updateLights(lightList, this);
   }
 
   /**
@@ -1153,7 +1155,7 @@ c3dl.Scene = function ()
       renderer.setLighting(false);
 
       // turn rendering ambient to full
-      renderer.updateAmbientLight([1, 1, 1]);
+      renderer.updateAmbientLight([1, 1, 1], this);
 
       // render skyModel
       skyModel.render(glCanvas3D, this);
@@ -1162,7 +1164,7 @@ c3dl.Scene = function ()
       renderer.setLighting(lightState);
 
       // restore previous lighting state
-      renderer.updateAmbientLight(prevAmbient);
+      renderer.updateAmbientLight(prevAmbient, this);
 
       // turn depth buffer back on so other object properly occlude each other.
       glCanvas3D.enable(glCanvas3D.DEPTH_TEST);
@@ -1278,7 +1280,7 @@ c3dl.Scene = function ()
       }
     }
 
-    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointRenderingMode(), pointSize);
+    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointRenderingMode(), pointSize, this);
 
     // LINES
     // collect all the lines from the scene, place them into this array
@@ -1292,7 +1294,7 @@ c3dl.Scene = function ()
         lines.push(objList[j]);
       }
     }
-    renderer.renderLines(lines);
+    renderer.renderLines(lines, this);
 
     // Render the particle systems last because they 
     // have blending

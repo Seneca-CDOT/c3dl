@@ -105,7 +105,7 @@ c3dl.Shape.prototype.render = function (glCanvas3D, scene) {
       this.primitiveSets[0].setupVBO(glCanvas3D);
       this.firstTimeRender = false;
     }
-    scene.getRenderer().renderShape(this);
+    scene.getRenderer().renderShape(this, scene);
     c3dl.popMatrix();
     if (scene.getBoundingVolumeVisibility()) {
       this.boundingVolume.renderObb(scene);

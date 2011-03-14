@@ -71,7 +71,7 @@ c3dl.OBB = function () {
     this.lineList[10].setCoordinates(this.boxVerts[4],this.boxVerts[5]);
     //F bottom right to B bottom right  
     this.lineList[11].setCoordinates(this.boxVerts[6],this.boxVerts[7]); 
-    scene.getRenderer().renderLines(this.lineList);
+    scene.getRenderer().renderLines(this.lineList, scene);
   }
   
   this.getCopy = function () {

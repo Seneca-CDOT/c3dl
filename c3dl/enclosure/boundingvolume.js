@@ -196,7 +196,7 @@ c3dl.BoundingVolume = function () {
   }
   
   this.renderSphere = function (scene) {
-    scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix());
+    scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix(), scene);
   }
   this.renderObb = function (scene) {
     this.obb.render(scene);

@@ -150,7 +150,7 @@ c3dl.Geometry = function () {
       return false;
     }
     if (this.getPrimitiveSets()[0].getType() === "lines") {
-      //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
+      //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines(), scene);
     }
     else {
       // The first time this is rendered, setup VBOs.
@@ -165,7 +165,7 @@ c3dl.Geometry = function () {
         scene.getRenderer().texManager.updateTexture(this.primitiveSets[i].texture);
       }
       
-      scene.getRenderer().renderGeometry(this);
+      scene.getRenderer().renderGeometry(this, scene);
     }
   }
   

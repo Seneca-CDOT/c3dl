@@ -397,7 +397,7 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
       else{
         if (currNode.primitiveSets) {
           if (currNode.getPrimitiveSets()[0].getType() === "lines") {
-            //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines());
+            //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines(), scene);
           }
           else {
             // The first time this is rendered, setup VBOs.
@@ -411,7 +411,7 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
             for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
               scene.getRenderer().texManager.updateTexture(currNode.primitiveSets[i].texture);
             }
-            scene.getRenderer().renderGeometry(currNode);
+            scene.getRenderer().renderGeometry(currNode, scene);
           }
         }
         currNode.rupdated =true;
