@@ -283,18 +283,18 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
         // base string to shorten code below.
         var base = "lights[" + lightID + "].";
         glCanvas3D.useProgram(PID);
-        this.setUniformf(PID, base + "position", [0, 0, 0], scene);
-        this.setUniformf(PID, base + "ambient", [0, 0, 0], scene);
-        this.setUniformf(PID, base + "diffuse", [0, 0, 0], scene);
-        this.setUniformf(PID, base + "specular", [0, 0, 0], scene);
-        this.setUniformf(PID, base + "spotDirection", [0, 0, -1], scene);
-        this.setUniformf(PID, base + "spotCutoff", 180, scene);
-        this.setUniformf(PID, base + "spotExponent", 0, scene);
-        this.setUniformf(PID, base + "attenuation1", 1, scene);
-        this.setUniformf(PID, base + "attenuation2", 0, scene);
-        this.setUniformf(PID, base + "attenuation3", 0, scene);
-        this.setUniformi(PID, base + "type", 0, scene);
-        this.setUniformi(PID, base + "isOn", 0, scene);
+        this.setUniformf(PID, base + "position", [0, 0, 0], scene, "light"+i);
+        this.setUniformf(PID, base + "ambient", [0, 0, 0], scene, "light"+i);
+        this.setUniformf(PID, base + "diffuse", [0, 0, 0], scene, "light"+i);
+        this.setUniformf(PID, base + "specular", [0, 0, 0], scene, "light"+i);
+        this.setUniformf(PID, base + "spotDirection", [0, 0, -1], scene, "light"+i);
+        this.setUniformf(PID, base + "spotCutoff", 180, scene, "light"+i);
+        this.setUniformf(PID, base + "spotExponent", 0, scene, "light"+i);
+        this.setUniformf(PID, base + "attenuation1", 1, scene, "light"+i);
+        this.setUniformf(PID, base + "attenuation2", 0, scene, "light"+i);
+        this.setUniformf(PID, base + "attenuation3", 0, scene, "light"+i);
+        this.setUniformi(PID, base + "type", 0, scene, "light"+i);
+        this.setUniformi(PID, base + "isOn", 0, scene, "light"+i);
       }
     }
   }
@@ -315,8 +315,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
     for (var i = 0, len = this.programsWithLights.length; i < len; i++)
     {
       glCanvas3D.useProgram(this.programsWithLights[i]);
-      this.setUniformf(this.programsWithLights[i], "ambientLightColor", ambientLight, scene);
-      this.setUniformi(this.programsWithLights[i], "lightingOn", this.getLighting(), scene);
+      this.setUniformf(this.programsWithLights[i], "ambientLightColor", ambientLight, scene, "light"+i);
+      this.setUniformi(this.programsWithLights[i], "lightingOn", this.getLighting(), scene, "light"+i);
     }
 
     // turn it back on if it was on before.
@@ -354,7 +354,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
           // if the light is off, that's the only uniform var that needs to be set.
           if (lightList[i].isOn() == false)
           {
-            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene);
+            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+i);
           }
           else
           {
@@ -365,10 +365,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
               var dir = c3dl.multiplyMatrixByDirection(c3dl.peekMatrix(), lightList[i].getDirection());
               dir =c3dl.addVectorComponent(dir,0);
 
-              this.setUniformf(shader, base + "position", dir, scene);
+              this.setUniformf(shader, base + "position", dir, scene, "light"+i);
 
               // this is used to distinguish a directional light from a spotlight.
-              this.setUniformf(shader, base + "spotCutoff", 180, scene);
+              this.setUniformf(shader, base + "spotCutoff", 180, scene, "light"+i);
             }
 
             // check if its a spotlight first before positional light!
@@ -381,10 +381,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
               var dir = lightList[i].getDirection();
               dir = c3dl.multiplyMatrixByDirection(c3dl.peekMatrix(), dir);
 
-              this.setUniformf(shader, base + "position", pos, scene);
-              this.setUniformf(shader, base + "spotDirection", dir, scene);
-              this.setUniformf(shader, base + "spotCutoff", lightList[i].getCutoff(), scene);
-              this.setUniformf(shader, base + "spotExponent", lightList[i].getExponent(), scene);
+              this.setUniformf(shader, base + "position", pos, scene, "light"+i);
+              this.setUniformf(shader, base + "spotDirection", dir, scene, "light"+i);
+              this.setUniformf(shader, base + "spotCutoff", lightList[i].getCutoff(), scene, "light"+i);
+              this.setUniformf(shader, base + "spotExponent", lightList[i].getExponent(), scene, "light"+i);
             }
 
             else if (lightList[i] instanceof c3dl.PositionalLight)
@@ -394,23 +394,23 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
               pos = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), pos);
               pos = c3dl.addVectorComponent(pos,1);
 
-              this.setUniformf(shader, base + "position", pos, scene);
-              this.setUniformf(shader, base + "spotCutoff", 180.0, scene);
+              this.setUniformf(shader, base + "position", pos, scene, "light"+i);
+              this.setUniformf(shader, base + "spotCutoff", 180.0, scene, "light"+i);
             }
 
-            this.setUniformi(shader, base + "type", lightList[i].getType(), scene);
-            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene);
-            this.setUniformf(shader, base + "ambient", lightList[i].getAmbient(), scene);
-            this.setUniformf(shader, base + "diffuse", lightList[i].getDiffuse(), scene);
-            this.setUniformf(shader, base + "specular", lightList[i].getSpecular(), scene);
+            this.setUniformi(shader, base + "type", lightList[i].getType(), scene, "light"+i);
+            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+i);
+            this.setUniformf(shader, base + "ambient", lightList[i].getAmbient(), scene, "light"+i);
+            this.setUniformf(shader, base + "diffuse", lightList[i].getDiffuse(), scene, "light"+i);
+            this.setUniformf(shader, base + "specular", lightList[i].getSpecular(), scene, "light"+i);
 
             // lights are attenuated as long as they are not directional lights
             if (!(lightList[i] instanceof c3dl.DirectionalLight))
             {
               var attn = lightList[i].getAttenuation();
-              this.setUniformf(shader, base + "attenuation1", attn[0], scene);
-              this.setUniformf(shader, base + "attenuation2", attn[1], scene);
-              this.setUniformf(shader, base + "attenuation3", attn[2], scene);
+              this.setUniformf(shader, base + "attenuation1", attn[0], scene, "light"+i);
+              this.setUniformf(shader, base + "attenuation2", attn[1], scene, "light"+i);
+              this.setUniformf(shader, base + "attenuation3", attn[2], scene, "light"+i);
             }
           }
         }
@@ -641,8 +641,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       var sphereViewMatrix = c3dl.multiplyMatrixByMatrix(viewMatrix,sphereMatrix);
 	  
       var MVPMatrix = c3dl.multiplyMatrixByMatrix(projMatrix, sphereViewMatrix);
-      this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix, scene);
-      this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert, scene);
+      this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix, scene, "boundingSphereShader");
+      this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert, scene, "boundingSphereShader");
       glCanvas3D.drawArrays(glCanvas3D.POINTS, 0, c3dl.BOUNDING_SPHERE_VERTICES.length / 3);
     }
   }
@@ -691,7 +691,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
             {
               this.programsWithLights.push(programObject.getProgramID());
               glCanvas3D.useProgram(programObject.getProgramID());
-              this.setUniformi(programObject.getProgramID(), "lightingOn", true, scene);
+              this.setUniformi(programObject.getProgramID(), "lightingOn", true, scene, "vertexfragmentShaders");
             }
           }
 
@@ -701,7 +701,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
             {
               this.programsWithLights.push(programObject.getProgramID());
               glCanvas3D.useProgram(programObject.getProgramID());
-              this.setUniformi(programObject.getProgramID(), "lightingOn", true, scene);
+              this.setUniformi(programObject.getProgramID(), "lightingOn", true, scene, "vertexfragmentShaders");
             }
           }
         }
@@ -751,7 +751,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
         };
 
         var cb = effect.getRenderingCallback();
-        cb(renderingObj);
+        cb(renderingObj, scene);
       }
 
     }
@@ -859,7 +859,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
     {
       glCanvas3D.activeTexture(glCanvas3D.TEXTURE0);
       glCanvas3D.bindTexture(glCanvas3D.TEXTURE_2D, texID);
-      this.setVertexAttribArray(shader, "Texture", 2, psys.getVBOTexCoords(), scene);
+      this.setVertexAttribArray(shader, "Texture", 2, psys.getVBOTexCoords(), scene, "particleSystemShader");
       usingTexture = true;
 
       glCanvas3D.texParameteri(glCanvas3D.TEXTURE_2D, glCanvas3D.TEXTURE_WRAP_S, glCanvas3D.CLAMP_TO_EDGE);
@@ -871,9 +871,9 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       glCanvas3D.disableVertexAttribArray(texAttribLoc);
       //glCanvas3D.bindTexture(glCanvas3D.TEXTURE_2D,-1);
     }
-    this.setUniformi(shader, "usingTexture", usingTexture, scene);
-    this.setUniformMatrix(shader, "rot", [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], scene);
-    this.setVertexAttribArray(shader, "Vertex", 3, psys.getVBOVertices(), scene);
+    this.setUniformi(shader, "usingTexture", usingTexture, scene, "particleSystemShader");
+    this.setUniformMatrix(shader, "rot", [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1], scene, "particleSystemShader");
+    this.setVertexAttribArray(shader, "Vertex", 3, psys.getVBOVertices(), scene, "particleSystemShader");
 
     for (var i = 0, numParticles = psys.getNumParticles(); i < numParticles; i++)
     {
@@ -881,7 +881,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       {
         var pSize = psys.getParticle(i).getSize();
 
-        this.setUniformf(shader, "Color", psys.getParticle(i).getColor(), scene);
+        this.setUniformf(shader, "Color", psys.getParticle(i).getColor(), scene, "particleSystemShader");
 
         c3dl.matrixMode(c3dl.PROJECTION);
         var projectionMatrix = c3dl.peekMatrix();
@@ -897,7 +897,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
         // 3 matrices together once per particle instead of once per vertex
         var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(viewMatrix, modelMatrix);
         modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewProjMatrix);
-        this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene);
+        this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene, "particleSystemShader");
 
         glCanvas3D.drawArrays(glCanvas3D.TRIANGLE_FAN, i, 4);
       }
@@ -927,7 +927,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       // create a ModelViewProjection matrix.  By doing this, we can multiply
       // 3 matrices together once per model instead of once per vertex
       var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix);
-      this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene);
+      this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene, "lineShader");
 
       // we need to render each line individually since each can have 
       // a different width.
@@ -953,7 +953,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
         glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.lineVertBuffer.position);
         glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(coords), glCanvas3D.STREAM_DRAW);
-        this.setVertexAttribArray(shader, "Vertex", 3, this.lineVertBuffer.position, scene);
+        this.setVertexAttribArray(shader, "Vertex", 3, this.lineVertBuffer.position, scene, "lineShader");
 
         if (this.lineColBuffer == null)
         {
@@ -965,7 +965,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
         glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.lineColBuffer.position);
         glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(cols), glCanvas3D.STREAM_DRAW);
-        this.setVertexAttribArray(shader, "Color", 3, this.lineColBuffer.position, scene);
+        this.setVertexAttribArray(shader, "Color", 3, this.lineColBuffer.position, scene, "lineShader");
 
         glCanvas3D.drawArrays(glCanvas3D.LINES, 0, coords.length / 3);
       }
@@ -999,10 +999,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
         // create a ModelViewProjection matrix.  By doing this, we can multiply
         // 3 matrices together once instead of once per point
-        var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, viewMatrix, scene);
-        this.setUniformMatrix(shader, "viewMatrix", viewMatrix, scene);
-        this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene);
-        this.setUniformf(shader, "attenuation", attenuation, scene);
+        var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, viewMatrix, scene, "pointShader");
+        this.setUniformMatrix(shader, "viewMatrix", viewMatrix, scene, "pointShader");
+        this.setUniformMatrix(shader, "modelViewProjMatrix", modelViewProjMatrix, scene, "pointShader");
+        this.setUniformf(shader, "attenuation", attenuation, scene, "pointShader");
 
         if (this.pointVertBuffer == null)
         {
@@ -1014,7 +1014,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
         glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.pointVertBuffer.position);
         glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(pointPositions), glCanvas3D.STREAM_DRAW);
-        this.setVertexAttribArray(shader, "Vertex", 3, this.pointVertBuffer.position, scene);
+        this.setVertexAttribArray(shader, "Vertex", 3, this.pointVertBuffer.position, scene, "pointShader");
 
         if (this.pointColBuffer == null)
         {
@@ -1026,7 +1026,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
         glCanvas3D.bindBuffer(glCanvas3D.ARRAY_BUFFER, this.pointColBuffer.position);
         glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, new WebGLFloatArray(pointColors), glCanvas3D.STREAM_DRAW);
-        this.setVertexAttribArray(shader, "Color", 3, this.pointColBuffer.position, scene);
+        this.setVertexAttribArray(shader, "Color", 3, this.pointColBuffer.position, scene, "pointShader");
         glCanvas3D.drawArrays(glCanvas3D.POINTS, 0, pointPositions.length / 3);
       }
       else if (mode == c3dl.POINT_MODE_SPHERE)
@@ -1062,10 +1062,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
             // create a modelviewprojection matrix.  By doing this, we can multiply
             // 3 matrices together once per model instead of once per vertex.
             var MVPMatrix = c3dl.multiplyMatrixByMatrix(proj, mat);
-            this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix, scene);
-            this.setUniformf(shader, "Color", [pointColors[i], pointColors[i + 1], pointColors[i + 2]], scene);
+            this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix, scene, "pointShader");
+            this.setUniformf(shader, "Color", [pointColors[i], pointColors[i + 1], pointColors[i + 2]], scene, "pointShader");
 
-            this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert, scene);
+            this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert, scene, "pointShader");
             glCanvas3D.drawArrays(glCanvas3D.TRIANGLES, 0, c3dl.BOUNDING_SPHERE_VERTICES.length / 3);
             c3dl.popMatrix();
           }
@@ -1082,12 +1082,12 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
    @param {int} size
    @param vbo
    */
-  this.setVertexAttribArray = function (shader, varName, size, vbo, scene)
+  this.setVertexAttribArray = function (shader, varName, size, vbo, scene, shaderName)
   {
-    var attribLoc = scene.curContextCache.attributes[varName];
+    var attribLoc = scene.curContextCache.attributes[shaderName+varName];
     if(attribLoc ==undefined) {
       attribLoc = glCanvas3D.getAttribLocation(shader, varName);
-      scene.curContextCache.attributes[varName] = attribLoc;
+      scene.curContextCache.attributes[shaderName+varName] = attribLoc;
     }
     if (attribLoc != c3dl.SHADER_VAR_NOT_FOUND)
     {
@@ -1120,12 +1120,12 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
    @param {String} varName The name of the matrix variable.
    @param {Array} matrix 16 element matrix.
    */
-  this.setUniformMatrix = function (programObjectID, varName, matrix, scene)
+  this.setUniformMatrix = function (programObjectID, varName, matrix, scene, programObjectName)
   {
-    var varLocation = scene.curContextCache.locations[varName];
+    var varLocation = scene.curContextCache.locations[programObjectName+varName];
     if(!varLocation) {
       varLocation = glCanvas3D.getUniformLocation(programObjectID, varName);
-      scene.curContextCache.locations[varName] = varLocation;
+      scene.curContextCache.locations[programObjectName+varName] = varLocation;
     }
     // the variable won't be found if it was optimized out.
     if (varLocation != c3dl.SHADER_VAR_NOT_FOUND)
@@ -1159,12 +1159,13 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
    @param {String} varName The name of the variable.
    @param {float|Array} value The value to assign the variable.
    */
-  this.setUniformf = function (shader, varName, value, scene)
+  this.setUniformf = function (shader, varName, value, scene, shaderName)
   {
-    var varLocation = scene.curContextCache.locations[varName];
+    var varLocation = scene.curContextCache.locations[shaderName+varName];
     if(!varLocation) {
       varLocation = glCanvas3D.getUniformLocation(shader, varName);
-      scene.curContextCache.locations[varName] = varLocation;
+      scene.curContextCache.flag = 0;
+      scene.curContextCache.locations[shaderName+varName] = varLocation;
     }
     // the variable won't be found if it was optimized out.
     if (varLocation != c3dl.SHADER_VAR_NOT_FOUND)
@@ -1213,12 +1214,12 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
    @param {String} varName The name of the variable.
    @param {int|Array} value The value to assign the variable.
    */
-  this.setUniformi = function (programObjectID, varName, value, scene)
+  this.setUniformi = function (programObjectID, varName, value, scene, programObjectName)
   {
-    var varLocation = scene.curContextCache.locations[varName];
+   var varLocation = scene.curContextCache.locations[programObjectName+varName];
     if(!varLocation) {
       varLocation = glCanvas3D.getUniformLocation(programObjectID, varName);
-      scene.curContextCache.locations[varName] = varLocation;
+      scene.curContextCache.locations[programObjectName+varName] = varLocation;
     }
     // the variable won't be found if it was optimized out.
     if (varLocation != c3dl.SHADER_VAR_NOT_FOUND)
