@@ -14,7 +14,6 @@ c3dl.cartoon_callback = function (renderingObj, scene)
   var effect = geometry.getEffect();
   var programObjID = renderingObj.getProgramObjectID();
   gl.useProgram(programObjID);
-
   if (effect.getParameter("qMap") == null)
   {
     c3dl.debug.logWarning('"qMap" is a required parameter for c3dl.effects.CARTOON');
@@ -68,12 +67,23 @@ c3dl.cartoon_callback = function (renderingObj, scene)
       // before trying to set it.
       // This is  a kludge for Safari and Chrome since they want these attributes
       ////////////////////////////
-      var normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+      
+      var normalAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"];
+      if(normalAttribLoc ==undefined ) {
+        normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+        scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"] = normalAttribLoc;
+      }
+      
       if (normalAttribLoc != -1 && currColl.getNormals())
       {
         renderer.setVertexAttribArray(outlineProgID, "Normal", 3, currColl.getVBONormals(), scene, "outlinecartoon"+primSet);
       }
-      var texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+      
+      var texAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"];
+      if(texAttribLoc ==undefined ) {
+        texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+        scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"] = texAttribLoc;
+      }
       
       if (texAttribLoc != -1 && currColl.getTexCoords())
       {
@@ -110,8 +120,13 @@ c3dl.cartoon_callback = function (renderingObj, scene)
   {
 
     var currColl = geometry.getPrimitiveSets()[coll];
-    var normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
-
+    
+    var normalAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Normal"];
+    if(normalAttribLoc ==undefined ) {
+      normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
+      scene.curContextCache.attributes["cartoon"+coll+"Normal"] = normalAttribLoc;
+    }
+    
     // if the object acutally has normals and the normal attribute was found
     // NORMALS	
     if (currColl.getNormals())
@@ -128,7 +143,12 @@ c3dl.cartoon_callback = function (renderingObj, scene)
     }
  
     // TEXTURE
-    var texAttribLoc = gl.getAttribLocation(programObjID, "Texture");
+    var texAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Texture"];
+    if(texAttribLoc ==undefined ) {
+      texAttribLoc = gl.getAttribLocation(programObjID, "Texture");
+      scene.curContextCache.attributes["cartoon"+coll+"Texture"] = texAttribLoc;
+    }
+    
     var texID = renderer.getTextureID(currColl.getTexture());
 
     // if the texture isn't loaded, but this collation element has one, 
@@ -171,8 +191,8 @@ c3dl.cartoon_callback = function (renderingObj, scene)
     gl.activeTexture(gl.TEXTURE1);
 
     // Minefield is throwing an exception here, but still running?
+    
     gl.bindTexture(gl.TEXTURE_2D, shadesTexID);
-         alert("")
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     renderer.setUniformi(programObjID, "celShadeTex", 1, scene, "cartoon"+coll);

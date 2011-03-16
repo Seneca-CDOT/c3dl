@@ -24,8 +24,8 @@ c3dl.std_callback = function (renderingObj, scene)
   // 3 matrices together once per model instead of once per vertex
   var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix, c3dl.mat1);
   
-  renderer.setUniformMatrix(progObjID, "modelViewMatrix", modelViewMatrix, scene, "std_callback");
-  renderer.setUniformMatrix(progObjID, "modelViewProjMatrix", modelViewProjMatrix, scene, "std_callback");
+  renderer.setUniformMatrix(progObjID, "modelViewMatrix", modelViewMatrix, scene, "std");
+  renderer.setUniformMatrix(progObjID, "modelViewProjMatrix", modelViewProjMatrix, scene, "std");
 
   // render all the collation elements. Every collation element in an object will 
   // have the same tranformation
@@ -40,23 +40,23 @@ c3dl.std_callback = function (renderingObj, scene)
     {
       // every primitive collection can have a material associated with it.
       // currColl.material.getEmission()
-      renderer.setUniformf(progObjID, "material.emission", mat.emission, scene, "std_callback");
-      renderer.setUniformf(progObjID, "material.ambient", mat.ambient, scene, "std_callback");
-      renderer.setUniformf(progObjID, "material.diffuse", mat.diffuse, scene, "std_callback");
-      renderer.setUniformf(progObjID, "material.specular", mat.specular, scene, "std_callback");
-      renderer.setUniformf(progObjID, "material.shininess", mat.shininess, scene, "std_callback");
-      renderer.setUniformi(progObjID, "usingMaterial", true, scene, "std_callback");
+      renderer.setUniformf(progObjID, "material.emission", mat.emission, scene, "std");
+      renderer.setUniformf(progObjID, "material.ambient", mat.ambient, scene, "std");
+      renderer.setUniformf(progObjID, "material.diffuse", mat.diffuse, scene, "std");
+      renderer.setUniformf(progObjID, "material.specular", mat.specular, scene, "std");
+      renderer.setUniformf(progObjID, "material.shininess", mat.shininess, scene, "std");
+      renderer.setUniformi(progObjID, "usingMaterial", true, scene, "std");
     }
     else
     {
-      renderer.setUniformi(progObjID, "usingMaterial", false, scene, "std_callback");
+      renderer.setUniformi(progObjID, "usingMaterial", false, scene, "std");
     }
 
     // NORMAL 
-    var normalAttribLoc = scene.curContextCache.attributes["std_callback"+"Normal"];
+    var normalAttribLoc = scene.curContextCache.attributes["std"+"Normal"];
     if(normalAttribLoc ==undefined ) {
       normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
-      scene.curContextCache.attributes["std_callback"+"Normal"] = normalAttribLoc;
+      scene.curContextCache.attributes["std"+"Normal"] = normalAttribLoc;
     }
     // if the object acutally has normals and the normal attribute was found
     //			
@@ -65,8 +65,8 @@ c3dl.std_callback = function (renderingObj, scene)
       // the top matrix is the modelview matrix.
       var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
       c3dl.transposeMatrix(NormalMatrix, NormalMatrix);
-      renderer.setUniformMatrix(progObjID, "normalMatrix", NormalMatrix, scene, "std_callback");
-      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "std_callback");
+      renderer.setUniformMatrix(progObjID, "normalMatrix", NormalMatrix, scene, "std");
+      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "std");
     }
     else
     {
@@ -75,10 +75,10 @@ c3dl.std_callback = function (renderingObj, scene)
 
     // TEXTURE
     var usingTexture = false;
-    var texAttribLoc = scene.curContextCache.attributes["std_callback"+"Texture"];
+    var texAttribLoc = scene.curContextCache.attributes["std"+"Texture"];
     if(texAttribLoc ==undefined) {
       texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
-      scene.curContextCache.attributes["std_callback"+"Texture"] = texAttribLoc;
+      scene.curContextCache.attributes["std"+"Texture"] = texAttribLoc;
     }
     var texID = renderer.texManager.getID(currColl.getTexture());
 
@@ -105,7 +105,7 @@ c3dl.std_callback = function (renderingObj, scene)
     {
       glCanvas3D.activeTexture(glCanvas3D.TEXTURE0);
       glCanvas3D.bindTexture(glCanvas3D.TEXTURE_2D, texID);
-      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "std_callback");
+      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "std");
       usingTexture = true;
     }
     else
@@ -116,11 +116,11 @@ c3dl.std_callback = function (renderingObj, scene)
     }
 
     // tell the fragment shader if we are using textures or not
-    renderer.setUniformi(progObjID, "usingTexture", usingTexture, scene, "std_callback");
-    renderer.setUniformi(progObjID, "lightingOn", true, scene, "std_callback");
+    renderer.setUniformi(progObjID, "usingTexture", usingTexture, scene, "std");
+    renderer.setUniformi(progObjID, "lightingOn", true, scene, "std");
 
     // VERTICES
-    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "std_callback");
+    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "std");
     if (renderer.getFillMode() === c3dl.FILL) {
       if (currColl.fillType === "TRIANGLE_STRIP") {
         glCanvas3D.drawArrays(glCanvas3D.TRIANGLE_STRIP, 0, currColl.getVertices().length / 3);

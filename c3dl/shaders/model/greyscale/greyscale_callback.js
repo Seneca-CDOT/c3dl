@@ -42,21 +42,25 @@ c3dl.greyscale_callback = function (renderingObj, scene)
     {
       // every primitive collection can have a material associated with it.
       // currColl.material.getEmission()
-      renderer.setUniformf(progObjID, "material.emission", mat.getEmission(), scene, "greyscale");
-      renderer.setUniformf(progObjID, "material.ambient", mat.getAmbient(), scene, "greyscale");
-      renderer.setUniformf(progObjID, "material.diffuse", mat.getDiffuse(), scene, "greyscale");
-      renderer.setUniformf(progObjID, "material.specular", mat.getSpecular(), scene, "greyscale");
-      renderer.setUniformf(progObjID, "material.shininess", mat.getShininess(), scene, "greyscale");
-      renderer.setUniformi(progObjID, "usingMaterial", true, scene, "greyscale");
+      renderer.setUniformf(progObjID, "material.emission", mat.getEmission(), scene, "greyscale"+coll);
+      renderer.setUniformf(progObjID, "material.ambient", mat.getAmbient(), scene, "greyscale"+coll);
+      renderer.setUniformf(progObjID, "material.diffuse", mat.getDiffuse(), scene, "greyscale"+coll);
+      renderer.setUniformf(progObjID, "material.specular", mat.getSpecular(), scene, "greyscale"+coll);
+      renderer.setUniformf(progObjID, "material.shininess", mat.getShininess(), scene, "greyscale"+coll);
+      renderer.setUniformi(progObjID, "usingMaterial", true, scene, "greyscale"+coll);
     }
     else
     {
-      renderer.setUniformi(progObjID, "usingMaterial", false, scene, "greyscale");
+      renderer.setUniformi(progObjID, "usingMaterial", false, scene, "greyscale"+coll);
     }
 
     // NORMAL
-    var normalAttribLoc = gl.getAttribLocation(progObjID, "Normal");
-
+    var normalAttribLoc = scene.curContextCache.attributes["greyscale"+coll+"Normal"];
+    if (normalAttribLoc == undefined) {
+      normalAttribLoc = gl.getAttribLocation(progObjID, "Normal");
+      scene.curContextCache.attributes["greyscale"+coll+"Normal"] = normalAttribLoc;
+    }
+    
     // if the object acutally has normals and the normal attribute was found
     //			
     if (currColl.getNormals())
@@ -64,8 +68,8 @@ c3dl.greyscale_callback = function (renderingObj, scene)
       // the top matrix is the modelview matrix.
       var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
       NormalMatrix = c3dl.transposeMatrix(NormalMatrix);
-      renderer.setUniformMatrix(progObjID, "normalMatrix", NormalMatrix, scene, "greyscale");
-      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "greyscale");
+      renderer.setUniformMatrix(progObjID, "normalMatrix", NormalMatrix, scene, "greyscale"+coll);
+      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "greyscale"+coll);
     }
     else
     {
@@ -75,8 +79,12 @@ c3dl.greyscale_callback = function (renderingObj, scene)
     // TEXTURE
     var usingTexture = false;
 
-    var texAttribLoc = gl.getAttribLocation(progObjID, "Texture");
-
+    var texAttribLoc = scene.curContextCache.attributes["greyscale"+coll+"Texture"];
+    if (texAttribLoc == undefined) {
+      texAttribLoc = gl.getAttribLocation(progObjID, "Texture");
+      scene.curContextCache.attributes["greyscale"+coll+"Texture"] = texAttribLoc;
+    }
+    
     //
     var texID = renderer.getTextureID(currColl.getTexture());
 
@@ -100,7 +108,7 @@ c3dl.greyscale_callback = function (renderingObj, scene)
 
       //gl.vertexAttribPointer(texAttribLoc, 2, gl.FLOAT, false, 0, currColl.getTexCoords());
       //gl.enableVertexAttribArray(texAttribLoc);	
-      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "greyscale");
+      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "greyscale"+coll);
       usingTexture = true;
     }
     else
@@ -111,10 +119,10 @@ c3dl.greyscale_callback = function (renderingObj, scene)
     }
 
     // tell the fragment shader if we are using textures or not
-    renderer.setUniformi(progObjID, "usingTexture", usingTexture, scene, "greyscale");
+    renderer.setUniformi(progObjID, "usingTexture", usingTexture, scene, "greyscale"+coll);
 
     // Vertices
-    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "greyscale");
+    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "greyscale"+coll);
     gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
   }
 }

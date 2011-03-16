@@ -283,18 +283,18 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
         // base string to shorten code below.
         var base = "lights[" + lightID + "].";
         glCanvas3D.useProgram(PID);
-        this.setUniformf(PID, base + "position", [0, 0, 0], scene, "light"+i);
-        this.setUniformf(PID, base + "ambient", [0, 0, 0], scene, "light"+i);
-        this.setUniformf(PID, base + "diffuse", [0, 0, 0], scene, "light"+i);
+        this.setUniformf(PID, base + "position", [0, 0, 0], scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "ambient", [0, 0, 0], scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "diffuse", [0, 0, 0], scene, "light"+i+lightID);
         this.setUniformf(PID, base + "specular", [0, 0, 0], scene, "light"+i);
-        this.setUniformf(PID, base + "spotDirection", [0, 0, -1], scene, "light"+i);
-        this.setUniformf(PID, base + "spotCutoff", 180, scene, "light"+i);
-        this.setUniformf(PID, base + "spotExponent", 0, scene, "light"+i);
-        this.setUniformf(PID, base + "attenuation1", 1, scene, "light"+i);
-        this.setUniformf(PID, base + "attenuation2", 0, scene, "light"+i);
-        this.setUniformf(PID, base + "attenuation3", 0, scene, "light"+i);
-        this.setUniformi(PID, base + "type", 0, scene, "light"+i);
-        this.setUniformi(PID, base + "isOn", 0, scene, "light"+i);
+        this.setUniformf(PID, base + "spotDirection", [0, 0, -1], scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "spotCutoff", 180, scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "spotExponent", 0, scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "attenuation1", 1, scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "attenuation2", 0, scene, "light"+i+lightID);
+        this.setUniformf(PID, base + "attenuation3", 0, scene, "light"+i+lightID);
+        this.setUniformi(PID, base + "type", 0, scene, "light"+i+lightID);
+        this.setUniformi(PID, base + "isOn", 0, scene, "light"+i+lightID);
       }
     }
   }
@@ -315,8 +315,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
     for (var i = 0, len = this.programsWithLights.length; i < len; i++)
     {
       glCanvas3D.useProgram(this.programsWithLights[i]);
-      this.setUniformf(this.programsWithLights[i], "ambientLightColor", ambientLight, scene, "light"+i);
-      this.setUniformi(this.programsWithLights[i], "lightingOn", this.getLighting(), scene, "light"+i);
+      this.setUniformf(this.programsWithLights[i], "ambientLightColor", ambientLight, scene, "ambientLight");
+      this.setUniformi(this.programsWithLights[i], "lightingOn", this.getLighting(), scene, "ambientLight"+i);
     }
 
     // turn it back on if it was on before.
@@ -354,7 +354,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
           // if the light is off, that's the only uniform var that needs to be set.
           if (lightList[i].isOn() == false)
           {
-            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+i);
+            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+progObjIter+i);
           }
           else
           {
@@ -365,10 +365,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
               var dir = c3dl.multiplyMatrixByDirection(c3dl.peekMatrix(), lightList[i].getDirection());
               dir =c3dl.addVectorComponent(dir,0);
 
-              this.setUniformf(shader, base + "position", dir, scene, "light"+i);
+              this.setUniformf(shader, base + "position", dir, scene, "light"+progObjIter+i);
 
               // this is used to distinguish a directional light from a spotlight.
-              this.setUniformf(shader, base + "spotCutoff", 180, scene, "light"+i);
+              this.setUniformf(shader, base + "spotCutoff", 180, scene, "light"+progObjIter+i);
             }
 
             // check if its a spotlight first before positional light!
@@ -383,8 +383,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
               this.setUniformf(shader, base + "position", pos, scene, "light"+i);
               this.setUniformf(shader, base + "spotDirection", dir, scene, "light"+i);
-              this.setUniformf(shader, base + "spotCutoff", lightList[i].getCutoff(), scene, "light"+i);
-              this.setUniformf(shader, base + "spotExponent", lightList[i].getExponent(), scene, "light"+i);
+              this.setUniformf(shader, base + "spotCutoff", lightList[i].getCutoff(), scene, "light"+progObjIter+i);
+              this.setUniformf(shader, base + "spotExponent", lightList[i].getExponent(), scene, "light"+progObjIter+i);
             }
 
             else if (lightList[i] instanceof c3dl.PositionalLight)
@@ -394,23 +394,23 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
               pos = c3dl.multiplyMatrixByVector(c3dl.peekMatrix(), pos);
               pos = c3dl.addVectorComponent(pos,1);
 
-              this.setUniformf(shader, base + "position", pos, scene, "light"+i);
-              this.setUniformf(shader, base + "spotCutoff", 180.0, scene, "light"+i);
+              this.setUniformf(shader, base + "position", pos, scene, "light"+progObjIter+i);
+              this.setUniformf(shader, base + "spotCutoff", 180.0, scene, "light"+progObjIter+i);
             }
 
-            this.setUniformi(shader, base + "type", lightList[i].getType(), scene, "light"+i);
-            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+i);
-            this.setUniformf(shader, base + "ambient", lightList[i].getAmbient(), scene, "light"+i);
-            this.setUniformf(shader, base + "diffuse", lightList[i].getDiffuse(), scene, "light"+i);
-            this.setUniformf(shader, base + "specular", lightList[i].getSpecular(), scene, "light"+i);
+            this.setUniformi(shader, base + "type", lightList[i].getType(), scene, "light"+progObjIter+i);
+            this.setUniformi(shader, base + "isOn", lightList[i].isOn(), scene, "light"+progObjIter+i);
+            this.setUniformf(shader, base + "ambient", lightList[i].getAmbient(), scene, "light"+progObjIter+i);
+            this.setUniformf(shader, base + "diffuse", lightList[i].getDiffuse(), scene, "light"+progObjIter+i);
+            this.setUniformf(shader, base + "specular", lightList[i].getSpecular(), scene, "light"+progObjIter+i);
 
             // lights are attenuated as long as they are not directional lights
             if (!(lightList[i] instanceof c3dl.DirectionalLight))
             {
               var attn = lightList[i].getAttenuation();
-              this.setUniformf(shader, base + "attenuation1", attn[0], scene, "light"+i);
-              this.setUniformf(shader, base + "attenuation2", attn[1], scene, "light"+i);
-              this.setUniformf(shader, base + "attenuation3", attn[2], scene, "light"+i);
+              this.setUniformf(shader, base + "attenuation1", attn[0], scene, "light"+progObjIter+i);
+              this.setUniformf(shader, base + "attenuation2", attn[1], scene, "light"+progObjIter+i);
+              this.setUniformf(shader, base + "attenuation3", attn[2], scene, "light"+progObjIter+i);
             }
           }
         }

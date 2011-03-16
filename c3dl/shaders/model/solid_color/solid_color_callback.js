@@ -37,20 +37,28 @@ c3dl.solid_color_callback = function (renderingObj, scene)
     // before trying to set it.
     // This is  a kludge for Safari and Chrome since they want these attributes
     ////////////////////////////
-    var normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
+    var normalAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Normal"];
+    if (normalAttribLoc == undefined) {
+      normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
+      scene.curContextCache.attributes["solidcolor"+coll+"Normal"] = normalAttribLoc;
+    }
     if (normalAttribLoc != -1 && currColl.getNormals())
     {
-      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "solidcolor");
+      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "solidcolor"+coll);
     }
-    var texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
+    var texAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Texture"];
+    if (texAttribLoc == undefined) {
+      texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
+      scene.curContextCache.attributes["solidcolor"+coll+"Texture"] = texAttribLoc;
+    }
     if (texAttribLoc != -1 && currColl.getTexCoords())
     {
-      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "solidcolor");
+      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "solidcolor"+coll);
     }
     ////////////////////////// End kludge
 
     // VERTICES
-    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "solidcolor");
+    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "solidcolor"+coll);
     glCanvas3D.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
   }
 }

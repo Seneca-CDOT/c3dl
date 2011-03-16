@@ -61,12 +61,22 @@ c3dl.gooch_callback = function (renderingObj, scene)
       // before trying to set it.
       // This is  a kludge for Safari and Chrome since they want these attributes
       ////////////////////////////
-      var normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+      var normalAttribLoc = scene.curContextCache.attributes["outlinegooch"+primSet+"Normal"];
+      if(normalAttribLoc ==undefined ) {
+        normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+        scene.curContextCache.attributes["outlinegooch"+primSet+"Normal"] = normalAttribLoc;
+      }
+      
       if (normalAttribLoc != -1 && currColl.getNormals())
       {
         renderer.setVertexAttribArray(outlineProgID, "Normal", 3, currColl.getVBONormals(), scene, "outlinegooch"+primSet);
       }
-      var texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+      var texAttribLoc = scene.curContextCache.attributes["outlinegooch"+primSet+"Texture"];
+      if(texAttribLoc ==undefined ) {
+        texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+        scene.curContextCache.attributes["outlinegooch"+primSet+"Texture"] = texAttribLoc;
+      }
+      
       if (texAttribLoc != -1 && currColl.getTexCoords())
       {
         renderer.setVertexAttribArray(outlineProgID, "Texture", 2, currColl.getVBOTexCoords(), scene, "outlinegooch"+primSet);
@@ -102,14 +112,23 @@ c3dl.gooch_callback = function (renderingObj, scene)
   {
     var currColl = geometry.getPrimitiveSets()[coll];
 
-    var dummyAttribLoc = gl.getAttribLocation(programObjID, "dummyAttrib");
+    var dummyAttribLoc = scene.curContextCache.attributes["gooch"+coll+"dummyAttrib"];
+    if(dummyAttribLoc ==undefined ) {
+      dummyAttribLoc = gl.getAttribLocation(programObjID, "dummyAttrib");
+      scene.curContextCache.attributes["gooch"+coll+"dummyAttrib"] = dummyAttribLoc;
+    }
+    
     if (dummyAttribLoc !== -1 && currColl.getNormals())
     {
-      renderer.setVertexAttribArray(programObjID, "dummyAttrib", 3, currColl.getVBONormals(), scene, "gooch");
+      renderer.setVertexAttribArray(programObjID, "dummyAttrib", 3, currColl.getVBONormals(), scene, "gooch"+coll);
     }
 
-    var normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
-
+    var normalAttribLoc = scene.curContextCache.attributes["gooch"+coll+"Normal"];
+    if(normalAttribLoc ==undefined ) {
+      normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
+      scene.curContextCache.attributes["gooch"+coll+"Normal"] = normalAttribLoc;
+    }
+    
     // if the object acutally has normals and the normal attribute was found
     //
     if (normalAttribLoc !== -1 && currColl.getNormals())
@@ -117,19 +136,19 @@ c3dl.gooch_callback = function (renderingObj, scene)
       // the top matrix is the modelview matrix.
       var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
       NormalMatrix = c3dl.transposeMatrix(NormalMatrix);
-      renderer.setUniformMatrix(programObjID, "normalMatrix", NormalMatrix, scene, "gooch");
+      renderer.setUniformMatrix(programObjID, "normalMatrix", NormalMatrix, scene, "gooch"+coll);
 
-      renderer.setVertexAttribArray(programObjID, "Normal", 3, currColl.getVBONormals(), scene, "gooch");
+      renderer.setVertexAttribArray(programObjID, "Normal", 3, currColl.getVBONormals(), scene, "gooch"+coll);
     }
     else
     {
       gl.disableVertexAttribArray(normalAttribLoc);
     }
 
-    renderer.setUniformf(programObjID, "warmColor", effect.getParameter("warmColor"), scene, "gooch");
-    renderer.setUniformf(programObjID, "coolColor", effect.getParameter("coolColor"), scene, "gooch");
-    renderer.setUniformf(programObjID, "surfaceColor", effect.getParameter("surfaceColor"), scene, "gooch");
-    renderer.setVertexAttribArray(programObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "gooch");
+    renderer.setUniformf(programObjID, "warmColor", effect.getParameter("warmColor"), scene, "gooch"+coll);
+    renderer.setUniformf(programObjID, "coolColor", effect.getParameter("coolColor"), scene, "gooch"+coll);
+    renderer.setUniformf(programObjID, "surfaceColor", effect.getParameter("surfaceColor"), scene, "gooch"+coll);
+    renderer.setVertexAttribArray(programObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "gooch"+coll);
     gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
   }
 }
