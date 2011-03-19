@@ -7,15 +7,15 @@ c3dl.gooch_fs =
 
 
 "float DiffuseWarm = 0.5;" +
-"float DiffuseCool = 0.5; " +
+"float DiffuseCool = 0.5;" +
 
 // parameters
 "uniform vec3 surfaceColor;" +
 "uniform vec3 warmColor;" +
 "uniform vec3 coolColor;" +
 
-"varying vec3 ViewVec; " +
-"varying vec3 ecPos; "+
+"varying vec3 ViewVec;" +
+"varying vec3 ecPos;"+
 "varying vec3 tnorm;" +
 
 /*
@@ -77,21 +77,24 @@ c3dl.gooch_fs =
 
 "	if(lightingOn == true)" +
 "	{" +
-"		for(int i = 0; appliedLight == false && i < C3DL_MAX_LIGHTS; i++) " +
+"		for(int i = 0; i < C3DL_MAX_LIGHTS; i++)" +
 "		{" +
-"			if( lights[i].isOn == true)" +
-"			{" +
-"				if(lights[i].type == 1)" +
-"				{" +
-"					c3dl_goochDirLight(lights[i], nviewVec, ntnorm, NdotL, spec); "+
-"					appliedLight = true;" +
-"				}" +
-"				else" +
-"				{" +
-"					c3dl_goochPointLight(lights[i], nviewVec, ntnorm, NdotL, spec); "+
-"					appliedLight = true;" +
-"				}" +
-"			}" +
+"     if ( appliedLight == false)"+
+"     {"+
+"			  if( lights[i].isOn == true)" +
+"			  {" +
+"			  	if(lights[i].type == 1)" +
+"			  	{" +
+"			  		c3dl_goochDirLight(lights[i], nviewVec, ntnorm, NdotL, spec);"+
+"		  			appliedLight = true;" +
+"		  		}" +
+"		  		else" +
+"		  		{" +
+"			  		c3dl_goochPointLight(lights[i], nviewVec, ntnorm, NdotL, spec);"+
+"			  		appliedLight = true;" +
+"			  	}" +
+"			  }" +
+"		  }" +
 "		}"+
 "	}" +
 

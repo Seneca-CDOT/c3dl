@@ -15,7 +15,6 @@ c3dl.gooch_callback = function (renderingObj, scene)
   var programObjID = renderingObj.getProgramObjectID();
 
   gl.useProgram(programObjID);
-
   var modelViewMatrix = c3dl.peekMatrix();
   c3dl.matrixMode(c3dl.PROJECTION);
   var projectionMatrix = c3dl.peekMatrix();

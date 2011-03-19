@@ -182,21 +182,18 @@ c3dl.cartoon_callback = function (renderingObj, scene)
 
     // if the user added the parameter, but didn't add the texture
     // to the renderer with renderer.addTexture.
-    if (shadesTexID == -1)
-    {
+    if (shadesTexID == -1) {
       renderer.addTexture(qMap);
-      //shadesTexID = renderer.texManager.getIDNumber(qMap)
     }
 
-    gl.activeTexture(gl.TEXTURE1);
-
-    // Minefield is throwing an exception here, but still running?
-    
-    gl.bindTexture(gl.TEXTURE_2D, shadesTexID);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    renderer.setUniformi(programObjID, "celShadeTex", 1, scene, "cartoon"+coll);
-
+    if (shadesTexID !== -1) {
+      // Minefield is throwing an exception here, but still running?
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, shadesTexID);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      renderer.setUniformi(programObjID, "celShadeTex", 1, scene, "cartoon"+coll);
+    }
     // VERTICES
     renderer.setVertexAttribArray(programObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "cartoon"+coll);
     gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
