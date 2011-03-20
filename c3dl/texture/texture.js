@@ -233,7 +233,14 @@ c3dl.Texture = function ()
     return returnCode;
   }
   this.update = function () {
-    if(sourcecan) {
+    if (sourcecan instanceof HTMLImageElement) {
+      if (sourcecan.src && sourcecan.src != tCanvas.oldSrc && sourcecan.complete) {
+        tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
+        textureImage.onload();
+        tCanvas.oldSrc = sourcecan.src;
+      }
+    }
+    else {
       tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
       textureImage.onload();
     }
