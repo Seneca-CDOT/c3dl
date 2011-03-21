@@ -3,7 +3,7 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-c3dl.Plane = c3dl.inherit(c3dl.Shape, function (length, width) {
+c3dl.Plain = c3dl.inherit(c3dl.Shape, function (length, width) {
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
   var vertices = new C3DL_FLOAT_ARRAY([-0.5,0,-0.5, -0.5,0,0.5, 0.5,0,-0.5, 0.5,0,0.5, 0.5,0,-0.5, -0.5,0,0.5]);
@@ -16,7 +16,7 @@ c3dl.Plane = c3dl.inherit(c3dl.Shape, function (length, width) {
   }
 });
 
-c3dl.Plane.prototype.init = function (length, width) {
+c3dl.Plain.prototype.init = function (length, width) {
   length = parseFloat(length);
   width = parseFloat(width);
   var curlength = 1;
