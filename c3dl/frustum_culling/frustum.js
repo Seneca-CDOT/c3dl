@@ -1,7 +1,7 @@
 c3dl.Frustum = function () {
   this.frustumPlane = [];
   for (var i = 0; i < 6; i++) {
-   this.frustumPlane[i] = new c3dl.Plane();
+   this.frustumPlane[i] = new c3dl.Plane_Frustrum();
   }
   
   this.init = function(frustumMatrix) {

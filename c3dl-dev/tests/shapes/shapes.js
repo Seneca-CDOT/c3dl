@@ -37,7 +37,7 @@ function planeMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-    var plane = new c3dl.Plain(5,5);
+    var plane = new c3dl.Plane(5,5);
     plane.setTexture("testing.jpg");
     var cam = new c3dl.FreeCamera();
     cam.setPosition([0.0, 3, 9]);
