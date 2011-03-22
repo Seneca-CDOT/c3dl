@@ -568,10 +568,27 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   // should be near zero.
   var diff = area - (area1 + area2 + area3);
 
-  // delete edg1, edge2, edge3, area1, area2, area3, normDotDir, normDotRayorig, t, POI, area;
-  // since we have done quite a few calculations on floats, 
-  // allow a small margin of error.
-  return (Math.abs(diff) <= 0.0001);
+  if(Math.abs(diff) <= 0.0001) {
+    //get vector from ray origin to poi
+    var otherdir = c3dl.subtractVectors(POI,orig);
+    //get unit vector of that
+    var normOtherDir = c3dl.normalizeVector(otherdir);
+    
+    //get unit vector of original dir (uvd)
+    var normDir = c3dl.normalizeVector(dir);
+    //find the angle between those two vectors
+    var angle = c3dl.getAngleBetweenVectors(normOtherDir,normDir);
+    //if it is less than 90, the object is probably visible
+    if(angle < 90) {
+      return true;
+    }
+    else {//if it is greater than 90, this is behind the point of origin somewhere
+      return false;
+    } 
+  }
+  else {
+    return false;
+  }
 }
 
 c3dl.rayAABBIntersect = function (orig, dir, maxMins) {

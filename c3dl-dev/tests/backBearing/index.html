@@ -1,0 +1,41 @@
+<!--
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+-->
+<html>
+    <head>
+        <title>C3DL Picking Back-Bearing test</title>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="test.js"></script>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+        <style>
+            canvas
+            {
+                width:500px;
+                height:500px;
+                border:1px solid #000;
+            }
+            span, div
+            {
+                font-size: 12px;
+                border:1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><a href="http://www.c3dl.org">C3DL</a>Picking Back-Bearing Test</h1>
+    
+        <p>
+            This pages tests to make sure that picking does not detect points behind the camera.<br />
+            An issue was identified where an object that extended behind the camera could have<br />
+            the portion behind the camera show up as picked.  This occured because the ray used<br />
+            for picking did not determine the direction from the source to the object it hit.<br />
+            In short, a mirror image of the ray was being fired in the opposite direction and<br />
+            hitting things behind the camera.  Clicking slightly above the end of the road<br />
+            that projects into the scene (and behind the camera) caused it to show up as picked<br />
+            (and start spinning).  This should no longer happen.<br />
+        </p>
+        <!-- Add a canvas element to the page. It is scripted by using its id -->
+        <canvas id="tutorial" style="border: 2px solid blue" width="500" height="500"></canvas>
+    </body>
+</html>
