@@ -568,7 +568,7 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   // should be near zero.
   var diff = area - (area1 + area2 + area3);
 
-  if(Math.abs(diff) <= 0.0001) {
+  if(Math.abs(diff) <= c3dl.TOLERANCE) {
     //get vector from ray origin to poi
     var otherdir = c3dl.subtractVectors(POI,orig);
     //get unit vector of that
