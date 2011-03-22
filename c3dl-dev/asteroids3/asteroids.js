@@ -12,7 +12,7 @@ var score=0;
 var timesincelastrock=0;
 var threshold=9000;
 var objs;
-var basevelocity=-0.055;
+var basevelocity=-0.00055;
 var basescale=0.6;
 var cam;
 var spot;
@@ -28,6 +28,7 @@ var effects;
 var curreffects;
 var netyaw=0;
 var pew;
+var running=false;
 c3dl.addMainCallBack(canvasMain, "mainwindow");
 c3dl.addModel("asteroid2.dae");
 c3dl.addModel("gameover.dae");
@@ -67,7 +68,7 @@ function canvasMain(canvasName){
   thing.setTexture("asteroid2.png");
   thing.scale([2,2,2]);
   thing.setPosition([0,0,-70]);
-  vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity-(Math.floor(Math.random()*3)*0.01));
+  vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity-(Math.floor(Math.random()*3)*0.0001));
   thing.setLinearVel(vel);
   objs[0] = [thing,1];
   scn.addObjectToScene(thing);
@@ -152,113 +153,116 @@ function canvasMain(canvasName){
   scn.addObjectToScene(psys);
 
   scn.setPickingCallback(handler);
+  running = true;
 }
 
 function update(time){
-  if(health > 0){
-    if(laser.isVisible()){
-      //alert(time);
-      laserTime += time;
-      if(laserTime > 200) {//if the laser has been around for more than 1 seconds
-        laser.setVisible(false);
-        psys.setEmitRate(0);//turn the particle system off too
-      }
-    }//if laser is visible
-    if(yaw != 0) {
-      cam.yaw(yaw*time/1000);
-      netyaw=netyaw+(yaw*time/1000);
-      if(netyaw > Math.PI*2){
-         netyaw = netyaw - Math.PI*2;
-      }
-      else if (netyaw < Math.PI*2){
-	netyaw=netyaw + Math.PI*2;
-      }
-    }
-    //now move the headlight to match
-    var pos = cam.getPosition();
-    spot.setPosition([pos[0],pos[1],pos[2]]);
-    var dir = cam.getDir();
-    spot.setDirection([dir[0],dir[1],dir[2]]);
-    timesincelastrock+=time;
-    if(timesincelastrock > threshold){
-      if(threshold > 5000)
-        threshold = threshold-200;
-      thing = new c3dl.Collada();
-      thing.init("asteroid2.dae");
-      thing.setTexture("asteroid2.png");
-      thing.scale([2,2,2]);
-      var x = Math.floor(Math.random() * 15) + 55;
-      var z = Math.sqrt(4900 - (x*x));
-      if(x%2 ==0){
-        x=-1*x;
-      }
-      if(Math.floor(Math.random()*2)==0){
-        z=-1*z;
-      }	  
-      thing.setPosition([x,0,z]);
-      var vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity+(Math.floor(Math.random()*3)*0.01));
-      thing.setLinearVel(vel);
-      objs.push([thing,1]);
-      scn.addObjectToScene(thing);
-      timesincelastrock=0;
-    }
-    /* check if any of the rocks has hit the ship and make them disappear if they do*/
-    for(var i=0;i<objs.length;i++){
-      if(objs[i][1]!=-1){
-        var p=objs[i][0].getPosition();
-        if(c3dl.vectorLength(p) < 5){
-          health=health-Math.floor(20*objs[i][1]);
-          objs[i][0].setVisible(false);
-          objs[i][0].setPickable(false);
-          scn.removeObjectFromScene(objs[i][0]);
-          objs.splice(i,1);
+  if(running){
+    if(health > 0){
+      if(laser.isVisible()){
+        //alert(time);
+        laserTime += time;
+        if(laserTime > 200) {//if the laser has been around for more than 1 seconds
+          laser.setVisible(false);
+          psys.setEmitRate(0);//turn the particle system off too
+        }
+      }//if laser is visible
+      if(yaw != 0) {
+        cam.yaw(yaw*time/1000);
+        netyaw=netyaw+(yaw*time/1000);
+        if(netyaw > Math.PI*2){
+           netyaw = netyaw - Math.PI*2;
+        }
+        else if (netyaw < Math.PI*2){
+  	netyaw=netyaw + Math.PI*2;
         }
       }
-    }
-  }
-  else{
-    if(cleaned==0){
-      for(var i=0;i<objs.length;i++){
-        objs[i][0].setVisible(false);
-        objs[i][0].setPickable(false);
-        scn.removeObjectFromScene(objs[i][0]);
-      }
-      objs.splice(0,objs.length);
+      //now move the headlight to match
       var pos = cam.getPosition();
       spot.setPosition([pos[0],pos[1],pos[2]]);
       var dir = cam.getDir();
       spot.setDirection([dir[0],dir[1],dir[2]]);
-      var angle;
-      if(netyaw<0){
-        netyaw=netyaw*-1;
-        angle=-1*(netyaw-Math.floor(netyaw/(Math.PI*2)));
+      timesincelastrock+=time;
+      if(timesincelastrock > threshold){
+        if(threshold > 5000)
+          threshold = threshold-200;
+        thing = new c3dl.Collada();
+        thing.init("asteroid2.dae");
+        thing.setTexture("asteroid2.png");
+        thing.scale([2,2,2]);
+        var x = Math.floor(Math.random() * 15) + 55;
+        var z = Math.sqrt(4900 - (x*x));
+        if(x%2 ==0){
+          x=-1*x;
+        }
+        if(Math.floor(Math.random()*2)==0){
+          z=-1*z;
+        }	  
+        thing.setPosition([x,0,z]);
+        var vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity+(Math.floor(Math.random()*3)*0.0001));
+        thing.setLinearVel(vel);
+        objs.push([thing,1]);
+        scn.addObjectToScene(thing);
+        timesincelastrock=0;
       }
-      else{
-        angle=(netyaw-Math.floor(netyaw/(Math.PI*2)));
+      /* check if any of the rocks has hit the ship and make them disappear if they do*/
+      for(var i=0;i<objs.length;i++){
+        if(objs[i][1]!=-1){
+          var p=objs[i][0].getPosition();
+          if(c3dl.vectorLength(p) < 5){
+            health=health-Math.floor(20*objs[i][1]);
+            objs[i][0].setVisible(false);
+            objs[i][0].setPickable(false);
+            scn.removeObjectFromScene(objs[i][0]);
+            objs.splice(i,1);
+          }
+        }
       }
-      var np=c3dl.normalizeVector(dir);
-      gameovermsg=new c3dl.Collada();
-      gameovermsg.init("gameover.dae");
-      gameovermsg.setTexture("gameover.png");
-      gameovermsg.scale([0.07,0.07,0.07]);
-      gameovermsg.yaw(angle);
-      gameovermsg.setAngularVel([0.0005,0,0]);
-      curreffects=0;
-      gameovermsg.setEffect(effects[0]);
-      scn.addObjectToScene(gameovermsg);  
-      cleaned=1;
-      gameovermsg.setPosition([40*np[0],40*np[1],40*np[2]]);    
     }
     else{
-      timesincelasteffectchange+=time;
-      if(timesincelasteffectchange > 7000){
-        timesincelasteffectchange=0;
-        curreffects=(curreffects+1)%4;
-        gameovermsg.setEffect(effects[curreffects]);		
+      if(cleaned==0){
+        for(var i=0;i<objs.length;i++){
+          objs[i][0].setVisible(false);
+          objs[i][0].setPickable(false);
+          scn.removeObjectFromScene(objs[i][0]);
+        }
+        objs.splice(0,objs.length);
+        var pos = cam.getPosition();
+        spot.setPosition([pos[0],pos[1],pos[2]]);
+        var dir = cam.getDir();
+        spot.setDirection([dir[0],dir[1],dir[2]]);
+        var angle;
+        if(netyaw<0){
+          netyaw=netyaw*-1;
+          angle=-1*(netyaw-Math.floor(netyaw/(Math.PI*2)));
+        }
+        else{
+          angle=(netyaw-Math.floor(netyaw/(Math.PI*2)));
+        }
+        var np=c3dl.normalizeVector(dir);
+        gameovermsg=new c3dl.Collada();
+        gameovermsg.init("gameover.dae");
+        gameovermsg.setTexture("gameover.png");
+        gameovermsg.scale([0.07,0.07,0.07]);
+        gameovermsg.yaw(angle);
+        gameovermsg.setAngularVel([0.0005,0,0]);
+        curreffects=0;
+        gameovermsg.setEffect(effects[0]);
+        scn.addObjectToScene(gameovermsg);  
+        cleaned=1;
+        gameovermsg.setPosition([40*np[0],40*np[1],40*np[2]]);    
+      }
+      else{
+        timesincelasteffectchange+=time;
+        if(timesincelasteffectchange > 7000){
+          timesincelasteffectchange=0;
+          curreffects=(curreffects+1)%4;
+          gameovermsg.setEffect(effects[curreffects]);		
+        }
       }
     }
+    drawhud();
   }
-  drawhud();
 }
 
 function handler(result){
@@ -325,7 +329,7 @@ function handler(result){
                 thing.init("asteroid2.dae");
                 thing.setTexture("asteroid2.png");
                 thing.setPosition([pos[0]+pr[0],pos[1] + pr[1],pos[2]+pr[2]]);
-                vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity-(Math.floor(Math.random()*3)*0.01));
+                vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity-(Math.floor(Math.random()*3)*0.0001));
                 thing.setLinearVel(vel);
                 thing.scale([scale,scale,scale]);
                 objs.push([thing,scale*basescale]);

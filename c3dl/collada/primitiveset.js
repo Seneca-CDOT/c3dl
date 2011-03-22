@@ -29,7 +29,8 @@ c3dl.PrimitiveSet = function ()
   this.texCoords = null;
   this.type = null;
   this.lineList = null;
-  this.boundingSphere = null;
+  this.boundingVolume = null;
+  this.fillType = null;
   this.buffers =
   {
   };
@@ -43,14 +44,37 @@ c3dl.PrimitiveSet = function ()
    */
   this.init = function (vertices, normals, texCoords,type)
   {
+  /*
+    var temp = [];
+    alert("vertices");
+    alert(vertices.length);
+    for (var i = 0; i < vertices.length; i++) {
+      temp.push(vertices[i]);
+    }
+    alert(temp);
+    var temp = [];
+    alert("normals");
+    alert(normals.length);
+    for (var i = 0; i < normals.length; i++) {
+      temp.push(normals[i]);
+    }
+    alert(temp);
+    var temp = [];
+    alert("texCoords");
+    alert(texCoords.length);
+    for (var i = 0; i < texCoords.length; i++) {
+      temp.push(texCoords[i]);
+    }
+    alert(temp);
+    */
     this.vertices = vertices;
     this.normals = normals;
     this.texCoords = texCoords;
-    this.boundingSphere = new c3dl.BoundingSphere();
+    this.boundingVolume = new c3dl.BoundingVolume();
 	  this.type = type;
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
-    this.boundingSphere.init(this.vertices);
+    this.boundingVolume.init(this.vertices);  
   }
   this.initLine = function (vertices, faces, type)
   {
@@ -130,8 +154,8 @@ c3dl.PrimitiveSet = function ()
     // get a deep copy of the material since every collada object's primitive set
     // can have its own material.		
     copy.material = this.material ? this.material.getCopy() : null;
-    if (this.boundingSphere){
-      copy.boundingSphere = this.boundingSphere.getCopy();
+    if (this.boundingVolume){
+      copy.boundingVolume = this.boundingVolume.getCopy();
     }
     return copy;
   }
@@ -194,12 +218,10 @@ c3dl.PrimitiveSet = function ()
    
    @returns {c3dl.BoundingSphere}  the updated bounding sphere object.
    */
-  this.getBoundingSphere = function ()
+  this.getBoundingVolume = function ()
   {
-    return this.boundingSphere;
+    return this.boundingVolume;
   }
-
-
   /**
    @private
    Set the material of this primitive set. The material can't be directly
@@ -223,6 +245,14 @@ c3dl.PrimitiveSet = function ()
   this.setTexture = function (texture)
   {
     this.texture = texture;
+  }
+  this.updateTextureByName = function (oldTexturePath,newTexturePath)
+  {
+    if (this.texture) {
+      if (this.texture === oldTexturePath){
+        this.texture = newTexturePath;
+      }
+    }
   }
   this.getLines = function ()
   {

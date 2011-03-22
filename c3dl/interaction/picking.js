@@ -102,7 +102,7 @@ c3dl.Picking = function (scene)
 
       // Make sure the object is a Collada before calling getPickable() since
       // not all objects in the scene will have that function.
-      if (currObj instanceof c3dl.Collada && currObj.getPickable())
+      if ((currObj instanceof c3dl.Collada ||  currObj.getObjectType() === c3dl.SHAPE) && currObj.getPickable() && currObj.isVisible() && currObj.isInsideFrustum())
       {
         // do the bounding volumes of the geometry nodes intersect with the given ray?
         if (currObj.rayIntersectsEnclosures(rayInitialPoint, rayDir))
@@ -133,9 +133,11 @@ c3dl.Picking = function (scene)
       for (var i = 0, len = passedBoundsTest.length; i < len; i++)
       {
         var currObject = passedBoundsTest[i];
-        // if the object is a collada object
-        if (currObject instanceof c3dl.Collada && currObject.getPickable())
-        {
+       
+        if (currObject.getObjectType() === c3dl.SHAPE) {
+          objectsPicked.push(passedBoundsTest[i]);
+        }
+        else {
           // if the collada object confirms the ray has intersected it, it will be
           // added to the list of objects the user picked.
           if (currObject.rayIntersectsTriangles(rayInitialPoint, rayDir))
@@ -551,23 +553,140 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   var POI = c3dl.addVectors(orig, scaledDir);
 
   // area of smaller triangles formed by the 3 vertices and the point of intersection	
-  edge1 = c3dl.subtractVectors(vert0, POI);
-  edge2 = c3dl.subtractVectors(vert1, POI);
+  c3dl.subtractVectors(vert0, POI,edge1);
+  c3dl.subtractVectors(vert1, POI,edge2);
   edge3 = c3dl.subtractVectors(vert2, POI);
 
   // get the area of the three triangles 'created' where the 
   // ray intersects the triangle's plane. 
-  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2));
-  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3));
-  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1));
+  var area1 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge1, edge2,c3dl.vec1));
+  var area2 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge2, edge3,c3dl.vec1));
+  var area3 = 0.5 * c3dl.vectorLength(c3dl.vectorCrossProduct(edge3, edge1,c3dl.vec1));
 
   // get the difference between the area of the triangle and the area of the three triangles
   // created where the user clicked. If the user clicked inside the triangle, the difference
   // should be near zero.
   var diff = area - (area1 + area2 + area3);
 
-  // delete edg1, edge2, edge3, area1, area2, area3, normDotDir, normDotRayorig, t, POI, area;
-  // since we have done quite a few calculations on floats, 
-  // allow a small margin of error.
-  return (Math.abs(diff) <= 0.0001);
+  if(Math.abs(diff) <= c3dl.TOLERANCE) {
+    //get vector from ray origin to poi
+    var otherdir = c3dl.subtractVectors(POI,orig);
+    //get unit vector of that
+    var normOtherDir = c3dl.normalizeVector(otherdir);
+    
+    //get unit vector of original dir (uvd)
+    var normDir = c3dl.normalizeVector(dir);
+    //find the angle between those two vectors
+    var angle = c3dl.getAngleBetweenVectors(normOtherDir,normDir);
+    //if it is less than 90, the object is probably visible
+    if(angle < 90) {
+      return true;
+    }
+    else {//if it is greater than 90, this is behind the point of origin somewhere
+      return false;
+    } 
+  }
+  else {
+    return false;
+  }
+}
+
+c3dl.rayAABBIntersect = function (orig, dir, maxMins) {
+  var tmin, tmax, tymin, tymax, tzmin, tzmax;
+  var divx = 1 / dir[0];
+  var divy = 1 / dir[1];
+  var divz = 1 / dir[2];
+  if (divx >= 0) {
+    tmin = (maxMins[1] - orig[0]) * divx;
+    tmax = (maxMins[0] - orig[0]) * divx;
+  }
+  else {
+    tmin = (maxMins[0] - orig[0]) * divx;
+    tmax = (maxMins[1] - orig[0]) * divx;
+  }
+  if (divy >= 0) {
+    tymin = (maxMins[3] - orig[1]) * divy;
+    tymax = (maxMins[2] - orig[1]) * divy;
+  }
+  else {
+    tymin = (maxMins[2] - orig[1]) * divy;
+    tymax = (maxMins[3] - orig[1]) * divy;
+  }
+  if ( (tmin > tymax) || (tymin > tmax) ) {
+    return false;
+  }
+  if (tymin > tmin) {
+    tmin = tymin;
+  }
+  if (tymax < tmax){
+    tmax = tymax;
+  }
+  if (divz >= 0) {
+    tzmin = (maxMins[5] - orig[2]) * divz;
+    tzmax = (maxMins[4] - orig[2]) * divz;
+  }
+  else {
+    tzmin = (maxMins[4] - orig[2]) * divz;
+    tzmax = (maxMins[5] - orig[2]) * divz;
+  }
+  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+    return false;
+  }
+  if (tzmin > tmin) {
+    tmin = tzmin;
+  }
+  if (tzmax < tmax) {
+    tmax = tzmax;
+  }
+  return true;
+}
+
+c3dl.rayOBBIntersect = function (orig, dir , pos, axis, sizes){
+  var tmin, tmax, tymin, tymax, tzmin, tzmax;
+  var divx = 1 / dir[0]*axis[0];
+  var divy = 1 / dir[1]*axis[1];
+  var divz = 1 / dir[2]*axis[2];
+  if (divx >= 0) {
+    tmin = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
+    tmax = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
+  }
+  else {
+    tmin = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
+    tmax = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
+  }
+  if (divy >= 0) {
+    tymin = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
+    tymax = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
+  }
+  else {
+    tymin = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
+    tymax = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
+  }
+  if ( (tmin > tymax) || (tymin > tmax) ) {
+    return false;
+  }
+  if (tymin > tmin) {
+    tmin = tymin;
+  }
+  if (tymax < tmax){
+    tmax = tymax;
+  }
+  if (divz >= 0) {
+    tzmin = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
+    tzmax = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
+  }
+  else {
+    tzmin = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
+    tzmax = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
+  }
+  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+    return false;
+  }
+  if (tzmin > tmin) {
+    tmin = tzmin;
+  }
+  if (tzmax < tmax) {
+    tmax = tzmax;
+  }
+  return true;
 }

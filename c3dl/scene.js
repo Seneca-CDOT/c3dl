@@ -46,8 +46,9 @@ c3dl.Scene = function ()
   // default point rendering to spheres to prevent possible crashing
   // when users render points which playing a DVD on OS X.
   var pointRenderingMode = c3dl.POINT_MODE_SPHERE;
-  var pauseFlag = false; //Pause the render loop
-  var exitFlag = false; // Exits the render loop
+  var pauseRender = false; //Pause the render loop
+  var exitRender = false; // Exits the render loop
+  var pauseUpdate = false; //Pause the update loop
   var canvasTag = null;
   var canvas2Dlist = [];
 
@@ -57,7 +58,6 @@ c3dl.Scene = function ()
   var updateHandler = null;
 
   // Performance variables
-  var timerID = 0;
   var lastTimeTaken = Date.now();
   var numFramesSinceSceneStart = 0;
 
@@ -68,7 +68,7 @@ c3dl.Scene = function ()
   var FPS_LastTimeTaken = Date.now();
 
   // This will be the color of the background if the user does not change it.
-  var backgroundColor = [c3dl.DEFAULT_BG_RED, c3dl.DEFAULT_BG_GREEN, c3dl.DEFAULT_BG_BLUE];
+  var backgroundColor = c3dl.makeVector(c3dl.DEFAULT_BG_RED, c3dl.DEFAULT_BG_GREEN, c3dl.DEFAULT_BG_BLUE);
   var ambientLight = c3dl.makeVector(1, 1, 1);
   var thisScn = null;
 
@@ -79,8 +79,17 @@ c3dl.Scene = function ()
   var textureQueue = [];
   var pointPositions = null;
   //type of culling 
+  var frustumCulling = new c3dl.Frustum();
   var culling = "BoundingSphere"
-
+  //Collision
+  var collision = false;
+  var collisionList = [];
+  var collisionDetection = new c3dl.CollisionDetection();
+  //can detect collision between the entire model or the geometries making up the model
+  //collisionType = "Collada" or "Geometry"
+  var collisionType = "Collada"; 
+  //cache attributes and location
+  this.curContextCache = { attributes: {}, locations: {} };
   // -------------------------------------------------------
   /**
    Add a texture to this scene to be used used for assigning to a model,
@@ -681,8 +690,7 @@ c3dl.Scene = function ()
   {
     if (bgColor.length >= 3)
     {
-      backgroundColor = bgColor.slice(0, 3);
-
+      backgroundColor = [bgColor[0], bgColor[1], bgColor[2]]; 
       if (renderer)
       {
         renderer.setClearColor(backgroundColor);
@@ -730,7 +738,7 @@ c3dl.Scene = function ()
    */
   this.getBackgroundColor = function ()
   {
-    return c3dl.copyObj(backgroundColor);
+    return c3dl.copyVector(backgroundColor);
   }
 
   /**
@@ -834,22 +842,22 @@ c3dl.Scene = function ()
     return false;
   }
 
-  /**
+ /**
    Remove a light from the scene. The first light found matching the name 
-   lightName will be removed.
+   light or object light will be removed.
    
-   @param {String} lightName the name of the light
+   @param {String || c3dl.Light } light the name of the light or the c3dl object light
    */
-  this.removeLight = function (lightName)
+  this.removeLight = function (light)
   {
     // There are 2 copies of the light, one in our js code and one in the WebGL
     // state variable.  We need to remove the light object from our list and set
     // the WebGL state variable to all zeros so it will no longer affect the scene.
     // first find the index of the light in our array.
     var lightID = -1;
-    for (var i = 0, len = lightList.length; i < len && lightID == -1; i++)
+    for (var i = 0; i < lightList.length && lightID == -1; i++)
     {
-      if (lightList[i] && lightList[i].getName() == lightName)
+      if (lightList[i] && (lightList[i].getName() == light || lightList[i] === light))
       {
         lightID = i;
       }
@@ -868,20 +876,20 @@ c3dl.Scene = function ()
       // we removed the light from our list, but WebGL still has
       // a light state which needs to be cleared.  Otherwise the
       // light will still affect the scene.
-      renderer.clearLight(lightID);
+      renderer.clearLight(lightID, this);
     }
     return (lightID == -1 ? false : true);
   }
-
+  
   /**
    @private
-   Update the WebGL light state variables with our list of lights
+   Update the boundingVolume light state variables with our list of lights
    This happens every frame.
    */
   this.updateLights = function ()
   {
-    renderer.updateAmbientLight(this.getAmbientLight());
-    renderer.updateLights(lightList);
+    renderer.updateAmbientLight(this.getAmbientLight(), this);
+    renderer.updateLights(lightList, this);
   }
 
   /**
@@ -901,6 +909,7 @@ c3dl.Scene = function ()
     case c3dl.POINT:
     case c3dl.PARTICLE_SYSTEM:
     case c3dl.COLLADA:
+    case c3dl.SHAPE:
       objList.push(obj);
       return true;
     }
@@ -941,41 +950,8 @@ c3dl.Scene = function ()
 
     return isFound;
   }
-
-  /**
-   Start scene sets a default ambient light to white with full 
-   intensity.  If this ambient lighting is not desired, call 
-   setAmbientLight(..) after this method, which will undo the
-   default ambient light values.
-   */
-  this.startScene = function ()
-  {
-    if (c3dl.debug.SHARK === true)
-    {
-      connectShark();
-      startShark();
-    }
-    numFramesSinceSceneStart = 0;
-    frameCounter = 0;
-
-    // Safety Checks
-    if (glCanvas3D == null) return false;
-    if (renderer == null) return false;
-    if (camera == null) return false;
-
-    // Start the timer
-    lastTimeTaken = Date.now();
-
-    // Benchmark hook:
-    if (typeof(benchmarkSetupDone) == "function") benchmarkSetupDone();
-
-    // Create a timer for this object
-    timerID = setInterval(this.render, 5);
-
-    this.setAmbientLight([ambientLight[0], ambientLight[1], ambientLight[2]]);
-  }
-
-  /**
+  
+/**
    @private
    Render Loop
    */
@@ -983,18 +959,20 @@ c3dl.Scene = function ()
   {
     // calculate FPS. 
     // we update the FPS after a second or more has elapsed.
-    if (Date.now() - FPS_LastTimeTaken >= 1000)
+    var sec = (new Date().getTime() - FPS_LastTimeTaken) / 1000;
+    FPS_Counter++;
+    var fps = FPS_Counter / sec;
+    if (sec > 0.5)
     {
       // frames / seconds
-      FPS = FPS_Counter / (Date.now() - FPS_LastTimeTaken) * 1000;
+      FPS = fps;
       FPS_Counter = 0;
-      FPS_LastTimeTaken = Date.now();
+      FPS_LastTimeTaken = new Date().getTime();
     }
 
     // If a user wants to stop rendering, this is where it happens
-    if (exitFlag)
+    if (exitRender)
     {
-      timerID = clearInterval(timerID);
       if (c3dl.debug.SHARK === true)
       {
         stopShark();
@@ -1002,12 +980,16 @@ c3dl.Scene = function ()
       }
       return;
     }
-    if (!pauseFlag){
+    if (pauseUpdate) {
+      lastTimeTaken = Date.now();
+    }
+    if (!pauseUpdate) {
       // update the camera and objects
       camera.update(Date.now() - lastTimeTaken);
       thisScn.updateObjects(Date.now() - lastTimeTaken);
       lastTimeTaken = Date.now();
-
+    }
+    if (!pauseRender) {
       // The user may have added a texture to the scene in 
       // which case, the renderer needs to create them.
       if (textureQueue.length > 0)
@@ -1047,7 +1029,41 @@ c3dl.Scene = function ()
     // the front and back buffers.
     //renderer.swapBuffers();
     numFramesSinceSceneStart++;
-    FPS_Counter++;
+  }
+
+  this.refresh = function() {
+    thisScn.render();
+    requestAnimFrame(thisScn.refresh);
+  }
+  
+  /**
+   Start scene sets a default ambient light to white with full 
+   intensity.  If this ambient lighting is not desired, call 
+   setAmbientLight(..) after this method, which will undo the
+   default ambient light values.
+   */
+  this.startScene = function ()
+  {
+    if (c3dl.debug.SHARK === true)
+    {
+      connectShark();
+      startShark();
+    }
+    numFramesSinceSceneStart = 0;
+    frameCounter = 0;
+
+    // Safety Checks
+    if (glCanvas3D == null) return false;
+    if (renderer == null) return false;
+    if (camera == null) return false;
+
+    // Start the timer
+    lastTimeTaken = Date.now();
+
+    // Benchmark hook:
+    if (typeof(benchmarkSetupDone) == "function") benchmarkSetupDone();
+    this.refresh();
+    this.setAmbientLight([ambientLight[0], ambientLight[1], ambientLight[2]]);
   }
 
   /**
@@ -1065,29 +1081,38 @@ c3dl.Scene = function ()
     {
       updateHandler(timeElapsed);
     }
-
+   collisionList=[];
     // update the rest of the objects individually
     for (var i = 0, len = objList.length; i < len; i++)
     {
       // we don't need to update lines or points since their
       // positions/coords are controlled by the user in the
       // update callback they write.
-      switch (objList[i].getObjectType())
-      {
-      case c3dl.PARTICLE_SYSTEM:
-      case c3dl.COLLADA:
-        objList[i].update(timeElapsed);
+   
+      switch (objList[i].getObjectType()) {
+        case c3dl.PARTICLE_SYSTEM:
+          objList[i].update(timeElapsed);
+          break;
+        case c3dl.COLLADA:
+        case c3dl.SHAPE:
+          objList[i].update(timeElapsed);
+          //Collision
+          if (collision) {
+            for (var j = i, len2 = objList.length; j < len2; j++) {
+              if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
+                if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
+                  collisionList.push(objList[i]);
+                  collisionList.push(objList[j]);
+                }
+              }
+            }
+          }
+          break;
       }
-
-
     }
-
     // update the SkyModel
-    if (skyModel)
-    {
-      //
+    if (skyModel) {
       skyModel.update(timeElapsed);
-
       // move skymodel so the camera is at its center.
       // Let the user scale it and rotate it if they wish.
       skyModel.setPosition(camera.getPosition());
@@ -1128,7 +1153,7 @@ c3dl.Scene = function ()
       renderer.setLighting(false);
 
       // turn rendering ambient to full
-      renderer.updateAmbientLight([1, 1, 1]);
+      renderer.updateAmbientLight([1, 1, 1], this);
 
       // render skyModel
       skyModel.render(glCanvas3D, this);
@@ -1137,7 +1162,7 @@ c3dl.Scene = function ()
       renderer.setLighting(lightState);
 
       // restore previous lighting state
-      renderer.updateAmbientLight(prevAmbient);
+      renderer.updateAmbientLight(prevAmbient, this);
 
       // turn depth buffer back on so other object properly occlude each other.
       glCanvas3D.enable(glCanvas3D.DEPTH_TEST);
@@ -1146,7 +1171,6 @@ c3dl.Scene = function ()
     glCanvas3D.enable(glCanvas3D.CULL_FACE);
     glCanvas3D.frontFace(glCanvas3D.CCW);
     glCanvas3D.cullFace(glCanvas3D.BACK);
-
     // particle systems need to be rendered last, so first render
     // all opaque objects, then render particle systems. This is a bit
     // wasteful since we could have reordered the object list when the 
@@ -1160,47 +1184,55 @@ c3dl.Scene = function ()
         particleSystems.push(objList[i]);
       }
 
-      if (objList[i].getObjectType() == c3dl.COLLADA)
+      if (objList[i].getObjectType() == c3dl.COLLADA || objList[i].getObjectType() == c3dl.SHAPE)
       {
         var checker;	
-		var cam = this.getCamera();
-		var projMatrix = cam.getProjectionMatrix();		
-        var viewMatrix = cam.getViewMatrix();
-		var frustumMatrix = c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix);
-		var frustumCulling = new Frustum(frustumMatrix);
-		//Culling using spheres
-		if (culling === "BoundingSphere") {
-		  var boundingSpheres = objList[i].getBoundingSpheres();
-		  for (var j = 0; j < boundingSpheres.length; j++) {
-			checker = frustumCulling.sphereInFrustum(boundingSpheres[j]);
-			if (checker === "INSIDE") {	
-			  break;
-			}
-		  }
-		  if (checker === "INSIDE") {		
-			objList[i].render(glCanvas3D, this);
-		  }
-        }		  
-		//Culling Boxes
-		else if (culling === "BoundingBox") {
-		  for (var j = 0; j < 3; j++) {
-		    box = objList[i].getBoundingBox();
-		    sizes = [];
-		    sizes[0]= box.getHeight();
-		    sizes[1]= box.getLength();
-		    sizes[2]= box.getWidth();
-	        checker = frustumCulling.boundingBoxInfrustumPlane(box.getPosition(),sizes[j]);
-			if (checker === "INSIDE") {	
-			  break;
-			}
-		  }
-		  if (checker === "INSIDE") {		
-			objList[i].render(glCanvas3D, this);
-		  }
-	    }
-		else {
-		  objList[i].render(glCanvas3D, this);
-		}
+        var cam = this.getCamera();
+        var projMatrix = cam.projMatrix;		
+        var viewMatrix = cam.viewMatrix;
+        c3dl.multiplyMatrixByMatrix(projMatrix,viewMatrix, c3dl.mat1);
+        frustumCulling.init(c3dl.mat1);
+        var boundingVolume = objList[i].getBoundingVolume();
+        //Culling using spheres
+        if (culling === "BoundingSphere") {
+          if (frustumCulling.sphereInFrustum(boundingVolume)) {		
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "AABB") {
+          if (frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins)) {	
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "OBB") {
+          if (frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {	
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        if (culling === "All") {
+          if (frustumCulling.sphereInFrustum(boundingVolume) && frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins) && frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {		
+            objList[i].setInsideFrustum(true);
+            objList[i].render(glCanvas3D, this);
+          }
+          else {
+            objList[i].setInsideFrustum(false);
+          }
+        }
+        else {
+          objList[i].render(glCanvas3D, this);
+        }
       }
     }
     // POINTS
@@ -1246,7 +1278,7 @@ c3dl.Scene = function ()
       }
     }
 
-    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointRenderingMode(), pointSize);
+    renderer.renderPoints(pointPositions, pointColors, pointAttenuation, this.getPointRenderingMode(), pointSize, this);
 
     // LINES
     // collect all the lines from the scene, place them into this array
@@ -1260,7 +1292,7 @@ c3dl.Scene = function ()
         lines.push(objList[j]);
       }
     }
-    renderer.renderLines(lines);
+    renderer.renderLines(lines, this);
 
     // Render the particle systems last because they 
     // have blending
@@ -1274,18 +1306,41 @@ c3dl.Scene = function ()
   /**
    Flags the main loop for exit.
    */
-  this.stopScene = function ()
-  {
+  this.stopScene = function () {
     // This flags the main loop to exit gracefully
-    exitFlag = true;
+    exitRender = true;
   }
-  this.unpauseScene = function ()
-  {
-    pauseFlag = false;
+  this.unpauseSceneRender = function () {
+    pauseRender = false;
   }
-    this.pauseScene = function ()
-  {
-    pauseFlag = true;
+  this.pauseSceneRender = function () {
+    pauseRender = true;
+  }
+  this.unpauseSceneUpdate = function () {
+    pauseUpdate = false;
+  }
+  this.pauseSceneUpdate = function () {
+    pauseUpdate = true;
+  }
+  this.unpauseScene = function () {
+    pauseRender = false;
+    pauseUpdate = false;
+  }
+  this.pauseScene = function () {
+    pauseRender = true;
+    pauseUpdate = true;
+  }
+  this.getCollision = function () {
+    return collisionList;
+  }
+  this.setCollision = function (truefalse) {
+    collision = truefalse;
+  }
+  this.setCollisionType = function (type) {
+    collisionType = type;
+  }
+  this.setCulling = function (type) {
+    culling = type;
   }
   /**
    @private

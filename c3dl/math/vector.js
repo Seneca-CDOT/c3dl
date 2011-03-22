@@ -50,9 +50,16 @@ c3dl.isValidVector = function (vecArr)
  
  @returns {Array} A copy of the 'srcVec' vector.
  */
-c3dl.copyVector = function (srcVec)
+c3dl.copyVector = function (srcVec, dest)
 {
-  return V3.clone(srcVec);
+  if (dest == undefined) {
+    return V3.clone(srcVec);
+  }
+  else {
+    dest[0] = srcVec[0];
+    dest[1] = srcVec[1];
+    dest[2] = srcVec[2];
+  }
 }
 
 /**
@@ -65,8 +72,8 @@ c3dl.copyVectorContents = function (srcVec, destVec)
 {
  destVec= V3.clone(srcVec);
 }
-c3dl.addVectorComponent = function (srcVec, newComponent)
-{
+
+c3dl.addVectorComponent = function (srcVec, newComponent) {
   var newVec = new C3DL_FLOAT_ARRAY(4);
   newVec[0]=srcVec[0]
   newVec[1]=srcVec[1]
@@ -111,7 +118,7 @@ c3dl.normalizeVector = function (vec)
 	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
 	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
 	  vec[3] = vec[3] != 0.0 ? vec[2] / ln : 0.0;
-	  return new C3DL_FLOAT_ARRAY(vec);
+	  return vec;
   }
   else {
 	  var compr = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
@@ -122,7 +129,7 @@ c3dl.normalizeVector = function (vec)
 	  vec[0] = vec[0] != 0.0 ? vec[0] / ln : 0.0;
 	  vec[1] = vec[1] != 0.0 ? vec[1] / ln : 0.0;
 	  vec[2] = vec[2] != 0.0 ? vec[2] / ln : 0.0;
-	  return new C3DL_FLOAT_ARRAY(vec);
+	  return vec;
   }
 }
 
@@ -135,9 +142,8 @@ c3dl.normalizeVector = function (vec)
  @returns {float} The dot product of the two specified Vectors. If 
  one of the Vectors was invalid, returns null.
  */
-c3dl.vectorDotProduct = function (vecOne, vecTwo)
-{
-  return V3.dot(vecOne,vecTwo);
+c3dl.vectorDotProduct = function (vecOne, vecTwo, dest) {
+  return V3.dot(vecOne,vecTwo, dest);
 }
 
 /**
@@ -148,8 +154,7 @@ c3dl.vectorDotProduct = function (vecOne, vecTwo)
  
  @returns {Array} result of projecting vector 'vecOne' onto 'vecTwo'.
  */
-c3dl.vectorProject = function (vecOne, vecTwo)
-{
+c3dl.vectorProject = function (vecOne, vecTwo) {
   //           vecOne . vecTwo
   // result =  ---------------- x vecTwo
   //           vecTwo . vecTwo
@@ -169,8 +174,7 @@ c3dl.vectorProject = function (vecOne, vecTwo)
  
  @returns {Array} The cross product of 'vecOne' and 'vecTwo'.
  */
-c3dl.vectorCrossProduct = function (vecOne, vecTwo, dest)
-{
+c3dl.vectorCrossProduct = function (vecOne, vecTwo, dest) {
 return V3.cross(vecOne, vecTwo, dest);
 }
 
@@ -181,8 +185,7 @@ return V3.cross(vecOne, vecTwo, dest);
  
  @return {float} The length of the vector 'vec'.
  */
-c3dl.vectorLength = function (vec)
-{
+c3dl.vectorLength = function (vec) {
   return V3.length(vec);
 }
 
@@ -193,8 +196,7 @@ c3dl.vectorLength = function (vec)
  
  @returns {float} The 'length' of each component of 'vec' added together.
  */
-c3dl.vectorLengthSq = function (vec)
-{
+c3dl.vectorLengthSq = function (vec) {
   return V3.lengthSquared(vec);
 }
 
@@ -209,8 +211,7 @@ c3dl.vectorLengthSq = function (vec)
  @returns {Array} The resultant Vector if both were valid 
  Vectors, otherwise returns null.
  */
-c3dl.addVectors = function (vecOne, vecTwo, dest)
-{
+c3dl.addVectors = function (vecOne, vecTwo, dest) {
   return V3.add(vecOne, vecTwo, dest);
 }
 
@@ -224,8 +225,7 @@ c3dl.addVectors = function (vecOne, vecTwo, dest)
  @returns {Array} The resultant Vector, which is the first vector 
  minus the second. If one of the vector were not valid, returns null.
  */
-c3dl.subtractVectors = function (vecOne, vecTwo, dest)
-{
+c3dl.subtractVectors = function (vecOne, vecTwo, dest) {
   return V3.sub(vecOne, vecTwo, dest);
 }
 
@@ -244,8 +244,7 @@ c3dl.subtractVectors = function (vecOne, vecTwo, dest)
  @returns {Array} A vector 'vec' which has been scaled by 'scalar' or
  returns null if 'vec' was invalid or 'scalar' was not a number.
  */
-c3dl.multiplyVector = function (vec, scalar, dest)
-{
+c3dl.multiplyVector = function (vec, scalar, dest) {
   return V3.scale(vec, scalar, dest);
 }
 
@@ -260,9 +259,10 @@ c3dl.multiplyVector = function (vec, scalar, dest)
  @returns {Array} A vector 'vec' which has been divided by 'scalar' or
  returns null if 'vec' was invalid or 'scalar' was NaN.
  */
-c3dl.divideVector = function (vec, scalar, dest)
-{
-  if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
+c3dl.divideVector = function (vec, scalar, dest) {
+  if (dest == undefined) {
+    dest = new C3DL_FLOAT_ARRAY(3);
+  }
   dest[0] = vec[0] / scalar;
   dest[1] = vec[1] / scalar;
   dest[2] = vec[2] / scalar;
@@ -285,15 +285,24 @@ c3dl.divideVector = function (vec, scalar, dest)
  component together or null if one of the vectors where not valid 
  Vectors.
  */
-c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest)
-{
-  if (typeof(dest) == "undefined" || dest == null) dest = c3dl.makeVector();
+c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest) {
+  if (dest == undefined) {
+    dest = new C3DL_FLOAT_ARRAY(3);
+  }
   dest[0] = vecOne[0] * vecTwo[0];
   dest[1] = vecOne[1] * vecTwo[1];
   dest[2] = vecOne[2] * vecTwo[2];
   return dest;
 }
-
+c3dl.divideVectorByVector = function (vecOne, vecTwo, dest) {
+  if (dest == undefined) {
+    dest = new C3DL_FLOAT_ARRAY(3);
+  }
+  dest[0] = vecOne[0] / vecTwo[0];
+  dest[1] = vecOne[1] / vecTwo[1];
+  dest[2] = vecOne[2] / vecTwo[2];
+  return dest;
+}
 
 /**
  Compare two vectors for equality. Two Vectors are said to be equal 
@@ -304,8 +313,7 @@ c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest)
  
  @return {boolean} True if both vectors are equal, null otherwise.
  */
-c3dl.isVectorEqual = function (vecOne, vecTwo)
-{
+c3dl.isVectorEqual = function (vecOne, vecTwo) {
   // add tolerance to calculations
   return (vecOne[0] === vecTwo[0] && vecOne[1] === vecTwo[1] && vecOne[2] === vecTwo[2]);
 }
@@ -320,8 +328,7 @@ c3dl.isVectorEqual = function (vecOne, vecTwo)
  
  @return {boolean} True if the vector is considered a zero vector, false otherwise.
  */
-c3dl.isVectorZero = function (vec)
-{
+c3dl.isVectorZero = function (vec) {
   // Check for a tolerance
   return ((-c3dl.TOLERANCE < vec[0] && vec[0] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[1] && vec[1] < c3dl.TOLERANCE) && (-c3dl.TOLERANCE < vec[2] && vec[2] < c3dl.TOLERANCE));
 }
@@ -338,5 +345,12 @@ c3dl.isVectorZero = function (vec)
 c3dl.getAngleBetweenVectors = function (vecOne, vecTwo)
 {
   var dot = c3dl.vectorDotProduct(vecOne, vecTwo);
+  //force dot into acceptable range.
+  if(dot > 1 && dot < 1+c3dl.TOLERANCE) {
+    dot = 1;
+  }
+  else if(dot < -1 && dot > -1-c3dl.TOLERANCE) {
+    dot = -1;
+  }
   return c3dl.radiansToDegrees(Math.acos(dot));
 }

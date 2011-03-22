@@ -6,7 +6,7 @@
 /**
  @private
  */
-c3dl.solid_color_callback = function (renderingObj)
+c3dl.solid_color_callback = function (renderingObj, scene)
 {
   var progObjID = renderingObj.getProgramObjectID();
   var geometry = renderingObj.getGeometry();
@@ -24,8 +24,8 @@ c3dl.solid_color_callback = function (renderingObj)
   // create a ModelViewProjection matrix.  By doing this, we can multiply
   // 3 matrices together once per model instead of once per vertex
   var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix);
-  renderer.setUniformMatrix(progObjID, "modelViewProjMatrix", modelViewProjMatrix);
-  renderer.setUniformf(progObjID, "color", effect.getParameter("color"));
+  renderer.setUniformMatrix(progObjID, "modelViewProjMatrix", modelViewProjMatrix, scene, "solidcolor");
+  renderer.setUniformf(progObjID, "color", effect.getParameter("color"), scene, "solidcolor");
 
   // render all the collation elements. Every collation element in an object will 
   // have the same tranformation
@@ -37,20 +37,28 @@ c3dl.solid_color_callback = function (renderingObj)
     // before trying to set it.
     // This is  a kludge for Safari and Chrome since they want these attributes
     ////////////////////////////
-    var normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
+    var normalAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Normal"];
+    if (normalAttribLoc == undefined) {
+      normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
+      scene.curContextCache.attributes["solidcolor"+coll+"Normal"] = normalAttribLoc;
+    }
     if (normalAttribLoc != -1 && currColl.getNormals())
     {
-      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals());
+      renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "solidcolor"+coll);
     }
-    var texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
+    var texAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Texture"];
+    if (texAttribLoc == undefined) {
+      texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
+      scene.curContextCache.attributes["solidcolor"+coll+"Texture"] = texAttribLoc;
+    }
     if (texAttribLoc != -1 && currColl.getTexCoords())
     {
-      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords());
+      renderer.setVertexAttribArray(progObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "solidcolor"+coll);
     }
     ////////////////////////// End kludge
 
     // VERTICES
-    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices());
+    renderer.setVertexAttribArray(progObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "solidcolor"+coll);
     glCanvas3D.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
   }
 }

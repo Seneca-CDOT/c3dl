@@ -373,7 +373,9 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
   // and max allowed constraints.	
   if (distFromNewPosToOP >= this.getClosestDistance() && distFromNewPosToOP <= this.getFarthestDistance())
   {
-    this.pos = c3dl.copyObj(position);
+    this.pos[0] = position[0];
+    this.pos[1] = position[1];
+    this.pos[2] = position[2];
     var camPosToOrbitPoint = c3dl.subtractVectors(this.orbitPoint, this.pos);
 
     // if the position was set such that the direction vector is parallel to the global

@@ -892,7 +892,7 @@ c3dl.ParticleSystem = function ()
 
     this.preRender(glCanvas3D, scene);
 
-    scene.getRenderer().renderParticleSystem(this);
+    scene.getRenderer().renderParticleSystem(this, scene);
 
     this.postRender(glCanvas3D, scene);
   }

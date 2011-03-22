@@ -45,15 +45,13 @@ c3dl.TextureManager = function (gl)
    */
   this.addTextureFromCanvas2D = function (sourceCanvas)
   {
-    if (this.getID(sourceCanvas) == -1)
-    {
-      var texture = new Texture();
-      if (texture.setup(this.glCanvas3D, 'deleteme', sourceCanvas))
-      {
+    if (this.getID(sourceCanvas) == -1) {
+      var texture = new c3dl.Texture();
+      if (texture.setup(this.glCanvas3D, 'deleteme', sourceCanvas)) {
         this.keys.push(texture.getTextureID());
         this.values.push(texture);
         this.currentID++;
-      }
+      } 
     }
   }
 
@@ -114,7 +112,16 @@ c3dl.TextureManager = function (gl)
     }
     return id;
   }
-
+  this.getIDNumber = function (relativePath) {
+    var id = -1;
+    for (var i = 0, len = this.values.length; i < len; i++) {
+      if (this.values[i].getRelativePath() === relativePath) {
+        id = i;
+        break;
+      }
+    }
+    return id;
+  }
   /**
    @private	
    Get a string representation of this class. Will display all the WebGL 
@@ -148,5 +155,13 @@ c3dl.TextureManager = function (gl)
       }
     }
     return str;
+  }
+  this.updateTexture= function(path) {
+    if (typeof(path) != "string") {
+      var id = this.getIDNumber(path);
+      if (id >= 0){
+        this.values[id].update();
+      }
+    }
   }
 }

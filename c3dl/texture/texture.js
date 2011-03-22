@@ -19,7 +19,9 @@ c3dl.Texture = function ()
   */
   var textureImage = null;
   var isSetup = false;
-
+  var tCanvas = document.createElement('CANVAS'); 
+  var tCtx = tCanvas.getContext("2d");
+  var sourcecan = null;
   /**
     @private
     Get the texture ID, the texture ID is a unique number which
@@ -102,8 +104,7 @@ c3dl.Texture = function ()
     // the user from calling this method more than once.
     if (source != null && glCanvas3D != null && this.getIsSetup() == false)
     {
-      if (sourceCanvas == null)
-      {
+      if (sourceCanvas == null) {
         textureImage = new Image();
         textureImage.src = source;
 
@@ -111,9 +112,23 @@ c3dl.Texture = function ()
         // the name variable.
         textureImage.relativePath = source;
       }
-      else
-      {
-        textureImage = document.getElementById(sourceCanvas);
+      else {
+        if (sourceCanvas instanceof HTMLCanvasElement || sourceCanvas instanceof HTMLVideoElement || sourceCanvas instanceof HTMLImageElement) {
+          //if height or width is unknown set height and width to predefined value of 1024 by 1024
+          if ( sourceCanvas.width < 1 || sourceCanvas.height  < 1) {
+            tCanvas.width = 1024;
+            tCanvas.height = 1024;
+          }
+          else {
+            tCanvas.width = c3dl.roundUpToNextPowerOfTwo(sourceCanvas.width);
+            tCanvas.height = c3dl.roundUpToNextPowerOfTwo(sourceCanvas.height);
+          }
+          sourcecan = sourceCanvas;
+          textureImage = tCanvas;
+        }
+        else {
+          textureImage = document.getElementById(sourceCanvas);
+        }
         textureImage.relativePath = sourceCanvas;
       }
 
@@ -216,5 +231,18 @@ c3dl.Texture = function ()
 
     // if the image could be setup, this variable was set to
     return returnCode;
+  }
+  this.update = function () {
+    if (sourcecan instanceof HTMLImageElement) {
+      if (sourcecan.src && sourcecan.src != tCanvas.oldSrc && sourcecan.complete) {
+        tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
+        textureImage.onload();
+        tCanvas.oldSrc = sourcecan.src;
+      }
+    }
+    else {
+      tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
+      textureImage.onload();
+    }
   }
 }

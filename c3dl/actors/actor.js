@@ -18,6 +18,8 @@ c3dl.Actor = function ()
   this.linVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animation of positions
   this.angVel = c3dl.makeVector(0.0, 0.0, 0.0); // Animations of rotation around (side Vector, up Vector, dir Vector)
   this.name = "unnamed";
+  this.rotMat = c3dl.makeMatrix();
+  this.transMat = c3dl.makeMatrix();
 }
 
 // -------------------------------------------------------
@@ -27,8 +29,7 @@ c3dl.Actor = function ()
  
  @returns {Array} The position of the Actor.
  */
-c3dl.Actor.prototype.getPosition = function ()
-{
+c3dl.Actor.prototype.getPosition = function () {
   return c3dl.copyVector(this.pos);
 }
 
@@ -37,8 +38,7 @@ c3dl.Actor.prototype.getPosition = function ()
  
  @returns {Array} The up Vector of the actor.
  */
-c3dl.Actor.prototype.getUp = function ()
-{
+c3dl.Actor.prototype.getUp = function () {  
   return c3dl.copyVector(this.up);
 }
 
@@ -48,8 +48,7 @@ c3dl.Actor.prototype.getUp = function ()
  
  @returns {Array} The direction of the actor.
  */
-c3dl.Actor.prototype.getDirection = function ()
-{
+c3dl.Actor.prototype.getDirection = function () {
   return c3dl.copyVector(this.dir);
 }
 
@@ -58,8 +57,7 @@ c3dl.Actor.prototype.getDirection = function ()
  
  @returns {Array} The left Vector of the actor.
  */
-c3dl.Actor.prototype.getLeft = function ()
-{
+c3dl.Actor.prototype.getLeft = function () {
   return c3dl.copyVector(this.left);
 }
 
@@ -68,8 +66,7 @@ c3dl.Actor.prototype.getLeft = function ()
  
  @returns {Array} The linear velocity of the Actor.
  */
-c3dl.Actor.prototype.getLinearVel = function ()
-{
+c3dl.Actor.prototype.getLinearVel = function () {
   return c3dl.copyVector(this.linVel);
 }
 
@@ -78,8 +75,7 @@ c3dl.Actor.prototype.getLinearVel = function ()
  
  @returns {Array} The angular velocity of the Actor.
  */
-c3dl.Actor.prototype.getAngularVel = function ()
-{
+c3dl.Actor.prototype.getAngularVel = function () {
   return c3dl.copyVector(this.angVel);
 }
 
@@ -89,9 +85,8 @@ c3dl.Actor.prototype.getAngularVel = function ()
  
  @returns {Array} The scale amount of the Actor.
  */
-c3dl.Actor.prototype.getScale = function ()
-{
-  return c3dl.copyVector(this.scaleVec[0], this.scaleVec[1], this.scaleVec[2]);
+c3dl.Actor.prototype.getScale = function () {
+  return c3dl.copyVector(this.scaleVec);
 }
 
 /**
@@ -102,29 +97,54 @@ c3dl.Actor.prototype.getScale = function ()
  
  @return {Array}
  */
-c3dl.Actor.prototype.getTransform = function ()
-{
-  var mat = c3dl.makePoseMatrix(this.left, this.up, this.dir, this.pos);
-  var smat = c3dl.makeMatrix();
-  c3dl.setMatrix(smat, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, 
-  this.scaleVec[2], 0, 0, 0, 0, 1);
-  mat = c3dl.multiplyMatrixByMatrix(mat, smat);
-  return mat;
+c3dl.Actor.prototype.getTransform = function () {
+  c3dl.mat1[0] = this.left[0];
+  c3dl.mat1[1] = this.left[1];
+  c3dl.mat1[2] = this.left[2];
+  c3dl.mat1[3] = 0.0;
+  c3dl.mat1[4] = this.up[0];
+  c3dl.mat1[5] = this.up[1];
+  c3dl.mat1[6] = this.up[2];
+  c3dl.mat1[7] = 0.0;
+  c3dl.mat1[8] = this.dir[0];
+  c3dl.mat1[9] = this.dir[1];
+  c3dl.mat1[10] = this.dir[2];
+  c3dl.mat1[11] = 0.0;
+  c3dl.mat1[12] = this.pos[0];
+  c3dl.mat1[13] = this.pos[1];
+  c3dl.mat1[14] = this.pos[2];
+  c3dl.mat1[15] = 1.0;
+  c3dl.setMatrix(c3dl.mat2, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, this.scaleVec[2], 0, 0, 0, 0, 1);
+  return c3dl.multiplyMatrixByMatrix(c3dl.mat1, c3dl.mat2, this.transMat); 
 }
 
 
 c3dl.Actor.prototype.getRotateMat = function ()
-{
-  return c3dl.makePoseMatrix(this.left, this.up, this.dir, [0,0,0]);
+{ 
+  this.rotMat[0] = this.left[0];
+  this.rotMat[1] = this.left[1];
+  this.rotMat[2] = this.left[2];
+  this.rotMat[3] = 0.0;
+  this.rotMat[4] = this.up[0];
+  this.rotMat[5] = this.up[1];
+  this.rotMat[6] = this.up[2];
+  this.rotMat[7] = 0.0;
+  this.rotMat[8] = this.dir[0];
+  this.rotMat[9] = this.dir[1];
+  this.rotMat[10] = this.dir[2];
+  this.rotMat[11] = 0.0;
+  this.rotMat[12] = 0;
+  this.rotMat[13] = 0;
+  this.rotMat[14] = 0;
+  this.rotMat[15] = 1.0;
+  return this.rotMat; 
 }
-
 /**
  Get the name of this actor.
  
  @returns {String} actor's name
  */
-c3dl.Actor.prototype.getName = function ()
-{
+c3dl.Actor.prototype.getName = function () {
   return this.name;
 }
 
@@ -134,8 +154,7 @@ c3dl.Actor.prototype.getName = function ()
  
  @param {Array} mat
  */
-c3dl.Actor.prototype.setTransform = function (mat)
-{
+c3dl.Actor.prototype.setTransform = function (mat) {
   this.left = c3dl.makeVector(mat[0], mat[1], mat[2]);
   this.up = c3dl.makeVector(mat[4], mat[5], mat[6]);
   this.dir = c3dl.makeVector(mat[8], mat[9], mat[10]);
@@ -144,8 +163,7 @@ c3dl.Actor.prototype.setTransform = function (mat)
 
 /**
  */
-c3dl.Actor.prototype.resetTransform = function ()
-{
+c3dl.Actor.prototype.resetTransform = function () {
   this.angVel = c3dl.makeVector(0.0, 0.0, 0.0);
   this.linVel = c3dl.makeVector(0.0, 0.0, 0.0);
   this.left = c3dl.makeVector(1.0, 0.0, 0.0);
@@ -163,8 +181,7 @@ c3dl.Actor.prototype.resetTransform = function ()
  
  @param {Array} scaleVec The amount to scale the Actor.
  */
-c3dl.Actor.prototype.scale = function (scaleVec)
-{
+c3dl.Actor.prototype.scale = function (scaleVec) {
   // none of the values should be less than or equal to zero
   if (scaleVec[0] > 0.0 && scaleVec[1] > 0.0 && scaleVec[2] > 0.0)
   {

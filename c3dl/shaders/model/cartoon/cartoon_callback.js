@@ -6,16 +6,14 @@
 
 /*
 */
-c3dl.cartoon_callback = function (renderingObj)
+c3dl.cartoon_callback = function (renderingObj, scene)
 {
   var renderer = renderingObj.getRenderer();
   var gl = renderingObj.getContext();
   var geometry = renderingObj.getGeometry();
   var effect = geometry.getEffect();
   var programObjID = renderingObj.getProgramObjectID();
-
   gl.useProgram(programObjID);
-
   if (effect.getParameter("qMap") == null)
   {
     c3dl.debug.logWarning('"qMap" is a required parameter for c3dl.effects.CARTOON');
@@ -30,8 +28,8 @@ c3dl.cartoon_callback = function (renderingObj)
   // create a ModelViewProjection matrix.  By doing this, we can multiply
   // 3 matrices together once per model instead of once per vertex
   var modelViewProjMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix);
-  renderer.setUniformMatrix(programObjID, "modelViewMatrix", modelViewMatrix);
-  renderer.setUniformMatrix(programObjID, "modelViewProjMatrix", modelViewProjMatrix);
+  renderer.setUniformMatrix(programObjID, "modelViewMatrix", modelViewMatrix, scene, "cartoon");
+  renderer.setUniformMatrix(programObjID, "modelViewProjMatrix", modelViewProjMatrix, scene, "cartoon");
 
   // Commenting out until a fix is solved for the 2-object outline bug
   // Only render the outline, which is a single pixel thick if the user
@@ -48,7 +46,7 @@ c3dl.cartoon_callback = function (renderingObj)
     gl.enable(gl.CULL_FACE);
     gl.cullFace(gl.FRONT);
     gl.useProgram(outlineProgID);
-    renderer.setUniformf(outlineProgID, "color", [0, 0, 0]);
+    renderer.setUniformf(outlineProgID, "color", [0, 0, 0], scene, "outlinecartoon");
 
     var modelViewMatrix = c3dl.peekMatrix();
     c3dl.matrixMode(c3dl.PROJECTION);
@@ -56,7 +54,7 @@ c3dl.cartoon_callback = function (renderingObj)
     c3dl.matrixMode(c3dl.MODELVIEW);
 
     var MVPMatrix = c3dl.multiplyMatrixByMatrix(projectionMatrix, modelViewMatrix);
-    renderer.setUniformMatrix(outlineProgID, "modelViewProjMatrix", MVPMatrix);
+    renderer.setUniformMatrix(outlineProgID, "modelViewProjMatrix", MVPMatrix, scene, "outlinecartoon");
 
     var contextWidth = renderer.getContextWidth();
     var contextHeight = renderer.getContextHeight();
@@ -69,22 +67,34 @@ c3dl.cartoon_callback = function (renderingObj)
       // before trying to set it.
       // This is  a kludge for Safari and Chrome since they want these attributes
       ////////////////////////////
-      var normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+      
+      var normalAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"];
+      if(normalAttribLoc ==undefined ) {
+        normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
+        scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"] = normalAttribLoc;
+      }
+      
       if (normalAttribLoc != -1 && currColl.getNormals())
       {
-        renderer.setVertexAttribArray(outlineProgID, "Normal", 3, currColl.getVBONormals());
+        renderer.setVertexAttribArray(outlineProgID, "Normal", 3, currColl.getVBONormals(), scene, "outlinecartoon"+primSet);
       }
-      var texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+      
+      var texAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"];
+      if(texAttribLoc ==undefined ) {
+        texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
+        scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"] = texAttribLoc;
+      }
+      
       if (texAttribLoc != -1 && currColl.getTexCoords())
       {
-        renderer.setVertexAttribArray(outlineProgID, "Texture", 2, currColl.getVBOTexCoords());
+        renderer.setVertexAttribArray(outlineProgID, "Texture", 2, currColl.getVBOTexCoords(), scene, "outlinecartoon"+primSet);
       }
       ////////////////////////// End kludge
-      renderer.setVertexAttribArray(outlineProgID, "Vertex", 3, currColl.getVBOVertices());
-
+      renderer.setVertexAttribArray(outlineProgID, "Vertex", 3, currColl.getVBOVertices(), scene, "outlinecartoon"+primSet);
+    
       gl.viewport(1, -1, contextWidth, contextHeight);
       gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
-
+      
       gl.viewport(-1, -1, contextWidth, contextHeight);
       gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
 
@@ -103,14 +113,20 @@ c3dl.cartoon_callback = function (renderingObj)
     gl.useProgram(programObjID);
   }
 
-  renderer.setUniformi(programObjID, "lightingOn", true);
+  renderer.setUniformi(programObjID, "lightingOn", true, scene, "cartoon");
   // render all the collation elements. Every collation element in an object will 
   // have the same tranformation
   for (var coll = 0; coll < geometry.getPrimitiveSets().length; coll++)
   {
-    var currColl = geometry.getPrimitiveSets()[coll];
-    var normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
 
+    var currColl = geometry.getPrimitiveSets()[coll];
+    
+    var normalAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Normal"];
+    if(normalAttribLoc ==undefined ) {
+      normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
+      scene.curContextCache.attributes["cartoon"+coll+"Normal"] = normalAttribLoc;
+    }
+    
     // if the object acutally has normals and the normal attribute was found
     // NORMALS	
     if (currColl.getNormals())
@@ -118,16 +134,21 @@ c3dl.cartoon_callback = function (renderingObj)
       // the top matrix is the modelview matrix.
       var NormalMatrix = c3dl.inverseMatrix(modelViewMatrix);
       NormalMatrix = c3dl.transposeMatrix(NormalMatrix);
-      renderer.setUniformMatrix(programObjID, "normalMatrix", NormalMatrix);
-      renderer.setVertexAttribArray(programObjID, "Normal", 3, currColl.getVBONormals());
+      renderer.setUniformMatrix(programObjID, "normalMatrix", NormalMatrix, scene, "cartoon"+coll);
+      renderer.setVertexAttribArray(programObjID, "Normal", 3, currColl.getVBONormals(), scene, "cartoon"+coll);
     }
     else
     {
       gl.disableVertexAttribArray(normalAttribLoc);
     }
-
+ 
     // TEXTURE
-    var texAttribLoc = gl.getAttribLocation(programObjID, "Texture");
+    var texAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Texture"];
+    if(texAttribLoc ==undefined ) {
+      texAttribLoc = gl.getAttribLocation(programObjID, "Texture");
+      scene.curContextCache.attributes["cartoon"+coll+"Texture"] = texAttribLoc;
+    }
+    
     var texID = renderer.getTextureID(currColl.getTexture());
 
     // if the texture isn't loaded, but this collation element has one, 
@@ -145,14 +166,14 @@ c3dl.cartoon_callback = function (renderingObj)
       // bind the collations texture object to texture unit 0 and make it active.
       gl.bindTexture(gl.TEXTURE_2D, texID);
 
-      renderer.setVertexAttribArray(programObjID, "Texture", 2, currColl.getVBOTexCoords());
-      renderer.setUniformi(programObjID, "myTex", 0);
-      renderer.setUniformi(programObjID, "usingTexture", true);
+      renderer.setVertexAttribArray(programObjID, "Texture", 2, currColl.getVBOTexCoords(), scene, "cartoon"+coll);
+      renderer.setUniformi(programObjID, "myTex", 0, scene, "cartoon"+coll);
+      renderer.setUniformi(programObjID, "usingTexture", true, scene, "cartoon"+coll);
     }
     else
     {
       gl.disableVertexAttribArray(texAttribLoc);
-      renderer.setUniformi(programObjID, "usingTexture", false);
+      renderer.setUniformi(programObjID, "usingTexture", false, scene, "cartoon"+coll);
     }
 
     // Quantization Map
@@ -161,21 +182,20 @@ c3dl.cartoon_callback = function (renderingObj)
 
     // if the user added the parameter, but didn't add the texture
     // to the renderer with renderer.addTexture.
-    if (shadesTexID == -1)
-    {
+    if (shadesTexID == -1) {
       renderer.addTexture(qMap);
     }
 
-    gl.activeTexture(gl.TEXTURE1);
-
-    // Minefield is throwing an exception here, but still running?
-    gl.bindTexture(gl.TEXTURE_2D, shadesTexID);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    renderer.setUniformi(programObjID, "celShadeTex", 1);
-
+    if (shadesTexID !== -1) {
+      // Minefield is throwing an exception here, but still running?
+      gl.activeTexture(gl.TEXTURE1);
+      gl.bindTexture(gl.TEXTURE_2D, shadesTexID);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      renderer.setUniformi(programObjID, "celShadeTex", 1, scene, "cartoon"+coll);
+    }
     // VERTICES
-    renderer.setVertexAttribArray(programObjID, "Vertex", 3, currColl.getVBOVertices());
+    renderer.setVertexAttribArray(programObjID, "Vertex", 3, currColl.getVBOVertices(), scene, "cartoon"+coll);
     gl.drawArrays(renderer.getFillMode(), 0, currColl.getVertices().length / 3);
   }
 }

@@ -56,6 +56,7 @@ c3dl_require('math/vector.js');
 c3dl_require('math/matrix.js');
 c3dl_require('math/quaternion.js');
 c3dl_require('matrixstack.js');
+
 //cameras
 c3dl_require('camera/camera.js');
 c3dl_require('camera/freecamera.js');
@@ -63,14 +64,24 @@ c3dl_require('camera/orbitcamera.js');
 
 //bounding volumes
 c3dl_require('enclosure/boundingsphere.js');
+c3dl_require('enclosure/boundingvolume.js');
 c3dl_require('enclosure/visualboundingsphere.js');
-c3dl_require('enclosure/boundingbox.js');
+c3dl_require('enclosure/obb.js');
+c3dl_require('enclosure/aabb.js');
 
 //actors
 c3dl_require('actors/actor.js');
 c3dl_require('actors/primitive.js');
 c3dl_require('actors/point.js');
 c3dl_require('actors/line.js');
+
+//shapes
+c3dl_require('shapes/shape.js');
+c3dl_require('shapes/cube.js');
+c3dl_require('shapes/plane.js');
+c3dl_require('shapes/sphere.js');
+c3dl_require('shapes/custom.js');
+c3dl_require('shapes/customplane.js');
 
 //frustum culling
 c3dl_require('frustum_culling/frustum.js');
@@ -158,5 +169,19 @@ c3dl_require('particle_system/particle.js');
 c3dl_require('init.js');
 
 //interaction
+c3dl_require('interaction/collision.js');
 c3dl_require('interaction/picking.js');
 c3dl_require('interaction/pickingresult.js');
+
+//Function to call the various versions of requestAnimationFrame
+//To be updated when this is properly standardized.
+window.requestAnimFrame = (function(callback){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
