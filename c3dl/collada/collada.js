@@ -181,7 +181,8 @@ c3dl.Collada.prototype.init = function (daePath) {
   else {
     // this will be called if the scene is being initialized and we are 
     // placing collada objects in the manager.
-    c3dl.ColladaQueue.pushBack(this);
+    c3dl.ColladaManager.loadFile(daePath);
+    //c3dl.ColladaQueue.pushBack(this);
   }
   if (this.isReady()) {
     c3dl.pushMatrix();

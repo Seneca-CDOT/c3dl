@@ -101,7 +101,13 @@ c3dl.ColladaManager.getSceneGraphCopy = function (filePath)
 c3dl.ColladaManager.isFileLoaded = function (filePath)
 {
   // if its in the 'table', it will return non-negative one.
-  return c3dl.ColladaManager.getIndex(filePath) != -1 ? true : false;
+  if  (c3dl.ColladaManager.getIndex(filePath) != -1 ? true : false){
+    return c3dl.ColladaManager.values[c3dl.ColladaManager.getIndex(filePath)].children.length != 0 ? true : false;
+  }
+  else {
+    return false;
+  }
+    
 }
 
 /**

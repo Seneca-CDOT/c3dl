@@ -94,7 +94,7 @@ c3dl.init = function ()
 {
   // if the user does not want to parse any collada models,
   // we don't put anything in the queue and go right ahead and 
-  // call the main methods.
+  // call the main methods.  
   if (c3dl.preloadModels.length == 0)
   {
     for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
@@ -123,6 +123,25 @@ c3dl.init = function ()
       var preloadColadda = new c3dl.Collada();
       preloadColadda.init(c3dl.preloadModels[i]);
     }
+    c3dl.hhhh = setInterval(c3dl.checker,100)
+  }
+}
+
+c3dl.checker  = function () {
+  var counter = 0;
+  for (var i = 0, len = c3dl.preloadModels.length; i < len; i++) {
+    if (c3dl.ColladaManager.values[0].children.length) {
+      counter++;
+    }
+  }
+  if  (counter == c3dl.preloadModels.length) {   
+    c3dl.removeProgressBars();
+    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++) {
+      var func = c3dl.mainCallBacks[i].f;
+      var tag = c3dl.mainCallBacks[i].t;
+      func(tag);
+    }
+    clearInterval(c3dl.hhhh);
   }
 }
 
