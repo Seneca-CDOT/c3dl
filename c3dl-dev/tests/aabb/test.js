@@ -1,7 +1,6 @@
 c3dl.addMainCallBack(yview, "yview");
 c3dl.addMainCallBack(xview, "xview");
 c3dl.addMainCallBack(zview, "zview");
-c3dl.addModel("teapot.dae");
 var teapot1,teapot2,teapot3;
 var scn,scn2,scn3;
 var cam1,cam2,cam3;

@@ -53,11 +53,11 @@ c3dl.ColladaManager.values = [];
 c3dl.ColladaManager.loadFile = function (filePath)
 {
   // prevent loading the file twice
-  if (c3dl.ColladaManager.isFileLoaded(filePath) == false)
+  if (c3dl.ColladaManager.getIndex(filePath) == -1)
   {
     // create a node which the loader will assign other nodes.
     var rootNode = new c3dl.SceneNode();
-
+    rootNode.loaded = false;
     // give the loader a sceneGraph which it will populate with nodes.
     // We know it has finished once it has set the scenegraph's root.
 
@@ -78,10 +78,14 @@ c3dl.ColladaManager.getSceneGraphCopy = function (filePath)
 {
   if (c3dl.ColladaManager.isFileLoaded(filePath))
   {
-    var i = c3dl.ColladaManager.getIndex(filePath);
-
+    var index = c3dl.ColladaManager.getIndex(filePath);
+ 
     // get a copy of the scenegraph
-    var sg = c3dl.ColladaManager.values[i].getCopy();
+    var sg = [];
+
+    for (var i=0; i < c3dl.ColladaManager.values[index].children.length; i++) {
+      sg.push(c3dl.ColladaManager.values[index].children[i].getCopy());
+    }
 
     //return ColladaManager.values[i];
     return sg;
@@ -101,13 +105,9 @@ c3dl.ColladaManager.getSceneGraphCopy = function (filePath)
 c3dl.ColladaManager.isFileLoaded = function (filePath)
 {
   // if its in the 'table', it will return non-negative one.
-  if  (c3dl.ColladaManager.getIndex(filePath) != -1 ? true : false){
-    return c3dl.ColladaManager.values[c3dl.ColladaManager.getIndex(filePath)].children.length != 0 ? true : false;
-  }
-  else {
-    return false;
-  }
-    
+    return c3dl.ColladaManager.values[c3dl.ColladaManager.getIndex(filePath)].loaded;
+ 
+
 }
 
 /**

@@ -443,7 +443,7 @@ c3dl.ColladaLoader = function ()
         loader.parseNodeRecursive(xmlObject, nodes[currNode], scenenode);
       }
     }
-
+    c3dl.ColladaManager.values[c3dl.ColladaManager.getIndex(xmlhttp.responseXML.colladaPath)].loaded = true;
     // !!!
     delete xmlObject;
     delete xmlhttp;

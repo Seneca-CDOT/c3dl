@@ -260,13 +260,13 @@ c3dl.SceneNode.prototype.getBoundingVolumes = function () {
   return boundingVolumes;
 }
 
-c3dl.SceneNode.prototype.getAllVerts = function () {
+c3dl.SceneNode.prototype.getAllVerts = function (first) {
   var allverts = [];
   var numverts = 0;
   var temp2 = [],
       temp3 = [];
   c3dl.pushMatrix();
-  c3dl.multMatrix(this.getTransform());
+  if (!first)c3dl.multMatrix(this.getTransform());
   for (var i = 0; i < this.children.length; i++) {
     if (this.children[i] instanceof c3dl.SceneNode) {
       allverts = allverts.concat(this.children[i].getAllVerts());

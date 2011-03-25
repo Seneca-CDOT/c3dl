@@ -95,8 +95,8 @@ c3dl.init = function ()
   // if the user does not want to parse any collada models,
   // we don't put anything in the queue and go right ahead and 
   // call the main methods.  
-  if (c3dl.preloadModels.length == 0)
-  {
+  //if (c3dl.preloadModels.length == 0)
+  //{
     for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
     {
       // Each element is an object which holds a function 
@@ -106,12 +106,13 @@ c3dl.init = function ()
       var tag = c3dl.mainCallBacks[i].t;
       func(tag);
     }
-  }
+  //}
   // otherwise we will let the collada queue call the main methods
   // once all the models have been parsed.
   // By creating collada objects, they will be placed in the queue.
   // Once the queue is empty, the main methods will be called by
   // the Queue.
+  /*
   else
   {
     // This will add an animated gif to the DOM, letting
@@ -124,13 +125,13 @@ c3dl.init = function ()
       preloadColadda.init(c3dl.preloadModels[i]);
     }
     c3dl.hhhh = setInterval(c3dl.checker,100)
-  }
+  }*/
 }
 
 c3dl.checker  = function () {
   var counter = 0;
   for (var i = 0, len = c3dl.preloadModels.length; i < len; i++) {
-    if (c3dl.ColladaManager.values[0].children.length) {
+    if (c3dl.ColladaManager.isFileLoaded(c3dl.preloadModels[i])) {
       counter++;
     }
   }
@@ -154,7 +155,9 @@ c3dl.checker  = function () {
  */
 c3dl.addModel = function (model)
 {
-  c3dl.preloadModels.push(model);
+  //c3dl.preloadModels.push(model);
+  var newModel = new c3dl.Collada();
+  newModel.init(c3dl.preloadModels[i]);
 }
 
 /**

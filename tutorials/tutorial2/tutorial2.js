@@ -6,7 +6,6 @@
 // is the id of the canvas element on the html page.
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
 var duck;
 
 // The program main
@@ -41,7 +40,7 @@ function canvasMain(canvasName){
  // then the model is automatically retrieved
  // from a collada manager.
  duck.init("duck.dae");
-
+ duck.setTexture("duck.jpg")
  // Give the duck a bit of a spin on y
  duck.setAngularVel(new Array(0.0, 0.001, 0.0));
 
