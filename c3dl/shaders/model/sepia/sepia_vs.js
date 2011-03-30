@@ -57,7 +57,7 @@ c3dl.sepia_vs =
 "	{" +
 		// iterate over all the lights, and keep incrementing color values
 		// the color values are passed by reference and modified.
-"		for(int i = 0; i < C3DL_MAX_LIGHTS; i++)" +
+"		for(int i = 0; i < 8; i++)" +
 "		{" +
 "     Light l = getLight(i);" +
 "			if(l.isOn) " +
