@@ -281,7 +281,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
         var PID = this.programsWithLights[i];
 
         // base string to shorten code below.
-        var base = "lights[" + lightID + "].";
+        var base = "lights" + lightID + ".";
         glCanvas3D.useProgram(PID);
         this.setUniformf(PID, base + "position", [0, 0, 0], scene, "light"+i+lightID);
         this.setUniformf(PID, base + "ambient", [0, 0, 0], scene, "light"+i+lightID);
@@ -345,7 +345,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       for (var i = 0, len2 = lightList.length; i < len2; i++)
       {
         // create a base string to shorten code below.
-        var base = "lights[" + i + "].";
+        var base = "lights" + i + ".";
 
         // we may have nulls in the array which represent places lights can be inserted
         // so we have to check for these.
