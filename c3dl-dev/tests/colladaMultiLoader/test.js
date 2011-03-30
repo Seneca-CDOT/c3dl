@@ -53,3 +53,8 @@ function canvasMain(canvasName){
  scn.startScene();
  }
 }
+$(function() {
+  $( "#progressbar" ).progressbar({
+  	value: 37
+	});
+});

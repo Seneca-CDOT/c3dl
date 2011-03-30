@@ -850,3 +850,7 @@ c3dl.Collada.prototype.centerObject = function () {
     this.parameterList.push([]);
   }
 }
+
+c3dl.Collada.prototype.getLoadedProgress = function () {
+  return c3dl.ColladaManager.loadProgress(this.path);
+}

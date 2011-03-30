@@ -98,7 +98,6 @@ c3dl_require('texture/textureutils.js');
 //collada management
 c3dl_require('collada/colladamanager.js');
 c3dl_require('collada/colladaloader.js');
-c3dl_require('collada/colladaqueue.js');
 c3dl_require('collada/geometry.js');
 c3dl_require('collada/primitiveset.js');
 
