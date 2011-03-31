@@ -9,6 +9,7 @@ for (var i = 0; i < 50; i++) {
   models[i] = new c3dl.Collada();
 }
 
+//addModel can also be used to preload
 models[0].init("./models/wall/cube.dae");
 models[1].init("./models/chair-modern/models/chair.dae");
 models[2].init("./models/wood-table/models/table.dae");
@@ -20,6 +21,8 @@ models[7].init("./models/pacman.dae");
 models[8].init("./models/redghost.dae");
 models[9].init("./models/blueghost.dae");
 models[10].init("./models/orangeghost.dae");
+/*
+50 is to many model for one thread add in when workers are used
 models[11].init("./models/pinkghost.dae");
 models[12].init("./models/ball.dae");
 models[13].init("./models/play.dae");
@@ -59,28 +62,26 @@ models[46].init("./models/Server-Rack-with-Keypad/models/Server-Rack-with-Keypad
 models[47].init("./models/panduit-CS1-server-rack/models/panduit-cn1.dae");
 models[48].init("./models/sofa/models/sofa.dae");
 models[49].init("./models/sofa2.dae");
-
-
-
+*/
 
 function canvasMain(canvasName){
- scn = new c3dl.Scene();
- scn.setCanvasTag(canvasName);
- renderer = new c3dl.WebGL();
- renderer.createRenderer(this);
- scn.setRenderer(renderer);
- scn.init(canvasName);
- if(renderer.isReady() )
- {
- scn.addObjectToScene(models[0]);
-models[0].setAngularVel([0,0,0.001]);
- var cam = new c3dl.FreeCamera();
- cam.setPosition(new Array(0.0, 0.0, 10.0));
- cam.setLookAtPoint(new Array(0.0, 0.0, 0.0));
- scn.setCamera(cam);
- scn.startScene();
- }
+  scn = new c3dl.Scene();
+  scn.setCanvasTag(canvasName);
+  renderer = new c3dl.WebGL();
+  renderer.createRenderer(this);
+  scn.setRenderer(renderer);
+  scn.init(canvasName);
+  if(renderer.isReady()) {
+    scn.addObjectToScene(models[0]);
+    models[0].setAngularVel([0,0,0.001]);
+    var cam = new c3dl.FreeCamera();
+    cam.setPosition(new Array(0.0, 0.0, 10.0));
+    cam.setLookAtPoint(new Array(0.0, 0.0, 0.0));
+    scn.setCamera(cam);
+    scn.startScene();
+  }
 }
+
 $(function() {
   $( "#progressbar" ).progressbar({
   	value: 0

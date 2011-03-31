@@ -24,6 +24,8 @@ function canvasMain(canvasName){
   models[8].init("./models/redghost.dae");
   models[9].init("./models/blueghost.dae");
   models[10].init("./models/orangeghost.dae");
+  /*
+  50 is to many model for one thread add in when workers are used
   models[11].init("./models/pinkghost.dae");
   models[12].init("./models/ball.dae");
   models[13].init("./models/play.dae");
@@ -62,16 +64,15 @@ function canvasMain(canvasName){
   models[46].init("./models/Server-Rack-with-Keypad/models/Server-Rack-with-Keypad.dae");
   models[47].init("./models/panduit-CS1-server-rack/models/panduit-cn1.dae");
   models[48].init("./models/sofa/models/sofa.dae");
-  models[49].init("./models/sofa2.dae");
- if(renderer.isReady() )
- {
- scn.addObjectToScene(models[0]);
- models[0].setAngularVel([0,0,0.001]);
- var cam = new c3dl.FreeCamera();
- cam.setPosition(new Array(0.0, 0.0, 10.0));
- cam.setLookAtPoint(new Array(0.0, 0.0, 0.0));
- scn.setCamera(cam);
- scn.startScene();
- }
+  models[49].init("./models/sofa2.dae");*/
+  if(renderer.isReady() ) {
+    scn.addObjectToScene(models[0]);
+    models[0].setAngularVel([0,0,0.001]);
+    var cam = new c3dl.FreeCamera();
+    cam.setPosition(new Array(0.0, 0.0, 10.0));
+    cam.setLookAtPoint(new Array(0.0, 0.0, 0.0));
+    scn.setCamera(cam);
+    scn.startScene();
+  }
 }
 
