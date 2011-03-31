@@ -75,7 +75,3 @@ c3dl.addMainCallBack = function (func, tagName)
 
 // This will make sure the c3dl.init() funciton is called once the web page
 // is done loading.
-if (document.addEventListener)
-{
-  document.addEventListener("DOMContentLoaded", c3dl.init, false);
-}

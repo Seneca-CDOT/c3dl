@@ -1,37 +1,38 @@
 c3dl.addMainCallBack(canvasMain, "tester");
  //Paths
+  var ready = false;
+  var models = [];
+  models[0] = new c3dl.Collada();
+  models[0].init("./models/pacman.dae");
+  models[1] = new c3dl.Collada();
+  models[1].init("./models/redghost.dae");
+  models[2] = new c3dl.Collada();
+  models[2].init("./models/blueghost.dae");
+  models[3] = new c3dl.Collada();
+  models[3].init("./models/orangeghost.dae");
+  models[4] = new c3dl.Collada();
+  models[4].init("./models/pinkghost.dae");  
+  models[5] = new c3dl.Collada();
+  models[5].init("./models/ball.dae");  
+  models[6] = new c3dl.Collada();
+  models[6].init("./models/ceiling-light.dae");
+  models[7] = new c3dl.Collada();
+  models[7].init("./models/ceiling-light2.dae");
+  models[8] = new c3dl.Collada();
+  models[8].init("./models/computer-chair.dae");
+  models[9] = new c3dl.Collada();
+  models[9].init("./models/lexmark-printer.dae");
+  models[10] = new c3dl.Collada();
+  models[10].init("./models/sofa.dae");
+  models[11] = new c3dl.Collada();
+  models[11].init("./models/table.dae");
+  models[12] = new c3dl.Collada();
+  models[12].init("./models/rack-mount-server-2U.dae");
+  models[13] = new c3dl.Collada();
+  models[13].init("./models/rack-mount-server-1U.dae");
+  models[14] = new c3dl.Collada();
+  models[14].init("./models/barracuda350.dae");
 
-  const PACMAN_PATH = "./models/pacman.dae";
-  const REDGHOST_PATH = "./models/redghost.dae";
-  const BLUEGHOST_PATH = "./models/blueghost.dae";
-  const ORANGEGHOST_PATH = "./models/orangeghost.dae";
-  const PINKGHOST_PATH = "./models/pinkghost.dae";
-  const PACMANBALL_PATH = "./models/ball.dae";
-  const CEILINGLIGHT_PATH = "./models/ceiling-light.dae";
-  const CEILINGLIGHT2_PATH = "./models/ceiling-light2.dae";
-  const COMPCHAIR_PATH = "./models/computer-chair.dae";
-  const LEXMARKPRINTER_PATH = "./models/lexmark-printer.dae";
-  const TABLE_PATH = "./models/table.dae";
-  const RACKMOUNTSERVER_PATH = "./models/rack-mount-server-2U.dae";
-  const RACKMOUNTSERVER2_PATH = "./models/rack-mount-server-1U.dae";
-  const RACKMOUNTSERVER3_PATH = "./models/barracuda350.dae";
-  const SOFA_PATH = "./models/sofa.dae";
-
-  c3dl.addModel(PACMAN_PATH);
-  c3dl.addModel(REDGHOST_PATH);
-  c3dl.addModel(BLUEGHOST_PATH);
-  c3dl.addModel(ORANGEGHOST_PATH);
-  c3dl.addModel(PINKGHOST_PATH);
-  c3dl.addModel(PACMANBALL_PATH);
-  c3dl.addModel(CEILINGLIGHT_PATH);
-  c3dl.addModel(CEILINGLIGHT2_PATH);
-  c3dl.addModel(COMPCHAIR_PATH);
-  c3dl.addModel(LEXMARKPRINTER_PATH);
-  c3dl.addModel(TABLE_PATH);
-  c3dl.addModel(RACKMOUNTSERVER_PATH);
-  c3dl.addModel(RACKMOUNTSERVER2_PATH);
-  c3dl.addModel(RACKMOUNTSERVER3_PATH);
-  c3dl.addModel(SOFA_PATH);
 
 function canvasMain(canvasName){
  scn = new c3dl.Scene();
@@ -42,9 +43,7 @@ function canvasMain(canvasName){
  scn.init(canvasName);
  if(renderer.isReady() )
  {
- var pacman = new c3dl.Collada();
- pacman.init(PACMAN_PATH);
- scn.addObjectToScene(pacman);
+ scn.addObjectToScene(models[0]);
 
  var cam = new c3dl.FreeCamera();
  cam.setPosition(new Array(0.0, 0.0, 2500.0));
@@ -55,6 +54,21 @@ function canvasMain(canvasName){
 }
 $(function() {
   $( "#progressbar" ).progressbar({
-  	value: 37
+  	value: 0
 	});
 });
+var intervalID = window.setInterval(function () {
+  var progress = 0;
+  var counter = 0;
+  for (var i = 0; i < models.length; i++) {
+    progress+=models[i].getLoadedProgress();
+  }
+  progress = progress/models.length;
+  $("#progressbar").progressbar("value", progress);
+  if (document.addEventListener && progress == 10) { 
+    document.addEventListener("DOMContentLoaded", c3dl.init, false);
+    clearInterval(intervalID);
+  }
+}, 100);
+
+
