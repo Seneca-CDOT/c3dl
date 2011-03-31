@@ -17,32 +17,6 @@ c3dl.ColladaManager =
 c3dl.ColladaManager.keys = [];
 c3dl.ColladaManager.values = [];
 
-/**
- @private
- Get the scenegraph's root for the filePath.
- 
- @param {String} filePath 
- 
- @returns c3dl.SceneNode or null if the file has not finished loading.
- 
- c3dl.ColladaManager.getSceneGraphRoot = function(filePath)
- {
- var index = c3dl.ColladaManager.getIndex(filePath);
- 
- // if it's in the table
- if(index != -1)
- {
- // The loader will set the root once it has finished parsing.
- // Initially when we create the sceneGraph, the root is null
- // indicating the graph hasn't been created.
- return c3dl.ColladaManager.values[index];
- }
- else
- {
- return null;
- }
- }*/
-
 
 /**
  @private

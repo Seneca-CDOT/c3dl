@@ -26,16 +26,17 @@ c3dl.init = function ()
   // if the user does not want to parse any collada models,
   // we don't put anything in the queue and go right ahead and 
   // call the main methods.  
-  for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++) {
-      // Each element is an object which holds a function 
-      // and a tag.  They were both placed in a wrapper
-      // object so we can stick to using arrays for simplicity.
-      var func = c3dl.mainCallBacks[i].f;
-      var tag = c3dl.mainCallBacks[i].t;
-      func(tag);
+  if (c3dl.ColladaManager.values.length == 0 || c3dl.PreLoader.progress == 100) {
+    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++) {
+        // Each element is an object which holds a function 
+        // and a tag.  They were both placed in a wrapper
+        // object so we can stick to using arrays for simplicity.
+        var func = c3dl.mainCallBacks[i].f;
+        var tag = c3dl.mainCallBacks[i].t;
+        func(tag);
+    }
   }
 }
-
 
 /**
  Add a model to the collada queue to be parsed
@@ -75,3 +76,23 @@ c3dl.addMainCallBack = function (func, tagName)
 
 // This will make sure the c3dl.init() funciton is called once the web page
 // is done loading.
+if (document.addEventListener) { 
+  document.addEventListener("DOMContentLoaded", c3dl.init, false);
+}
+
+c3dl.PreLoader = {
+  progress: 0,
+  checkProgress: function () {
+    c3dl.PreLoader.progress = 0;
+    var counter = 0;
+    for (var i = 0; i < c3dl.ColladaManager.values.length; i++) {
+      c3dl.PreLoader.progress+=c3dl.ColladaManager.values[i].progress;
+    }
+    c3dl.PreLoader.progress = c3dl.PreLoader.progress/c3dl.ColladaManager.values.length;
+    c3dl.PreLoader.callBack()
+    if (c3dl.PreLoader.progress == 100) { 
+      c3dl.init();
+    }
+  },
+  callBack: function () {}
+};

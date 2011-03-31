@@ -215,7 +215,7 @@ c3dl.Collada.prototype.update = function (timeStep) {
 c3dl.Collada.prototype.update = function (timeStep) {
   // keep checking to see if the file is done being loaded.
   if (this.isReady()) {
-    if (!this.isStatic() || this.isStatic() && this.isDirty()) {
+    if (!this.isStatic() || (this.isStatic() && this.isDirty())) {
       scaleVec=[1,1,1];
       //ModelView stack will be used for trasform mat
       c3dl.pushMatrix();
@@ -302,7 +302,6 @@ c3dl.Collada.prototype.update = function (timeStep) {
     for (var i=0; i < sg.length; i++) {
       this.sceneGraph.addChild(sg[i]);
     }
-    
     c3dl.pushMatrix();
     c3dl.loadIdentity();
     var allVerts = this.sceneGraph.getAllVerts(true);

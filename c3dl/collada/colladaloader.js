@@ -64,6 +64,7 @@ c3dl.ColladaLoader = function ()
           // we can now parse by calling the callback which 
           // was set the the parse function.
           this.parent.rootNode.progress = 100;
+          c3dl.PreLoader.checkProgress();
           this.callbackFunc(xmlhttp.responseXML);
         }
       }
@@ -71,6 +72,7 @@ c3dl.ColladaLoader = function ()
     
     xmlhttp.onprogress = function (e){
       this.parent.rootNode.progress = (e.position / e.totalSize)*100;
+      c3dl.PreLoader.checkProgress();
     }
   }
 
