@@ -841,6 +841,25 @@ c3dl.Scene = function ()
     // we end up here, returning to indicate the light was not added.
     return false;
   }
+  
+  /**
+    Remove a light from the scene by its index in the scene's list of lights.
+    
+    @param {int} The index of the light to remove
+  */
+  this.removeLightFromScene=function(index) {
+    if(index >= 0 && index < c3dl.MAX_LIGHTS && lightList[index] != null) {
+      // place a 'hole' in the array. This can later be populated with another light.
+      // don't delete the light, leave it up to the gc, otherwise
+      // the light seems to stay on and can't be removed.		
+      lightList[index]=null;
+
+      // we removed the light from our list, but WebGL still has
+      // a light state which needs to be cleared.  Otherwise the
+      // light will still affect the scene.
+      renderer.clearLight(index,this);
+    }
+  }
 
  /**
    Remove a light from the scene. The first light found matching the name 
@@ -868,15 +887,7 @@ c3dl.Scene = function ()
     //
     if (lightID != -1)
     {
-      // place a 'hole' in the array. This can later be populated with another light.
-      // don't delete the light, leave it up to the gc, otherwise
-      // the light seems to stay on and can't be removed.		
-      lightList[lightID] = null;
-
-      // we removed the light from our list, but WebGL still has
-      // a light state which needs to be cleared.  Otherwise the
-      // light will still affect the scene.
-      renderer.clearLight(lightID, this);
+      this.removeLightFromScene(lightID);
     }
     return (lightID == -1 ? false : true);
   }
