@@ -22,7 +22,7 @@ c3dl.Picking = function (scene)
    
    @returns {Array} The mouse button clicked and the array of object index number.
    */
-  this.onMouseDown = function (event)
+  this.pickingReaction = function (event)
   {
     // user may have switched the camera or the user may have moved the camera 
     // and then clicked, so everytime the user tries to pick something, get the 

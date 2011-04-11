@@ -369,7 +369,7 @@ c3dl.Scene = function ()
 
       // set the picking handler
       this.pickingHandler = pickingHandler;
-      canvasTag.addEventListener("mousedown", this.pick.onMouseDown, false);
+      canvasTag.addEventListener("mousedown", this.pick.pickingReaction, false);
     }
     else
     {
