@@ -360,16 +360,31 @@ c3dl.Scene = function ()
    
    @param {function} pickingHandler The function to call when the user clicks on the canvas.
    */
-  this.setPickingCallback = function (pickingHandler)
+  this.setPickingCallback = function (pickingHandler,pickingEvent)
   {
     if (pickingHandler && pickingHandler instanceof Function)
     {
       // for now we need to make an instance, this needs to be changed.
       this.pick = new c3dl.Picking(this);
 
+      if(undefined == pickingEvent) {
+	pickingEvent = "mousedown";
+      }
+
+      switch(pickingEvent) {
+	case "mousedown":
+	case "mouseup":
+	case "click":
+	  this.pickingHandler = pickingHandler;
+          canvasTag.addEventListener(pickingEvent, this.pick.pickingReaction, false);
+	  break;
+	default:
+	  c3dl.debug.logWarning("scene's setPickingCallback() was passed an invalid event");
+	  break;
+      }
+
       // set the picking handler
-      this.pickingHandler = pickingHandler;
-      canvasTag.addEventListener("mousedown", this.pick.pickingReaction, false);
+      
     }
     else
     {
