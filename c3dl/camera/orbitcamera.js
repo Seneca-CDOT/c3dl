@@ -148,7 +148,9 @@ c3dl.OrbitCamera.prototype.goFarther = function (distance)
 
 
 /**
- Pitch the camera about the orbit point.
+ Pitch the camera about the orbit point. The camera will remain looking at the
+ orbit point and its position will rotate about the axis parallel to
+ its own 'left' axis and intersecting with the orbit point.
  
  @param {float} angle in radians.
  */
@@ -157,7 +159,7 @@ c3dl.OrbitCamera.prototype.pitch = function (angle)
   if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
   {
     // Create a proper Quaternion based on location and angle.
-    // we will rotate about the global up axis.
+    // we will rotate about the camera's 'left' axis.
     var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.left, angle));
 
     // 
@@ -304,7 +306,7 @@ c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
 
 /**
  Yaw about the orbit point. The camera will remain looking at the
- orbit point and its position will rotate about the point parallel to
+ orbit point and its position will rotate about the axis parallel to
  the global up axis and intersecting with the orbit point.
  
  @param {float} angle in radians.
