@@ -378,6 +378,7 @@ c3dl.Scene = function ()
 	case "mousedown":
 	case "mouseup":
 	case "click":
+	  // set the picking handler
 	  this.pickingHandler = pickingHandler;
           canvasTag.addEventListener(pickingEvent, this.pick.pickingReaction, false);
 	  break;
@@ -385,9 +386,6 @@ c3dl.Scene = function ()
 	  c3dl.debug.logWarning("scene's setPickingCallback() was passed an invalid event");
 	  break;
       }
-
-      // set the picking handler
-      
     }
     else
     {
