@@ -96,8 +96,8 @@ function handler(result)
 				obj = objectsPicked[i];
 				// delete the object
 				scn.removeObjectFromScene(obj);
+				c3dl.ColladaManager.deleteFile(obj.getPath());
 				delete obj;
-
 			}
 		}
 	}
