@@ -156,48 +156,7 @@ c3dl.OrbitCamera.prototype.goFarther = function (distance)
  */
 c3dl.OrbitCamera.prototype.pitch = function (angle)
 {
-  if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
-  {
-    // Create a proper Quaternion based on location and angle.
-    // we will rotate about the camera's 'left' axis.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.left, angle));
-
-    // 
-    this.dir = c3dl.multiplyMatrixByVector(rotMat, this.dir);
-    this.dir = c3dl.normalizeVector(this.dir);
-
-    // update up vector
-    this.up = c3dl.vectorCrossProduct(this.dir, this.left);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // left does not change.
-  }
-  else
-  {
-    // get position relative to orbit point
-    this.pos = c3dl.subtractVectors(this.pos, this.orbitPoint);
-
-    // Create a Quaternion based on left vector and angle
-    var quat = c3dl.axisAngleToQuat(this.left, angle);
-
-    // Create a rotation Matrix out of this quaternion and apply 
-    // the rotation matrix to position
-    var rotMat = c3dl.quatToMatrix(quat);
-    var newpos = c3dl.multiplyMatrixByVector(rotMat, this.pos);
-    this.pos = c3dl.addVectors(newpos, this.orbitPoint);
-
-    // 
-    this.dir = c3dl.subtractVectors(this.orbitPoint, this.pos);
-    this.dir = c3dl.normalizeVector(this.dir);
-
-    // update up vector
-    this.up = c3dl.vectorCrossProduct(this.dir, this.left);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left
-    this.left = c3dl.vectorCrossProduct(this.up, this.dir);
-    this.left = c3dl.normalizeVector(this.left);
-  }
+  this.rotate(this.left,angle);
 }
 
 
@@ -300,8 +259,63 @@ c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
   this.orbitPoint[2] = orbitPoint[2];
   this.pos = c3dl.addVectors(this.orbitPoint, orbitPointToCam);
 }
-  
 
+/**
+ rotate about the orbit point. The camera will remain looking at the
+ orbit point and its position will rotate about the axis parallel to
+ the passed axis that intersects with the orbit point.
+ 
+ @param {Array} axis to rotate around
+ @param {float} angle in radians.
+ */
+c3dl.OrbitCamera.prototype.rotate = function (axis,angle)
+{
+  if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
+  {
+    // Create a proper Quaternion based on location and angle.
+    // we will rotate about the passed angle.
+    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(axis, angle));
+
+    //adjust the 'left' vector of the camera based on the rotation matrix
+    this.left = c3dl.multiplyMatrixByVector(rotMat, this.left);
+    this.left = c3dl.normalizeVector(this.left);
+
+    // update up
+    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
+    this.up = c3dl.normalizeVector(this.up);
+
+    // update dir, can either do a cross product or matrix-vector mult.
+    this.dir = c3dl.vectorCrossProduct(this.left, this.up);
+    this.dir = c3dl.normalizeVector(this.dir);
+  }
+
+  else
+  {
+    //
+    var camPosOrbit = c3dl.subtractVectors(this.pos, this.orbitPoint);
+
+    // Create a rotation matrix based on location and angle.
+    // we will rotate about the passed angle.
+    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(axis, angle));
+
+    //adjust the position of the camera based on that rotation
+    var newpos = c3dl.multiplyMatrixByVector(rotMat, camPosOrbit);
+    this.pos = c3dl.addVectors(newpos, this.orbitPoint);
+
+    // update direction
+    this.dir = c3dl.subtractVectors(this.orbitPoint, this.pos);
+    this.dir = c3dl.normalizeVector(this.dir);
+
+    // update up
+    //
+    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
+    this.up = c3dl.normalizeVector(this.up);
+
+    // update left
+    this.left = c3dl.vectorCrossProduct(this.up, this.dir);
+    this.left = c3dl.normalizeVector(this.left);
+  }
+}
 
 
 /**
@@ -313,51 +327,7 @@ c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
  */
 c3dl.OrbitCamera.prototype.yaw = function (angle)
 {
-  if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
-  {
-    // Create a proper Quaternion based on location and angle.
-    // we will rotate about the global up axis.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat([0, 1, 0], angle));
-
-    //
-    this.left = c3dl.multiplyMatrixByVector(rotMat, this.left);
-    this.left = c3dl.normalizeVector(this.left);
-
-    // update up
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left, can either do a cross product or matrix-vector mult.
-    this.dir = c3dl.vectorCrossProduct(this.left, this.up);
-    this.dir = c3dl.normalizeVector(this.dir);
-  }
-
-  else
-  {
-    //
-    var camPosOrbit = c3dl.subtractVectors(this.pos, this.orbitPoint);
-
-    // Create a rotation matrix based on location and angle.
-    // we will rotate about the global up axis.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat([0, 1, 0], angle));
-
-    //
-    var newpos = c3dl.multiplyMatrixByVector(rotMat, camPosOrbit);
-    this.pos = c3dl.addVectors(newpos, this.orbitPoint);
-
-    // update direction
-    this.dir = c3dl.subtractVectors(this.orbitPoint, this.pos);
-    this.dir = c3dl.normalizeVector(this.dir);
-
-    // update up
-    //
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left
-    this.left = c3dl.vectorCrossProduct(this.up, this.dir);
-    this.left = c3dl.normalizeVector(this.left);
-  }
+  this.rotate([0,1,0],angle);
 }
 
 /**
@@ -369,51 +339,7 @@ c3dl.OrbitCamera.prototype.yaw = function (angle)
  */
 c3dl.OrbitCamera.prototype.yawLocal = function (angle)
 {
-  if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
-  {
-    // Create a proper Quaternion based on location and angle.
-    // we will rotate about the camera's up axis.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.up, angle));
-
-    //
-    this.left = c3dl.multiplyMatrixByVector(rotMat, this.left);
-    this.left = c3dl.normalizeVector(this.left);
-
-    // update up
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left, can either do a cross product or matrix-vector mult.
-    this.dir = c3dl.vectorCrossProduct(this.left, this.up);
-    this.dir = c3dl.normalizeVector(this.dir);
-  }
-
-  else
-  {
-    //
-    var camPosOrbit = c3dl.subtractVectors(this.pos, this.orbitPoint);
-
-    // Create a rotation matrix based on location and angle.
-    // we will rotate about the camera's up axis.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.up, angle));
-
-    //
-    var newpos = c3dl.multiplyMatrixByVector(rotMat, camPosOrbit);
-    this.pos = c3dl.addVectors(newpos, this.orbitPoint);
-
-    // update direction
-    this.dir = c3dl.subtractVectors(this.orbitPoint, this.pos);
-    this.dir = c3dl.normalizeVector(this.dir);
-
-    // update up
-    //
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left
-    this.left = c3dl.vectorCrossProduct(this.up, this.dir);
-    this.left = c3dl.normalizeVector(this.left);
-  }
+  this.rotate(this.up,angle);
 }
 
 /**
@@ -425,51 +351,7 @@ c3dl.OrbitCamera.prototype.yawLocal = function (angle)
  */
 c3dl.OrbitCamera.prototype.roll = function (angle)
 {
-  if (c3dl.isVectorEqual(this.pos, this.orbitPoint))
-  {
-    // Create a proper Quaternion based on location and angle.
-    // we will rotate about the camera's direction vector.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.dir, angle));
-
-    //
-    this.left = c3dl.multiplyMatrixByVector(rotMat, this.left);
-    this.left = c3dl.normalizeVector(this.left);
-
-    // update up
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left, can either do a cross product or matrix-vector mult.
-    this.dir = c3dl.vectorCrossProduct(this.left, this.up);
-    this.dir = c3dl.normalizeVector(this.dir);
-  }
-
-  else
-  {
-    //
-    var camPosOrbit = c3dl.subtractVectors(this.pos, this.orbitPoint);
-
-    // Create a rotation matrix based on location and angle.
-    // we will rotate about the camera's direction vector.
-    var rotMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat(this.dir, angle));
-
-    //
-    var newpos = c3dl.multiplyMatrixByVector(rotMat, camPosOrbit);
-    this.pos = c3dl.addVectors(newpos, this.orbitPoint);
-
-    // update direction
-    this.dir = c3dl.subtractVectors(this.orbitPoint, this.pos);
-    this.dir = c3dl.normalizeVector(this.dir);
-
-    // update up
-    //
-    this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
-    this.up = c3dl.normalizeVector(this.up);
-
-    // update left
-    this.left = c3dl.vectorCrossProduct(this.up, this.dir);
-    this.left = c3dl.normalizeVector(this.left);
-  }
+  this.rotate(this.dir,angle);
 }
 
 
