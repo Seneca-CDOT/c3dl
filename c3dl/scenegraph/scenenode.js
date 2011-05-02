@@ -302,3 +302,39 @@ c3dl.SceneNode.prototype.center = function (realposition) {
   this.addChild(temp);
   temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
 }
+
+c3dl.SceneNode.prototype.getTextures = function () {  
+  var textures = [];
+
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i] instanceof c3dl.SceneNode) {
+      textures = textures.concat(this.children[i].getTextures());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) {
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        if (this.children[i].getPrimitiveSets()[j].getType() !== "lines") {
+          textures.push(this.children[i].getPrimitiveSets()[j].getTexture());
+        }
+      }
+    }
+  }
+  return textures;
+}
+
+c3dl.SceneNode.prototype.getPrimitiveSets = function () {  
+  var primitiveSets = [];
+
+  for (var i = 0; i < this.children.length; i++) {
+    if (this.children[i] instanceof c3dl.SceneNode) {
+      primitiveSets = primitiveSets.concat(this.children[i].getPrimitiveSets());
+    }
+    else if (this.children[i] instanceof c3dl.Geometry) {
+      for (var j = 0; j < this.children[i].getPrimitiveSets().length; j++) {
+        if (this.children[i].getPrimitiveSets()[j].getType() !== "lines") {
+          primitiveSets.push(this.children[i].getPrimitiveSets()[j]);
+        }
+      }
+    }
+  }
+  return primitiveSets;
+}

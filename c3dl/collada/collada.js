@@ -166,7 +166,7 @@ c3dl.Collada.prototype.init = function (daePath) {
     this.ready = true;
     c3dl.pushMatrix();
     c3dl.loadIdentity();
-    var allVerts = this.sceneGraph.getAllVerts();
+    var allVerts = this.sceneGraph.getAllVerts(true);
     this.boundingVolume.init(allVerts);
     c3dl.popMatrix();
   }
@@ -444,6 +444,9 @@ c3dl.Collada.prototype.render = function (glCanvas3D, scene) {
  */
 c3dl.Collada.prototype.scale = function (scaleVec) {
   this.sceneGraph.scale(scaleVec);
+  if (this.isReady()) { 
+    this.boundingVolume.scale(scaleVec);
+  }
   this.setDirty(true);
 }
 
@@ -455,6 +458,9 @@ c3dl.Collada.prototype.scale = function (scaleVec) {
  */
 c3dl.Collada.prototype.translate = function (trans) {
   this.sceneGraph.translate(trans);
+  if (this.isReady()) { 
+    this.boundingVolume.setPosition(this.sceneGraph.pos);
+  }
   this.setDirty(true);
 }
 
@@ -465,6 +471,9 @@ c3dl.Collada.prototype.translate = function (trans) {
  */
 c3dl.Collada.prototype.setPosition = function (pos) {
   this.sceneGraph.setPosition(pos);
+  if (this.isReady()) { 
+    this.boundingVolume.setPosition(pos);
+  }
   this.setDirty(true); 
 }
 
@@ -519,6 +528,18 @@ c3dl.Collada.prototype.updateTextureByName = function (oldTexturePath,newTexture
     this.parameterList.push([oldTexturePath, newTexturePath]);
   }
 }
+
+c3dl.Collada.prototype.getTextures = function () {
+  if (this.isReady()) {
+    return this.sceneGraph.getTextures();
+  }
+}
+
+c3dl.Collada.prototype.getPrimitiveSets = function () {
+  if (this.isReady()) {
+    return this.sceneGraph.getPrimitiveSets();
+  }
+}
 /**
  Sets the material of all the geometry sections (primitive collation elements 
  or primitiveSets) to this material. Thus, the entire Collada object will be
@@ -564,6 +585,9 @@ c3dl.Collada.prototype.setEffect = function (effect) {
  */
 c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
   this.sceneGraph.rotateOnAxis(axisVec, angle);
+  if (this.isReady()) { 
+    this.boundingVolume.rotateOnAxis(axisVec, angle);
+  }
   this.setDirty(true);
 }
 
@@ -575,6 +599,9 @@ c3dl.Collada.prototype.rotateOnAxis = function (axisVec, angle) {
  */
 c3dl.Collada.prototype.yaw = function (angle) {
   this.sceneGraph.yaw(angle);
+  if (this.isReady()) { 
+    this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[1], angle);
+  }
   this.setDirty(true);
 }
 
@@ -585,6 +612,9 @@ c3dl.Collada.prototype.yaw = function (angle) {
  */
 c3dl.Collada.prototype.pitch = function (angle) {
   this.sceneGraph.pitch(angle);
+  if (this.isReady()) { 
+    this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[0], angle);
+  }
   this.setDirty(true);
 }
 
@@ -602,6 +632,9 @@ c3dl.Collada.prototype.isReady = function () {
  */
 c3dl.Collada.prototype.roll = function (angle) {
   this.sceneGraph.roll(angle);
+  if (this.isReady()) { 
+    this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[2], angle);
+  }
   this.setDirty(true);
 }
 
@@ -609,7 +642,7 @@ c3dl.Collada.prototype.roll = function (angle) {
  @private
  */
 c3dl.Collada.prototype.getCopy = function () {
-  var collada = new Collada();
+  var collada = new c3dl.Collada();
   collada.clone(this);
   return collada;
 }
@@ -646,7 +679,7 @@ c3dl.Collada.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
   var result;
   if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getRadius()) && 
   c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) &&
-  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getAxis(),this.boundingVolume.getSizeInAxis())) {
+  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis())) {
     result = this.sceneGraph.rayIntersectsEnclosures(rayOrigin, rayDir);
   }
   else {

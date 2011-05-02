@@ -26,7 +26,7 @@ c3dl.init = function ()
   // if the user does not want to parse any collada models,
   // we don't put anything in the queue and go right ahead and 
   // call the main methods.  
-  if (c3dl.ColladaManager.values.length == 0 || c3dl.PreLoader.progress == 100) {
+  if (c3dl.ColladaManager.values.length == 0 || c3dl.PreLoader.loaded) {
     for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++) {
         // Each element is an object which holds a function 
         // and a tag.  They were both placed in a wrapper
@@ -82,17 +82,18 @@ if (document.addEventListener) {
 
 c3dl.PreLoader = {
   progress: 0,
+  loaded: false,
   checkProgress: function () {
     c3dl.PreLoader.progress = 0;
     var counter = 0;
-    var loaded = true;
+    c3dl.PreLoader.loaded = true;
     for (var i = 0; i < c3dl.ColladaManager.values.length; i++) {
       c3dl.PreLoader.progress+=c3dl.ColladaManager.values[i].progress;
-      if (!c3dl.ColladaManager.values[i].loaded) {loaded = false};
+      if (!c3dl.ColladaManager.values[i].loaded) {c3dl.PreLoader.loaded = false};
     }
     c3dl.PreLoader.progress = c3dl.PreLoader.progress/c3dl.ColladaManager.values.length;
     c3dl.PreLoader.callBack()
-    if (loaded) { 
+    if (c3dl.PreLoader.loaded) { 
       c3dl.init();
     }
   },
