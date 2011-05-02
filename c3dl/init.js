@@ -85,12 +85,14 @@ c3dl.PreLoader = {
   checkProgress: function () {
     c3dl.PreLoader.progress = 0;
     var counter = 0;
+    var loaded = true;
     for (var i = 0; i < c3dl.ColladaManager.values.length; i++) {
       c3dl.PreLoader.progress+=c3dl.ColladaManager.values[i].progress;
+      if (!c3dl.ColladaManager.values[i].loaded) {loaded = false};
     }
     c3dl.PreLoader.progress = c3dl.PreLoader.progress/c3dl.ColladaManager.values.length;
     c3dl.PreLoader.callBack()
-    if (c3dl.PreLoader.progress == 100) { 
+    if (loaded) { 
       c3dl.init();
     }
   },

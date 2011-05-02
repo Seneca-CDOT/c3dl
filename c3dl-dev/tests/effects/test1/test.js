@@ -23,7 +23,7 @@ var teapots = [];
 var simpleIEffect, simpleIEffect2;
 var celIEffect;
 var goochEffect, goochEffect2;
-var plane;
+
 // outlines for gooch and cel effects
 var outlineOn = true;
 
@@ -138,13 +138,17 @@ function effect_test(canvasName)
   teapots[7].setEffect(goochEffect2);
   scene.addObjectToScene(teapots[7]);
 
-  plane = new c3dl.Collada();
+  var plane = new c3dl.Collada();
   plane.init("models/fly_plane_tri.dae");
   plane.scale([2,2,2]);
   plane.setEffect(celIEffect);
 
-
+  var propNode = plane.getSceneGraph().findNode('prop');
+  var planeNode = plane.getSceneGraph().findNode('plane');
   scene.addObjectToScene(plane);
+
+  propNode.setAngularVel([0,0,0.002]);
+  planeNode.setAngularVel([0,0.001,0.0]);
 
   scene.setCamera(orbitCam);
   scene.startScene();
@@ -167,12 +171,6 @@ function changeKeyState(event, keyState)
 
 function update(event)
 {	
-  if (plane.isReady()) {
-    var propNode = plane.getSceneGraph().findNode('prop');
-    var planeNode = plane.getSceneGraph().findNode('plane');
-    propNode.setAngularVel([0,0,0.002]);
-    planeNode.setAngularVel([0,0.001,0.0]);
-  }
   document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scene.getFPS());
 }
 
