@@ -657,7 +657,7 @@ c3dl.Collada.prototype.getTransform = function () {
  */
 c3dl.Collada.prototype.clone = function (other) {
   c3dl._super(this, arguments, "clone");
-
+  this.ready = other.ready;
   this.path = other.path;
   this.sceneGraph = other.sceneGraph.getCopy();
   this.boundingVolume = other.boundingVolume.getCopy();
