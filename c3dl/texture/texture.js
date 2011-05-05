@@ -202,6 +202,8 @@ c3dl.Texture = function ()
         try
         {
           this.texImage2DWrapper();
+          this.glCanvas3D.texParameteri(glCanvas3D.TEXTURE_2D, glCanvas3D.TEXTURE_MAG_FILTER, glCanvas3D.LINEAR);
+          this.glCanvas3D.texParameteri(glCanvas3D.TEXTURE_2D, glCanvas3D.TEXTURE_MIN_FILTER, glCanvas3D.LINEAR_MIPMAP_NEAREST);
           this.glCanvas3D.generateMipmap(glCanvas3D.TEXTURE_2D);
           this.isSetup = true;
         }
