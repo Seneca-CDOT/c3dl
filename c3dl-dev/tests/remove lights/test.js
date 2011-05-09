@@ -1,6 +1,7 @@
 c3dl.addMainCallBack(canvasMain, "tutorial");
 c3dl.addModel("duck.dae");
 var scn;
+var spotLights = [];
 
 
 function up(event) {
@@ -9,7 +10,7 @@ function up(event) {
       break;
     case 50: scn.removeLightFromScene(1);
       break;
-    case 51: scn.removeLightFromScene(2);
+    case 51: scn.removeLight(spotLights[2]);
       break;
     case 52: scn.removeLightFromScene(3);
       break;
@@ -38,7 +39,7 @@ function canvasMain(canvasName){
     scn.setAmbientLight([0,0,0,0]);
 
     var things = [];
-    var spotLights = [];
+    //spotLights = [];
     if(scn.init(canvasName))
     {
       for(var i=0;i<4;i++)
