@@ -1,7 +1,7 @@
 /* This program is one part of a three part test for the rotation functions of
   OrbitCamera.  All three use the same scene with an earth and the moon and
   allow the camera to be rotated around them by clicking and dragging the mouse.
-  This test uses rotate.
+  This test uses rotateOnAxis.
 */
 
 var scn;
@@ -10,7 +10,7 @@ var light;
 var moon;
 var earth;
 var orbit = [500,0,0];
-var	orbittingBody;
+var orbittingBody;
 
 c3dl.addMainCallBack(canvasMain, "xcom");
 c3dl.addModel('models/earth.dae');
@@ -137,8 +137,8 @@ function mouseMove(evt)
 		var deltaX = x - rotationStartCoords[0];
                 var deltaY = y - rotationStartCoords[1];
 
-		cam.rotate(cam.getUp(),-deltaX * SENSITIVITY);
-		cam.rotate(cam.getDir(),deltaY * SENSITIVITY);
+		cam.rotateOnAxis([0,1,0],-deltaX * SENSITIVITY);
+		cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
 		
 		// now that the camera was updated, reset where the
 		// rotation will start for the next time this function is 
@@ -199,7 +199,7 @@ function camUpdate(event)
 {
 	if(keysPressed[PITCH])
 	{
-		cam.roll(-event.detail/KB_SENSITIVITY);
+		cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
 	}
 
 	// z is for zoom
@@ -219,7 +219,7 @@ function camUpdate(event)
 	}
 	else if(keysPressed[YAW])
 	{
-		cam.yawLocal(-event.detail/KB_SENSITIVITY);
+		cam.rotateOnAxis([0,1,0],-event.detail/KB_SENSITIVITY);
 	}
 }
 

@@ -1,7 +1,7 @@
 /* This program is one part of a three part test for the rotation functions of
   OrbitCamera.  All three use the same scene with an earth and the moon and
   allow the camera to be rotated around them by clicking and dragging the mouse.
-  This test uses yaw and pitch.
+  This test uses roll and yaw.
 */
 
 var scn;
@@ -24,12 +24,12 @@ const ZOOM_SENSITIVITY = 3;
 var keysPressed = [false,false,false];
 
 // indices into keysPressed array
-const PITCH = 0;
+const ROLL = 0;
 const YAW = 1;
 const ZOOM = 2;
 
 // ascii values, P,Y and Z
-const KEY_PITCH = 80;
+const KEY_ROLL = 82;
 const KEY_YAW = 89;
 const KEY_ZOOM = 90;
 
@@ -97,7 +97,7 @@ function changeKeyState(event, keyState)
 	switch( event.keyCode)
 	{
 		case KEY_ZOOM: keysPressed[ZOOM] = keyState;break;
-		case KEY_PITCH: keysPressed[PITCH] = keyState;break;
+		case KEY_ROLL: keysPressed[ROLL] = keyState;break;
 		case KEY_YAW: keysPressed[YAW] = keyState;break;
 	}
 }
@@ -138,7 +138,7 @@ function mouseMove(evt)
                 var deltaY = y - rotationStartCoords[1];
 
 		cam.yaw(-deltaX * SENSITIVITY);
-		cam.pitch(deltaY * SENSITIVITY);
+		cam.roll(deltaY * SENSITIVITY);
 		
 		// now that the camera was updated, reset where the
 		// rotation will start for the next time this function is 
@@ -197,7 +197,7 @@ function onKeyDown(event)
 
 function camUpdate(event)
 {
-	if(keysPressed[PITCH])
+	if(keysPressed[ROLL])
 	{
 		cam.roll(-event.detail/KB_SENSITIVITY);
 	}
@@ -219,7 +219,7 @@ function camUpdate(event)
 	}
 	else if(keysPressed[YAW])
 	{
-		cam.yawLocal(-event.detail/KB_SENSITIVITY);
+		cam.yaw(-event.detail/KB_SENSITIVITY);
 	}
 }
 

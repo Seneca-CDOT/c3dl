@@ -1,7 +1,7 @@
 /* This program is one part of a three part test for the rotation functions of
   OrbitCamera.  All three use the same scene with an earth and the moon and
   allow the camera to be rotated around them by clicking and dragging the mouse.
-  This test uses yawLocal and roll.
+  This test uses yaw and pitch.
 */
 
 var scn;
@@ -137,8 +137,8 @@ function mouseMove(evt)
 		var deltaX = x - rotationStartCoords[0];
                 var deltaY = y - rotationStartCoords[1];
 
-		cam.yawLocal(-deltaX * SENSITIVITY);
-		cam.roll(deltaY * SENSITIVITY);
+		cam.yaw(-deltaX * SENSITIVITY);
+		cam.pitch(deltaY * SENSITIVITY);
 
 		// now that the camera was updated, reset where the
 		// rotation will start for the next time this function is 
@@ -199,7 +199,7 @@ function camUpdate(event)
 {
 	if(keysPressed[PITCH])
 	{
-		cam.roll(-event.detail/KB_SENSITIVITY);
+		cam.pitch(-event.detail/KB_SENSITIVITY);
 	}
 
 	// z is for zoom
@@ -219,7 +219,7 @@ function camUpdate(event)
 	}
 	else if(keysPressed[YAW])
 	{
-		cam.yawLocal(-event.detail/KB_SENSITIVITY);
+		cam.yaw(-event.detail/KB_SENSITIVITY);
 	}
 }
 
