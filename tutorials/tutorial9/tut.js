@@ -1,4 +1,3 @@
-c3dl.addModel("camera.dae");
 c3dl.addModel("duck.dae");
 c3dl.addMainCallBack(yawCallback, "yaw");
 c3dl.addMainCallBack(pitchCallback, "pitch");
