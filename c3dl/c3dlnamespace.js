@@ -105,5 +105,5 @@ var c3dl =
     }
     tmpparent.prototype.constructor.apply(o);
     delete o.__parent;
-  },
+  }
 };

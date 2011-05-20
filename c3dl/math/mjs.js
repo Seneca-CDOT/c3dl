@@ -24,14 +24,14 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  */
-const MJS_VERSION = 0x000000;
-const MJS_DO_ASSERT = true;
+var MJS_VERSION = 0x000000;
+var MJS_DO_ASSERT = true;
 try {
   WebGLFloatArray;
 } catch (x) {
   WebGLFloatArray = Float32Array;
 }
-const MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
+var MJS_FLOAT_ARRAY_TYPE = WebGLFloatArray;
 if (MJS_DO_ASSERT) {
   function MathUtils_assert(cond, msg) {
     if (!cond) throw "Assertion failed: " + msg;

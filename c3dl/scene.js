@@ -601,7 +601,7 @@ c3dl.Scene = function ()
         [-1.0 * (whRatio / 2), -1.0, 0.0], // 0 - bottom left
         [-1.0 * (whRatio / 2), 1.0, 0.0], // 1 - top left
         [1.0 * (whRatio / 2), 1.0, 0.0], // 2 - top right
-        [1.0 * (whRatio / 2), -1.0, 0.0], // 3 - bottom right
+        [1.0 * (whRatio / 2), -1.0, 0.0] // 3 - bottom right
         ];
       var smallCanvasNormals = [
         [0, 0, -1]
