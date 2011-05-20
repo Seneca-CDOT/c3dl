@@ -35,7 +35,7 @@ function canvasMain(canvasName){
         things[i].scale(new Array(0.05,0.05,0.05));
 
         // set the position of the teapot
-        things[i].translate(new Array(-7 + i*9,1,-25));
+        things[i].translate(new Array(-7 + i*5,1,-25));
 
         // Add the object to the scene
         scn.addObjectToScene(things[i]);
@@ -43,9 +43,11 @@ function canvasMain(canvasName){
       
       things[4] = new c3dl.Collada();
       things[4].init("road.dae");
-      things[4].setPosition([0, 0, -15]);
-      scn.addObjectToScene(things[4]);
 
+      //things[4].scale([0.05,0.05,0.05]);
+      things[4].setPosition([0, 0, -15]);
+      //things[4].pitch(Math.PI * 0.5);
+      scn.addObjectToScene(things[4]);
       // Create a camera
       var cam = new c3dl.FreeCamera();
 
