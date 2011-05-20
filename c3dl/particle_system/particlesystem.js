@@ -171,7 +171,7 @@ c3dl.ParticleSystem = function ()
         c3dl.getRandom(this.minColor[0], this.maxColor[0]), 
         c3dl.getRandom(this.minColor[1], this.maxColor[1]), 
         c3dl.getRandom(this.minColor[2], this.maxColor[2]), 
-        c3dl.getRandom(this.minColor[3], this.maxColor[3]), 
+        c3dl.getRandom(this.minColor[3], this.maxColor[3])
         ]);
 
       this.particles[index].setSize(c3dl.getRandom(this.minSize, this.maxSize));
