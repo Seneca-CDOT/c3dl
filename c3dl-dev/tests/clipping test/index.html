@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>C3DL Clipping Planes test</title>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="test.js"></script>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+        <style>
+            canvas
+            {
+                width:500px;
+                height:500px;
+                border:1px solid #000;
+            }
+            span, div
+            {
+                font-size: 12px;
+                border:1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><a href="http://www.c3dl.org">C3DL</a> Clipping Planes Test</h1>
+    
+        <p>
+            This page tests to make sure that the near and far clipping planes<br />
+            are not allowed to overlap.  Pressing q will cause the near clipping<br />
+            plane ot move farther awqy, while a will bring it closer. Pressing w<br />
+            will move the far clipping plane farther away, with s bringing it<br />
+            closer.  Prior to this change you could move the near clipping<br />
+            plane beyond the far plane, enabling you to see objects between<br />
+            them.  You should no longer be able to cause either of the planes<br />
+            to move past the other.<br />
+        </p>
+        <!-- Add a canvas element to the page. It is scripted by using its id -->
+        <canvas id="tutorial" style="border: 2px solid blue" width="500" height="500"></canvas>
+    </body>
+</html>
