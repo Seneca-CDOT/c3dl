@@ -11,8 +11,6 @@
 
   <script type="application/javascript" src="../canvas3dapi/c3dapi.js"></script>		
 */
-
-
 var scripts = document.getElementsByTagName("script");
 var parts = scripts[scripts.length - 1].src.split("/");
 parts.pop();
@@ -29,11 +27,10 @@ basePath += "/";
 */
 c3dl_require = function (path)
 {
-  console.log(basePath, path);
   var s = window.document.createElement('script');
   s.type = 'text/javascript';
   s.onload = function(){
-      window.document.head.removeChild(this);
+      window.document.head.removeChild(s);
   };
   s.src = basePath + path;
   window.document.head.appendChild(s);
@@ -179,3 +176,15 @@ c3dl_require('interaction/collision.js');
 c3dl_require('interaction/picking.js');
 c3dl_require('interaction/pickingresult.js');
 
+//Function to call the various versions of requestAnimationFrame
+//To be updated when this is properly standardized.
+window.requestAnimFrame = (function(callback){
+      return  window.requestAnimationFrame       || 
+              window.webkitRequestAnimationFrame || 
+              window.mozRequestAnimationFrame    || 
+              window.oRequestAnimationFrame      || 
+              window.msRequestAnimationFrame     || 
+              function(/* function */ callback, /* DOMElement */ element){
+                window.setTimeout(callback, 1000 / 60);
+              };
+    })();
