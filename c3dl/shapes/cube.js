@@ -29,7 +29,7 @@ c3dl.Cube = c3dl.inherit(c3dl.Shape, function (length, width, height) {
     0,-1,-1,-1,-1,0,-1,0,0,0,0,-1,
     0,0,0,-1,-1,-1,-1,-1,-1,0,0,0,
     0,1,1,1,1,0,1,0,0,0,0,1,
-    0,0,0,-1,-1,-1,-1,-1,-1,0,0,0,
+    0,0,0,-1,-1,-1,-1,-1,-1,0,0,0
     ]);
   this.primitiveSets[0].init(vertices, normals, texCoords);
   this.boundingVolume.init(vertices);
