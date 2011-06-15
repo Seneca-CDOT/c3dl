@@ -1038,7 +1038,7 @@ c3dl.Scene = function ()
       // camera that creates the projection matrix.
       // creates the projection matrix
       // this will place the view matrix at the bottom of the matrix stack.
-      camera.applyToWorld(canvasTag.width / canvasTag.height);
+      camera.applyToWorld(canvasTag.clientWidth / canvasTag.clientHeight);
 
       // save the projection matrix so if the picking code needs to know what
       // projection matrix was used, it can query the scene.
