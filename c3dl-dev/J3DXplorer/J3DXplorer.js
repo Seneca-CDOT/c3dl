@@ -41,7 +41,7 @@ function J3DXplorer_main(canvasName)
 	// spinning 'windows'
 	for(var i = 0; i < MAXOBJ; i++){
 	
-		var obj = new c3dl.Collada();
+		var obj = new c3dl.Model();
 		obj.init("J3DXplorer_window.dae");		
 		
 		var ranScale = 1 - ( Math.floor(Math.random()*11) / 20);
@@ -72,7 +72,7 @@ function J3DXplorer_main(canvasName)
 	}
 	
 	// c3dl logo
-	var logo = new c3dl.Collada();			
+	var logo = new c3dl.Model();			
 	logo.init("c3DL_logo.dae");
 	logo.scale([0.1,0.1,0.1]);
 	logo.setAngularVel([0,-0.001,0]);
@@ -80,7 +80,7 @@ function J3DXplorer_main(canvasName)
 	scn.addObjectToScene(logo);
 
 	// SkySphere
-	var skySphere = new c3dl.Collada();			
+	var skySphere = new c3dl.Model();			
 	skySphere.init("SkySphere.dae");
 	skySphere.setAngularVel(new Array(0,.00005,0));
 	skySphere.setPickable(false);

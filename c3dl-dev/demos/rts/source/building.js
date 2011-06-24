@@ -95,7 +95,7 @@ Building.prototype.ejectAll = function(){
 	return ret;
 }
 Building.prototype.setCollada = function(){
-	this.collada = new c3dl.Collada();
+	this.collada = new c3dl.Model();
 	this.collada.init(this.modelPath);
 }
 Building.prototype.setColladaPitch = function(pitch){

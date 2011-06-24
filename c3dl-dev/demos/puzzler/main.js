@@ -164,7 +164,7 @@ function createObject(objectType, col, row) {
   switch (objectType) {
   case GOAL:
     {
-      object = new c3dl.Collada();
+      object = new c3dl.Model();
       object.init("models/cube.dae");
       object.setName("goal");
       object.setTexture("textures/goal.jpg");
@@ -176,7 +176,7 @@ function createObject(objectType, col, row) {
 
   case GEM:
     {
-      object = new c3dl.Collada();
+      object = new c3dl.Model();
       object.init("models/gem.dae");
       object.setName("gem");
       object.setTexture("textures/gem.jpg");
@@ -189,7 +189,7 @@ function createObject(objectType, col, row) {
 
   case ROCK:
     {
-      object = new c3dl.Collada();
+      object = new c3dl.Model();
       object.init("models/rock.dae");
       object.setName("rock");
       object.pitch(Math.random() * 3.14);
@@ -201,7 +201,7 @@ function createObject(objectType, col, row) {
 
   case USER:
     {
-      object = new c3dl.Collada();
+      object = new c3dl.Model();
       object.init("models/duck.dae");
       object.setName("user");
       object.setTexture("textures/duck.jpg");
@@ -214,7 +214,7 @@ function createObject(objectType, col, row) {
 
   case WALL:
     {
-      object = new c3dl.Collada();
+      object = new c3dl.Model();
       object.init("models/cube.dae");
       object.scale([0.2, 0.2, 0.2]);
       object.setTexture("textures/wall.jpg");
