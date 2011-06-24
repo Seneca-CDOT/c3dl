@@ -57,13 +57,13 @@ function canvasMain(canvasName){
   scn.setRenderer(renderer);
   scn.init();
   
-  sm = new c3dl.Collada();
+  sm = new c3dl.Model();
   sm.init('skysphere.dae');
 
   var vel;
   objs = new Array();
 
-  thing = new c3dl.Collada();
+  thing = new c3dl.Model();
   thing.init("asteroid2.dae");
   thing.setTexture("asteroid2.png");
   thing.scale([2,2,2]);
@@ -186,7 +186,7 @@ function update(time){
       if(timesincelastrock > threshold){
         if(threshold > 5000)
           threshold = threshold-200;
-        thing = new c3dl.Collada();
+        thing = new c3dl.Model();
         thing.init("asteroid2.dae");
         thing.setTexture("asteroid2.png");
         thing.scale([2,2,2]);
@@ -240,7 +240,7 @@ function update(time){
           angle=(netyaw-Math.floor(netyaw/(Math.PI*2)));
         }
         var np=c3dl.normalizeVector(dir);
-        gameovermsg=new c3dl.Collada();
+        gameovermsg=new c3dl.Model();
         gameovermsg.init("gameover.dae");
         gameovermsg.setTexture("gameover.png");
         gameovermsg.scale([0.07,0.07,0.07]);
@@ -325,7 +325,7 @@ function handler(result){
                   pr[2]=pr[2]*-1;
                 }
 
-                var thing = new c3dl.Collada();
+                var thing = new c3dl.Model();
                 thing.init("asteroid2.dae");
                 thing.setTexture("asteroid2.png");
                 thing.setPosition([pos[0]+pr[0],pos[1] + pr[1],pos[2]+pr[2]]);

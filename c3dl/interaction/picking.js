@@ -94,15 +94,15 @@ c3dl.Picking = function (scene)
     // tested against the ray.  Objects which do 
     var passedBoundsTest = new Array();
 
-    // Collada objects must pass an enclosure test first before their individual
+    // Models must pass an enclosure test first before their individual
     // triangles are tested against the ray, to speed up this test.
     for (var i = 0, len = scn.getObjListSize(); i < len; i++)
     {
       var currObj = scn.getObj(i);
 
-      // Make sure the object is a Collada before calling getPickable() since
+      // Make sure the object is a Model before calling getPickable() since
       // not all objects in the scene will have that function.
-      if ((currObj instanceof c3dl.Collada ||  currObj.getObjectType() === c3dl.SHAPE) && currObj.getPickable() && currObj.isVisible() && currObj.isInsideFrustum())
+      if ((currObj instanceof c3dl.Model ||  currObj.getObjectType() === c3dl.SHAPE) && currObj.getPickable() && currObj.isVisible() && currObj.isInsideFrustum())
       {
         // do the bounding volumes of the geometry nodes intersect with the given ray?
         if (currObj.rayIntersectsEnclosures(rayInitialPoint, rayDir))
@@ -138,7 +138,7 @@ c3dl.Picking = function (scene)
           objectsPicked.push(passedBoundsTest[i]);
         }
         else {
-          // if the collada object confirms the ray has intersected it, it will be
+          // if the model confirms the ray has intersected it, it will be
           // added to the list of objects the user picked.
           if (currObject.rayIntersectsTriangles(rayInitialPoint, rayDir))
           {

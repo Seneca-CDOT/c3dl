@@ -149,7 +149,7 @@ c3dl.SceneNode.prototype.renderBoundingVolumes = function (scene) {
  @private
  
  Set the texture for all the geometry leaves in the scenegraph.
- This should be used when a Collada file has many meshes and each
+ This should be used when a model file has many meshes and each
  mesh uses the same texture file.
  
  @param {String} textureName

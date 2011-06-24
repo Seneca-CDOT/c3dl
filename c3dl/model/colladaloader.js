@@ -445,7 +445,7 @@ c3dl.ColladaLoader = function ()
     }
 
     // !!!
-    c3dl.ColladaQueue.popFront();
+    c3dl.ModelQueue.popFront();
     delete xmlObject;
     delete xmlhttp;
   }

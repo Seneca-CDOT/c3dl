@@ -37,7 +37,7 @@ c3dl.PickingResult = function ()
 
   /**
    Get the list of objects which were picked. This list contains points,
-   lines and collada objects.
+   lines and models.
    
    @returns {Array} References to objects which have been picked.
    */

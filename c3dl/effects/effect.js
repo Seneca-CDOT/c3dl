@@ -30,7 +30,7 @@
  // c3dl.effects is a namespace which contains premade effects.
  var effect = new c3dl.Effect();
  effect.init(c3dl.effects.GOOCH);
- var teapot = c3dl.Collada();
+ var teapot = c3dl.Model();
  teapot.init('teapot.dae');
  // the effect's parameters were not set, so the default Gooch params
  // will be used.

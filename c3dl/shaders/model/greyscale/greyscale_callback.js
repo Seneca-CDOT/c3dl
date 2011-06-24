@@ -95,7 +95,7 @@ c3dl.greyscale_callback = function (renderingObj, scene)
       renderer.addTexture(currColl.getTexture());
     }
 
-    // The following must be fixed: If a collada object was specified as having
+    // The following must be fixed: If a model was specified as having
     // a texture, but the texture file isn't found, the object will be textured.
     // However, this following condition will run, because the object 'thinks'
     // it has a texture.  the result is the object will not get lit and will

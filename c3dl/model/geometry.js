@@ -14,14 +14,14 @@ c3dl.Geometry = function () {
   this.effect = null;
 
   // the first time geometries are rendered, their VBO's need to
-  // be setup. Can't do this when Collada objects are created
+  // be setup. Can't do this when models are created
   // because we don't yet have a graphics context.
   this.firstTimeRender = true;
 
   /**
    @private
    
-   Used by the collada loader
+   Used by the model loader
    */
   this.addPrimitiveSet = function (primitiveSet) {
     this.primitiveSets.push(primitiveSet);
@@ -30,7 +30,7 @@ c3dl.Geometry = function () {
   /**
    @private
    
-   Used by the ColladaManager
+   Used by the ModelManager
    */
   this.clone = function (other) {
     // 
@@ -42,7 +42,7 @@ c3dl.Geometry = function () {
   /**
    @private
    
-   Used by the ColladaManager
+   Used by the ModelManager
    */
   this.getCopy = function () {
     var geometry = new c3dl.Geometry();
