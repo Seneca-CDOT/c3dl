@@ -14,7 +14,7 @@ function canvasMain(canvasName){
   scn.init(canvasName);
   
   if(renderer.isReady()) {   
-    duck = new c3dl.Collada();
+    duck = new c3dl.Model();
     duck.init("duck.dae");
     duck.setAngularVel([0.0, -0.001, 0.0]);
     scn.addObjectToScene(duck);

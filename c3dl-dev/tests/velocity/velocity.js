@@ -15,7 +15,7 @@ function canvasMain(canvasName){
   
   if (renderer.isReady()) {
     var now = new Date();
-    duck = new c3dl.Collada();
+    duck = new c3dl.Model();
     duck.init("duck.dae");
     duck.setLinearVel([0.0, -0.05, 0.0]);
     scn.addObjectToScene(duck);

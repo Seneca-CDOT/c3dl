@@ -11,7 +11,7 @@ function canvasMain(canvasName){
   scn.setRenderer(renderer);
   scn.init(canvasName);
   if(renderer.isReady()) {
-    teapot = new c3dl.Collada();
+    teapot = new c3dl.Model();
     teapot.init("teapot.dae");
     teapot.centerObject();
     teapot.setRenderObb(true);
@@ -19,7 +19,7 @@ function canvasMain(canvasName){
     teapot.setWidth(5);
     teapot.setLength(5);
     scn.addObjectToScene(teapot);
-    var cube = new c3dl.Collada();
+    var cube = new c3dl.Model();
     cube.init("cube.dae");
     cube.centerObject();
     scn.addObjectToScene(cube);

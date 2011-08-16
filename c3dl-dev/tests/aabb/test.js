@@ -13,7 +13,7 @@ function yview(canvasName){
   scn.setRenderer(renderer);
   scn.init(canvasName);
   if(renderer.isReady()) {
-    teapot1 = new c3dl.Collada();
+    teapot1 = new c3dl.Model();
     teapot1.init("teapot.dae");
     teapot1.setRenderAabb(true);
     teapot1.setPosition([0,0,10]);
@@ -35,7 +35,7 @@ function xview(canvasName){
   scn2.setRenderer(renderer);
   scn2.init(canvasName);
   if(renderer.isReady() ) {
-    teapot2 = new c3dl.Collada();
+    teapot2 = new c3dl.Model();
     teapot2.init("teapot.dae");
     teapot2.setRenderAabb(true);
     teapot2.setAngularVel(new Array(0.0005, 0.0,0.0));
@@ -57,7 +57,7 @@ function zview(canvasName){
   scn3.setRenderer(renderer);
   scn3.init(canvasName);
   if(renderer.isReady()) {
-    teapot3 = new c3dl.Collada();
+    teapot3 = new c3dl.Model();
     teapot3.init("teapot.dae");
     teapot3.setRenderAabb(true);
     teapot3.setAngularVel(new Array(0.0, 0.0,0.0005));

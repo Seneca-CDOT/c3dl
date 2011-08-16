@@ -1,8 +1,8 @@
 c3dl.addMainCallBack(canvasMain, "test");
 c3dl.addModel("cube.dae");
-var image=new c3dl.Collada();
-var canvas=new c3dl.Collada();
-var video=new c3dl.Collada();
+var image=new c3dl.Model();
+var canvas=new c3dl.Model();
+var video=new c3dl.Model();
 
 function canvasMain(canvasName){
   scn = new c3dl.Scene();

@@ -659,7 +659,7 @@ c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
 c3dl.Model.prototype.getObjectType = function () {
   //switch(this.path.substr(this.path.lastIndexOf("."))) {
     //case "dae":
-      return c3dl.COLLADA;
+      return c3dl.MODEL;
     //break;
   //}
 }

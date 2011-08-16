@@ -58,7 +58,7 @@ function effect_test(canvasName)
   greyscaleEffect = new c3dl.Effect();
   greyscaleEffect.init(c3dl.effects.GREYSCALE);
 
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[0].init("models/teapot.dae");
   teapots[0].setTexture("models/images/red.jpg");
   teapots[0].translate([0,40,0]);
@@ -71,7 +71,7 @@ function effect_test(canvasName)
   sepiaEffect.init(c3dl.effects.SEPIA);
   sepiaEffect.setParameter("color", [1.2, 1.0, 0.8]);
 
-  teapots[1] = new c3dl.Collada();
+  teapots[1] = new c3dl.Model();
   teapots[1].init("models/teapot.dae");
   teapots[1].setTexture("models/images/red.jpg");
   teapots[1].translate([30,40,0]);
@@ -83,7 +83,7 @@ function effect_test(canvasName)
   celIEffect.init(c3dl.effects.CARTOON);
   celIEffect.setParameter("qMap", "models/images/shades.jpg");
 
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[2].init("models/teapot.dae");
   teapots[2].setTexture("models/images/texture.jpg");
   teapots[2].translate([0,20,0]);
@@ -95,14 +95,14 @@ function effect_test(canvasName)
   solidColorEffect.init(c3dl.effects.SOLID_COLOR);
   solidColorEffect.setParameter("color", [0.0, 1.0, 0.0]);	
 
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[3].init("models/teapot.dae");
   teapots[3].translate([30,20,0]);
   teapots[3].setEffect(solidColorEffect);
   scene.addObjectToScene(teapots[3]);
 
   // STANDARD
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[4].init("models/teapot.dae");
   teapots[4].setTexture("modes/images/red.jpg");
   teapots[4].setVisible(false);
@@ -112,14 +112,14 @@ function effect_test(canvasName)
   goochEffect = new c3dl.Effect();
   goochEffect.init(c3dl.effects.GOOCH);
 
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[5].init("models/teapot.dae");
   teapots[5].translate([30,0,0]);
   teapots[5].setEffect(goochEffect);
   scene.addObjectToScene(teapots[5]);
 
   // VARYING
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[6].init("models/teapot.dae");
   teapots[6].setTexture("models/images/red.jpg");
   teapots[6].translate([0,-20,0]);
@@ -132,13 +132,13 @@ function effect_test(canvasName)
   goochEffect2.setParameter("warmColor", [1,1,1]);
   goochEffect2.setParameter("coolColor", [0,0,0]);
 
-  teapots.push(new c3dl.Collada());
+  teapots.push(new c3dl.Model());
   teapots[7].init("models/teapot.dae");
   teapots[7].translate([30,-20,0]);
   teapots[7].setEffect(goochEffect2);
   scene.addObjectToScene(teapots[7]);
 
-  var plane = new c3dl.Collada();
+  var plane = new c3dl.Model();
   plane.init("models/fly_plane_tri.dae");
   plane.scale([2,2,2]);
   plane.setEffect(celIEffect);
