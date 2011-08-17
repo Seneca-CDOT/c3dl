@@ -1,0 +1,37 @@
+<!--
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+-->
+<html>
+    <head>
+        <title>C3DL Canvas Resize Test</title>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="test.js"></script>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+        <style>
+            canvas
+            {
+                border:1px solid #000;
+            }
+            span, div
+            {
+                font-size: 12px;
+                border:1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><a href="http://www.c3dl.org">C3DL</a> Canvas Resize Test</h1>
+    
+        <p style="width: 500">
+            This page tests the resizing ability of the canvas.  Enter a width and height into the appropriate boxes and click the 'Resize' button. The canvas and the content it displays should resize to the requested scale.  Changing the height of the canvas does not change what is visble in the scene, but scales it according to the new size of the canvas.  An object that was half the height of the canvas before resizing will be half the height of the canvas afterwards.  Width does not change the display of the objects in the scene.  Instead it changes how much of the scene you can see horizontally.  Note that as you get further from a square canvas objects directly in front of the camera will appear as normal, but objects on the periphery (extreme left and right) will be significantly distorted.
+        </p>
+        <form action="" method="">
+            Height <input type="text" id="canvasHeight" value="300" /><br />
+            Width &nbsp;<input type="text" id="canvasWidth" value="300" /><br />
+            <input type="button" onclick="resize(canvasHeight.value,canvasWidth.value);" value="Resize" /><br />
+        </form>
+        <!-- Add a canvas element to the page. It is scripted by using its id -->
+        <canvas id="tutorial" style="border: 2px solid blue" width="300" height="300"></canvas>
+    </body>
+</html>

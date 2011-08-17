@@ -52,8 +52,7 @@ c3dl.Picking = function (scene)
     // -1,-1 |_______| 1,-1
     //
     // go from viewport coords to normalized device coords
-    var normalizedDeviceCoords = [(2 * clickedCanvasCoords[0] / canvasTag.width) - 1, -((2 * clickedCanvasCoords[1] / canvasTag.height) - 1), 1, 1];
-
+    var normalizedDeviceCoords = [(2 * clickedCanvasCoords[0] / canvasTag.clientWidth) - 1, -((2 * clickedCanvasCoords[1] / canvasTag.clientHeight) - 1), 1, 1];
     var iproj = c3dl.inverseMatrix(scene.getProjectionMatrix());
 
     // To get the clip coords, we multiply the viewspace coordinates by

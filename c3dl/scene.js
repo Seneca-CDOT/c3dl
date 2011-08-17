@@ -793,6 +793,33 @@ c3dl.Scene = function ()
     c3dl.debug.logError('Scene::createScene() No renderer was specified.');
     return false;
   }
+  
+  /**
+   Attempts to resize the canvas to the passed height and width.
+   
+   @param {int} height The desired height of the canvas (must be >= 0)
+   @param {int} width The desired width of the canvas (must be >= 0)
+   
+   @returns {boolean} true if the canvas was resized; false if not.
+   */
+  this.setSize = function(height, width) {
+    if(canvasTag != null && glCanvas3D != null) {
+      if(height >= 0 && width >= 0) {
+	canvasTag.height = height;
+	canvasTag.width = width;
+	glCanvas3D.viewport(0, 0, width, height);
+	return true;
+      }
+      else {
+	c3dl.debug.logError('Scene::setSize(): height and width cannot be negative.');
+	return false;
+      }
+    }
+    else {
+      c3dl.debug.logError('Scene::setSize(): No canvas found.');
+      return false;
+    }
+  }
 
   /**
    Get a reference to a light from the list in the scene. This is an O(n) 
@@ -1011,7 +1038,7 @@ c3dl.Scene = function ()
       // camera that creates the projection matrix.
       // creates the projection matrix
       // this will place the view matrix at the bottom of the matrix stack.
-      camera.applyToWorld(canvasTag.width / canvasTag.height);
+      camera.applyToWorld(canvasTag.clientWidth / canvasTag.clientHeight);
 
       // save the projection matrix so if the picking code needs to know what
       // projection matrix was used, it can query the scene.
