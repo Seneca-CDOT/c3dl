@@ -33,7 +33,7 @@ function canvasMain(canvasName) {
   scn.init(canvasName);
   if (renderer.isReady()) {
 
-    obj = new c3dl.Collada();
+    obj = new c3dl.Model();
     obj.init("obj.dae");
     obj.setPosition(new Array(0.0, 0.0, 0));
     obj.scale([0.5, 0.5, 0.5]);

@@ -50,7 +50,7 @@ function loadLevel(board) {
       switch (board[z][x]) {
         case 0:
         {
-         var earth = new c3dl.Collada();
+         var earth = new c3dl.Model();
          earth.init(PLANE_PATH);
          // move down y to prevent z-fighting with planes
          // under models
@@ -61,11 +61,11 @@ function loadLevel(board) {
         }break;
         case 1:
         {
-          var townHall = new c3dl.Collada();
+          var townHall = new c3dl.Model();
           townHall.init(BARRACKS_PATH);
           townHall.translate([z*10,0,x*10]);
           scn.addObjectToScene(townHall);
-          var earth = new c3dl.Collada();
+          var earth = new c3dl.Model();
           earth.init(PLANE_PATH);
           // move down y to prevent z-fighting with planes
           // under models
@@ -398,7 +398,7 @@ function canvasMain(canvasName) {
     
   loadLevel(board1);
     
-  var s = new c3dl.Collada();
+  var s = new c3dl.Model();
   s.init(SPHERE_PATH);
   s.yaw(Math.PI/2);
   s.pitch(1);
@@ -695,23 +695,23 @@ function createObject(objID) {
   // don't allow creation of buildings if the user is
   // currently creating one
   if(!holdingBuilding && usersMoney - 500 >= 0) {
-    var collada = new c3dl.Collada();
+    var Model = new c3dl.Model();
     var isValid = true;
     
     switch (objID) {
-      case 0: collada.init(HOUSE_PATH);break;
-      case 1: collada.init(FIREHALL_PATH);break;
-      case 2: collada.init(BANK_PATH);break;
-      case 3: collada.init(LUMBER_YARD_PATH);break;
+      case 0: Model.init(HOUSE_PATH);break;
+      case 1: Model.init(FIREHALL_PATH);break;
+      case 2: Model.init(BANK_PATH);break;
+      case 3: Model.init(LUMBER_YARD_PATH);break;
       default: isValid = false;break;
     }
 
     if (isValid) {
       showCancelBuildingImg(true);
-      holdingBuilding = collada;
-      collada.ID = idGenerator.getNextID();
-      usersBuildings.push(collada);
-      scn.addObjectToScene(collada);
+      holdingBuilding = Model;
+      Model.ID = idGenerator.getNextID();
+      usersBuildings.push(Model);
+      scn.addObjectToScene(Model);
     }
   }
 }

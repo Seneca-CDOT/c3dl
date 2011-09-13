@@ -45,7 +45,7 @@ function gun(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/gun.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -75,7 +75,7 @@ function firehall(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/firehall.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -104,7 +104,7 @@ function teapot(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/teapot.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -135,7 +135,7 @@ function gingerbread_house(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/gingerbread_house.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -165,7 +165,7 @@ function swiss_army_usb(canvasName)
   dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/swiss_army_usb.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -195,7 +195,7 @@ function duck(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/duck.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -227,7 +227,7 @@ function old_cottage(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/old_cottage.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -260,7 +260,7 @@ function transform_test(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/transform_test.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -292,7 +292,7 @@ function fly_plane_polylist(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
   obj.init("models/fly_plane_polylist.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -323,7 +323,7 @@ function move_widget(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/move_widget.dae");
   obj.centerObject();
   obj.setRenderObb(true);
@@ -353,7 +353,7 @@ function parallelogram(canvasName){
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/parallelogram.dae");
   obj.centerObject();
   obj.setRenderObb(true);

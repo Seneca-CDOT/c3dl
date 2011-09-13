@@ -5,13 +5,13 @@
 
 /**
  @private
- @class ColladaQueue is a queueing system to load collada files.  There
+ @class ModelQueue is a queueing system to load model files.  There
  seems to be issues when two or more files are attempted to be loaded
  in script.  Albeit, if the second model is loaded once the first has
  been completely loaded, then they are both loaded properly.  Therefore
  this class was created for taking care of such serial loading.
  */
-c3dl.ColladaQueue =
+c3dl.ModelQueue =
 {
 
   queue: [],
@@ -25,27 +25,27 @@ c3dl.ColladaQueue =
    */
   isEmpty: function ()
   {
-    return (c3dl.ColladaQueue.queue.length == 0 ? true : false);
+    return (c3dl.ModelQueue.queue.length == 0 ? true : false);
   },
 
   /**
    @private
    Add a file to load at the end of the list
    
-   @param {Collada} colladaInstance
+   @param {Model} modelInstance
    */
-  pushBack: function (colladaInstance)
+  pushBack: function (modelInstance)
   {
-    c3dl.ColladaQueue.queue.push(colladaInstance);
+    c3dl.ModelQueue.queue.push(modelInstance);
 
     // every time scene sees that a file is loaded, it
     // will popFront(), which in turn will load the next
     // file, but for the first file loaded,  we have to
     // do it manually.
-    if (c3dl.ColladaQueue.firstTime)
+    if (c3dl.ModelQueue.firstTime)
     {
-      c3dl.ColladaQueue.firstTime = false;
-      c3dl.ColladaManager.loadFile(c3dl.ColladaQueue.queue[0].path);
+      c3dl.ModelQueue.firstTime = false;
+      c3dl.ModelManager.loadFile(c3dl.ModelQueue.queue[0].path);
     }
   },
 
@@ -56,24 +56,24 @@ c3dl.ColladaQueue =
    */
   popFront: function ()
   {
-    c3dl.ColladaQueue.queue.shift();
+    c3dl.ModelQueue.queue.shift();
 
     // if there are more files to load, load them.
-    if (c3dl.ColladaQueue.isEmpty() == false)
+    if (c3dl.ModelQueue.isEmpty() == false)
     {
-      c3dl.ColladaManager.loadFile(c3dl.ColladaQueue.queue[0].path);
+      c3dl.ModelManager.loadFile(c3dl.ModelQueue.queue[0].path);
     }
 
     // if all the models were done, but the user didn't give us	
     // their main functions, we don't want the gif spinning there
     // forever, so turn it off.	
-    else if (c3dl.ColladaQueue.isEmpty() == true && c3dl.mainCallBacks.length == 0)
+    else if (c3dl.ModelQueue.isEmpty() == true && c3dl.mainCallBacks.length == 0)
     {
       c3dl.removeProgressBars();
     }
 
     // otherwise we loaded all the models, we can start rendering.
-    else if (c3dl.ColladaQueue.isEmpty() == true && c3dl.mainCallBacks.length != 0)
+    else if (c3dl.ModelQueue.isEmpty() == true && c3dl.mainCallBacks.length != 0)
     {
       c3dl.removeProgressBars();
 
@@ -90,10 +90,10 @@ c3dl.ColladaQueue =
    @private	
    Get the first element from the queue.
    
-   @returns {Collada}
+   @returns {Model}
    */
   getFront: function ()
   {
-    return c3dl.ColladaQueue.queue[0];
+    return c3dl.ModelQueue.queue[0];
   }
 };

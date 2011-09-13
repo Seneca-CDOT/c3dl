@@ -14,7 +14,7 @@ c3dl.preloadModels = [];
  in the center of the screen.  
  
  The primary purpose of using a progress bar is to notify users
- that collada model files are being parsed.   When the collada
+ that model files are being parsed.   When the model
  Queue becomes empty, it will automatically call removeProgressBars().
  */
 c3dl.addProgressBars = function ()
@@ -81,7 +81,7 @@ c3dl.removeProgressBars = function ()
  page is done.
  
  Once the page is done loading, this function will place all the models 
- the user will use in the course of the script into the ColladaQueue.  
+ the user will use in the course of the script into the ModelQueue.  
  Once the Queue detects it is empty, it will call all the 'main' 
  functions the user wants to start automatically.
  
@@ -92,7 +92,7 @@ c3dl.removeProgressBars = function ()
  */
 c3dl.init = function ()
 {
-  // if the user does not want to parse any collada models,
+  // if the user does not want to parse any models,
   // we don't put anything in the queue and go right ahead and 
   // call the main methods.
   if (c3dl.preloadModels.length == 0)
@@ -107,9 +107,9 @@ c3dl.init = function ()
       func(tag);
     }
   }
-  // otherwise we will let the collada queue call the main methods
+  // otherwise we will let the modelqueue call the main methods
   // once all the models have been parsed.
-  // By creating collada objects, they will be placed in the queue.
+  // By creating model objects, they will be placed in the queue.
   // Once the queue is empty, the main methods will be called by
   // the Queue.
   else
@@ -120,16 +120,16 @@ c3dl.init = function ()
 
     for (var i = 0, len = c3dl.preloadModels.length; i < len; i++)
     {
-      var preloadColadda = new c3dl.Collada();
-      preloadColadda.init(c3dl.preloadModels[i]);
+      var preloadModel = new c3dl.Model();
+      preloadModel.init(c3dl.preloadModels[i]);
     }
   }
 }
 
 /**
- Add a model to the collada queue to be parsed
+ Add a model to the modelqueue to be parsed
  before the main funciton is run. Call this function
- once for each collada file your script will use.
+ once for each model file your script will use.
  
  @param {string} model - path to a .dae file.
  */

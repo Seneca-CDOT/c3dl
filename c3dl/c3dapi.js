@@ -95,12 +95,12 @@ c3dl_require('texture/texture.js');
 c3dl_require('texture/texturemanager.js');
 c3dl_require('texture/textureutils.js');
 
-//collada management
-c3dl_require('collada/colladamanager.js');
-c3dl_require('collada/colladaloader.js');
-c3dl_require('collada/colladaqueue.js');
-c3dl_require('collada/geometry.js');
-c3dl_require('collada/primitiveset.js');
+//model management
+c3dl_require('model/modelmanager.js');
+c3dl_require('model/colladaloader.js');
+c3dl_require('model/modelqueue.js');
+c3dl_require('model/geometry.js');
+c3dl_require('model/primitiveset.js');
 
 //lights
 c3dl_require('light/light.js');
@@ -112,7 +112,7 @@ c3dl_require('light/spotlight.js');
 c3dl_require('material.js');
 
 //scenegraph stuff
-c3dl_require('collada/collada.js');
+c3dl_require('model/model.js');
 c3dl_require('scenegraph/scenenode.js');
 
 //misc utilities

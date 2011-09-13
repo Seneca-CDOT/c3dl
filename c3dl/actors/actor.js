@@ -383,7 +383,7 @@ c3dl.Actor.prototype.getCopy = function ()
  */
 c3dl.Actor.getObjectType = function ()
 {
-  return c3dl.COLLADA;
+  return c3dl.MODEL;
 }
 
 /**

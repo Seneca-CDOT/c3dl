@@ -12,7 +12,7 @@ function canvasMain(canvasName){
     scn.init(canvasName);
     if(renderer.isReady() )
     {
-        duck = new c3dl.Collada();
+        duck = new c3dl.Model();
         duck.init("duck.dae");
         duck.setAngularVel(new Array(0.0, -0.001, 0.0));
         duck.setPosition([300,0,0]);
@@ -51,7 +51,7 @@ function test(time) {
 }
 function addDuck() {
   oldPos = duck.getPosition();
-  duck = new c3dl.Collada();
+  duck = new c3dl.Model();
   duck.init("duck.dae");
   duck.setPosition([oldPos[0]-150,oldPos[1],oldPos[2]]);
   duck.setAngularVel(new Array(0.0, -0.001, 0.0));

@@ -86,8 +86,8 @@ c3dl.Scene = function ()
   var collisionList = [];
   var collisionDetection = new c3dl.CollisionDetection();
   //can detect collision between the entire model or the geometries making up the model
-  //collisionType = "Collada" or "Geometry"
-  var collisionType = "Collada"; 
+  //collisionType = "Model" or "Geometry"
+  var collisionType = "Model"; 
   //cache attributes and location
   this.curContextCache = { attributes: {}, locations: {} };
   // -------------------------------------------------------
@@ -241,7 +241,7 @@ c3dl.Scene = function ()
   /**
    Get the SkyModel.
    
-   @returns {c3dl.Collada} The Scene's SkyModel.
+   @returns {c3dl.Model} The Scene's SkyModel.
    */
   this.getSkyModel = function ()
   {
@@ -445,18 +445,18 @@ c3dl.Scene = function ()
    restricted to a Cube.  Whatever model that is appropirate should 
    be used.
    
-   @param {c3dl.Collada} sky A Model which will maintain the same distance 
+   @param {c3dl.Model} sky A Model which will maintain the same distance 
    from the Scene's camera.
    */
   this.setSkyModel = function (sky)
   {
-    if (sky instanceof c3dl.Collada)
+    if (sky instanceof c3dl.Model)
     {
       skyModel = sky;
     }
     else
     {
-      c3dl.debug.Warning("Scene::setSkyModel() Inavlid argument passed, was not c3dl.Collada.");
+      c3dl.debug.Warning("Scene::setSkyModel() Inavlid argument passed, was not c3dl.Model.");
     }
   }
 
@@ -935,7 +935,7 @@ c3dl.Scene = function ()
     case c3dl.LINE:
     case c3dl.POINT:
     case c3dl.PARTICLE_SYSTEM:
-    case c3dl.COLLADA:
+    case c3dl.MODEL:
     case c3dl.SHAPE:
       objList.push(obj);
       return true;
@@ -1120,13 +1120,13 @@ c3dl.Scene = function ()
         case c3dl.PARTICLE_SYSTEM:
           objList[i].update(timeElapsed);
           break;
-        case c3dl.COLLADA:
+        case c3dl.MODEL:
         case c3dl.SHAPE:
           objList[i].update(timeElapsed);
           //Collision
           if (collision) {
             for (var j = i, len2 = objList.length; j < len2; j++) {
-              if (objList[j].getObjectType() == c3dl.COLLADA && i !== j) {
+              if (objList[j].getObjectType() == c3dl.MODEL && i !== j) {
                 if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
                   collisionList.push(objList[i]);
                   collisionList.push(objList[j]);
@@ -1211,7 +1211,7 @@ c3dl.Scene = function ()
         particleSystems.push(objList[i]);
       }
 
-      if (objList[i].getObjectType() == c3dl.COLLADA || objList[i].getObjectType() == c3dl.SHAPE)
+      if (objList[i].getObjectType() == c3dl.MODEL || objList[i].getObjectType() == c3dl.SHAPE)
       {
         var checker;	
         var cam = this.getCamera();

@@ -42,7 +42,7 @@ function gun(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/gun.dae");
 	obj.setAngularVel([0.001,0.001,0]);
 
@@ -70,7 +70,7 @@ function firehall(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/firehall.dae");
 	obj.setAngularVel([0,0.001,0]);
 
@@ -98,7 +98,7 @@ function teapot(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/teapot.dae");
   obj.setTexture("models/images/teapot/teapot.png");
 	obj.setAngularVel([0,0.001,0]);
@@ -127,7 +127,7 @@ function gingerbread_house(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/gingerbread_house.dae");
   obj.translate([0,-100,-80]);
 	obj.setAngularVel([0,0.0001,0.0]);
@@ -156,7 +156,7 @@ function swiss_army_usb(canvasName)
   dir.setOn(true);
 	scn.addLight(dir);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/swiss_army_usb.dae");
   obj.translate([0,-300,0]);
 	obj.setAngularVel([0.0001,0.0001,0.0001]);
@@ -185,7 +185,7 @@ function duck(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/duck.dae");
   obj.scale([.2,.2,.2]);
   obj.translate([0,-25,-25]);
@@ -216,7 +216,7 @@ function old_cottage(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/old_cottage.dae");
   obj.translate([0,-2,0]);
 //	obj.setAngularVel([0,0.001,0]);
@@ -248,7 +248,7 @@ function transform_test(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/transform_test.dae");
   obj.translate([0,-5,0]);
   obj.setAngularVel([0,0.001,0]);
@@ -279,7 +279,7 @@ function fly_plane_polylist(canvasName)
 	light.setOn(true);
 	scn.addLight(light);
 
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
   obj.init("models/fly_plane_polylist.dae");
   obj.setAngularVel([0,0.001,0]);
 
@@ -308,7 +308,7 @@ function move_widget(canvasName)
 	dir.setOn(true);
 	scn.addLight(dir);
 	
-	var obj = new c3dl.Collada();
+	var obj = new c3dl.Model();
 	obj.init("models/move_widget.dae");
   obj.scale([4,4,4]);
 	obj.setAngularVel([0.001,0.001,0]);

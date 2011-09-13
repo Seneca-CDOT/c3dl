@@ -1,8 +1,8 @@
 c3dl.addMainCallBack(canvasMain, "test");
 c3dl.addModel("./models/tv.dae");
 c3dl.addModel("./models/tv2.dae");
-var tv=new c3dl.Collada();
-var tv2=new c3dl.Collada();
+var tv=new c3dl.Model();
+var tv2=new c3dl.Model();
 var timeSinceLastChange=0;
 var changed = false;
 function canvasMain(canvasName){

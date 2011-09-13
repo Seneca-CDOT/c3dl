@@ -14,7 +14,7 @@ function canvasMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-    obj1 = new c3dl.Collada();
+    obj1 = new c3dl.Model();
     obj1.init("models/table.dae");
     obj1.centerObject();
     obj1.setSize(5,5,5);
@@ -23,7 +23,7 @@ function canvasMain(canvasName){
     obj1.setName("Table")
     scn.addObjectToScene(obj1);
     //moving object headed to collide
-    obj2 = new c3dl.Collada();
+    obj2 = new c3dl.Model();
     obj2.init("duck.dae");
     obj2.setSize(5,5,5);
     obj2.roll(-0.7);
@@ -33,7 +33,7 @@ function canvasMain(canvasName){
     obj2.setName("MovingDuck")
     scn.addObjectToScene(obj2);
     //object colliding if type set to Collada
-    obj3 = new c3dl.Collada();
+    obj3 = new c3dl.Model();
     obj3.init("duck.dae");
     obj3.centerObject();
     obj3.setSize(1,1,1);

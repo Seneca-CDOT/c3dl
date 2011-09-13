@@ -138,7 +138,7 @@ c3dl.MODELVIEW = 2;
 
 /**
  */
-c3dl.COLLADA = 0;
+c3dl.MODEL = 0;
 
 /**
  */

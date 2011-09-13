@@ -11,7 +11,7 @@ function canvasMain(canvasName){
   scn.init(canvasName);
   
   if (renderer.isReady()) {
-    table = new c3dl.Collada();
+    table = new c3dl.Model();
     table.init("models/table.dae");
     table.centerObject();
     table.setSize(5,5,5);

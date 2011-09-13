@@ -30,7 +30,7 @@ function canvasMain(canvasName){
     {
       for(var i=0;i<4;i++)
       {
-        things[i] = new c3dl.Collada();
+        things[i] = new c3dl.Model();
         things[i].init("duck.dae");
         things[i].scale(new Array(0.05,0.05,0.05));
 
@@ -41,7 +41,7 @@ function canvasMain(canvasName){
         scn.addObjectToScene(things[i]);
       }
       
-      things[4] = new c3dl.Collada();
+      things[4] = new c3dl.Model();
       things[4].init("road.dae");
       things[4].setPosition([0, 0, -15]);
       scn.addObjectToScene(things[4]);
