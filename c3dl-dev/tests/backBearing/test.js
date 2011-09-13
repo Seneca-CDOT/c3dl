@@ -7,8 +7,8 @@
 // is the id of the canvas element on the html page.
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
-c3dl.addModel("road.dae");
+c3dl.addModel("models/duck.dae");
+c3dl.addModel("models/road.dae");
 var drawPoint;
 
 // The program main
@@ -31,7 +31,7 @@ function canvasMain(canvasName){
       for(var i=0;i<4;i++)
       {
         things[i] = new c3dl.Model();
-        things[i].init("duck.dae");
+        things[i].init("models/duck.dae");
         things[i].scale(new Array(0.05,0.05,0.05));
 
         // set the position of the teapot
@@ -42,7 +42,7 @@ function canvasMain(canvasName){
       }
       
       things[4] = new c3dl.Model();
-      things[4].init("road.dae");
+      things[4].init("models/road.dae");
       things[4].setPosition([0, 0, -15]);
       scn.addObjectToScene(things[4]);
 

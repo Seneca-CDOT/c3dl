@@ -26,14 +26,7 @@
         <h1><a href="http://www.c3dl.org">C3DL</a>Picking Back-Bearing Test</h1>
     
         <p>
-            This pages tests to make sure that picking does not detect points behind the camera.<br />
-            An issue was identified where an object that extended behind the camera could have<br />
-            the portion behind the camera show up as picked.  This occured because the ray used<br />
-            for picking did not determine the direction from the source to the object it hit.<br />
-            In short, a mirror image of the ray was being fired in the opposite direction and<br />
-            hitting things behind the camera.  Clicking slightly above the end of the road<br />
-            that projects into the scene (and behind the camera) caused it to show up as picked<br />
-            (and start spinning).  This should no longer happen.<br />
+            This pages tests to make sure that picking does not detect points behind the camera. An issue was identified where an object that extended behind the camera could have the portion behind the camera show up as picked.  This occured because the ray used for picking did not determine the direction from the source to the object it hit. In short, a mirror image of the ray was being fired in the opposite direction and hitting things behind the camera.  Clicking slightly above the end of the road that projects into the scene (and behind the camera) caused it to show up as picked (and start spinning).  This should no longer happen.
         </p>
         <!-- Add a canvas element to the page. It is scripted by using its id -->
         <canvas id="tutorial" style="border: 2px solid blue" width="500" height="500"></canvas>

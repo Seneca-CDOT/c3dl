@@ -1,6 +1,6 @@
 c3dl.addMainCallBack(canvasMain, "size");
-c3dl.addModel("teapot.dae");
-c3dl.addModel("cube.dae");
+c3dl.addModel("models/teapot.dae");
+c3dl.addModel("models/cube.dae");
 var teapot;
 
 function canvasMain(canvasName){
@@ -12,7 +12,7 @@ function canvasMain(canvasName){
   scn.init(canvasName);
   if(renderer.isReady()) {
     teapot = new c3dl.Model();
-    teapot.init("teapot.dae");
+    teapot.init("models/teapot.dae");
     teapot.centerObject();
     teapot.setRenderObb(true);
     teapot.setHeight(5);
@@ -20,7 +20,7 @@ function canvasMain(canvasName){
     teapot.setLength(5);
     scn.addObjectToScene(teapot);
     var cube = new c3dl.Model();
-    cube.init("cube.dae");
+    cube.init("models/cube.dae");
     cube.centerObject();
     scn.addObjectToScene(cube);
     var cam = new c3dl.FreeCamera();

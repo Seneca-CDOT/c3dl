@@ -9,7 +9,7 @@
 */
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
+c3dl.addModel("models/duck.dae");
 
 var lastKey = -1;
 
@@ -85,9 +85,9 @@ function canvasMain(canvasName){
  {
   var things = [];
   for(var i = 0; i < 70; i++) {
-    things[i] = new c3dl.Collada();
-    things[i].init("duck.dae");
-    things[i].setTexture("duck.png");
+    things[i] = new c3dl.Model();
+    things[i].init("models/duck.dae");
+    things[i].setTexture("images/duck.png");
     things[i].setPosition([0,0,200-(1000*i)]);
     scn.addObjectToScene(things[i]);
   }

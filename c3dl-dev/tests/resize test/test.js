@@ -1,8 +1,8 @@
 
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
-c3dl.addModel("road.dae");
+c3dl.addModel("models/duck.dae");
+c3dl.addModel("models/road.dae");
 var drawPoint;
 
 // The program main
@@ -26,8 +26,8 @@ function canvasMain(canvasName){
     {
       for(var i=0;i<4;i++)
       {
-        things[i] = new c3dl.Collada();
-        things[i].init("duck.dae");
+        things[i] = new c3dl.Model();
+        things[i].init("models/duck.dae");
         things[i].scale(new Array(0.05,0.05,0.05));
 
         // set the position of the teapot
@@ -37,49 +37,49 @@ function canvasMain(canvasName){
         scn.addObjectToScene(things[i]);
       }
       
-      things[4] = new c3dl.Collada();
-      things[4].init("road.dae");
+      things[4] = new c3dl.Model();
+      things[4].init("models/road.dae");
       things[4].setPosition([0, 0, -15]);
       scn.addObjectToScene(things[4]);
       
-      things[5] = new c3dl.Collada();
-      things[5].init("duck.dae");
+      things[5] = new c3dl.Model();
+      things[5].init("models/duck.dae");
       things[5].scale([0.05,0.05,0.05]);
       things[5].setPosition([200,0,180]);
       scn.addObjectToScene(things[5]);
       
-      things[6] = new c3dl.Collada();
-      things[6].init("duck.dae");
+      things[6] = new c3dl.Model();
+      things[6].init("models/duck.dae");
       things[6].scale([0.05,0.05,0.05]);
       things[6].setPosition([-200,0,180]);
       scn.addObjectToScene(things[6]);
       
-      things[7] = new c3dl.Collada();
-      things[7].init("duck.dae");
+      things[7] = new c3dl.Model();
+      things[7].init("models/duck.dae");
       things[7].scale([0.05,0.05,0.05]);
       things[7].setPosition([100,0,100]);
       scn.addObjectToScene(things[7]);
       
-      things[8] = new c3dl.Collada();
-      things[8].init("duck.dae");
+      things[8] = new c3dl.Model();
+      things[8].init("models/duck.dae");
       things[8].scale([0.05,0.05,0.05]);
       things[8].setPosition([-100,0,100]);
       scn.addObjectToScene(things[8]);
 
-      things[9] = new c3dl.Collada();
-      things[9].init("duck.dae");
+      things[9] = new c3dl.Model();
+      things[9].init("models/duck.dae");
       things[9].scale([0.05,0.05,0.05]);
       things[9].setPosition([100,0,300]);
       scn.addObjectToScene(things[9]);
       
-      things[10] = new c3dl.Collada();
-      things[10].init("duck.dae");
+      things[10] = new c3dl.Model();
+      things[10].init("models/duck.dae");
       things[10].scale([0.05,0.05,0.05]);
       things[10].setPosition([-100,0,300]);
       scn.addObjectToScene(things[10]);
       
-      things[11] = new c3dl.Collada();
-      things[11].init("duck.dae");
+      things[11] = new c3dl.Model();
+      things[11].init("models/duck.dae");
       things[11].scale([0.05,0.05,0.05]);
       things[11].setPosition([0,0,-400]);
       scn.addObjectToScene(things[11]);

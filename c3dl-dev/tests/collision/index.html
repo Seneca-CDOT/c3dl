@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <title>Collision</title>
+    <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+    <script type="application/javascript" src="test.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css" />
+  </head>
+
+  <body>    
+    <h1><a href="http://www.c3dl.org/">C3DL</a> Collision Test</h1>
+
+    <p>
+	    <input type="button" value="Collision On Collada" onclick="setTypeCollada()"/>
+      <input type="button" value="Collision On Geometry" onclick="setTypeGeometry()"/>
+      <input type="button" value="Reset" onclick="reset()"/>
+      <input type="button" value="Pause" onclick="pause()"/>
+    </p>
+    <p>
+      Collision: <span id="res"></span>
+    </p>
+
+    <p>
+      <canvas id="test" style="border: 2px solid blue" width="500" height="500"></canvas>
+    </p>
+
+  </body>
+</html>

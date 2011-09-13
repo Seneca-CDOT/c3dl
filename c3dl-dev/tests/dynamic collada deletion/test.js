@@ -7,9 +7,9 @@
 // is the id of the canvas element on the html page.
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
-c3dl.addModel("teapot.dae");
-c3dl.addModel("fly_plane_tri.dae");
+c3dl.addModel("models/duck.dae");
+c3dl.addModel("models/teapot.dae");
+c3dl.addModel("models/fly_plane_tri.dae");
 var drawPoint;
 
 // The program main
@@ -29,22 +29,22 @@ function canvasMain(canvasName){
     if(scn.init(canvasName))
     {
       var obj;
-      obj = new c3dl.Collada();
-      obj.init("duck.dae");
+      obj = new c3dl.Model();
+      obj.init("models/duck.dae");
       obj.setTexture("images/duck.png");
       obj.scale([0.05,0.05,0.05]);
       obj.setPosition([-20,0,-100]);
       scn.addObjectToScene(obj);
       
-      obj = new c3dl.Collada();
-      obj.init("teapot.dae");
+      obj = new c3dl.Model();
+      obj.init("models/teapot.dae");
       obj.setTexture("images/teapot.png");
       obj.scale([0.5,0.5,0.5]);
       obj.setPosition([0,5,-100]);
       scn.addObjectToScene(obj);
       
-      obj = new c3dl.Collada();
-      obj.init("fly_plane_tri.dae");
+      obj = new c3dl.Model();
+      obj.init("models/fly_plane_tri.dae");
       obj.setTexture("images/planeDiffuse.jpg");
       obj.setPosition([20,5,-100]);
       scn.addObjectToScene(obj);
@@ -96,7 +96,7 @@ function handler(result)
 				obj = objectsPicked[i];
 				// delete the object
 				scn.removeObjectFromScene(obj);
-				c3dl.ColladaManager.deleteFile(obj.getPath());
+				c3dl.ModelManager.deleteFile(obj.getPath());
 				delete obj;
 			}
 		}

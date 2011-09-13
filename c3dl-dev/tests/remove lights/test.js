@@ -1,5 +1,5 @@
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
+c3dl.addModel("models/duck.dae");
 var scn;
 var spotLights = [];
 
@@ -44,8 +44,8 @@ function canvasMain(canvasName){
     {
       for(var i=0;i<4;i++)
       {
-        things[i] = new c3dl.Collada();
-        things[i].init("duck.dae");
+        things[i] = new c3dl.Model();
+        things[i].init("models/duck.dae");
         things[i].scale(new Array(0.05,0.05,0.05));
         // set the position of each duck
         things[i].translate(new Array(-30 + i*20,1,-25));
@@ -57,7 +57,7 @@ function canvasMain(canvasName){
         spotLights[i].setDirection([0,-1,0]);
         spotLights[i].setDiffuse([0.5,1,0.5]);
         spotLights[i].setOn(true);
-        spotLights[i].setCutoff(20);
+        spotLights[i].setCutoff(40);
         scn.addLight(spotLights[i]);
       }
       

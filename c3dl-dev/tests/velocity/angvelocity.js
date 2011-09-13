@@ -1,5 +1,5 @@
 c3dl.addMainCallBack(canvasMain, "test");
-c3dl.addModel("duck.dae");
+c3dl.addModel("models/duck.dae");
 
 var timeSinceLastChange = 0;
 var duck;
@@ -15,7 +15,7 @@ function canvasMain(canvasName){
   
   if(renderer.isReady()) {   
     duck = new c3dl.Model();
-    duck.init("duck.dae");
+    duck.init("models/duck.dae");
     duck.setAngularVel([0.0, -0.001, 0.0]);
     scn.addObjectToScene(duck);
     var cam = new c3dl.FreeCamera();
