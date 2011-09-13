@@ -68,6 +68,20 @@ c3dl.ModelManager.loadFile = function (filePath)
   }
 }
 
+c3dl.ColladaManager.deleteFile = function (filePath)
+{
+  //get the index associated with that file
+  var index = c3dl.ColladaManager.getIndex(filePath);
+  if(index != -1) {//if it exists
+    //remove it from both arrays
+    c3dl.ColladaManager.values.splice(index,1);
+    c3dl.ColladaManager.keys.splice(index,1);
+  }
+  else {//if it does not exist, warn the user they are trying to delete a file that does not exist.
+    c3dl.debug.logWarning('Attempting to delete non-existant file ' + filePath + '.');
+  }
+}
+
 /**
  @private
  Make a copy of the sceneGraph

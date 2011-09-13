@@ -1,0 +1,40 @@
+<!--
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+-->
+<html>
+    <head>
+        <title>C3DL Dynamic Collada Deletion Test</title>
+        <script type="application/javascript" src="../../../c3dl/c3dapi.js" ></script>
+        <script type="application/javascript" src="test.js"></script>
+        <link rel="stylesheet" type="text/css" href="../style.css" />
+        <style>
+            canvas
+            {
+                width:500px;
+                height:500px;
+                border:1px solid #000;
+            }
+            span, div
+            {
+                font-size: 12px;
+                border:1px solid #000;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><a href="http://www.c3dl.org">C3DL</a> Dynamic Collada Deletion Test</h1>
+    
+        <p>
+            This page tests dynamic deletion of collada objects from the scene<br />
+            In addition to using scene.removeObjectFromScene it will use splice<br />
+            to remove each object from the scenegraph.<br />
+            Click on an object to delete it.
+        </p>
+        <!-- Add a canvas element to the page. It is scripted by using its id -->
+        <canvas id="tutorial" style="border: 2px solid blue" width="500" height="500"></canvas>
+        <p>
+           FPS: <span id="fps"></span>
+        </p>
+    </body>
+</html>
