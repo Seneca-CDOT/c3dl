@@ -1433,7 +1433,14 @@ c3dl.ColladaLoader = function ()
     // the trailing space causes problems as when the string is split, an undefined value
     // is placed at the end of the array.  So we will get rid of any trailing spaces here.
     //
-    return values.replace(/\s+$/, '');
+    //turn any newline type characters into spaces
+    var newValues = values.replace(/(\n|\r|\f|\t|\v)/gm,' ');
+    //turn any multiple spaces into single spaces
+    newValues = newValues.replace(/\s{2,}/g,' ');
+    //remove leading whitespace
+    newValues = newValues.replace(/^\s/g,'');
+    //remove any trailing spaces and return
+    return newValues.replace(/\s$/, '');
   }
 
 
