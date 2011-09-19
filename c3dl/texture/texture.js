@@ -186,7 +186,7 @@ c3dl.Texture = function ()
           // new way
           this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, glCanvas3D.RGBA, glCanvas3D.RGBA, glCanvas3D.UNSIGNED_BYTE, this);
         }catch(ex){
-          this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, this, false);
+          c3dl.debug.logWarning(textureImage.src + " can not be loaded.  This texture will appear black.");
         }
       }
 
