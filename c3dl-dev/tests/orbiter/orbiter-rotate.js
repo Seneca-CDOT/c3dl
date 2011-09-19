@@ -46,14 +46,14 @@ function canvasMain(canvasName)
 	scn.init();
 
 	// EARTH
-	earth = new c3dl.Collada();
+	earth = new c3dl.Model();
 	earth.init('models/earth.dae');
 	earth.pitch(-3.14159/2);
 	scn.addObjectToScene(earth);
 	orbittingBody = earth;
 	
 	// MOON
-	moon = new c3dl.Collada();
+	moon = new c3dl.Model();
 	moon.init('models/earth.dae');
 	moon.pitch(-3.14159/2);
 	moon.setTexture('images/moon.png');
@@ -62,7 +62,7 @@ function canvasMain(canvasName)
 	scn.addObjectToScene(moon);
 
 	// create the skymodel which has the stars
-	var sm = new c3dl.Collada();
+	var sm = new c3dl.Model();
 	sm.init('models/skysphere.dae');
 	
 	// light the earth
