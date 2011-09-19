@@ -4,7 +4,7 @@
 // selected duck should start/stop spinning.
 
 c3dl.addMainCallBack(canvasMain, "tutorial");
-c3dl.addModel("duck.dae");
+c3dl.addModel("models/duck.dae");
 
 // The program main
 function canvasMain(canvasName){
@@ -25,8 +25,8 @@ function canvasMain(canvasName){
     {
       for(var i=0;i<4;i++)
       {
-        things[i] = new c3dl.Collada();
-        things[i].init("duck.dae");
+        things[i] = new c3dl.Model();
+        things[i].init("models/duck.dae");
         things[i].scale(new Array(0.05,0.05,0.05));
 
         // set the position of each duck
