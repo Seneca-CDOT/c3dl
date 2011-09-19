@@ -36,7 +36,7 @@ function canvasMain(canvasName){
         // Resize the thing.
         things[i].scale(new Array(0.1,0.1,0.1));
 
-        // set the position of the teapot
+        // set the position of the duck
         things[i].setPosition(new Array(-7 + i*5,1,-25));
 
         // Add the object to the scene
