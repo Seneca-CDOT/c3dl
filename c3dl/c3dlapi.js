@@ -170,7 +170,7 @@ this.setMouseCallback=function(mouseUpCB,mouseDownCB,mouseMoveCB,mouseScrollCB)
 {canvasTag.addEventListener("DOMMouseScroll",mouseScrollCB,false);canvasTag.addEventListener("mousewheel",mouseScrollCB,false);}}}
 this.setPickingCallback=function(pickingHandler)
 {if(pickingHandler&&pickingHandler instanceof Function)
-{this.pick=new c3dl.Picking(this);this.pickingHandler=pickingHandler;canvasTag.addEventListener("mousedown",this.pick.onMouseDown,false);}
+{this.pick=new c3dl.Picking(this);this.pickingHandler=pickingHandler;canvasTag.addEventListener("mousedown",this.pick.pickingReaction,false);}
 else
 {c3dl.debug.logWarning("scene's setPickingCallback() was passed an invalid callback function");}}
 this.getPickingCallback=function()
@@ -1146,7 +1146,7 @@ return"INSIDE";}}function Plane(){this.normal=new C3DL_FLOAT_ARRAY(3);this.offse
 this.normalize=function(){var norm=Math.sqrt(this.normal[0]*this.normal[0]+this.normal[1]*this.normal[1]+
 this.normal[2]*this.normal[2]);this.normal[0]/=norm;this.normal[1]/=norm;this.normal[2]/=norm;this.offset/=norm;}}
 c3dl.Picking=function(scene)
-{var scn=scene;var cam=scn.getCamera();this.onMouseDown=function(event)
+{var scn=scene;var cam=scn.getCamera();this.pickingReaction=function(event)
 {cam=scn.getCamera();var canvasTag=scn.getCanvas();var clickedCanvasCoords=getClickedCoords(event);var normalizedDeviceCoords=[(2*clickedCanvasCoords[0]/canvasTag.width)-1,-((2*clickedCanvasCoords[1]/canvasTag.height)-1),1,1];var iproj=c3dl.inverseMatrix(scene.getProjectionMatrix());var clipCoords=c3dl.multiplyMatrixByVector(iproj,normalizedDeviceCoords);clipCoords[0]/=clipCoords[3];clipCoords[1]/=clipCoords[3];clipCoords[2]/=clipCoords[3];clipCoords[2]=-clipCoords[2];var rayInitialPoint=cam.getPosition();var x=clipCoords[0];var y=clipCoords[1];var z=clipCoords[2];var kludge=c3dl.multiplyVector(cam.getLeft(),-1);var viewMatrix=c3dl.makePoseMatrix(kludge,cam.getUp(),cam.getDir(),cam.getPosition());var rayTerminalPoint=c3dl.multiplyMatrixByVector(viewMatrix,new C3DL_FLOAT_ARRAY([x,y,z,0]));var rayDir=c3dl.normalizeVector(rayTerminalPoint);var passedBoundsTest=new Array();for(var i=0,len=scn.getObjListSize();i<len;i++)
 {var currObj=scn.getObj(i);if(currObj instanceof c3dl.Collada&&currObj.getPickable())
 {if(currObj.rayIntersectsEnclosures(rayInitialPoint,rayDir))
