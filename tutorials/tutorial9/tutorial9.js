@@ -34,7 +34,7 @@ function canvasMain(canvasName){
 
  if(renderer.isReady() )
  {
-  var duck = new c3dl.Collada();
+  var duck = new c3dl.Model();
   duck.init("duck.dae");
   scn.addObjectToScene(duck);
 

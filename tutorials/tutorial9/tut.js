@@ -90,7 +90,7 @@ function yawCallback(canvasName)
 	var ducks = [];
 	for(var i = 0; i < 10; i++)
 	{
-			ducks[i] = new c3dl.Collada();
+			ducks[i] = new c3dl.Model();
 			ducks[i].init("duck.dae");
 			ducks[i].scale([0.2,0.2,0.2]);
 	
@@ -124,7 +124,7 @@ function pitchCallback(canvasName)
 	var ducks = [];
 	for(var i = 0; i < 10; i++)
 	{
-			ducks[i] = new c3dl.Collada();
+			ducks[i] = new c3dl.Model();
 			ducks[i].init("duck.dae");
 			ducks[i].scale([0.2,0.2,0.2]);
 	
@@ -162,7 +162,7 @@ function rollCallback(canvasName)
 	var ducks = [];
 	for(var i = 0; i < 10; i++)
 	{
-			ducks[i] = new c3dl.Collada();
+			ducks[i] = new c3dl.Model();
 			ducks[i].init("duck.dae");
 			ducks[i].scale([0.2,0.2,0.2]);
 	

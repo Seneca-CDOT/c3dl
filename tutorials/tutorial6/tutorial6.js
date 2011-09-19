@@ -28,7 +28,7 @@ function canvasMain(canvasName){
     {
       for(var i=0;i<4;i++)
       {
-        things[i] = new c3dl.Collada();
+        things[i] = new c3dl.Model();
         things[i].init("duck.dae");
         things[i].scale(new Array(0.2,0.2,0.2));
         things[i].setTexture("duck.jpg");

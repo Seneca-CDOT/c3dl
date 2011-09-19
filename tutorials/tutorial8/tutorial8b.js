@@ -48,7 +48,7 @@ function canvasMain(canvasName)
   scn.addLight(sun);
 
   //add a duck in the lower right portion of the screen, facing left.
-  var thing = new c3dl.Collada();
+  var thing = new c3dl.Model();
   thing.init("duck.dae");
   thing.setTexture("duck.png");
   thing.scale([0.05,0.05,0.05]);
@@ -111,7 +111,7 @@ function canvasMain(canvasName)
   scn.addObjectToScene(fire);
   
   //add a teapot in front of and above the duck (and above the fire)
-  var thing = new c3dl.Collada();
+  var thing = new c3dl.Model();
   thing.init("teapot.dae");
   thing.setTexture("teapot.png");
   thing.setPosition([2,4,-50]);

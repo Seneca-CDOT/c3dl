@@ -58,7 +58,7 @@ function canvasMain(canvasName){
  // will contain a imported
  // model of something to put
  // in the scene.
- duck = new c3dl.Collada();
+ duck = new c3dl.Model();
 
  // If the path is already parsed
  // (as it is in this case)
