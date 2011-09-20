@@ -73,29 +73,29 @@ function canvasMain(canvasName){
 // pressed and has a list of objects picked.
 function handler(result)
 {
-	var buttonUsed = result.getButtonUsed();
-	var objectsPicked = result.getObjects();
-	if(objectsPicked != undefined)
-	{
-		// a left mouse click will equal 1;
-		// at present that is the only mouse event implemented
-		if (buttonUsed == 1)
-		{
-			// loop through the objects
-			for(var i = 0 ; i < objectsPicked.length; i++)
-			{
-				// get the object that was picked
-				obj = objectsPicked[i];
-				// manipulate the object
-				if(obj.getAngularVel()[0] > 0)
-				{
-					obj.setAngularVel([0, 0, 0]);
-				}
-				else
-				{
-					obj.setAngularVel([0.0003,0.0008,0]);
-				}
-			}
-		}
-	}
+  var buttonUsed = result.getButtonUsed();
+  var objectsPicked = result.getObjects();
+  if(objectsPicked != undefined)
+  {
+    // a left mouse click will equal 1;
+    // at present that is the only mouse event implemented
+    if (buttonUsed == 1)
+    {
+      // loop through the objects
+      for(var i = 0 ; i < objectsPicked.length; i++)
+      {
+        // get the object that was picked
+        obj = objectsPicked[i];
+        // manipulate the object
+        if(obj.getAngularVel()[0] > 0)
+        {
+          obj.setAngularVel([0, 0, 0]);
+        }
+        else
+        {
+          obj.setAngularVel([0.0003,0.0008,0]);
+        }
+      }
+    }
+  }
 }

@@ -34,7 +34,7 @@ function checktime(time){
     if(timeSinceLastChange >= 8000){
       testDone = true;
       duck.setLinearVel([0.0, 0.0, 0.0]);
-	    var pos = duck.getPosition();
+      var pos = duck.getPosition();
       document.getElementById('res').innerHTML = "[" + pos[0].toFixed(2) + "," + pos[1].toFixed(2) + "," + pos[2].toFixed(2) + "]";
     }
   }

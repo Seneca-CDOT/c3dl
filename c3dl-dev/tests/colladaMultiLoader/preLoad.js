@@ -42,6 +42,6 @@ function canvasMain(canvasName){
 
 $(function() {
   $( "#progressbar" ).progressbar({
-  	value: 0
-	});
+    value: 0
+  });
 });

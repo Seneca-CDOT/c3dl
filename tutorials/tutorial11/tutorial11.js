@@ -11,10 +11,10 @@ var SENSITIVITY = 0.7;
 //Records that the user is no longer dragging the mouse
 function mouseUp(evt)
 {
-	if(evt.which == 1)
-	{
-		isDragging = false;
-	}
+  if(evt.which == 1)
+  {
+    isDragging = false;
+  }
 }
 
 //Called when the user presses the left mouse button.
@@ -22,12 +22,12 @@ function mouseUp(evt)
 // coordinates of the mouse.
 function mouseDown(evt)
 {
-	if(evt.which == 1)
-	{
-		isDragging = true;
-		rotationStartCoords[0] = xevtpos(evt);
-		rotationStartCoords[1] = yevtpos(evt);
-	}
+  if(evt.which == 1)
+  {
+    isDragging = true;
+    rotationStartCoords[0] = xevtpos(evt);
+    rotationStartCoords[1] = yevtpos(evt);
+  }
 }
 
 //Called when the mouse moves
@@ -37,25 +37,25 @@ function mouseDown(evt)
 // amount and the sensitivity variable.
 function mouseMove(evt)
 {
-	if(isDragging == true)
-	{
+  if(isDragging == true)
+  {
                 var cam = scn.getCamera();
-		var x = xevtpos(evt);
-		var y = yevtpos(evt);
-		
-		// how much was the cursor moved compared to last time
-		// this function was called?
-		var deltaX = x - rotationStartCoords[0];
+    var x = xevtpos(evt);
+    var y = yevtpos(evt);
+    
+    // how much was the cursor moved compared to last time
+    // this function was called?
+    var deltaX = x - rotationStartCoords[0];
                 var deltaY = y - rotationStartCoords[1];
 
-		cam.yaw(-deltaX * SENSITIVITY);
-		cam.pitch(deltaY * SENSITIVITY);
-		
-		// now that the camera was updated, reset where the
-		// rotation will start for the next time this function is 
-		// called.
-		rotationStartCoords = [x,y];
-	}
+    cam.yaw(-deltaX * SENSITIVITY);
+    cam.pitch(deltaY * SENSITIVITY);
+    
+    // now that the camera was updated, reset where the
+    // rotation will start for the next time this function is 
+    // called.
+    rotationStartCoords = [x,y];
+  }
 }
 
 //Calculates the current X coordinate of the mouse in the client window
@@ -91,13 +91,13 @@ function canvasMain(canvasName){
 
   var cam = new c3dl.OrbitCamera();
   cam.setFarthestDistance(1000);
-  cam.setClosestDistance(60);	
+  cam.setClosestDistance(60);  
   cam.setOrbitPoint([0.0, 0.0, 0.0]);
   cam.setDistance(400);
   scn.setCamera(cam);
 
   scn.setMouseCallback(mouseUp,mouseDown, mouseMove);
-	
+  
 
   scn.startScene();
  }

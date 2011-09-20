@@ -38,113 +38,113 @@ var rotationStartCoords = [0,0];
 
 function canvasMain(canvasName)
 {
-	// create a new Scene object
-	scn = new c3dl.Scene();
-	scn.setCanvasTag(canvasName);
-	renderer = new c3dl.WebGL();
-	scn.setRenderer(renderer);
-	scn.init();
+  // create a new Scene object
+  scn = new c3dl.Scene();
+  scn.setCanvasTag(canvasName);
+  renderer = new c3dl.WebGL();
+  scn.setRenderer(renderer);
+  scn.init();
 
-	// EARTH
-	earth = new c3dl.Model();
-	earth.init('models/earth.dae');
-	earth.pitch(-3.14159/2);
-	scn.addObjectToScene(earth);
-	orbittingBody = earth;
-	
-	// MOON
-	moon = new c3dl.Model();
-	moon.init('models/earth.dae');
-	moon.pitch(-3.14159/2);
-	moon.setTexture('images/moon.png');
-	moon.scale([0.25,0.25,0.25]);
-	moon.setAngularVel([0,0,0.001]);
-	scn.addObjectToScene(moon);
+  // EARTH
+  earth = new c3dl.Model();
+  earth.init('models/earth.dae');
+  earth.pitch(-3.14159/2);
+  scn.addObjectToScene(earth);
+  orbittingBody = earth;
+  
+  // MOON
+  moon = new c3dl.Model();
+  moon.init('models/earth.dae');
+  moon.pitch(-3.14159/2);
+  moon.setTexture('images/moon.png');
+  moon.scale([0.25,0.25,0.25]);
+  moon.setAngularVel([0,0,0.001]);
+  scn.addObjectToScene(moon);
 
-	// create the skymodel which has the stars
-	var sm = new c3dl.Model();
-	sm.init('models/skysphere.dae');
-	
-	// light the earth
-	light = new c3dl.DirectionalLight();
-	light.setDiffuse([1,1,1]);
-	light.setAmbient([0.1,0.1,0.1]);
-	light.setDirection([0,0,-1]);
-	light.setOn(true);
-	scn.addLight(light);
+  // create the skymodel which has the stars
+  var sm = new c3dl.Model();
+  sm.init('models/skysphere.dae');
+  
+  // light the earth
+  light = new c3dl.DirectionalLight();
+  light.setDiffuse([1,1,1]);
+  light.setAmbient([0.1,0.1,0.1]);
+  light.setDirection([0,0,-1]);
+  light.setOn(true);
+  scn.addLight(light);
 
-	// orbit camera will orbit the earth.
-	cam = new c3dl.OrbitCamera();
-	
-	cam.setFarthestDistance(1000);
-	cam.setClosestDistance(60);
-	cam.setDistance(200);
+  // orbit camera will orbit the earth.
+  cam = new c3dl.OrbitCamera();
+  
+  cam.setFarthestDistance(1000);
+  cam.setClosestDistance(60);
+  cam.setDistance(200);
 
-	scn.setAmbientLight([0,0,0]);
-	scn.setPointAttenuation([.15,0,0]);
-	scn.setPointRenderingMode(c3dl.POINT_MODE_POINT);
-	scn.setSkyModel(sm);
-	scn.setCamera(cam);
-	scn.setMouseCallback(mouseUp,mouseDown, mouseMove, camUpdate);
-	scn.setKeyboardCallback(onKeyUp, onKeyDown);
-	scn.setUpdateCallback(updateCB);
-	scn.startScene();
+  scn.setAmbientLight([0,0,0]);
+  scn.setPointAttenuation([.15,0,0]);
+  scn.setPointRenderingMode(c3dl.POINT_MODE_POINT);
+  scn.setSkyModel(sm);
+  scn.setCamera(cam);
+  scn.setMouseCallback(mouseUp,mouseDown, mouseMove, camUpdate);
+  scn.setKeyboardCallback(onKeyUp, onKeyDown);
+  scn.setUpdateCallback(updateCB);
+  scn.startScene();
 }
 
 
 function changeKeyState(event, keyState)
 {
-	switch( event.keyCode)
-	{
-		case KEY_ZOOM: keysPressed[ZOOM] = keyState;break;
-		case KEY_PITCH: keysPressed[PITCH] = keyState;break;
-		case KEY_YAW: keysPressed[YAW] = keyState;break;
-	}
+  switch( event.keyCode)
+  {
+    case KEY_ZOOM: keysPressed[ZOOM] = keyState;break;
+    case KEY_PITCH: keysPressed[PITCH] = keyState;break;
+    case KEY_YAW: keysPressed[YAW] = keyState;break;
+  }
 }
 
 function mouseUp(evt)
 {
-	// user released the LMB.
-	if(evt.which == 1)
-	{
-		isDragging = false;
-	}
+  // user released the LMB.
+  if(evt.which == 1)
+  {
+    isDragging = false;
+  }
 }
 
 
 function mouseDown(evt)
 {
-	// user pressed the LMB.
-	if(evt.which == 1)
-	{
-		isDragging = true;
+  // user pressed the LMB.
+  if(evt.which == 1)
+  {
+    isDragging = true;
 
-		rotationStartCoords[0] = xevtpos(evt);
-		rotationStartCoords[1] = yevtpos(evt);
-	}
+    rotationStartCoords[0] = xevtpos(evt);
+    rotationStartCoords[1] = yevtpos(evt);
+  }
 }
 
 
 function mouseMove(evt)
 {
-	if(isDragging == true)
-	{
-		var x = xevtpos(evt);
-		var y = yevtpos(evt);
-		
-		// how much was the cursor moved compared to last time
-		// this function was called?
-		var deltaX = x - rotationStartCoords[0];
+  if(isDragging == true)
+  {
+    var x = xevtpos(evt);
+    var y = yevtpos(evt);
+    
+    // how much was the cursor moved compared to last time
+    // this function was called?
+    var deltaX = x - rotationStartCoords[0];
                 var deltaY = y - rotationStartCoords[1];
 
-		cam.rotateOnAxis([0,1,0],-deltaX * SENSITIVITY);
-		cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
-		
-		// now that the camera was updated, reset where the
-		// rotation will start for the next time this function is 
-		// called.
-		rotationStartCoords = [x,y];
-	}
+    cam.rotateOnAxis([0,1,0],-deltaX * SENSITIVITY);
+    cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
+    
+    // now that the camera was updated, reset where the
+    // rotation will start for the next time this function is 
+    // called.
+    rotationStartCoords = [x,y];
+  }
 }
 
 
@@ -162,8 +162,8 @@ function yevtpos(evt)
 */
 function onKeyUp(event)
 {
-	// the key has been released
-	changeKeyState(event, false);
+  // the key has been released
+  changeKeyState(event, false);
 }
 
 
@@ -171,73 +171,73 @@ function onKeyUp(event)
 */
 function onKeyDown(event)
 {
-	changeKeyState(event, true);
-	
-	// m is for moon
-	if(event.keyCode == 77)
-	{
-		cam.setOrbitPoint(moon.getPosition());
-		orbittingBody = moon;
-	}
-	
-	// e is for earth
-	if(event.keyCode == 69)
-	{
-		cam.setOrbitPoint(earth.getPosition());
-		orbittingBody = earth;		
-	}
+  changeKeyState(event, true);
+  
+  // m is for moon
+  if(event.keyCode == 77)
+  {
+    cam.setOrbitPoint(moon.getPosition());
+    orbittingBody = moon;
+  }
+  
+  // e is for earth
+  if(event.keyCode == 69)
+  {
+    cam.setOrbitPoint(earth.getPosition());
+    orbittingBody = earth;    
+  }
 
-	// s is for setPosition
-	if(event.keyCode == 83)
-	{
-		cam.setPosition([0,200,0]);
-	}
+  // s is for setPosition
+  if(event.keyCode == 83)
+  {
+    cam.setPosition([0,200,0]);
+  }
 }
 
 
 function camUpdate(event)
 {
-	if(keysPressed[PITCH])
-	{
-		cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
-	}
+  if(keysPressed[PITCH])
+  {
+    cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
+  }
 
-	// z is for zoom
-	else if(keysPressed[ZOOM])
-	{	
-		// towards user
-		if(-event.detail*ZOOM_SENSITIVITY < 0)
-		{
-			cam.goFarther(-1 * -event.detail*ZOOM_SENSITIVITY);
-		}
-		
-		// towards screen
-		else
-		{
-			cam.goCloser(-event.detail*ZOOM_SENSITIVITY);
-		}
-	}
-	else if(keysPressed[YAW])
-	{
-		cam.rotateOnAxis([0,1,0],-event.detail/KB_SENSITIVITY);
-	}
+  // z is for zoom
+  else if(keysPressed[ZOOM])
+  {  
+    // towards user
+    if(-event.detail*ZOOM_SENSITIVITY < 0)
+    {
+      cam.goFarther(-1 * -event.detail*ZOOM_SENSITIVITY);
+    }
+    
+    // towards screen
+    else
+    {
+      cam.goCloser(-event.detail*ZOOM_SENSITIVITY);
+    }
+  }
+  else if(keysPressed[YAW])
+  {
+    cam.rotateOnAxis([0,1,0],-event.detail/KB_SENSITIVITY);
+  }
 }
 
 function updateCB(deltaTime)
 {
-	var pos = light.getDirection();
+  var pos = light.getDirection();
 
-	var quat = c3dl.axisAngleToQuat([0,1,0], deltaTime/1800);
-	var mat = c3dl.quatToMatrix(quat);
-	c3dl.multiplyMatrixByVector(mat, pos, pos);
-	
-	light.setDirection(pos);
-	
-	var orbitMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat([0,1,0], deltaTime/40000));
-	c3dl.multiplyMatrixByVector(orbitMat, orbit, orbit);
-	
-	moon.setPosition(orbit);
-	
-	// keep the camera orbiting whatever it is orbitting.
-	cam.setOrbitPoint(orbittingBody.getPosition());
+  var quat = c3dl.axisAngleToQuat([0,1,0], deltaTime/1800);
+  var mat = c3dl.quatToMatrix(quat);
+  c3dl.multiplyMatrixByVector(mat, pos, pos);
+  
+  light.setDirection(pos);
+  
+  var orbitMat = c3dl.quatToMatrix(c3dl.axisAngleToQuat([0,1,0], deltaTime/40000));
+  c3dl.multiplyMatrixByVector(orbitMat, orbit, orbit);
+  
+  moon.setPosition(orbit);
+  
+  // keep the camera orbiting whatever it is orbitting.
+  cam.setOrbitPoint(orbittingBody.getPosition());
 }

@@ -160,11 +160,11 @@ function customPlaneMain(canvasName){
   }
 }
 
-function picking(pickingObj) {	
-	var objectsHit = pickingObj.getObjects();
+function picking(pickingObj) {  
+  var objectsHit = pickingObj.getObjects();
 
-	if( objectsHit.length > 0 )	{
+  if( objectsHit.length > 0 )  {
     alert("hit");
-	}
+  }
 }
 

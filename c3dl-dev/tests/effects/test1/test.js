@@ -30,7 +30,7 @@ var outlineOn = true;
 //
 function effect_test(canvasName)
 {
-  scene = new c3dl.Scene();		
+  scene = new c3dl.Scene();    
   scene.setCanvasTag(canvasName);
   var renderer = new c3dl.WebGL();
 
@@ -52,7 +52,7 @@ function effect_test(canvasName)
   light2.setOn(false);
   scene.addLight(light2);
 
-  /////////////////////////////////////////////////	
+  /////////////////////////////////////////////////  
 
   // GREYSCALE
   greyscaleEffect = new c3dl.Effect();
@@ -93,7 +93,7 @@ function effect_test(canvasName)
   // SOLID COLOR
   solidColorEffect = new c3dl.Effect();
   solidColorEffect.init(c3dl.effects.SOLID_COLOR);
-  solidColorEffect.setParameter("color", [0.0, 1.0, 0.0]);	
+  solidColorEffect.setParameter("color", [0.0, 1.0, 0.0]);  
 
   teapots.push(new c3dl.Model());
   teapots[3].init("models/teapot.dae");
@@ -161,22 +161,22 @@ function effect_test(canvasName)
 
 function changeKeyState(event, keyState)
 {
-	switch( event.keyCode)
-	{
-		case KEY_ZOOM: keysPressed[ZOOM] = keyState;break;
-		case KEY_PITCH: keysPressed[PITCH] = keyState;break;
-		case KEY_YAW: keysPressed[YAW] = keyState;break; 
-	}
+  switch( event.keyCode)
+  {
+    case KEY_ZOOM: keysPressed[ZOOM] = keyState;break;
+    case KEY_PITCH: keysPressed[PITCH] = keyState;break;
+    case KEY_YAW: keysPressed[YAW] = keyState;break; 
+  }
 }
 
 function update(event)
-{	
+{  
   document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scene.getFPS());
 }
 
 function onKeyUp(event)
 {
-	changeKeyState(event, false);
+  changeKeyState(event, false);
 }
 
 function toggleOutlines()
@@ -206,41 +206,41 @@ function changeOrbit(id)
 
 function onKeyDown(event)
 {
-	changeKeyState(event, true);
-	
-	if(event.keyCode == 65)
-	{
-		effectCounter++;
-		if(effectCounter >= effects.length)
-		{
-			effectCounter = 0;
-		}
-		
-		teapots[6].setEffect(effects[effectCounter]);
-	}
+  changeKeyState(event, true);
+  
+  if(event.keyCode == 65)
+  {
+    effectCounter++;
+    if(effectCounter >= effects.length)
+    {
+      effectCounter = 0;
+    }
+    
+    teapots[6].setEffect(effects[effectCounter]);
+  }
 
-	// B
-	if(event.keyCode == 66)
-	{
-		celIEffect.setParameter("outline", !celIEffect.getParameter("outline"));
-		goochEffect.setParameter("outline", !goochEffect.getParameter("outline"));
-	}
-	
-	//E
-	if(event.keyCode == 69)
-	{
-		c3dl.debug.logInfo(goochEffect2.getParameter("warmColor"));
-		c3dl.debug.logInfo(goochEffect.getParameter("warmColor"));
-	}
+  // B
+  if(event.keyCode == 66)
+  {
+    celIEffect.setParameter("outline", !celIEffect.getParameter("outline"));
+    goochEffect.setParameter("outline", !goochEffect.getParameter("outline"));
+  }
+  
+  //E
+  if(event.keyCode == 69)
+  {
+    c3dl.debug.logInfo(goochEffect2.getParameter("warmColor"));
+    c3dl.debug.logInfo(goochEffect.getParameter("warmColor"));
+  }
 }
 
 function mouseUp(event)
 {
-	// user released the LMB.
-	if(event.which == 1)
-	{
-		isDragging = false;
-	}
+  // user released the LMB.
+  if(event.which == 1)
+  {
+    isDragging = false;
+  }
 }
 
 function mouseScroll(event)
@@ -262,13 +262,13 @@ function mouseScroll(event)
 
 function mouseDown(evt)
 {
-	// user pressed the LMB.
-	if(evt.which == 1)
-	{
-		isDragging = true;
-		rotationStartCoords[0] = xevtpos(evt);
-		rotationStartCoords[1] = yevtpos(evt);
-	}
+  // user pressed the LMB.
+  if(evt.which == 1)
+  {
+    isDragging = true;
+    rotationStartCoords[0] = xevtpos(evt);
+    rotationStartCoords[1] = yevtpos(evt);
+  }
 }
 
 function mouseMove(evt)

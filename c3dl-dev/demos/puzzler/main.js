@@ -285,7 +285,7 @@ function move(direction) {
 function isFinishedLevel() {
   for (var z = 0; z < board.length; z++) {
     for (var x = 0; x < board[z].length; x++) {
-      // if there is at least one rock, that means the level is not done yet.	
+      // if there is at least one rock, that means the level is not done yet.  
       if (board[z][x] != 0 && board[z][x].getName() == "rock") {
         return false;
       }

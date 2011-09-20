@@ -14,90 +14,90 @@ orbitCam.setPosition([0,0,90]);
 
 function applychanges()
 {
-	var f = document.forms[0];
+  var f = document.forms[0];
 
-	var emitRate = parseInt(f.emitrate.value);
+  var emitRate = parseInt(f.emitrate.value);
 
-	var mincolor = [parseFloat(f.mincolr.value), parseFloat(f.mincolg.value), parseFloat(f.mincolb.value), parseFloat(f.mincola.value)];
-	var maxcolor = [parseFloat(f.maxcolr.value), parseFloat(f.maxcolg.value), parseFloat(f.maxcolb.value), parseFloat(f.maxcola.value)];
+  var mincolor = [parseFloat(f.mincolr.value), parseFloat(f.mincolg.value), parseFloat(f.mincolb.value), parseFloat(f.mincola.value)];
+  var maxcolor = [parseFloat(f.maxcolr.value), parseFloat(f.maxcolg.value), parseFloat(f.maxcolb.value), parseFloat(f.maxcola.value)];
 
-//	var srcblend = parseInt(f.srcblend.options[f.srcblend.selectedIndex].value);
-//	var dstblend = parseInt(f.dstblend.options[f.dstblend.selectedIndex].value);
+//  var srcblend = parseInt(f.srcblend.options[f.srcblend.selectedIndex].value);
+//  var dstblend = parseInt(f.dstblend.options[f.dstblend.selectedIndex].value);
 
-	var minvel	= [parseFloat(f.minvelx.value), parseFloat(f.minvely.value), parseFloat(f.minvelz.value)];
-	var maxvel	= [parseFloat(f.maxvelx.value), parseFloat(f.maxvely.value), parseFloat(f.maxvelz.value)];
+  var minvel  = [parseFloat(f.minvelx.value), parseFloat(f.minvely.value), parseFloat(f.minvelz.value)];
+  var maxvel  = [parseFloat(f.maxvelx.value), parseFloat(f.maxvely.value), parseFloat(f.maxvelz.value)];
 
-	var accel = [parseFloat(f.accelx.value), parseFloat(f.accely.value), parseFloat(f.accelz.value)];
+  var accel = [parseFloat(f.accelx.value), parseFloat(f.accely.value), parseFloat(f.accelz.value)];
 
-	var minlife = parseFloat(f.minlife.value);
-	var maxlife = parseFloat(f.maxlife.value);
+  var minlife = parseFloat(f.minlife.value);
+  var maxlife = parseFloat(f.maxlife.value);
   
   var maxsize = parseFloat(f.maxsize.value);
   var minsize = parseFloat(f.minsize.value);
 
-	psys.setEmitRate(emitRate);
-	psys.setMinColor(mincolor);
-	psys.setMaxColor(maxcolor);
-//	psys.setSrcBlend(srcblend);
-//	psys.setDstBlend(dstblend);
-	psys.setTexture(f.texture.options[f.texture.selectedIndex].value);
-	//c3dl.debug.logError(f.texture.options[f.texture.selectedIndex].value);
+  psys.setEmitRate(emitRate);
+  psys.setMinColor(mincolor);
+  psys.setMaxColor(maxcolor);
+//  psys.setSrcBlend(srcblend);
+//  psys.setDstBlend(dstblend);
+  psys.setTexture(f.texture.options[f.texture.selectedIndex].value);
+  //c3dl.debug.logError(f.texture.options[f.texture.selectedIndex].value);
 
-	psys.setMinLifetime(minlife);
-	psys.setMaxLifetime(maxlife);
+  psys.setMinLifetime(minlife);
+  psys.setMaxLifetime(maxlife);
 
-	psys.setMinVelocity(minvel);
-	psys.setMaxVelocity(maxvel);
+  psys.setMinVelocity(minvel);
+  psys.setMaxVelocity(maxvel);
   
   psys.setMinSize(minsize);
   psys.setMaxSize(maxsize);
 
-	psys.setAcceleration(accel);
+  psys.setAcceleration(accel);
 }
 
 c3dl.addMainCallBack(canvasMain, 'psys');
 
 function canvasMain(canvasName)
 {
-	scn = new c3dl.Scene();
-	scn.setCanvasTag(canvasName);
-	var renderer = new c3dl.WebGL();
-	renderer.addTexture('flare.jpg');
-	scn.setRenderer(renderer);
-	scn.init();
+  scn = new c3dl.Scene();
+  scn.setCanvasTag(canvasName);
+  var renderer = new c3dl.WebGL();
+  renderer.addTexture('flare.jpg');
+  scn.setRenderer(renderer);
+  scn.init();
   scn.setBackgroundColor([0,0,0,0]);
-	
-	psys = new c3dl.ParticleSystem();
-	psys.setMinVelocity([-2,15,-2]);
-	psys.setMaxVelocity([2,25, 2]);
   
-	psys.setMinLifetime(0.3);
-	psys.setMaxLifetime(0.7);
+  psys = new c3dl.ParticleSystem();
+  psys.setMinVelocity([-2,15,-2]);
+  psys.setMaxVelocity([2,25, 2]);
   
-	psys.setMinColor([0.4,0,0,0]);
-	psys.setMaxColor([1,0.4,0,1]);
+  psys.setMinLifetime(0.3);
+  psys.setMaxLifetime(0.7);
   
-	psys.setSrcBlend(c3dl.ONE);
-	psys.setDstBlend(c3dl.ONE);
+  psys.setMinColor([0.4,0,0,0]);
+  psys.setMaxColor([1,0.4,0,1]);
+  
+  psys.setSrcBlend(c3dl.ONE);
+  psys.setDstBlend(c3dl.ONE);
   
   psys.setMinSize(1.0);
   psys.setMaxSize(5.0);
   
-	psys.setTexture("flare.gif");
-	psys.setAcceleration([0,0,0]);
-	psys.setEmitRate(80);
-	psys.init(150);
-	scn.addObjectToScene(psys);
+  psys.setTexture("flare.gif");
+  psys.setAcceleration([0,0,0]);
+  psys.setEmitRate(80);
+  psys.init(150);
+  scn.addObjectToScene(psys);
   
-	scn.setCamera(orbitCam);
-	scn.startScene();
-	scn.setMouseCallback(mouseUp, mouseDown, mouseMove, null) 
-	scn.setUpdateCallback(update);
+  scn.setCamera(orbitCam);
+  scn.startScene();
+  scn.setMouseCallback(mouseUp, mouseDown, mouseMove, null) 
+  scn.setUpdateCallback(update);
 }
 
 function update()
 {
-	document.getElementById('fps').innerHTML = Math.floor(scn.getFPS());
+  document.getElementById('fps').innerHTML = Math.floor(scn.getFPS());
 }
 
 
@@ -323,43 +323,43 @@ function u(f,emitRate, tex,
   f.maxsize.value = maxs;
 
   // create aliases
-	var emitRate = parseInt(f.emitrate.value);
+  var emitRate = parseInt(f.emitrate.value);
 
-	var mincolor = [parseFloat(f.mincolr.value), parseFloat(f.mincolg.value), parseFloat(f.mincolb.value), parseFloat(f.mincola.value)];
-	var maxcolor = [parseFloat(f.maxcolr.value), parseFloat(f.maxcolg.value), parseFloat(f.maxcolb.value), parseFloat(f.maxcola.value)];
+  var mincolor = [parseFloat(f.mincolr.value), parseFloat(f.mincolg.value), parseFloat(f.mincolb.value), parseFloat(f.mincola.value)];
+  var maxcolor = [parseFloat(f.maxcolr.value), parseFloat(f.maxcolg.value), parseFloat(f.maxcolb.value), parseFloat(f.maxcola.value)];
 
-	//var srcblend = parseInt(f.srcblend.options[f.srcblend.selectedIndex].value);
-	//var dstblend = parseInt(f.dstblend.options[f.dstblend.selectedIndex].value);
+  //var srcblend = parseInt(f.srcblend.options[f.srcblend.selectedIndex].value);
+  //var dstblend = parseInt(f.dstblend.options[f.dstblend.selectedIndex].value);
 
-	var minvel	= [parseFloat(f.minvelx.value), parseFloat(f.minvely.value), parseFloat(f.minvelz.value)];
-	var maxvel	= [parseFloat(f.maxvelx.value), parseFloat(f.maxvely.value), parseFloat(f.maxvelz.value)];
+  var minvel  = [parseFloat(f.minvelx.value), parseFloat(f.minvely.value), parseFloat(f.minvelz.value)];
+  var maxvel  = [parseFloat(f.maxvelx.value), parseFloat(f.maxvely.value), parseFloat(f.maxvelz.value)];
 
-	var accel = [parseFloat(f.accelx.value), parseFloat(f.accely.value), parseFloat(f.accelz.value)];
+  var accel = [parseFloat(f.accelx.value), parseFloat(f.accely.value), parseFloat(f.accelz.value)];
 
-	var minlife = parseFloat(f.minlife.value);
-	var maxlife = parseFloat(f.maxlife.value);
+  var minlife = parseFloat(f.minlife.value);
+  var maxlife = parseFloat(f.maxlife.value);
   
   var maxsize = parseFloat(f.maxsize.value);
   var minsize = parseFloat(f.minsize.value);
 
   // update the particle system
-	psys.setEmitRate(emitRate);
-	psys.setMinColor(mincolor);
-	psys.setMaxColor(maxcolor);
-	//psys.setSrcBlend(srcblend);
-	//psys.setDstBlend(dstblend);
-	psys.setTexture(f.texture.options[f.texture.selectedIndex].value);
+  psys.setEmitRate(emitRate);
+  psys.setMinColor(mincolor);
+  psys.setMaxColor(maxcolor);
+  //psys.setSrcBlend(srcblend);
+  //psys.setDstBlend(dstblend);
+  psys.setTexture(f.texture.options[f.texture.selectedIndex].value);
 
-	psys.setMinLifetime(minlife);
-	psys.setMaxLifetime(maxlife);
+  psys.setMinLifetime(minlife);
+  psys.setMaxLifetime(maxlife);
 
-	psys.setMinVelocity(minvel);
-	psys.setMaxVelocity(maxvel);
+  psys.setMinVelocity(minvel);
+  psys.setMaxVelocity(maxvel);
   
   psys.setMinSize(minsize);
   psys.setMaxSize(maxsize);
 
-	psys.setAcceleration(accel);
+  psys.setAcceleration(accel);
 }
 
 function getRandom(min, max)

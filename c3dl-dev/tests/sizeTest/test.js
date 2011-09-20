@@ -34,7 +34,7 @@ function canvasMain(canvasName){
 }
 
 function update(event)
-{	
+{  
   if (teapot.isReady() && first) {
     document.getElementById("length").value=teapot.getSize()[0].toFixed(2);
     document.getElementById("width").value=teapot.getSize()[2].toFixed(2);

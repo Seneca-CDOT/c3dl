@@ -52,40 +52,40 @@ function canvasMain(canvasName)
 
 function update(t)
 {
-	if( t < 100)
-	{
-		if( lineList.length > 0)
-		{
-			for(var i = 0; i < lineList.length; i++)
-			{
-				var oldCoords = lineList[i].getCoordinates();
+  if( t < 100)
+  {
+    if( lineList.length > 0)
+    {
+      for(var i = 0; i < lineList.length; i++)
+      {
+        var oldCoords = lineList[i].getCoordinates();
 
-				s = Math.sin(oldCoords[0])/6;
-				
-				oldCoords[0] += t/100;
-				oldCoords[1] += s;
-				
-				oldCoords[3] += t/100;
-				oldCoords[4] += s;
+        s = Math.sin(oldCoords[0])/6;
+        
+        oldCoords[0] += t/100;
+        oldCoords[1] += s;
+        
+        oldCoords[3] += t/100;
+        oldCoords[4] += s;
 
-				lineList[i].setCoordinates([oldCoords[0],oldCoords[1],oldCoords[2] ],  [oldCoords[3],oldCoords[4],oldCoords[5]] );
-				
-				var oldCols = lineList[i].getColors();
+        lineList[i].setCoordinates([oldCoords[0],oldCoords[1],oldCoords[2] ],  [oldCoords[3],oldCoords[4],oldCoords[5]] );
+        
+        var oldCols = lineList[i].getColors();
 
-				var col = [startColor[0],oldCoords[0]/40,startColor[2]];
-				var col2 = [oldCoords[1],oldCoords[0]/40,1];
-				
-				lineList[i].setColors(col, col2);
+        var col = [startColor[0],oldCoords[0]/40,startColor[2]];
+        var col2 = [oldCoords[1],oldCoords[0]/40,1];
+        
+        lineList[i].setColors(col, col2);
 
-				// reset line's position so it goes back into view
-				if(oldCoords[0] > 50)
-				{
-					lineList[i].setCoordinates([0,0,0],  [0,0,20] );
-					lineList[i].setColors(startColor , startColor );
-				}
-			}
-		}
-	}
+        // reset line's position so it goes back into view
+        if(oldCoords[0] > 50)
+        {
+          lineList[i].setCoordinates([0,0,0],  [0,0,20] );
+          lineList[i].setColors(startColor , startColor );
+        }
+      }
+    }
+  }
   document.getElementById('fps').innerHTML = "FPS: " + Math.floor(scn.getFPS());
 }
 
@@ -120,7 +120,7 @@ function up(event)
     for(var i = 0; i < lineList.length; i++) {
       lineList[i].setWidth(width);
     }
-  }	
+  }  
 
   // D delete one line
   if(event.keyCode == 68) {

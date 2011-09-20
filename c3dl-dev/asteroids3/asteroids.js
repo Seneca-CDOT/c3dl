@@ -81,7 +81,7 @@ function canvasMain(canvasName){
   //simple solid colour effect
   simple=  solidColorEffect = new c3dl.Effect();
   simple.init(c3dl.effects.SOLID_COLOR);
-  simple.setParameter("color", [0.0, 0.0, 1.0]);	
+  simple.setParameter("color", [0.0, 0.0, 1.0]);  
 
   //cartoon style effect
   cartoon = new c3dl.Effect();
@@ -174,7 +174,7 @@ function update(time){
            netyaw = netyaw - Math.PI*2;
         }
         else if (netyaw < Math.PI*2){
-  	netyaw=netyaw + Math.PI*2;
+    netyaw=netyaw + Math.PI*2;
         }
       }
       //now move the headlight to match
@@ -197,7 +197,7 @@ function update(time){
         }
         if(Math.floor(Math.random()*2)==0){
           z=-1*z;
-        }	  
+        }    
         thing.setPosition([x,0,z]);
         var vel = c3dl.multiplyVector(c3dl.normalizeVector(thing.getPosition()),basevelocity+(Math.floor(Math.random()*3)*0.0001));
         thing.setLinearVel(vel);
@@ -257,7 +257,7 @@ function update(time){
         if(timesincelasteffectchange > 7000){
           timesincelasteffectchange=0;
           curreffects=(curreffects+1)%4;
-          gameovermsg.setEffect(effects[curreffects]);		
+          gameovermsg.setEffect(effects[curreffects]);    
         }
       }
     }
@@ -291,7 +291,7 @@ function handler(result){
         psys.setPosition([pos2[0],pos2[1],pos2[2]]);
         laserTime = 0; //start the laserTimer
         if(pew!=null)
-	  pew.play();
+    pew.play();
         //figure out the object's index, to get scale
         var scale = -1;
         for(var q = 0; q < objs.length; q++){
@@ -356,7 +356,7 @@ function handler(result){
 }
 
 function down(event){
-	
+  
   //left (A)
   if(event.keyCode == 65){
     yaw = 1;
@@ -365,31 +365,31 @@ function down(event){
   if(event.keyCode == 68){
     yaw = -1;
   }
-	
-	
+  
+  
 }
 
 function up(event){
   //left
-	if(event.keyCode == 65){
-		yaw = 0;
-	}
+  if(event.keyCode == 65){
+    yaw = 0;
+  }
 
-/*	if(event.keyCode == 66){
-		          health=health-100;
-	}*/
-	
-	//right
-	if(event.keyCode == 68){
-		yaw = 0;
-	}
+/*  if(event.keyCode == 66){
+              health=health-100;
+  }*/
+  
+  //right
+  if(event.keyCode == 68){
+    yaw = 0;
+  }
 }
 
 //return a normalized copy of a 3D vector
 function normalize(vec) {
-	var len = Math.sqrt((vec[0] * vec[0]) + (vec[1] * vec[1]) + (vec[2] * vec[2]));
-	var retval = ([vec[0]/len,vec[1]/len,vec[2]/len]);
-	return retval;
+  var len = Math.sqrt((vec[0] * vec[0]) + (vec[1] * vec[1]) + (vec[2] * vec[2]));
+  var retval = ([vec[0]/len,vec[1]/len,vec[2]/len]);
+  return retval;
 }
 
 //sets a random yaw,roll,pitch and rotation speed
@@ -401,7 +401,7 @@ function rollEm(ob) {
   ranRoll = .5 - Math.floor(Math.random()*10) / 10 ; ;
   ranVel1 = 0.0001 + (Math.floor(Math.random()*11) * 0.00005);
   ranVel2 = 0.0001 + (Math.floor(Math.random()*11) * 0.00005);
-  ranVel3 = 0.0001 + (Math.floor(Math.random()*11) * 0.00005);		
+  ranVel3 = 0.0001 + (Math.floor(Math.random()*11) * 0.00005);    
 
   ob.yaw(ranYaw);
   ob.pitch(ranPitch/1.5);

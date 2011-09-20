@@ -16,10 +16,10 @@ var teapot;
 //Records that the user is no longer dragging the mouse
 function mouseUp(evt)
 {
-	if(evt.which == 1)
-	{
-		isDragging = false;
-	}
+  if(evt.which == 1)
+  {
+    isDragging = false;
+  }
 }
 
 //Called when the user presses the left mouse button.
@@ -27,12 +27,12 @@ function mouseUp(evt)
 // coordinates of the mouse.
 function mouseDown(evt)
 {
-	if(evt.which == 1)
-	{
-		isDragging = true;
-		rotationStartCoords[0] = xevtpos(evt);
-		rotationStartCoords[1] = yevtpos(evt);
-	}
+  if(evt.which == 1)
+  {
+    isDragging = true;
+    rotationStartCoords[0] = xevtpos(evt);
+    rotationStartCoords[1] = yevtpos(evt);
+  }
 }
 
 //Called when the mouse moves
@@ -42,58 +42,58 @@ function mouseDown(evt)
 // amount and the sensitivity variable.
 function mouseMove(evt)
 {
-	if(isDragging == true)
-	{
+  if(isDragging == true)
+  {
                 var cam = scn.getCamera();
-		var x = xevtpos(evt);
-		var y = yevtpos(evt);
-		
-		// how much was the cursor moved compared to last time
-		// this function was called?
-		var deltaX = x - rotationStartCoords[0];
+    var x = xevtpos(evt);
+    var y = yevtpos(evt);
+    
+    // how much was the cursor moved compared to last time
+    // this function was called?
+    var deltaX = x - rotationStartCoords[0];
                 var deltaY = y - rotationStartCoords[1];
 
-		cam.yaw(-deltaX * SENSITIVITY);
-		cam.pitch(deltaY * SENSITIVITY);
-		
-		// now that the camera was updated, reset where the
-		// rotation will start for the next time this function is 
-		// called.
-		rotationStartCoords = [x,y];
-	}
+    cam.yaw(-deltaX * SENSITIVITY);
+    cam.pitch(deltaY * SENSITIVITY);
+    
+    // now that the camera was updated, reset where the
+    // rotation will start for the next time this function is 
+    // called.
+    rotationStartCoords = [x,y];
+  }
 }
 
 //This function is called when the user moves the scroll-wheel on the mouse
 //Depending on the direction of the action, the camera will either get
 // closer to or farther from the orbit point.
 function mouseScroll(evt) {
-	var cam = scn.getCamera();
-	if(-evt.detail*ZOOM_SENSITIVITY < 0)
-		{
-			cam.goFarther(-1 * -evt.detail*ZOOM_SENSITIVITY);
-		}
-		
-		// towards screen
-		else
-		{
-			cam.goCloser(-evt.detail*ZOOM_SENSITIVITY);
-		}
+  var cam = scn.getCamera();
+  if(-evt.detail*ZOOM_SENSITIVITY < 0)
+    {
+      cam.goFarther(-1 * -evt.detail*ZOOM_SENSITIVITY);
+    }
+    
+    // towards screen
+    else
+    {
+      cam.goCloser(-evt.detail*ZOOM_SENSITIVITY);
+    }
 }
 
 //This function is called whenever a key is released.
 //If the key released was the space-bar, the camera will switch
 // which object it is orbiting.
 function swapOrbitPoint(evt) {
-	if(evt.keyCode == 32) {
-		var cam = scn.getCamera();
-		//compare the camera's orbit point with the location of the duck
-		if(c3dl.isVectorEqual(cam.getOrbitPoint(),duck.getPosition())) {
-			cam.setOrbitPoint(teapot.getPosition());
-		}
-		else{
-			cam.setOrbitPoint(duck.getPosition());
-		}
-	}
+  if(evt.keyCode == 32) {
+    var cam = scn.getCamera();
+    //compare the camera's orbit point with the location of the duck
+    if(c3dl.isVectorEqual(cam.getOrbitPoint(),duck.getPosition())) {
+      cam.setOrbitPoint(teapot.getPosition());
+    }
+    else{
+      cam.setOrbitPoint(duck.getPosition());
+    }
+  }
 }
 
 //Calculates the current X coordinate of the mouse in the client window
@@ -136,7 +136,7 @@ function canvasMain(canvasName){
 
   var cam = new c3dl.OrbitCamera();
   cam.setFarthestDistance(1000);
-  cam.setClosestDistance(20);	
+  cam.setClosestDistance(20);  
   cam.setOrbitPoint(duck.getPosition());
   cam.setDistance(400);
   scn.setCamera(cam);
