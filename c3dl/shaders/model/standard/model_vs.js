@@ -61,23 +61,24 @@ c3dl.model_vs =
 "	{" +
 		// iterate over all the lights, and keep incrementing color values
 		// the color values are passed by reference and modified.
-"		for(int i = 0; i < C3DL_MAX_LIGHTS; i++)" +
+"		for(int i = 0; i < 8; i++)" +
 "		{" +
-"			if(lights[i].isOn) " +
+"     Light l = getLight(i);" +
+"			if(l.isOn) " +
 "			{" +
-"				if(lights[i].type == 1)" +
+"				if(l.type == 1)" +
 "				{" +
-"					c3dl_DirectionalLight(lights[i], transformNormal, ambient, diffuse, specular, shine);" +
+"					c3dl_DirectionalLight(l, transformNormal, ambient, diffuse, specular, shine);" +
 "				}" +
 
-"				else if(lights[i].type == 2) " +
+"				else if(l.type == 2) " +
 "				{" +
-"					c3dl_PointLight(lights[i], transformNormal, eye, ecPos, ambient, diffuse, specular, shine);" +
+"					c3dl_PointLight(l, transformNormal, eye, ecPos, ambient, diffuse, specular, shine);" +
 "				}" +
 
-"				else if(lights[i].type == 3)" +
+"				else if(l.type == 3)" +
 "				{" +
-"					c3dl_SpotLight(lights[i], transformNormal, eye, ecPos, ambient, diffuse, specular, shine);" +
+"					c3dl_SpotLight(l, transformNormal, eye, ecPos, ambient, diffuse, specular, shine);" +
 "				}" +
 "			}" +
 "		}" +

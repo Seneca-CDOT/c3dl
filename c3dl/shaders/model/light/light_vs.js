@@ -41,12 +41,30 @@ c3dl.light_vs =
 // are computed.
 "uniform bool lightingOn;" +
 
-//
-"const int C3DL_MAX_LIGHTS = 7;" +
+// nVidia cards have issues with arrays of structures
+// so instead we create 8 instances of Light
+"uniform Light lights0;" +
+"uniform Light lights1;" +
+"uniform Light lights2;" +
+"uniform Light lights3;" +
+"uniform Light lights4;" +
+"uniform Light lights5;" +
+"uniform Light lights6;" +
+"uniform Light lights7;" +
 
-// custom light structures needed, we can't access WebGL light states.
-"uniform Light lights[C3DL_MAX_LIGHTS];" +
-
+// GLSL does not support switch
+"Light getLight(int index){" +
+"  if(index == 0) return lights0;" +
+"  if(index == 1) return lights1;" +
+"  if(index == 2) return lights2;" +
+"  if(index == 3) return lights3;" +
+"  if(index == 4) return lights4;" +
+"  if(index == 5) return lights5;" +
+"  if(index == 6) return lights6;" +
+// some cards complain that not all paths return if we have
+// this last one in a conditional.
+"  return lights7;" +
+"}" +
 
 /*
 	A Spotlight is a positional light with a constraint which prevents light from radiating from

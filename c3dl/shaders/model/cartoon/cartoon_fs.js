@@ -81,23 +81,24 @@ c3dl.cartoon_fs =
 
      // iterate over all the lights, and keep incrementing color values
      // the color values are passed by reference and modified.
-"    for(int i = 0; i < C3DL_MAX_LIGHTS; i++)" +
+"    for(int i = 0; i < 8; i++)" +
 "    {" +
-"      if(lights[i].isOn == true) " +
+"      Light l = getLight(i);" +
+"      if(l.isOn == true) " +
 "      {" +
-"        if(lights[i].type == 1)" +
+"        if(l.type == 1)" +
 "        {" +
-"          c3dl_celDirLight(lights[i], n, intensity);" +
+"          c3dl_celDirLight(l, n, intensity);" +
 "        }" +
 
-"       else if(lights[i].type == 2)" +
+"       else if(l.type == 2)" +
 "       {" +
-"         c3dl_celPointLight(lights[i], pos, n, intensity);" +
+"         c3dl_celPointLight(l, pos, n, intensity);" +
 "       }" +
 
 "       else" + 
 "       {" +
-"         c3dl_celSpotLight(lights[i], pos, n, intensity);" +
+"         c3dl_celSpotLight(l, pos, n, intensity);" +
 "       }" +
 "     }" +
 "   }" +
