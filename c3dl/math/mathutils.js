@@ -163,7 +163,7 @@ c3dl.degreesToRadians = function (deg)
   return deg / 360.0 * (Math.PI * 2);
 }
 
-/**	
+/**  
  Get a random value from min to max inclusive
  
  @param {num} min

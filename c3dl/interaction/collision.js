@@ -1,4 +1,4 @@
-c3dl.CollisionDetection = function () {	
+c3dl.CollisionDetection = function () {  
   this.checkObjectCollision= function(obj1, obj2,timeElapsed, collisionType) {
     this.obj1 = obj1;
     this.obj2 = obj2;

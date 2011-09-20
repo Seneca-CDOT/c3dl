@@ -22,8 +22,8 @@ c3dl.BoundingVolume = function () {
   this.transMat = new C3DL_FLOAT_ARRAY(16);
   this.init = function (vertices) {
     this.vertices = new C3DL_FLOAT_ARRAY(vertices);
-   	var lengthVerts = new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3);
-	  var j = 0;
+     var lengthVerts = new C3DL_FLOAT_ARRAY(vertices.length/3), heightVerts= new C3DL_FLOAT_ARRAY(vertices.length/3), widthVerts= new C3DL_FLOAT_ARRAY(vertices.length/3);
+    var j = 0;
     
     for (var i = 0, len = vertices.length/3; i < len; i++) {
       lengthVerts[i] = vertices[j];
@@ -65,7 +65,7 @@ c3dl.BoundingVolume = function () {
     this.height = this.height * scaleVec[1];
     this.width = this.width * scaleVec[2];
     this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
-	  this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
+    this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
     this.boundingSphere.set(scaleVec);  
     this.obb.set(this.getTransform()); 

@@ -349,9 +349,9 @@ c3dl.ColladaLoader = function ()
       {
         // an <image> has exactly one <init_from> which have the uri or the
         // texture.
-        //	<image id="file2" name="file2" depth="1">
-        //		<init_from>./duckCM.tga</init_from>
-        //	</image>
+        //  <image id="file2" name="file2" depth="1">
+        //    <init_from>./duckCM.tga</init_from>
+        //  </image>
         //
         var init_from = imageElements[imageElementIter].getElementsByTagName("init_from")[0];
       }
@@ -472,12 +472,12 @@ c3dl.ColladaLoader = function ()
     // a <material> has exactly 1 <instance_effect>, so just get the first.
     //
     //<library_materials>
-    //	<material id="shine" name="shine">
-    //		<instance_effect url="#shine-fx"/>
-    //	</material>
-    //	<material id="matte" name="matte">
-    //		<instance_effect url="#matte-fx"/>
-    //	</material>
+    //  <material id="shine" name="shine">
+    //    <instance_effect url="#shine-fx"/>
+    //  </material>
+    //  <material id="matte" name="matte">
+    //    <instance_effect url="#matte-fx"/>
+    //  </material>
     //</library_materials>
     var instanceEffect = material.getElementsByTagName("instance_effect")[0];
     var instanceEffectURL = instanceEffect.getAttribute("url").split('#')[1];
@@ -535,7 +535,7 @@ c3dl.ColladaLoader = function ()
 
       // finally, get the image name
       //<image id="file2" name="file2" depth="1">
-      //	<init_from>./duckCM.tga</init_from>
+      //  <init_from>./duckCM.tga</init_from>
       //</image>
       var textureName = texture.getElementsByTagName("init_from")[0].childNodes[0].nodeValue;
 
@@ -671,7 +671,7 @@ c3dl.ColladaLoader = function ()
     // currColl = current collation
     for (var currColl = 0, len = collations.length; currColl < len; currColl++)
     {
-      // Depending on the type of collation element, the data will be layed out slighly differently.			
+      // Depending on the type of collation element, the data will be layed out slighly differently.      
       //
       // <triangles> and <polylist> are similar in that they both only have one <p> tag.
       // polylist has an additional <vcount> child element which has a list of integers
@@ -754,7 +754,7 @@ c3dl.ColladaLoader = function ()
           // get the child
           var input = vertices.getElementsByTagName("input")[0];
 
-          // get the <input>s source				
+          // get the <input>s source        
           var posSource = input.getAttribute("source").split('#')[1];
 
           // the raw data in a long list of floats, we have to group this so the face indices
@@ -805,7 +805,7 @@ c3dl.ColladaLoader = function ()
           else if (xmlObject.upAxis && xmlObject.upAxis == "X_UP")
           {
             for (var vertIter = 0, len3 = data.values.length; vertIter < len3; vertIter += normalsStride)
-            {		
+            {    
               var temp = data.values[vertIter];
               data.values[vertIter] = -data.values[vertIter + 1];
               data.values[vertIter + 1] = temp;
@@ -933,18 +933,18 @@ c3dl.ColladaLoader = function ()
       faces = this.groupScalarsIntoArray(rawFaces, inputs.length, inputs.length,collations[currColl].nodeName);
 
       // each primitive collation element can have a material name. this name matches to the
-      // <instance_material>'s symbol attribute value.					
+      // <instance_material>'s symbol attribute value.          
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
-	    if (collations[currColl].nodeName !== "lines") {
+      if (collations[currColl].nodeName !== "lines") {
         collationElement.init(
           this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
           this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
           this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2)
         );
-	  }
-	  else {
-	    collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
-	  }
+    }
+    else {
+      collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
+    }
       geometry.addPrimitiveSet(collationElement);
     } // end iterating over collations
 
@@ -1178,7 +1178,7 @@ c3dl.ColladaLoader = function ()
       }
     }
     // overwrite rawFaces with the triangle faces, as if quads never existed.
-    //rawFaces = trianglesList;				
+    //rawFaces = trianglesList;        
     return new C3DL_FLOAT_ARRAY(trianglesList);
   }
 
@@ -1219,7 +1219,7 @@ c3dl.ColladaLoader = function ()
 
   /**
    @private
-   @param {} xmlObject	
+   @param {} xmlObject  
    @param {String} nodeName
    @param {String} attributeKey
    @param {String} attributeValue
@@ -1246,7 +1246,7 @@ c3dl.ColladaLoader = function ()
     var float_array = c3dl.ColladaLoader.getNodeWithAttribute(xmlObject, "float_array", "id", accessorSrc);   
     // values in the DAE file are seperated with a space
     // don't use nodeValue since it will be broken up in 4096 chunks
-	  data.values = new C3DL_FLOAT_ARRAY(this.mergeChildData(float_array.childNodes).split(" "));
+    data.values = new C3DL_FLOAT_ARRAY(this.mergeChildData(float_array.childNodes).split(" "));
     return data;
   }
 
@@ -1464,7 +1464,7 @@ c3dl.ColladaLoader = function ()
 
 
 /**
- @private	
+ @private  
  
  static method of collada loader. 
  

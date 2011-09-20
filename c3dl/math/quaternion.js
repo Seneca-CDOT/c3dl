@@ -2,9 +2,9 @@
   Copyright (c) 2008 Seneca College
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
-// Written By:	Mark Paruzel
-// Date:		April 20, 2008
-// Project:		Canvas 3D Library
+// Written By:  Mark Paruzel
+// Date:    April 20, 2008
+// Project:    Canvas 3D Library
 // -----------------------------------------------------------------------------
 // NOTE: This group of functions act uppon an array of four values which
 //       represent a Quaternion in 3D space. The values of the array each hold 
@@ -68,7 +68,7 @@ c3dl.makeQuat = function (newW, newX, newY, newZ)
  Convert a Quaternion to a Matrix.
  
  @param {Array} quat
- @param {Array} dest	
+ @param {Array} dest  
  
  @returns {Array} A matrix
  */
@@ -158,8 +158,8 @@ c3dl.quatToAxisAngle = function (axisVec, angleScalar)
 
     // Set the Vector
     axisVec[0] = quat[1] * invLength; 
-	axisVec[1] = quat[2] * invLength; 
-	axisVec[3] = quat[3] * invLength;
+  axisVec[1] = quat[2] * invLength; 
+  axisVec[3] = quat[3] * invLength;
   }
   else
   {

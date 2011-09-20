@@ -31,7 +31,7 @@ c3dl.cartoon_vs =
 "void main(void)" +
 "{" + 
 
-	// create a normal matrix 3x3 out of 4x4
+  // create a normal matrix 3x3 out of 4x4
 "  mat3 normalMatrix3x3 = mat3(normalMatrix[0][0],normalMatrix[0][1],normalMatrix[0][2],normalMatrix[1][0],normalMatrix[1][1],normalMatrix[1][2],normalMatrix[2][0],normalMatrix[2][1],normalMatrix[2][2]);" + 
 "  norm = normalize(normalMatrix3x3 * Normal);" + 
 

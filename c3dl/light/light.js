@@ -163,8 +163,8 @@ c3dl.Light = function ()
   this.setAmbient = function (color)
   {
       this.ambient[0] = color[0];
-	  this.ambient[1] = color[1];
-	  this.ambient[2] = color[2];  
+    this.ambient[1] = color[1];
+    this.ambient[2] = color[2];  
   }
 
   /**
@@ -175,15 +175,15 @@ c3dl.Light = function ()
    light’s position relative to the object.  For example,  if you were looking 
    at the object directly and the light was behind it, you would likely not see much of
    the light's effect. If you were at the position of the light looking at the object,
-   you would see the object light and likely its contour would be less lit.		
+   you would see the object light and likely its contour would be less lit.    
    
    @param {Array} color Array of three values in the order RGB.
    */
   this.setDiffuse = function (color)
   {
     this.diffuse[0] = color[0];
-	this.diffuse[1] = color[1];
-	this.diffuse[2] = color[2]; 
+  this.diffuse[1] = color[1];
+  this.diffuse[2] = color[2]; 
   }
 
   /**

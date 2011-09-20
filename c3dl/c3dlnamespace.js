@@ -10,7 +10,7 @@
  */
 var c3dl =
 {
-  // Each renderer requires a unique ID, we start the counter here.	
+  // Each renderer requires a unique ID, we start the counter here.  
   rendererID: 0,
 
   /**

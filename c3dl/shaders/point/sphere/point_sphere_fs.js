@@ -12,5 +12,5 @@ c3dl.point_sphere_fs =
 "varying vec4 frontColor;"+
 
 "void main(void){ " + 
-"	gl_FragColor = frontColor;" +
+"  gl_FragColor = frontColor;" +
 "}";

@@ -110,8 +110,8 @@ c3dl.Material = function ()
     if (this.assertColor(color))
     {
       this.emission[0] = color[0];
-	  this.emission[1] = color[1];
-	  this.emission[2] = color[2];
+    this.emission[1] = color[1];
+    this.emission[2] = color[2];
     }
   }
 
@@ -125,8 +125,8 @@ c3dl.Material = function ()
     if (this.assertColor(color))
     {
       this.ambient[0] = color[0];
-	  this.ambient[1] = color[1];
-	  this.ambient[2] = color[2];
+    this.ambient[1] = color[1];
+    this.ambient[2] = color[2];
     }
   }
 
@@ -140,8 +140,8 @@ c3dl.Material = function ()
     if (this.assertColor(color))
     {
       this.diffuse[0] = color[0];
-	  this.diffuse[1] = color[1];
-	  this.diffuse[2] = color[2];
+    this.diffuse[1] = color[1];
+    this.diffuse[2] = color[2];
     }
   }
 
@@ -155,8 +155,8 @@ c3dl.Material = function ()
     if (this.assertColor(color))
     {
       this.specular[0] = color[0];
-	  this.specular[1] = color[1];
-	  this.specular[2] = color[2];
+    this.specular[1] = color[1];
+    this.specular[2] = color[2];
     }
   }
 

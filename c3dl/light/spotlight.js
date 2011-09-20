@@ -13,7 +13,7 @@
  One application of using a spotlight is making a headlight effect.
  @see c3dl.PositionalLight
  @augments c3dl.Light
- @augments c3dl.PositionalLight	
+ @augments c3dl.PositionalLight  
  */
 c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function () {
   c3dl._superc(this);

@@ -38,7 +38,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    */
   this.getPosition = function ()
   {
@@ -46,7 +46,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    */
   this.getVelocity = function ()
   {
@@ -65,7 +65,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    Get the color of this particle.
    
    @returns {Array}
@@ -91,7 +91,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    */
   this.isAlive = function ()
   {
@@ -115,7 +115,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    */
   this.setAge = function (age)
   {
@@ -142,8 +142,8 @@ c3dl.Particle = function ()
   this.setVelocity = function (velocity)
   {
     this.velocity[0] = velocity[0];
-	this.velocity[1] = velocity[1];
-	this.velocity[2] = velocity[2];
+  this.velocity[1] = velocity[1];
+  this.velocity[2] = velocity[2];
   }
 
   /**
@@ -168,7 +168,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    */
   this.setAlive = function (alive)
   {
@@ -186,7 +186,7 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private	
+   @private  
    Update the position of the particle.
    
    @param timeStep

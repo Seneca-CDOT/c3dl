@@ -19,41 +19,41 @@ c3dl.gooch_fs =
 "varying vec3 tnorm;" +
 
 /*
-	Light light [in]
-	vec3 nviewVec [in]
-	vec3 ntnorm [in]
-	float spec [inout]
-	float NdotL [inout]
+  Light light [in]
+  vec3 nviewVec [in]
+  vec3 ntnorm [in]
+  float spec [inout]
+  float NdotL [inout]
 */
 "void c3dl_goochPointLight(in Light light, in vec3 nviewVec, in vec3 ntnorm, inout float NdotL, inout float spec)" +
 "{" +
-	// lightVec = dir of light
-"	vec3 lightVec = normalize(vec3(light.position) - ecPos);" +
-"	vec3 ReflectVec = normalize(reflect(lightVec, ntnorm));" +
-"	NdotL = (dot(lightVec, ntnorm) + 1.0) * 0.5;" +
+  // lightVec = dir of light
+"  vec3 lightVec = normalize(vec3(light.position) - ecPos);" +
+"  vec3 ReflectVec = normalize(reflect(lightVec, ntnorm));" +
+"  NdotL = (dot(lightVec, ntnorm) + 1.0) * 0.5;" +
 
-"	spec += max(dot(ReflectVec, -nviewVec), 0.0);" +
+"  spec += max(dot(ReflectVec, -nviewVec), 0.0);" +
 
 "}" +
 
 /*
-	light
-	nviewVec
-	ntnorm
-	NdotL
-	spec
+  light
+  nviewVec
+  ntnorm
+  NdotL
+  spec
 */
 "void c3dl_goochDirLight(in Light light, in vec3 nviewVec, in vec3 ntnorm,  inout float NdotL, inout float spec)" +
 "{"+
-	// when the user specifies the the direction of the light, they are
-	// specifying the direction the light is going towards.
-"	vec3 lightVec = vec3(-light.position);" +
+  // when the user specifies the the direction of the light, they are
+  // specifying the direction the light is going towards.
+"  vec3 lightVec = vec3(-light.position);" +
 
-	// calculate how intense the light is. 
-	// NdotL is added for each light.
-"	NdotL = (dot(lightVec, ntnorm) + 1.0) * 0.5;" +
-"	vec3 ReflectVec = normalize(reflect(lightVec, ntnorm));" +
-"	spec += max(dot(ReflectVec, -nviewVec), 0.0);" +
+  // calculate how intense the light is. 
+  // NdotL is added for each light.
+"  NdotL = (dot(lightVec, ntnorm) + 1.0) * 0.5;" +
+"  vec3 ReflectVec = normalize(reflect(lightVec, ntnorm));" +
+"  spec += max(dot(ReflectVec, -nviewVec), 0.0);" +
 
 "}"+
 
@@ -61,46 +61,46 @@ c3dl.gooch_fs =
 */
 "void main(void) {" + 
 
-"	vec3 kcool = min(coolColor + DiffuseCool * surfaceColor, 1.0);"+
-"	vec3 kwarm = min(warmColor + DiffuseWarm * surfaceColor, 1.0);" +
+"  vec3 kcool = min(coolColor + DiffuseCool * surfaceColor, 1.0);"+
+"  vec3 kwarm = min(warmColor + DiffuseWarm * surfaceColor, 1.0);" +
 
-"	vec3 nviewVec = normalize(ViewVec);" +
-"	vec3 ntnorm = normalize(tnorm);" +
+"  vec3 nviewVec = normalize(ViewVec);" +
+"  vec3 ntnorm = normalize(tnorm);" +
 
-"	float NdotL = 0.0;" +	
-"	float spec = 0.0;" +
+"  float NdotL = 0.0;" +  
+"  float spec = 0.0;" +
 
-	// Gooch effects should only have one light so the contour of the object
-	// is properly rendered. So, only accept the first active light as the light
-	// source.
-"	bool appliedLight = false;" +
+  // Gooch effects should only have one light so the contour of the object
+  // is properly rendered. So, only accept the first active light as the light
+  // source.
+"  bool appliedLight = false;" +
 
-"	if(lightingOn == true)" +
-"	{" +
-"		for(int i = 0; i < 8; i++)" +
-"		{" +
+"  if(lightingOn == true)" +
+"  {" +
+"    for(int i = 0; i < 8; i++)" +
+"    {" +
 "     if ( appliedLight == false)"+
 "     {"+
 "       Light l = getLight(i);" +
-"			  if( l.isOn == true)" +
-"			  {" +
-"			  	if(l.type == 1)" +
-"			  	{" +
-"			  		c3dl_goochDirLight(l, nviewVec, ntnorm, NdotL, spec);"+
-"		  			appliedLight = true;" +
-"		  		}" +
-"		  		else" +
-"		  		{" +
-"			  		c3dl_goochPointLight(l, nviewVec, ntnorm, NdotL, spec);"+
-"			  		appliedLight = true;" +
-"			  	}" +
-"			  }" +
-"		  }" +
-"		}"+
-"	}" +
+"        if( l.isOn == true)" +
+"        {" +
+"          if(l.type == 1)" +
+"          {" +
+"            c3dl_goochDirLight(l, nviewVec, ntnorm, NdotL, spec);"+
+"            appliedLight = true;" +
+"          }" +
+"          else" +
+"          {" +
+"            c3dl_goochPointLight(l, nviewVec, ntnorm, NdotL, spec);"+
+"            appliedLight = true;" +
+"          }" +
+"        }" +
+"      }" +
+"    }"+
+"  }" +
 
-"	NdotL = clamp(NdotL, 0.0, 1.0);"+
-"	vec3 kfinal = mix(kcool, kwarm, NdotL);" +	
-"	spec = pow(spec,16.0);" +
-"	gl_FragColor = vec4(min(kfinal + spec, 1.0), 1.0);" +
+"  NdotL = clamp(NdotL, 0.0, 1.0);"+
+"  vec3 kfinal = mix(kcool, kwarm, NdotL);" +  
+"  spec = pow(spec,16.0);" +
+"  gl_FragColor = vec4(min(kfinal + spec, 1.0), 1.0);" +
 "}";

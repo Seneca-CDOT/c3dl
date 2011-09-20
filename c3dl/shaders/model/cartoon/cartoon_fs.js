@@ -14,10 +14,10 @@ c3dl.cartoon_fs =
 "varying vec3 pos;" +
 
 /*
-	light
-	fragPos
-	normal
-	intensity
+  light
+  fragPos
+  normal
+  intensity
 */
 "void c3dl_celPointLight(in Light light, in vec3 fragPos, in vec3 normal, inout float intensity)"+
 "{" +
@@ -26,9 +26,9 @@ c3dl.cartoon_fs =
 "}" +
 
 /*
-	light
-	normal
-	intensity
+  light
+  normal
+  intensity
 */
 "void c3dl_celDirLight(in Light light, in vec3 normal, inout float intensity)"+
 "{" +
@@ -36,21 +36,21 @@ c3dl.cartoon_fs =
 "}" +
 
 /*
-	light
-	fragPos
-	normal
-	intensity
+  light
+  fragPos
+  normal
+  intensity
 */
 "void c3dl_celSpotLight(in Light light, in vec3 fragPos, in vec3 normal, inout float intensity)" +
 "{" +
 
-	// ray direction goes from light position to fragment.
+  // ray direction goes from light position to fragment.
 "  vec3 rayDir = fragPos - vec3(light.position);" +
 "  rayDir = normalize(rayDir);" +
 "  float spotDot = dot(rayDir, normalize(light.spotDirection));" +
 
-	// if the fragment is within the cone
-	// don't light up the back side of the object
+  // if the fragment is within the cone
+  // don't light up the back side of the object
 "  if( dot(-normal, rayDir ) > 0.0 && spotDot > cos(radians(light.spotCutoff)) )" +
 "  {" +
 "    intensity += max(dot(-normal, rayDir), 0.0);" +

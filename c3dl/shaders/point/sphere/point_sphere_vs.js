@@ -13,6 +13,6 @@ c3dl.point_sphere_vs =
 "uniform mat4 modelViewProjMatrix;" +
 
 "void main(void){" + 
-"	frontColor = vec4(Color, 1.0); " +
-"	gl_Position = modelViewProjMatrix * vec4(Vertex, 1.0);" +
+"  frontColor = vec4(Color, 1.0); " +
+"  gl_Position = modelViewProjMatrix * vec4(Vertex, 1.0);" +
 "}";

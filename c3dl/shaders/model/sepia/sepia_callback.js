@@ -57,7 +57,7 @@ c3dl.sepia_callback = function (renderingObj, scene)
     }
     
     // if the object acutally has normals and the normal attribute was found
-    //			
+    //      
     if (currColl.getNormals())
     {
       // the top matrix is the modelview matrix.

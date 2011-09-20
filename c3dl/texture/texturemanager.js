@@ -41,7 +41,7 @@ c3dl.TextureManager = function (gl)
   }
 
   /**
-   @private	
+   @private  
    */
   this.addTextureFromCanvas2D = function (sourceCanvas)
   {
@@ -56,7 +56,7 @@ c3dl.TextureManager = function (gl)
   }
 
   /**
-   @private	
+   @private  
    Has the Texture already been added?
    
    @param {String} relativePath The relative path of the Texture from 
@@ -72,7 +72,7 @@ c3dl.TextureManager = function (gl)
   }
 
   /**
-   @private	
+   @private  
    Remove a texture. Currently not implemented.
    
    @param {String} relativePath
@@ -123,7 +123,7 @@ c3dl.TextureManager = function (gl)
     return id;
   }
   /**
-   @private	
+   @private  
    Get a string representation of this class. Will display all the WebGL 
    texture IDs along with the associated texture path.
    

@@ -128,7 +128,7 @@ c3dl.cartoon_callback = function (renderingObj, scene)
     }
     
     // if the object acutally has normals and the normal attribute was found
-    // NORMALS	
+    // NORMALS  
     if (currColl.getNormals())
     {
       // the top matrix is the modelview matrix.

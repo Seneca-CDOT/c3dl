@@ -338,7 +338,7 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
   var distFromNewPosToOP = c3dl.vectorLength(c3dl.subtractVectors(this.orbitPoint, position));
 
   // make sure the new position of the cam is between the min 
-  // and max allowed constraints.	
+  // and max allowed constraints.  
   if (distFromNewPosToOP >= this.getClosestDistance() && distFromNewPosToOP <= this.getFarthestDistance())
   {
     this.pos[0] = position[0];

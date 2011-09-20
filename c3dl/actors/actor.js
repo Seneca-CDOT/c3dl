@@ -148,7 +148,7 @@ c3dl.Actor.prototype.getName = function () {
   return this.name;
 }
 
-// Setters	
+// Setters  
 /**
  Set the transformation of this actor.
  
@@ -175,7 +175,7 @@ c3dl.Actor.prototype.resetTransform = function () {
 
 
 /**
- Scale the  Actor relative to its current scaling value.	
+ Scale the  Actor relative to its current scaling value.  
  Attempts to scale the x, y or z values of the Actor less 
  than or equal to zero will be ignored.
  
@@ -186,7 +186,7 @@ c3dl.Actor.prototype.scale = function (scaleVec) {
   if (scaleVec[0] > 0.0 && scaleVec[1] > 0.0 && scaleVec[2] > 0.0)
   {
     this.scaleVec[0] = this.scaleVec[0] * scaleVec[0]; 
-  	this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
+    this.scaleVec[1] = this.scaleVec[1] * scaleVec[1]; 
     this.scaleVec[2] = this.scaleVec[2] * scaleVec[2];
   }
 }

@@ -3,7 +3,7 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-/**	
+/**  
  @class c3dl.Geometry is a container for the primitiveSets of a 
  geometric object.
  */

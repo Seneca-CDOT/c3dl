@@ -17,10 +17,10 @@ c3dl.psys_vs =
 
 "void main(void){" +
 
-"	frontColor = Color;" + 
-"	gl_Position = modelViewProjMatrix * vec4( Vertex, 1.0);" +
+"  frontColor = Color;" + 
+"  gl_Position = modelViewProjMatrix * vec4( Vertex, 1.0);" +
 
-"	texCoord = rot * vec4(Texture.x - 0.5, Texture.y - 0.5, 1.0, 1.0);" + 
+"  texCoord = rot * vec4(Texture.x - 0.5, Texture.y - 0.5, 1.0, 1.0);" + 
 " texCoord.x += 0.5;" +
 " texCoord.y += 0.5;" +
 "}";

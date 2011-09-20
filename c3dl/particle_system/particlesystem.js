@@ -447,9 +447,9 @@ c3dl.ParticleSystem = function ()
   this.setAcceleration = function (acceleration)
   {
     this.acceleration[0] = acceleration[0];
-	this.acceleration[1] = acceleration[1];
-	this.acceleration[2] = acceleration[2];
-	this.acceleration[3] = acceleration[3];
+  this.acceleration[1] = acceleration[1];
+  this.acceleration[2] = acceleration[2];
+  this.acceleration[3] = acceleration[3];
   }
 
   /**
@@ -458,7 +458,7 @@ c3dl.ParticleSystem = function ()
    c3dl.ONE,
    c3dl.SRC_COLOR,
    c3dl.ONE_MINUS_SRC_COLOR,
-   c3dl.SRC_ALPHA,	
+   c3dl.SRC_ALPHA,  
    c3dl.ONE_MINUS_SRC_ALPHA,
    c3dl.DST_ALPHA,
    c3dl.ONE_MINUS_DST_ALPHA,
@@ -499,9 +499,9 @@ c3dl.ParticleSystem = function ()
     if (c3dl.isValidColor(maxColor))
     {
       this.maxColor[0] = maxColor[0];
-	  this.maxColor[1] = maxColor[1];
-	  this.maxColor[2] = maxColor[2];
-	  this.maxColor[3] = maxColor[3];
+    this.maxColor[1] = maxColor[1];
+    this.maxColor[2] = maxColor[2];
+    this.maxColor[3] = maxColor[3];
     }
   }
 
@@ -516,9 +516,9 @@ c3dl.ParticleSystem = function ()
     if (c3dl.isValidColor(minColor))
     {
       this.minColor[0] = minColor[0];
-	  this.minColor[1] = minColor[1];
-	  this.minColor[2] = minColor[2];
-	  this.minColor[3] = minColor[3];
+    this.minColor[1] = minColor[1];
+    this.minColor[2] = minColor[2];
+    this.minColor[3] = minColor[3];
     }
   }
 
@@ -581,8 +581,8 @@ c3dl.ParticleSystem = function ()
   this.setMinVelocity = function (minVelocity)
   {
     this.minVelocity[0] = minVelocity[0];
-	this.minVelocity[1] = minVelocity[1];
-	this.minVelocity[2] = minVelocity[2];
+  this.minVelocity[1] = minVelocity[1];
+  this.minVelocity[2] = minVelocity[2];
   }
 
   /**
@@ -593,8 +593,8 @@ c3dl.ParticleSystem = function ()
   this.setMaxVelocity = function (maxVelocity)
   {
     this.maxVelocity[0] = maxVelocity[0];
-	this.maxVelocity[1] = maxVelocity[1];
-	this.maxVelocity[2] = maxVelocity[2];
+  this.maxVelocity[1] = maxVelocity[1];
+  this.maxVelocity[2] = maxVelocity[2];
   }
 
   /**
@@ -635,7 +635,7 @@ c3dl.ParticleSystem = function ()
    c3dl.ONE,
    c3dl.SRC_COLOR,
    c3dl.ONE_MINUS_SRC_COLOR,
-   c3dl.SRC_ALPHA,	
+   c3dl.SRC_ALPHA,  
    c3dl.ONE_MINUS_SRC_ALPHA,
    c3dl.DST_ALPHA,
    c3dl.ONE_MINUS_DST_ALPHA,
@@ -931,7 +931,7 @@ c3dl.ParticleSystem = function ()
 
       // use counter clockwise order since models vertices are also counter clockwise.
       // This prevents having to change the WebGL state of the winding order when 
-      // switching between rendering models and particle systems.			
+      // switching between rendering models and particle systems.      
       this.billboardVerts = [bottomRight[0], bottomRight[1], bottomRight[2], 
                              topRight[0], topRight[1], topRight[2], 
                              topLeft[0], topLeft[1], topLeft[2], 

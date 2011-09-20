@@ -9,7 +9,7 @@
   Note the path for the src attribute may need to be changed, depending
   on where c3dapi.js has been placed.
 
-  <script type="application/javascript" src="../canvas3dapi/c3dapi.js"></script>		
+  <script type="application/javascript" src="../canvas3dapi/c3dapi.js"></script>    
 */
 var scripts = document.getElementsByTagName("script");
 var parts = scripts[scripts.length - 1].src.split("/");

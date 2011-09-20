@@ -24,7 +24,7 @@ c3dl.PositionalLight = c3dl.inherit(c3dl.Light, function () {
   // need to override the type the abstract class set.
   this.type = c3dl.POSITIONAL_LIGHT;
 
-  /**	 
+  /**   
    Get the attenuation factors of this light. This is an array of three values
    which include constant attenuation, linear attenuation and quadratic attenuation.
    

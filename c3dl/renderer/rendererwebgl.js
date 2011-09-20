@@ -496,7 +496,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
     this.contextHeight = height;
     this.scene = scene;
 
-    // enable the depth buffer, only needs to be done once, so do it here		
+    // enable the depth buffer, only needs to be done once, so do it here    
     glCanvas3D.enable(glCanvas3D.DEPTH_TEST);
 
     // create the shader programs
@@ -639,7 +639,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       // create a modelviewprojection matrix.  By doing this, we can multiply
       // 3 matrices together once per model instead of once per vertex.
       var sphereViewMatrix = c3dl.multiplyMatrixByMatrix(viewMatrix,sphereMatrix);
-	  
+    
       var MVPMatrix = c3dl.multiplyMatrixByMatrix(projMatrix, sphereViewMatrix);
       this.setUniformMatrix(shader, "modelViewProjMatrix", MVPMatrix, scene, "boundingSphereShader");
       this.setVertexAttribArray(shader, "Vertex", 3, this.pointSphereVBOVert, scene, "boundingSphereShader");
@@ -832,7 +832,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
 
   }
   /**
-   @private	
+   @private  
    Render a particle system.
    
    @param {c3dl.ParticleSystem} psys

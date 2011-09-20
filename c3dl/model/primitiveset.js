@@ -3,7 +3,7 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-/**	
+/**  
  @class c3dl.PrimitiveSet represents a set of primitives within a 
  geometric class. It derives from how .DAE files are structured and is
  roughly equal to a 'primitive collation element'.
@@ -48,7 +48,7 @@ c3dl.PrimitiveSet = function ()
     this.normals = normals;
     this.texCoords = texCoords;
     this.boundingVolume = new c3dl.BoundingVolume();
-	  this.type = type;
+    this.type = type;
     // give the bounding sphere the vertices, so it can properly
     // adjust its radius to completely enclose the object. 
     this.boundingVolume.init(this.vertices);  
@@ -62,7 +62,7 @@ c3dl.PrimitiveSet = function ()
       xyz[0]= parseFloat(vertices[i][0]);
       xyz[1] = parseFloat(vertices[i][1]);
       xyz[2] = parseFloat(vertices[i][2]);
-	    this.vertices.push(xyz[0]);
+      this.vertices.push(xyz[0]);
       this.vertices.push(xyz[1]);
       this.vertices.push(xyz[2]);
     }
@@ -131,7 +131,7 @@ c3dl.PrimitiveSet = function ()
     copy.fillType = this.fillType;
     // get a deep copy of the material since every model's primitive set
 
-    // can have its own material.		
+    // can have its own material.    
     copy.material = this.material ? this.material.getCopy() : null;
     if (this.boundingVolume){
       copy.boundingVolume = this.boundingVolume.getCopy();
@@ -149,7 +149,7 @@ c3dl.PrimitiveSet = function ()
     return this.texture;
   }
 
-  /**		
+  /**    
    Get the single dimensional array of vertices of this primitive set.
    The array of vertices is in the order x,y,z,x,y,z,...
    

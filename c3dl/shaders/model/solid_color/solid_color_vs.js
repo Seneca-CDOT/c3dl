@@ -21,5 +21,5 @@ c3dl.solid_color_vs =
 "  vec3 dummy = Normal;" +
 
 "  frontColor = vec4(color, 1.0);" +
-"	 gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
+"   gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
 "}";

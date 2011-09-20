@@ -50,7 +50,7 @@ c3dl.Primitive.prototype.isDirty = function () {
   return this.dirtyFlag;
 }
 // -------------------------------------------------------
-// Setters	
+// Setters  
 /**
  Set the visibility state.
  

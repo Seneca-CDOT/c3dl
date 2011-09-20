@@ -105,7 +105,7 @@ c3dl.Line = function ()
     return this.visible;
   }
 
-  /**		
+  /**    
    Set the width the line in pixels. A line width of 1 is guaranteed to be supported. 
    However, the maximum supported width for lines is implementation dependent. To get the
    maximum supported line width, call Renderer's getMaxLineWidth() once the scene and renderer

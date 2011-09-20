@@ -117,7 +117,7 @@ c3dl.Picking = function (scene)
     // if the user only wants to only run the test against bounding volumes, just
     // make the array which holds the objects which passed the triangle test point to 
     // the array we just filled up with object indices.  There is no need to recopy 
-    // everything into the array which holds the passed triangle tests.	
+    // everything into the array which holds the passed triangle tests.  
     if (scn.getPickingPrecision() == c3dl.PICK_PRECISION_BOUNDING_VOLUME)
     {
       objectsPicked = passedBoundsTest;
@@ -322,7 +322,7 @@ c3dl.Picking = function (scene)
     return (d < circleDiameter / 2 ? true : false);
   }
 
-  /**		
+  /**    
    @private
    Get the coordinates where the user clicked on the canvas.
    
@@ -435,16 +435,16 @@ c3dl.rayIntersectsSphere = function (rayInitialPoint, rayD, spherePos, sphereRad
   var q;
 
   // If the discriminant is less than 0, we cannot get the square root
-  // since it would result in an imaginary number.	
+  // since it would result in an imaginary number.  
   if (discriminant >= 0)
-  {	
+  {  
     var discriminantsqrt = Math.sqrt(discriminant);
-	if (b < 0) {
+  if (b < 0) {
      q = (-b - discriminantsqrt) / 2;
-	}
-	else {
+  }
+  else {
      q = (-b + discriminantsqrt) / 2;
-	}
+  }
     var t0 = q / a;
     var t1 = c / q;
     // make sure t0 is smaller than t1
@@ -455,12 +455,12 @@ c3dl.rayIntersectsSphere = function (rayInitialPoint, rayD, spherePos, sphereRad
         t0 = t1;
         t1 = temp;
     }
-	if (t1 < 0) {
+  if (t1 < 0) {
         return false;
     }
     if (t1 > 0 || t0 > 0) {
         hasIntersected = true;
-	}
+  }
   }
   return hasIntersected;
 }
@@ -551,7 +551,7 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   var scaledDir = c3dl.multiplyVector(dir, t);
   var POI = c3dl.addVectors(orig, scaledDir);
 
-  // area of smaller triangles formed by the 3 vertices and the point of intersection	
+  // area of smaller triangles formed by the 3 vertices and the point of intersection  
   c3dl.subtractVectors(vert0, POI,edge1);
   c3dl.subtractVectors(vert1, POI,edge2);
   edge3 = c3dl.subtractVectors(vert2, POI);

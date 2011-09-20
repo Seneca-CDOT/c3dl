@@ -25,9 +25,9 @@ c3dl.hasCorrectDimensions = function (texture)
   // Texture width and height must be a power of 2. By performing a 
   // bitwise and, we can see if the bit to the far left is on and all
   // other bits are off, thus, the size must be square.
-  // 10(bin) = 2(dec)		= power of 2
-  // 100(bin) = 4dec)		= power of 2
-  // 1000(bin) = 8(dec)	= power of 2
+  // 10(bin) = 2(dec)    = power of 2
+  // 100(bin) = 4dec)    = power of 2
+  // 1000(bin) = 8(dec)  = power of 2
   // etc..
   else if ((texture.width & (texture.width - 1)) || (texture.height & (texture.height - 1)))
   {

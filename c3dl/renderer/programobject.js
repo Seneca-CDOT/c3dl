@@ -31,7 +31,7 @@ c3dl.ProgramObject = function ()
   }
 
   /**
-   @private	
+   @private  
    Get a string representation of this object. 
    
    @param {null|String} delimiter A string which will separate values. Typically will be 

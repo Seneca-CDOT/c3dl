@@ -23,15 +23,15 @@ c3dl.gooch_vs =
 // this object properly.
 " vec3 dummy = dummyAttrib;" +
 
-"	mat3 normalMatrix3x3 = mat3(normalMatrix[0][0],normalMatrix[0][1],normalMatrix[0][2],normalMatrix[1][0],normalMatrix[1][1],normalMatrix[1][2],normalMatrix[2][0],normalMatrix[2][1],normalMatrix[2][2]);" + 
+"  mat3 normalMatrix3x3 = mat3(normalMatrix[0][0],normalMatrix[0][1],normalMatrix[0][2],normalMatrix[1][0],normalMatrix[1][1],normalMatrix[1][2],normalMatrix[2][0],normalMatrix[2][1],normalMatrix[2][2]);" + 
 
-	// ecPos = vertex in eye coordinate space.
-"	ecPos = vec3(modelViewMatrix * vec4(Vertex,1.0));" +
-"	tnorm = normalize(normalMatrix3x3 * Normal);" + 
+  // ecPos = vertex in eye coordinate space.
+"  ecPos = vec3(modelViewMatrix * vec4(Vertex,1.0));" +
+"  tnorm = normalize(normalMatrix3x3 * Normal);" + 
 
-	// a normalized vector pointing from the vector to the light
+  // a normalized vector pointing from the vector to the light
 
-"	ViewVec = normalize(-ecPos);" +
+"  ViewVec = normalize(-ecPos);" +
 
-"	gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
+"  gl_Position =  modelViewProjMatrix * vec4(Vertex, 1.0);" +
 "}";

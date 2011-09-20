@@ -59,7 +59,7 @@ c3dl.std_callback = function (renderingObj, scene)
       scene.curContextCache.attributes["std"+"Normal"] = normalAttribLoc;
     }
     // if the object acutally has normals and the normal attribute was found
-    //			
+    //      
     if (normalAttribLoc != -1 && currColl.getNormals())
     {
       // the top matrix is the modelview matrix.

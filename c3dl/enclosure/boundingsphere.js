@@ -55,13 +55,13 @@ c3dl.BoundingSphere = function () {
     // too much allocation. So allocate outside the loop.
     var vector = c3dl.makeVector(0, 0, 0);
     var currVector;
-	  for (var i = 0; i < vertices.length; i += 3)
+    for (var i = 0; i < vertices.length; i += 3)
     {
       // 
       vector[0] = vertices[i + 0];
       vector[1] = vertices[i + 1];
-      vector[2] = vertices[i + 2];	
-	    c3dl.subtractVectors(vector, centerPosition, vector);
+      vector[2] = vertices[i + 2];  
+      c3dl.subtractVectors(vector, centerPosition, vector);
       currVector = c3dl.vectorLength(vector);
 
       // once the longest vector is found, this becomes our radius.

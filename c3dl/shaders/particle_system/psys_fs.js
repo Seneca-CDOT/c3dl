@@ -17,14 +17,14 @@ c3dl.psys_fs =
 
 "void main(void) {" + 
 
-	// if the current object being rendered has a texture, use the texel which has the 
-	// texture color.  Otherwise we only take the frontColor into account.
-"	if( usingTexture == 1 ){" +
-"		vec3 texel = vec3(texture2D(myTex, texCoord.xy));" + 
-"		gl_FragColor = vec4(texel,1.0) * frontColor;" + 
-"	}" + 
-"	else" + 
-"	{" + 
-"		gl_FragColor = frontColor;" +
-"	}" + 
+  // if the current object being rendered has a texture, use the texel which has the 
+  // texture color.  Otherwise we only take the frontColor into account.
+"  if( usingTexture == 1 ){" +
+"    vec3 texel = vec3(texture2D(myTex, texCoord.xy));" + 
+"    gl_FragColor = vec4(texel,1.0) * frontColor;" + 
+"  }" + 
+"  else" + 
+"  {" + 
+"    gl_FragColor = frontColor;" +
+"  }" + 
 "}";
