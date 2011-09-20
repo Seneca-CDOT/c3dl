@@ -640,26 +640,59 @@ c3dl.rayAABBIntersect = function (orig, dir, maxMins) {
   return true;
 }
 
-c3dl.rayOBBIntersect = function (orig, dir , pos, axis, sizes){
-  var tmin, tmax, tymin, tymax, tzmin, tzmax;
-  var divx = 1 / dir[0]*axis[0];
-  var divy = 1 / dir[1]*axis[1];
-  var divz = 1 / dir[2]*axis[2];
+c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis){
+  maxMins = [];
+  c3dl.mat1[0] = axis[0][0];
+  c3dl.mat1[1] = axis[0][1];
+  c3dl.mat1[2] = axis[0][2];
+  c3dl.mat1[3] = 0.0;
+  c3dl.mat1[4] = axis[1][0];
+  c3dl.mat1[5] = axis[1][1];
+  c3dl.mat1[6] = axis[1][2];
+  c3dl.mat1[7] = 0.0;
+  c3dl.mat1[8] = axis[2][0];
+  c3dl.mat1[9] = axis[2][1];
+  c3dl.mat1[10] = axis[2][2];
+  c3dl.mat1[11] = 0.0;
+  c3dl.mat1[12] = 0.0;
+  c3dl.mat1[13] = 0.0;
+  c3dl.mat1[14] = 0.0;
+  c3dl.mat1[15] = 1.0;
+  
+  orig = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), orig);
+  dir= c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), dir);
+  var lengthVerts= new C3DL_FLOAT_ARRAY(8), widthVerts=new C3DL_FLOAT_ARRAY(8), heightVerts=new C3DL_FLOAT_ARRAY(8);
+  for (var i = 0; i < 8; i++) {
+    c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), boxVerts[i], c3dl.vec1);
+    lengthVerts[i] = c3dl.vec1[0];
+    heightVerts[i] = c3dl.vec1[1];
+    widthVerts[i] = c3dl.vec1[2];
+  }       
+  maxMins[0] = c3dl.findMax(lengthVerts); 
+  maxMins[1] = c3dl.findMin(lengthVerts);
+  maxMins[2] = c3dl.findMax(heightVerts);     
+  maxMins[3] = c3dl.findMin(heightVerts); 
+  maxMins[4] = c3dl.findMax(widthVerts);     
+  maxMins[5] = c3dl.findMin(widthVerts);    
+
+  var divx = 1 / dir[0];
+  var divy = 1 / dir[1];
+  var divz = 1 / dir[2];
   if (divx >= 0) {
-    tmin = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
-    tmax = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
+    tmin = (maxMins[1] - orig[0]) * divx;
+    tmax = (maxMins[0] - orig[0]) * divx;
   }
   else {
-    tmin = (pos[0]*axis[0] + sizes[0] - orig[0]*axis[0]) * divx;
-    tmax = (pos[0]*axis[0] - sizes[0] - orig[0]*axis[0]) * divx;
+    tmin = (maxMins[0] - orig[0]) * divx;
+    tmax = (maxMins[1] - orig[0]) * divx;
   }
   if (divy >= 0) {
-    tymin = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
-    tymax = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
+    tymin = (maxMins[3] - orig[1]) * divy;
+    tymax = (maxMins[2] - orig[1]) * divy;
   }
   else {
-    tymin = (pos[1]*axis[1] + sizes[1] - orig[1]*axis[1]) * divy;
-    tymax = (pos[1]*axis[1] - sizes[1] - orig[1]*axis[1]) * divy;
+    tymin = (maxMins[2] - orig[1]) * divy;
+    tymax = (maxMins[3] - orig[1]) * divy;
   }
   if ( (tmin > tymax) || (tymin > tmax) ) {
     return false;
@@ -671,12 +704,12 @@ c3dl.rayOBBIntersect = function (orig, dir , pos, axis, sizes){
     tmax = tymax;
   }
   if (divz >= 0) {
-    tzmin = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
-    tzmax = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
+    tzmin = (maxMins[5] - orig[2]) * divz;
+    tzmax = (maxMins[4] - orig[2]) * divz;
   }
   else {
-    tzmin = (pos[2]*axis[2] + sizes[2] - orig[2]*axis[2]) * divz;
-    tzmax = (pos[2]*axis[2] - sizes[2] - orig[2]*axis[2]) * divz;
+    tzmin = (maxMins[4] - orig[2]) * divz;
+    tzmax = (maxMins[5] - orig[2]) * divz;
   }
   if ( (tmin > tzmax) || (tzmin > tmax) ) {
     return false;

@@ -19,53 +19,23 @@ c3dl.ModelManager.values = [];
 
 /**
  @private
- Get the scenegraph's root for the filePath.
- 
- @param {String} filePath 
- 
- @returns c3dl.SceneNode or null if the file has not finished loading.
- 
- c3dl.ModelManager.getSceneGraphRoot = function(filePath)
- {
- var index = c3dl.ModelManager.getIndex(filePath);
- 
- // if it's in the table
- if(index != -1)
- {
- // The loader will set the root once it has finished parsing.
- // Initially when we create the sceneGraph, the root is null
- // indicating the graph hasn't been created.
- return c3dl.ModelManager.values[index];
- }
- else
- {
- return null;
- }
- }*/
-
-
-/**
- @private
  Load a model file at 'filePath'. This method will check if
  the model is already loaded, thus preventing the file being
  loaded twice.
  */
 c3dl.ModelManager.loadFile = function (filePath)
 {
-  // prevent loading the file twice
-  if (c3dl.ModelManager.isFileLoaded(filePath) == false)
-  {
-    // create a node which the loader will assign other nodes.
-    var rootNode = new c3dl.SceneNode();
+  // create a node which the loader will assign other nodes.
+  var rootNode = new c3dl.SceneNode();
+  rootNode.loaded = false;
+  rootNode.progress = 0;
+  // give the loader a sceneGraph which it will populate with nodes.
+  // We know it has finished once it has set the scenegraph's root.
 
-    // give the loader a sceneGraph which it will populate with nodes.
-    // We know it has finished once it has set the scenegraph's root.
-
-    var modelLoader = new c3dl.ColladaLoader();
-    modelLoader.load(filePath, rootNode);
-    c3dl.ModelManager.keys.push(filePath);
-    c3dl.ModelManager.values.push(rootNode);
-  }
+  var modelLoader = new c3dl.ColladaLoader();
+  modelLoader.load(filePath, rootNode);
+  c3dl.ModelManager.keys.push(filePath);
+  c3dl.ModelManager.values.push(rootNode);
 }
 
 c3dl.ModelManager.deleteFile = function (filePath)
@@ -92,16 +62,17 @@ c3dl.ModelManager.getSceneGraphCopy = function (filePath)
 {
   if (c3dl.ModelManager.isFileLoaded(filePath))
   {
-    var i = c3dl.ModelManager.getIndex(filePath);
+    var index = c3dl.ModelManager.getIndex(filePath);
 
     // get a copy of the scenegraph
-    var sg = c3dl.ModelManager.values[i].getCopy();
+    var sg = [];
+    
+    for (var i=0; i < c3dl.ModelManager.values[index].children.length; i++) {
+      sg.push(c3dl.ModelManager.values[index].children[i].getCopy());
+    }
 
-    //return ModelManager.values[i];
     return sg;
   }
-
-  // return null?
 }
 
 /**
@@ -114,8 +85,11 @@ c3dl.ModelManager.getSceneGraphCopy = function (filePath)
  */
 c3dl.ModelManager.isFileLoaded = function (filePath)
 {
-  // if its in the 'table', it will return non-negative one.
-  return c3dl.ModelManager.getIndex(filePath) != -1 ? true : false;
+  return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].loaded;
+}
+
+c3dl.ModelManager.loadProgress = function (filePath) {
+    return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].progress;
 }
 
 /**

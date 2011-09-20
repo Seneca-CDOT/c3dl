@@ -967,7 +967,6 @@ c3dl.Scene = function ()
       objList.push(obj);
       return true;
     }
-
     c3dl.debug.logWarning("Scene::addObjectToScene() called with an invalid argument.");
     return false;
   }

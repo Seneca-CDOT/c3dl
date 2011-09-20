@@ -2,7 +2,7 @@ c3dl.addMainCallBack(canvasMain, "size");
 c3dl.addModel("models/teapot.dae");
 c3dl.addModel("models/cube.dae");
 var teapot;
-
+var first = true;
 function canvasMain(canvasName){
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
@@ -27,10 +27,19 @@ function canvasMain(canvasName){
     cam.setPosition(new Array(0.0, 0.0,10));
     cam.setLookAtPoint(new Array(0.0, 0.0, 0.0));
     scn.setCamera(cam);
+    scn.setUpdateCallback(update);
+    scn.startScene();
+   
+  }
+}
+
+function update(event)
+{	
+  if (teapot.isReady() && first) {
     document.getElementById("length").value=teapot.getSize()[0].toFixed(2);
     document.getElementById("width").value=teapot.getSize()[2].toFixed(2);
     document.getElementById("height").value=teapot.getSize()[1].toFixed(2);
-    scn.startScene();
+    first = false;
   }
 }
 function maintainAspectRatioLength(){

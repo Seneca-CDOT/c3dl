@@ -98,7 +98,6 @@ c3dl_require('texture/textureutils.js');
 //model management
 c3dl_require('model/modelmanager.js');
 c3dl_require('model/colladaloader.js');
-c3dl_require('model/modelqueue.js');
 c3dl_require('model/geometry.js');
 c3dl_require('model/primitiveset.js');
 

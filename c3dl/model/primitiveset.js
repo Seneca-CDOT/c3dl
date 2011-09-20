@@ -44,29 +44,6 @@ c3dl.PrimitiveSet = function ()
    */
   this.init = function (vertices, normals, texCoords,type)
   {
-  /*
-    var temp = [];
-    alert("vertices");
-    alert(vertices.length);
-    for (var i = 0; i < vertices.length; i++) {
-      temp.push(vertices[i]);
-    }
-    alert(temp);
-    var temp = [];
-    alert("normals");
-    alert(normals.length);
-    for (var i = 0; i < normals.length; i++) {
-      temp.push(normals[i]);
-    }
-    alert(temp);
-    var temp = [];
-    alert("texCoords");
-    alert(texCoords.length);
-    for (var i = 0; i < texCoords.length; i++) {
-      temp.push(texCoords[i]);
-    }
-    alert(temp);
-    */
     this.vertices = vertices;
     this.normals = normals;
     this.texCoords = texCoords;
@@ -150,8 +127,10 @@ c3dl.PrimitiveSet = function ()
     copy.texCoords = this.texCoords;
     copy.texture = this.texture;
     copy.lineList = this.lineList;
-	  copy.type = this.type;
+    copy.type = this.type;
+    copy.fillType = this.fillType;
     // get a deep copy of the material since every model's primitive set
+
     // can have its own material.		
     copy.material = this.material ? this.material.getCopy() : null;
     if (this.boundingVolume){

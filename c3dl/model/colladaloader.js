@@ -12,10 +12,8 @@ c3dl.ColladaLoader = function ()
 {
   var XHR_STATE_COMPLETED = 4;
   var xmlhttp = null;
-  this.done = false;
-  this.name = "";
-  this.rootNode = new c3dl.SceneNode();
-
+  this.rootNode = null;
+  
   /**
    @private
    Opens the DAE file, reads the vertex, normal and uv data and stores 
@@ -28,7 +26,6 @@ c3dl.ColladaLoader = function ()
   {
     //
     this.rootNode = rootNode;
-
     xmlhttp = new XMLHttpRequest();
 
     //
@@ -66,9 +63,15 @@ c3dl.ColladaLoader = function ()
 
           // we can now parse by calling the callback which 
           // was set the the parse function.
+          this.parent.rootNode.progress = 100;
           this.callbackFunc(xmlhttp.responseXML);
         }
       }
+    }
+    
+    xmlhttp.onprogress = function (e){
+      this.parent.rootNode.progress = (e.position / e.totalSize)*100;
+      c3dl.PreLoader.checkProgress();
     }
   }
 
@@ -443,9 +446,11 @@ c3dl.ColladaLoader = function ()
         loader.parseNodeRecursive(xmlObject, nodes[currNode], scenenode);
       }
     }
-
+    
+    loader = this.parent;
+    loader.rootNode.loaded = true;
+    c3dl.PreLoader.checkProgress();
     // !!!
-    c3dl.ModelQueue.popFront();
     delete xmlObject;
     delete xmlhttp;
   }
@@ -1339,18 +1344,6 @@ c3dl.ColladaLoader = function ()
       }
     }
     return expandedArray;
-  }
-
-  /**
-   @private
-   Loading is done once all the nodes in the .DAE file have been created and placed
-   into the ModelManager.
-   
-   @returns {bool} true if loading is done, false otherwise. 
-   */
-  this.doneLoading = function ()
-  {
-    return this.done;
   }
 
   /**

@@ -1,0 +1,45 @@
+<multisub>
+<sub matID="0" >
+<standard name="chrome" type="Blinn">
+<flags twoSided="false" faceMap="false" faceted="false" isMirror="false" reflectance="0.0" />
+<wire enable="false" size="1.0" />
+<ambient x="0.0" y="0.0" z="0.0" />
+<diffuse x="0.0" y="0.0" z="0.0" />
+<specular x="229.5" y="229.5" z="229.5" amount="130.0" />
+<illumination amount="0.0" />
+<opacity amount="100.0" opacityType="0" opacityFallOffType="0" opacityFallOff="0.0" ior="1.5" />
+<glossiness amount="20.0" />
+<textures>
+<texture name="Reflection" amount="40.0" resource="Chromic.jpg" channel="1" />
+</textures>
+</standard>
+</sub>
+<sub matID="1" >
+<standard name="black" type="Blinn">
+<flags twoSided="false" faceMap="false" faceted="false" isMirror="false" reflectance="0.0" />
+<wire enable="false" size="1.0" />
+<ambient x="0.0" y="0.0" z="0.0" />
+<diffuse x="0.0" y="0.0" z="0.0" />
+<specular x="229.5" y="229.5" z="229.5" amount="0.0" />
+<illumination amount="0.0" />
+<opacity amount="100.0" opacityType="0" opacityFallOffType="0" opacityFallOff="0.0" ior="1.5" />
+<glossiness amount="10.0" />
+<textures>
+</textures>
+</standard>
+</sub>
+<sub matID="2" >
+<standard name="white" type="Blinn">
+<flags twoSided="false" faceMap="false" faceted="false" isMirror="false" reflectance="0.0" />
+<wire enable="false" size="1.0" />
+<ambient x="225.0" y="225.0" z="217.0" />
+<diffuse x="225.0" y="225.0" z="217.0" />
+<specular x="229.5" y="229.5" z="229.5" amount="0.0" />
+<illumination amount="0.0" />
+<opacity amount="100.0" opacityType="0" opacityFallOffType="0" opacityFallOff="0.0" ior="1.5" />
+<glossiness amount="10.0" />
+<textures>
+</textures>
+</standard>
+</sub>
+</multisub>

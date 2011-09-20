@@ -6,13 +6,15 @@
 c3dl.Plane = c3dl.inherit(c3dl.Shape, function (length, width) {
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
-  var vertices = new C3DL_FLOAT_ARRAY([-0.5,0,-0.5, -0.5,0,0.5, 0.5,0,-0.5, 0.5,0,0.5, 0.5,0,-0.5, -0.5,0,0.5]);
-  var normals = new C3DL_FLOAT_ARRAY([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0]);
-  var texCoords = new C3DL_FLOAT_ARRAY([0,0, 0,1, 1,0, 1,1, 1,0, 0,1, 0,0, 0,0, 0,0]);
-  this.primitiveSets[0].init(vertices, normals, texCoords);
-  this.boundingVolume.init(vertices);
   if (arguments.length == 2) {
-    this.init(length,width)
+    var vertices = new C3DL_FLOAT_ARRAY([-0.5,0,-0.5, -0.5,0,0.5, 0.5,0,-0.5, 0.5,0,0.5, 0.5,0,-0.5, -0.5,0,0.5]);
+    var normals = new C3DL_FLOAT_ARRAY([0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0]);
+    var texCoords = new C3DL_FLOAT_ARRAY([0,0, 0,1, 1,0, 1,1, 1,0, 0,1, 0,0, 0,0, 0,0]);
+    this.primitiveSets[0].init(vertices, normals, texCoords);
+    this.boundingVolume.init(vertices);
+    if (arguments.length == 2) {
+      this.init(length,width)
+    }
   }
 });
 
@@ -46,4 +48,14 @@ c3dl.Plane.prototype.init = function (length, width) {
   this.boundingVolume.set(this.shape.pos,this.shape.getRotateMat(),this.shape.scaleVec);
 }
 
- 
+c3dl.Plane.prototype.getCopy = function () {
+  var Shape = new c3dl.Plane();
+  Shape.clone(this);
+  return Shape;
+}
+c3dl.Plane.prototype.clone = function (other) {
+  c3dl._super(this, arguments, "clone");
+  this.boundingVolume = other.boundingVolume.getCopy();
+  this.primitiveSets[0] = other.primitiveSets[0].getCopy();
+  this.shape = other.shape.getCopy();
+}

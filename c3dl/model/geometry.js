@@ -85,7 +85,7 @@ c3dl.Geometry = function () {
         var pos = bv.getPosition();
         var radius = bv.getRadius();
         if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, pos, radius) && c3dl.rayAABBIntersect(rayOrigin, rayDir, bv.aabb.maxMins) && 
-        c3dl.rayOBBIntersect(rayOrigin, rayDir, pos, bv.getAxis(),bv.getSizeInAxis())) {
+        c3dl.rayOBBIntersect(rayOrigin, rayDir, bv.obb.boxVerts, bv.getAxis())) {
           return true;
         }
       }

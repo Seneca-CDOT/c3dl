@@ -100,6 +100,15 @@ c3dl.OBB = function () {
     //B bottom right  
     this.originalBoxVerts[7] = c3dl.makeVector(this.originalBoxVerts[7][0]  - centerPosition[0], this.originalBoxVerts[7][1] - centerPosition[1] , this.originalBoxVerts[7][2] - centerPosition[2]);
   }
+  
+  this.getCorners = function () {  
+    return [
+            [this.boxVerts[0][0].toFixed(2), this.boxVerts[0][2].toFixed(2)], 
+            [this.boxVerts[2][0].toFixed(2), this.boxVerts[2][2].toFixed(2)],
+            [this.boxVerts[3][0].toFixed(2), this.boxVerts[3][2].toFixed(2)],
+            [this.boxVerts[1][0].toFixed(2), this.boxVerts[1][2].toFixed(2)]
+           ];
+  }
 }
 
 
