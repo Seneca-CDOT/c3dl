@@ -406,9 +406,12 @@ c3dl.PICK_PRECISION_TRIANGLE = 2;
 /*
   Compatibility wrapper
 */
-try{
+try
+{
   Float32Array;
-}catch(ex){
+}
+catch(ex)
+{
   Uint8Array = WebGLUnsignedByteArray;
   Float32Array = WebGLFloatArray;
 }

@@ -5,7 +5,8 @@
  vertices, normals and uv coordinates. Models may also  have textures
  applied to them.
  */
-c3dl.BoundingSphere = function () {
+c3dl.BoundingSphere = function ()
+{
   // When a model is first loaded, the longestVector will be set.  Once the
   // model is scaled for example by (2,2,2), this scaled vector will be multiplied by
   // the longest vector and the radius will be recomputed.  It is not
@@ -47,7 +48,8 @@ c3dl.BoundingSphere = function () {
    [-0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, .... ]<br />
    in which case values at 0,1 and 2 are x,y,z coordinates.
    */
-  this.init = function (vertices,centerPosition) {
+  this.init = function (vertices,centerPosition)
+  {
     // start the longest to zero, so it will be overritten probably by the first
     // vector found.
     var longestLengthFound = 0;
@@ -81,18 +83,21 @@ c3dl.BoundingSphere = function () {
     this.radius = c3dl.vectorLength(this.longestVector);
   }
 
-  this.set = function (scaleVec) {
+  this.set = function (scaleVec)
+  {
     c3dl.multiplyVectorByVector(scaleVec, this.originalLV, this.longestVector)
     this.radius = c3dl.vectorLength(this.longestVector);
   }
   /**
    @private
    */
-  this.getRadius = function () {
+  this.getRadius = function ()
+  {
     return this.radius;
   }
   
-  this.getCopy = function () {
+  this.getCopy = function ()
+  {
     var copy = new c3dl.BoundingSphere();
     copy.longestVector = c3dl.copyVector(this.longestVector);
     copy.originalLV = c3dl.copyVector(this.originalLV);

@@ -3,27 +3,33 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDetailV) {
+c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDetailV)
+{
   c3dl._superc(this);
   this.primitiveSets[0] = new c3dl.PrimitiveSet();
-  if (arguments.length >= 1) {
+  if (arguments.length >= 1)
+  {
     this.sinLUT = new Array(c3dl.SINCOS_LENGTH);
     this.cosLUT = new Array(c3dl.SINCOS_LENGTH);
-    for (var i = 0; i < c3dl.SINCOS_LENGTH; i++) {
+    for (var i = 0; i < c3dl.SINCOS_LENGTH; i++)
+    {
       this.sinLUT[i] = Math.sin(i * (Math.PI / 180) * 0.5);
       this.cosLUT[i] = Math.cos(i * (Math.PI / 180) * 0.5);
     }
-    if (arguments.length == 3) {
+    if (arguments.length == 3)
+    {
       this.sphereDetail(parseInt(sphereDetailU),parseInt(sphereDetailV));
     }
-    else {
+    else
+    {
       this.sphereDetail(32,32);
     }
     var sphereArray = [], texCoords = [];
     var sectionX = 1/this.sphereDetailU;
     var sectionY = 1/this.sphereDetailV;
     var i;
-    for (i = 0; i < this.sphereDetailU; i++) {
+    for (i = 0; i < this.sphereDetailU; i++)
+    {
       sphereArray.push(0);
       sphereArray.push(-1);
       sphereArray.push(0);
@@ -51,11 +57,13 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDe
     // middle rings
     var voff = 0;
     var toff = 0;
-    for (i = 2; i < this.sphereDetailV; i++) {
+    for (i = 2; i < this.sphereDetailV; i++)
+    {
       v1 = v11 = voff;
       voff += this.sphereDetailU;
       v2 = voff;
-      for (var j = 0; j < this.sphereDetailU; j++) {
+      for (var j = 0; j < this.sphereDetailU; j++)
+      {
         sphereArray.push(parseFloat(this.sphereX[v1]));
         sphereArray.push(parseFloat(this.sphereY[v1]));
         sphereArray.push(parseFloat(this.sphereZ[v1++]));
@@ -82,7 +90,8 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDe
       texCoords.push(1-sectionY*i);  
     }
     // add the northern cap
-    for (i = 0; i < this.sphereDetailU; i++) {
+    for (i = 0; i < this.sphereDetailU; i++)
+    {
       v2 = voff + i;
       sphereArray.push(parseFloat(this.sphereX[v2]));
       sphereArray.push(parseFloat(this.sphereY[v2]));
@@ -117,18 +126,22 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDe
   }
 });
 
-c3dl.Sphere.prototype.init = function (radius) {
+c3dl.Sphere.prototype.init = function (radius)
+{
   radius = parseFloat(radius);
   var curRadius = 1;
   var scaleVec = [];
   var scale;
-  if (curRadius > radius) {
+  if (curRadius > radius)
+  {
     scale = (1 / (curRadius / radius));
   }
-  else if (curRadius < radius) {
+  else if (curRadius < radius)
+  {
     scale = radius / curRadius;
   }
-  else {
+  else
+  {
     scale = 1;
   }
   scaleVec = [scale, scale, scale];
@@ -137,16 +150,20 @@ c3dl.Sphere.prototype.init = function (radius) {
 }
 
  
-c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres) {
+c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres)
+{
   var i;
-  if (arguments.length === 1) {
+  if (arguments.length === 1)
+  {
     ures = vres = arguments[0];
   }
 
-  if (ures < 3) {
+  if (ures < 3)
+  {
     ures = 3;
   } // force a minimum res
-  if (vres < 2) {
+  if (vres < 2)
+  {
     vres = 2;
   } // force a minimum res
 
@@ -154,7 +171,8 @@ c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres) {
   var cx = new Array(ures);
   var cz = new Array(ures);
   // calc unit circle in XZ plane
-  for (i = 0; i < ures; i++) {
+  for (i = 0; i < ures; i++)
+  {
     cx[i] = this.cosLUT[parseInt((i * delta) % c3dl.SINCOS_LENGTH, 10)];
     cz[i] = this.sinLUT[parseInt((i * delta) % c3dl.SINCOS_LENGTH, 10)];
   }
@@ -173,26 +191,30 @@ c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres) {
   var angle = angle_step;
 
   // step along Y axis
-  for (i = 1; i < vres; i++) {
+  for (i = 1; i < vres; i++)
+  {
     var curradius = this.sinLUT[parseInt(angle % c3dl.SINCOS_LENGTH, 10)];
     var currY = -this.cosLUT[parseInt(angle % c3dl.SINCOS_LENGTH, 10)];
-    for (var j = 0; j < ures; j++) {
+    for (var j = 0; j < ures; j++)
+    {
       this.sphereX[currVert] = cx[j] * curradius;
       this.sphereY[currVert] = currY;
       this.sphereZ[currVert++] = cz[j] * curradius;
     }
-  angle += angle_step;
+    angle += angle_step;
   }
   this.sphereDetailU = ures;
   this.sphereDetailV = vres;
 };
 
-c3dl.Sphere.prototype.getCopy = function () {
+c3dl.Sphere.prototype.getCopy = function ()
+{
   var Shape = new c3dl.Sphere();
   Shape.clone(this);
   return Shape;
 }
-c3dl.Sphere.prototype.clone = function (other) {
+c3dl.Sphere.prototype.clone = function (other)
+{
   c3dl._super(this, arguments, "clone");
   this.boundingVolume = other.boundingVolume.getCopy();
   this.primitiveSets[0] = other.primitiveSets[0].getCopy();

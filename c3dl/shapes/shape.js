@@ -3,7 +3,8 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
-c3dl.Shape = c3dl.inherit(c3dl.Primitive, function () {
+c3dl.Shape = c3dl.inherit(c3dl.Primitive, function ()
+{
   c3dl._superc(this);
   this.boundingVolume = new c3dl.BoundingVolume();
   this.boundingVolume.centered = true;
@@ -15,79 +16,103 @@ c3dl.Shape = c3dl.inherit(c3dl.Primitive, function () {
   this.primitiveSets = [];
 });
 
-c3dl.Shape.prototype.getAngularVel = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getAngularVel = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getAngularVel();
   }
 }
 
 
-c3dl.Shape.prototype.getLinearVel = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getLinearVel = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getLinearVel();
   }
 }
 
-c3dl.Shape.prototype.getPosition = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getPosition = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getPosition();
   }
 }
 
 
-c3dl.Shape.prototype.setAngularVel = function (vec) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.setAngularVel = function (vec)
+{
+  if (this.isReady())
+  {
     this.shape.setAngularVel(vec);
   }
 }
 
-c3dl.Shape.prototype.getUp = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getUp = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getUp();
   }
 }
 
-c3dl.Shape.prototype.getLeft = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getLeft = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getLeft();
   }
 }
 
-c3dl.Shape.prototype.getDirection = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getDirection = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getDirection();
   }
 }
 
-c3dl.Shape.prototype.getPickable = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getPickable = function ()
+{
+  if (this.isReady())
+  {
     return this.shape.getPickable();
   }
 }
 
-c3dl.Shape.prototype.setPickable = function (isPickable) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.setPickable = function (isPickable)
+{
+  if (this.isReady())
+  {
     this.shape.setPickable(isPickable);
   }
 }
 
-c3dl.Shape.prototype.setLinearVel = function (vec) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.setLinearVel = function (vec)
+{
+  if (this.isReady())
+  {
     this.shape.setLinearVel(vec);
   }
 }
 
-c3dl.Shape.prototype.init = function () {
+c3dl.Shape.prototype.init = function ()
+{
 }
 
-c3dl.Shape.prototype.update = function (timeStep) {
-  if (!this.isStatic() || this.isStatic() && this.isDirty()) {
+c3dl.Shape.prototype.update = function (timeStep)
+{
+  if (!this.isStatic() || this.isStatic() && this.isDirty())
+  {
     c3dl.multiplyVector(this.shape.linVel, timeStep, c3dl.vec1);
     c3dl.addVectors(this.shape.pos, c3dl.vec1, this.shape.pos);
     this.shape.pitch(this.shape.angVel[0] * timeStep);
     this.shape.yaw(this.shape.angVel[1] * timeStep);
     this.shape.roll(this.shape.angVel[2] * timeStep);
-    if (this.isStatic()) {
+    if (this.isStatic())
+    {
       this.setDirty(false);
     }
     var pos = this.shape.pos;
@@ -97,52 +122,65 @@ c3dl.Shape.prototype.update = function (timeStep) {
   }
 }
 
-c3dl.Shape.prototype.render = function (glCanvas3D, scene) {
-  if (this.isVisible()) {
+c3dl.Shape.prototype.render = function (glCanvas3D, scene)
+{
+  if (this.isVisible())
+  {
     c3dl.pushMatrix();
     c3dl.multMatrix(this.shape.getTransform());
-    if (this.firstTimeRender == true) {
+    if (this.firstTimeRender == true)
+    {
       this.primitiveSets[0].setupVBO(glCanvas3D);
       this.firstTimeRender = false;
     }
     scene.getRenderer().renderShape(this, scene);
     c3dl.popMatrix();
-    if (scene.getBoundingVolumeVisibility()) {
+    if (scene.getBoundingVolumeVisibility())
+    {
       this.boundingVolume.renderObb(scene);
       this.boundingVolume.renderAabb(scene);
       this.boundingVolume.renderSphere(scene);
     }
-    if (this.renderObb) {
+    if (this.renderObb)
+    {
       this.boundingVolume.renderObb(scene);
     }
-    if (this.renderAabb) {
+    if (this.renderAabb)
+    {
       this.boundingVolume.renderAabb(scene);
     }
-    if (this.renderBoundingSphere) {
+    if (this.renderBoundingSphere)
+    {
       this.boundingVolume.renderSphere(scene);
     }
     scene.getRenderer().texManager.updateTexture(this.primitiveSets[0].texture);
   }
 } 
 
-c3dl.Shape.prototype.scale = function (scaleVec) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.scale = function (scaleVec)
+{
+  if (this.isReady())
+  {
     this.shape.scale(scaleVec);
     this.boundingVolume.scale(scaleVec);
     this.setDirty(true);
   }
 }
 
-c3dl.Shape.prototype.translate = function (trans) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.translate = function (trans)
+{
+  if (this.isReady())
+  {
     this.shape.translate(trans);
     this.boundingVolume.setPosition(this.shape.pos);
     this.setDirty(true);
   }
 }
 
-c3dl.Shape.prototype.setPosition = function (pos) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.setPosition = function (pos)
+{
+  if (this.isReady())
+  {
     this.shape.setPosition(pos);
     this.boundingVolume.setPosition(pos);
     this.setDirty(true);
@@ -150,22 +188,28 @@ c3dl.Shape.prototype.setPosition = function (pos) {
   
 }
 
-c3dl.Shape.prototype.setTexture = function (texturePath) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.setTexture = function (texturePath)
+{
+  if (this.isReady())
+  {
     this.primitiveSets[0].setTexture(texturePath);
   }
 }
 
-c3dl.Shape.prototype.rotateOnAxis = function (axisVec, angle) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.rotateOnAxis = function (axisVec, angle)
+{
+  if (this.isReady())
+  {
     this.shape.rotateOnAxis(axisVec, angle);
     this.boundingVolume.rotateOnAxis(axisVec, angle);
     this.setDirty(true);
   }
 }
 
-c3dl.Shape.prototype.yaw = function (angle) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.yaw = function (angle)
+{
+  if (this.isReady())
+  {
     this.shape.yaw(angle);
     this.boundingVolume.rotateOnAxis(this.shape.up, angle);
     this.setDirty(true);
@@ -177,8 +221,10 @@ c3dl.Shape.prototype.yaw = function (angle) {
  
  @param {float} angle in radians.
  */
-c3dl.Shape.prototype.pitch = function (angle) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.pitch = function (angle)
+{
+  if (this.isReady())
+  {
     this.shape.pitch(angle);
     this.boundingVolume.rotateOnAxis(this.shape.left, angle);
     this.setDirty(true);
@@ -188,20 +234,25 @@ c3dl.Shape.prototype.pitch = function (angle) {
 /**
  @private
  */
-c3dl.Shape.prototype.isReady = function () {
+c3dl.Shape.prototype.isReady = function ()
+{
   return this.shape != null ? true : false;
 }
 
-c3dl.Shape.prototype.roll = function (angle) {
-  if (this.isReady()) {
+c3dl.Shape.prototype.roll = function (angle)
+{
+  if (this.isReady())
+  {
     this.shape.roll(angle);
     this.boundingVolume.rotateOnAxis(this.shape.dir, angle);
     this.setDirty(true);
   }
 }
 
-c3dl.Shape.prototype.getTransform = function () {
-  if (this.shape) {
+c3dl.Shape.prototype.getTransform = function ()
+{
+  if (this.shape)
+  {
     return this.shape.getTransform();
   }
 }
@@ -218,16 +269,19 @@ c3dl.Shape.prototype.getTransform = function () {
  @returns {bool} true if the ray intersects with one of the geometry nodes
  in the shape.
  */
-c3dl.Shape.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
+c3dl.Shape.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
+{
   if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getRadius()) && 
     c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) &&
-    c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis())) {
+    c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis()))
+  {
     return true;
   }
   return false;
 }
 
-c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
+c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
+{
   c3dl.pushMatrix();
   c3dl.multMatrix(this.getTransform());
   var mat = c3dl.inverseMatrix(c3dl.peekMatrix());
@@ -240,7 +294,8 @@ c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
   var vert3 = new C3DL_FLOAT_ARRAY(3);
   var vertices = this.primitiveSets[0].getVertices();
   // Iterate over each face of the object and test it against the ray.
-  for (var j = 0, len2 = vertices.length; j < len2; j += 9) {
+  for (var j = 0, len2 = vertices.length; j < len2; j += 9)
+  {
     // 3 points of a triangle with the object's position offset
     vert1[0] = vertices[j];
     vert1[1] = vertices[j + 1]
@@ -253,56 +308,71 @@ c3dl.Shape.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
     vert3[0] = vertices[j + 6];
     vert3[1] = vertices[j + 7];
     vert3[2] = vertices[j + 8];
-    if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3)) {
+    if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3))
+    {
       return true;
     }   
   }
   return false;
 }
 
-c3dl.Shape.prototype.getObjectType = function () {
+c3dl.Shape.prototype.getObjectType = function ()
+{
   return c3dl.SHAPE;
 }
 
-c3dl.Shape.prototype.getBoundingVolumes = function () {
+c3dl.Shape.prototype.getBoundingVolumes = function ()
+{
   return [this.boundingVolume];
 }
 
-c3dl.Shape.prototype.getHeight = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getHeight = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getHeight();
   }
 }
 
-c3dl.Shape.prototype.getWidth = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getWidth = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getWidth();
   }
 }
 
-c3dl.Shape.prototype.getLength = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getLength = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getLength();
   }
 }
 
-c3dl.Shape.prototype.getSize = function () {
-  if (this.isReady()) {
+c3dl.Shape.prototype.getSize = function ()
+{
+  if (this.isReady())
+  {
     return [this.boundingVolume.getLength(),this.boundingVolume.getWidth(),this.boundingVolume.getHeight()];
   }
 }
 
-c3dl.Shape.prototype.setHeight = function (height) {
+c3dl.Shape.prototype.setHeight = function (height)
+{
   height = parseFloat(height);
   var curheight = this.boundingVolume.getHeight();
   var scaleVec = [];
-  if (curheight > height) {
+  if (curheight > height)
+  {
     scaleVec = [1, (1 / (curheight / height)), 1];
   }
-  else if (curheight < height) {
+  else if (curheight < height)
+  {
     scaleVec = [1, (height / curheight), 1];
   }
-  else {
+  else
+  {
     scaleVec= [1, 1, 1];
   }
   this.shape.scale(scaleVec);
@@ -310,17 +380,21 @@ c3dl.Shape.prototype.setHeight = function (height) {
   this.setDirty(true);
 }
 
-c3dl.Shape.prototype.setLength = function (length) {
+c3dl.Shape.prototype.setLength = function (length)
+{
   length = parseFloat(length);
   var curlength = this.boundingVolume.getLength();
   var scaleVec = [];
-  if (curlength > length) {
+  if (curlength > length)
+  {
     scaleVec = [(1 / (curlength / length)), 1, 1];
   }
-  else if (curlength < length) {
+  else if (curlength < length)
+  {
     scaleVec = [(length / curlength), 1, 1];
   }
-  else {
+  else
+  {
     scaleVec = [1, 1, 1];
   }
   this.shape.scale(scaleVec);
@@ -328,17 +402,21 @@ c3dl.Shape.prototype.setLength = function (length) {
   this.setDirty(true);
 }
 
-c3dl.Shape.prototype.setWidth = function (width) {
+c3dl.Shape.prototype.setWidth = function (width)
+{
   width = parseFloat(width);
   var curwidth = this.boundingVolume.getWidth();
   var scaleVec = [];
-  if (curwidth > width) {
+  if (curwidth > width)
+  {
     scaleVec = [1, 1, (1 / (curwidth / width))];
   }
-  else if (curwidth < width) {
+  else if (curwidth < width)
+  {
     scaleVec = [1, 1, (width / curwidth)];
   }
-  else {
+  else
+  {
     scaleVec = [1, 1, 1];
   }
   this.shape.scale(scaleVec);
@@ -346,7 +424,8 @@ c3dl.Shape.prototype.setWidth = function (width) {
   this.setDirty(true);
 }
 
-c3dl.Shape.prototype.setSize = function (length, width, height) {
+c3dl.Shape.prototype.setSize = function (length, width, height)
+{
   length = parseFloat(length);
   width = parseFloat(width);
   height = parseFloat(height);
@@ -355,31 +434,40 @@ c3dl.Shape.prototype.setSize = function (length, width, height) {
   var curheight = this.boundingVolume.getHeight();
   var scaleVec = [];
   var vecL, vecW, vecH;
-  if (curlength > length) {
+  if (curlength > length)
+  {
     vecL = (1 / (curlength / length));
   }
-  else if (curlength < length) {
+  else if (curlength < length)
+  {
     vecL = length / curlength;
   }
-  else {
+  else
+  {
     vecL = 1;
   }
-  if (curheight > height) {
+  if (curheight > height)
+  {
     vecH = (1 / (curheight / height));
   }
-  else if (curheight < height) {
+  else if (curheight < height)
+  {
     vecH = (height / curheight);
   }
-  else {
+  else
+  {
     vecH = 1;
   }
-  if (curwidth > width) {
+  if (curwidth > width)
+  {
     vecW = (1 / (curwidth / width));
   }
-  else if (curwidth < width) {
+  else if (curwidth < width)
+  {
     vecW = (width / curwidth);
   }
-  else {
+  else
+  {
     vecW = 1;
   }
   scaleVec = [vecL, vecH, vecW];
@@ -388,24 +476,30 @@ c3dl.Shape.prototype.setSize = function (length, width, height) {
   this.setDirty(true);
 }
 
-c3dl.Shape.prototype.setRenderObb = function (renderObb) {
+c3dl.Shape.prototype.setRenderObb = function (renderObb)
+{
   this.renderObb = renderObb;
 }
 
-c3dl.Shape.prototype.setRenderAabb = function (renderAabb) {
+c3dl.Shape.prototype.setRenderAabb = function (renderAabb)
+{
   this.renderAabb = renderAabb;
 }
 
-c3dl.Shape.prototype.setRenderBoundingSphere = function (renderBoundingSphere) {
+c3dl.Shape.prototype.setRenderBoundingSphere = function (renderBoundingSphere)
+{
   this.renderBoundingSphere = renderBoundingSphere;
 }
 
-c3dl.Shape.prototype.getBoundingVolume = function () {
+c3dl.Shape.prototype.getBoundingVolume = function ()
+{
   return this.boundingVolume;
 }
-c3dl.Shape.prototype.getPrimitiveSets = function () {
+c3dl.Shape.prototype.getPrimitiveSets = function ()
+{
   return this.primitiveSets;
 }
-c3dl.Shape.prototype.getTextures = function () {
+c3dl.Shape.prototype.getTextures = function ()
+{
   return [this.primitiveSets[0].getTexture()];
 }

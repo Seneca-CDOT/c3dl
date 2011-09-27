@@ -69,7 +69,8 @@ c3dl.cartoon_callback = function (renderingObj, scene)
       ////////////////////////////
       
       var normalAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"];
-      if(normalAttribLoc ==undefined ) {
+      if(normalAttribLoc ==undefined )
+      {
         normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
         scene.curContextCache.attributes["outlinecartoon"+primSet+"Normal"] = normalAttribLoc;
       }
@@ -80,7 +81,8 @@ c3dl.cartoon_callback = function (renderingObj, scene)
       }
       
       var texAttribLoc = scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"];
-      if(texAttribLoc ==undefined ) {
+      if(texAttribLoc ==undefined )
+      {
         texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
         scene.curContextCache.attributes["outlinecartoon"+primSet+"Texture"] = texAttribLoc;
       }
@@ -122,7 +124,8 @@ c3dl.cartoon_callback = function (renderingObj, scene)
     var currColl = geometry.getPrimitiveSets()[coll];
     
     var normalAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Normal"];
-    if(normalAttribLoc ==undefined ) {
+    if(normalAttribLoc ==undefined )
+    {
       normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
       scene.curContextCache.attributes["cartoon"+coll+"Normal"] = normalAttribLoc;
     }
@@ -144,7 +147,8 @@ c3dl.cartoon_callback = function (renderingObj, scene)
  
     // TEXTURE
     var texAttribLoc = scene.curContextCache.attributes["cartoon"+coll+"Texture"];
-    if(texAttribLoc ==undefined ) {
+    if(texAttribLoc ==undefined )
+    {
       texAttribLoc = gl.getAttribLocation(programObjID, "Texture");
       scene.curContextCache.attributes["cartoon"+coll+"Texture"] = texAttribLoc;
     }
@@ -182,11 +186,13 @@ c3dl.cartoon_callback = function (renderingObj, scene)
 
     // if the user added the parameter, but didn't add the texture
     // to the renderer with renderer.addTexture.
-    if (shadesTexID == -1) {
+    if (shadesTexID == -1)
+    {
       renderer.addTexture(qMap);
     }
 
-    if (shadesTexID !== -1) {
+    if (shadesTexID !== -1)
+    {
       // Minefield is throwing an exception here, but still running?
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, shadesTexID);

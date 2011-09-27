@@ -133,10 +133,12 @@ c3dl.Picking = function (scene)
       {
         var currObject = passedBoundsTest[i];
        
-        if (currObject.getObjectType() === c3dl.SHAPE) {
+        if (currObject.getObjectType() === c3dl.SHAPE)
+        {
           objectsPicked.push(passedBoundsTest[i]);
         }
-        else {
+        else
+        {
           // if the model confirms the ray has intersected it, it will be
           // added to the list of objects the user picked.
           if (currObject.rayIntersectsTriangles(rayInitialPoint, rayDir))
@@ -439,28 +441,32 @@ c3dl.rayIntersectsSphere = function (rayInitialPoint, rayD, spherePos, sphereRad
   if (discriminant >= 0)
   {  
     var discriminantsqrt = Math.sqrt(discriminant);
-  if (b < 0) {
-     q = (-b - discriminantsqrt) / 2;
-  }
-  else {
-     q = (-b + discriminantsqrt) / 2;
-  }
+    if (b < 0)
+    {
+       q = (-b - discriminantsqrt) / 2;
+    }
+    else
+    {
+      q = (-b + discriminantsqrt) / 2;
+    }
     var t0 = q / a;
     var t1 = c / q;
     // make sure t0 is smaller than t1
     if (t0 > t1)
     {
-        // if t0 is bigger than t1 swap them around
-        var temp = t0;
-        t0 = t1;
-        t1 = temp;
+      // if t0 is bigger than t1 swap them around
+      var temp = t0;
+      t0 = t1;
+      t1 = temp;
     }
-  if (t1 < 0) {
-        return false;
+    if (t1 < 0)
+    {
+      return false;
     }
-    if (t1 > 0 || t0 > 0) {
-        hasIntersected = true;
-  }
+    if (t1 > 0 || t0 > 0)
+    {
+      hasIntersected = true;
+    }
   }
   return hasIntersected;
 }
@@ -567,7 +573,8 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   // should be near zero.
   var diff = area - (area1 + area2 + area3);
 
-  if(Math.abs(diff) <= area * c3dl.TOLERANCE) {
+  if(Math.abs(diff) <= area * c3dl.TOLERANCE)
+  {
     //get vector from ray origin to poi
     var otherdir = c3dl.subtractVectors(POI,orig);
     //get unit vector of that
@@ -578,69 +585,85 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
     //find the angle between those two vectors
     var angle = c3dl.getAngleBetweenVectors(normOtherDir,normDir);
     //if it is less than 90, the object is probably visible
-    if(angle < 90) {
+    if(angle < 90)
+    {
       return true;
     }
     else {//if it is greater than 90, this is behind the point of origin somewhere
       return false;
     } 
   }
-  else {
+  else
+  {
     return false;
   }
 }
 
-c3dl.rayAABBIntersect = function (orig, dir, maxMins) {
+c3dl.rayAABBIntersect = function (orig, dir, maxMins)
+{
   var tmin, tmax, tymin, tymax, tzmin, tzmax;
   var divx = 1 / dir[0];
   var divy = 1 / dir[1];
   var divz = 1 / dir[2];
-  if (divx >= 0) {
+  if (divx >= 0)
+  {
     tmin = (maxMins[1] - orig[0]) * divx;
     tmax = (maxMins[0] - orig[0]) * divx;
   }
-  else {
+  else
+  {
     tmin = (maxMins[0] - orig[0]) * divx;
     tmax = (maxMins[1] - orig[0]) * divx;
   }
-  if (divy >= 0) {
+  if (divy >= 0)
+  {
     tymin = (maxMins[3] - orig[1]) * divy;
     tymax = (maxMins[2] - orig[1]) * divy;
   }
-  else {
+  else
+  {
     tymin = (maxMins[2] - orig[1]) * divy;
     tymax = (maxMins[3] - orig[1]) * divy;
   }
-  if ( (tmin > tymax) || (tymin > tmax) ) {
+  if ( (tmin > tymax) || (tymin > tmax) )
+  {
     return false;
   }
-  if (tymin > tmin) {
+  if (tymin > tmin)
+  {
     tmin = tymin;
   }
-  if (tymax < tmax){
+  if (tymax < tmax)
+  {
     tmax = tymax;
   }
-  if (divz >= 0) {
+  if (divz >= 0)
+  {
     tzmin = (maxMins[5] - orig[2]) * divz;
     tzmax = (maxMins[4] - orig[2]) * divz;
   }
-  else {
+  else
+  {
     tzmin = (maxMins[4] - orig[2]) * divz;
     tzmax = (maxMins[5] - orig[2]) * divz;
   }
-  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+  if ( (tmin > tzmax) || (tzmin > tmax) )
+  {
     return false;
   }
-  if (tzmin > tmin) {
+  if (tzmin > tmin)
+  {
     tmin = tzmin;
   }
-  if (tzmax < tmax) {
+  if (tzmax < tmax)
+  {
     tmax = tzmax;
   }
   return true;
 }
 
-c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis){
+c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis)
+{
   maxMins = [];
   c3dl.mat1[0] = axis[0][0];
   c3dl.mat1[1] = axis[0][1];
@@ -662,7 +685,8 @@ c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis){
   orig = c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), orig);
   dir= c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), dir);
   var lengthVerts= new C3DL_FLOAT_ARRAY(8), widthVerts=new C3DL_FLOAT_ARRAY(8), heightVerts=new C3DL_FLOAT_ARRAY(8);
-  for (var i = 0; i < 8; i++) {
+  for (var i = 0; i < 8; i++)
+  {
     c3dl.multiplyMatrixByVector(c3dl.inverseMatrix(c3dl.mat1), boxVerts[i], c3dl.vec1);
     lengthVerts[i] = c3dl.vec1[0];
     heightVerts[i] = c3dl.vec1[1];
@@ -678,46 +702,58 @@ c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis){
   var divx = 1 / dir[0];
   var divy = 1 / dir[1];
   var divz = 1 / dir[2];
-  if (divx >= 0) {
+  if (divx >= 0)
+  {
     tmin = (maxMins[1] - orig[0]) * divx;
     tmax = (maxMins[0] - orig[0]) * divx;
   }
-  else {
+  else
+  {
     tmin = (maxMins[0] - orig[0]) * divx;
     tmax = (maxMins[1] - orig[0]) * divx;
   }
-  if (divy >= 0) {
+  if (divy >= 0)
+  {
     tymin = (maxMins[3] - orig[1]) * divy;
     tymax = (maxMins[2] - orig[1]) * divy;
   }
-  else {
+  else
+  {
     tymin = (maxMins[2] - orig[1]) * divy;
     tymax = (maxMins[3] - orig[1]) * divy;
   }
-  if ( (tmin > tymax) || (tymin > tmax) ) {
+  if ( (tmin > tymax) || (tymin > tmax) )
+  {
     return false;
   }
-  if (tymin > tmin) {
+  if (tymin > tmin)
+  {
     tmin = tymin;
   }
-  if (tymax < tmax){
+  if (tymax < tmax)
+  {
     tmax = tymax;
   }
-  if (divz >= 0) {
+  if (divz >= 0)
+  {
     tzmin = (maxMins[5] - orig[2]) * divz;
     tzmax = (maxMins[4] - orig[2]) * divz;
   }
-  else {
+  else
+  {
     tzmin = (maxMins[4] - orig[2]) * divz;
     tzmax = (maxMins[5] - orig[2]) * divz;
   }
-  if ( (tmin > tzmax) || (tzmin > tmax) ) {
+  if ( (tmin > tzmax) || (tzmin > tmax) )
+  {
     return false;
   }
-  if (tzmin > tmin) {
+  if (tzmin > tmin)
+  {
     tmin = tzmin;
   }
-  if (tzmax < tmax) {
+  if (tzmax < tmax)
+  {
     tmax = tzmax;
   }
   return true;

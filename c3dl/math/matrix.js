@@ -306,29 +306,32 @@ c3dl.transposeMatrix = function (mat, dest)
  
  @returns {Array} The inverse of matrix 'mat' if it has one
  */
-c3dl.inverseMatrix = function (mat) {
-  if (!mat) {
+c3dl.inverseMatrix = function (mat)
+{
+  if (!mat)
+  {
     return
   }
   var kInv =  c3dl.mat1;
   var fA0 = mat[ 0] * mat[ 5] - mat[ 1] * mat[ 4];
-   var fA1 = mat[ 0] * mat[ 6] - mat[ 2] * mat[ 4];
-   var fA2 = mat[ 0] * mat[ 7] - mat[ 3] * mat[ 4];
-   var fA3 = mat[ 1] * mat[ 6] - mat[ 2] * mat[ 5];
-   var fA4 = mat[ 1] * mat[ 7] - mat[ 3] * mat[ 5];
-   var fA5 = mat[ 2] * mat[ 7] - mat[ 3] * mat[ 6];
-   var fB0 = mat[ 8] * mat[13] - mat[ 9] * mat[12];
-   var fB1 = mat[ 8] * mat[14] - mat[10] * mat[12];
-   var fB2 = mat[ 8] * mat[15] - mat[11] * mat[12];
-   var fB3 = mat[ 9] * mat[14] - mat[10] * mat[13];
-   var fB4 = mat[ 9] * mat[15] - mat[11] * mat[13];
-   var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
+  var fA1 = mat[ 0] * mat[ 6] - mat[ 2] * mat[ 4];
+  var fA2 = mat[ 0] * mat[ 7] - mat[ 3] * mat[ 4];
+  var fA3 = mat[ 1] * mat[ 6] - mat[ 2] * mat[ 5];
+  var fA4 = mat[ 1] * mat[ 7] - mat[ 3] * mat[ 5];
+  var fA5 = mat[ 2] * mat[ 7] - mat[ 3] * mat[ 6];
+  var fB0 = mat[ 8] * mat[13] - mat[ 9] * mat[12];
+  var fB1 = mat[ 8] * mat[14] - mat[10] * mat[12];
+  var fB2 = mat[ 8] * mat[15] - mat[11] * mat[12];
+  var fB3 = mat[ 9] * mat[14] - mat[10] * mat[13];
+  var fB4 = mat[ 9] * mat[15] - mat[11] * mat[13];
+  var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
   // Determinant
-   var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
-   // Account for a very small value
-  if (Math.abs(fDet) <= 1e-9) {
-     c3dl.debug.logWarning('inverseMatrix() failed due to bad values');
-     return null;
+  var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
+  // Account for a very small value
+  if (Math.abs(fDet) <= 1e-9)
+  {
+    c3dl.debug.logWarning('inverseMatrix() failed due to bad values');
+    return null;
   } 
   kInv[ 0] = + mat[ 5] * fB5 - mat[ 6] * fB4 + mat[ 7] * fB3;
   kInv[ 4] = - mat[ 4] * fB5 + mat[ 6] * fB2 - mat[ 7] * fB1;
@@ -341,28 +344,28 @@ c3dl.inverseMatrix = function (mat) {
   kInv[ 2] = + mat[13] * fA5 - mat[14] * fA4 + mat[15] * fA3;
   kInv[ 6] = - mat[12] * fA5 + mat[14] * fA2 - mat[15] * fA1;     
   kInv[10] = + mat[12] * fA4 - mat[13] * fA2 + mat[15] * fA0;
-   kInv[14] = - mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0;
-   kInv[ 3] = - mat[ 9] * fA5 + mat[10] * fA4 - mat[11] * fA3;
-   kInv[ 7] = + mat[ 8] * fA5 - mat[10] * fA2 + mat[11] * fA1;
-   kInv[11] = - mat[ 8] * fA4 + mat[ 9] * fA2 - mat[11] * fA0;
-   kInv[15] = + mat[ 8] * fA3 - mat[ 9] * fA1 + mat[10] * fA0;
+  kInv[14] = - mat[12] * fA3 + mat[13] * fA1 - mat[14] * fA0;
+  kInv[ 3] = - mat[ 9] * fA5 + mat[10] * fA4 - mat[11] * fA3;
+  kInv[ 7] = + mat[ 8] * fA5 - mat[10] * fA2 + mat[11] * fA1;
+  kInv[11] = - mat[ 8] * fA4 + mat[ 9] * fA2 - mat[11] * fA0;
+  kInv[15] = + mat[ 8] * fA3 - mat[ 9] * fA1 + mat[10] * fA0;
   // Inverse using Determinant
-   var fInvDet = 1.0 / fDet;
-   kInv[ 0] *= fInvDet;
-   kInv[ 1] *= fInvDet;
-   kInv[ 2] *= fInvDet;
-   kInv[ 3] *= fInvDet;
-   kInv[ 4] *= fInvDet;
-   kInv[ 5] *= fInvDet;
-   kInv[ 6] *= fInvDet;
-   kInv[ 7] *= fInvDet;
-   kInv[ 8] *= fInvDet;
-   kInv[ 9] *= fInvDet;
-   kInv[10] *= fInvDet;
-   kInv[11] *= fInvDet;
-   kInv[12] *= fInvDet;
-   kInv[13] *= fInvDet;
-   kInv[14] *= fInvDet;
+  var fInvDet = 1.0 / fDet;
+  kInv[ 0] *= fInvDet;
+  kInv[ 1] *= fInvDet;
+  kInv[ 2] *= fInvDet;
+  kInv[ 3] *= fInvDet;
+  kInv[ 4] *= fInvDet;
+  kInv[ 5] *= fInvDet;
+  kInv[ 6] *= fInvDet;
+  kInv[ 7] *= fInvDet;
+  kInv[ 8] *= fInvDet;
+  kInv[ 9] *= fInvDet;
+  kInv[10] *= fInvDet;
+  kInv[11] *= fInvDet;
+  kInv[12] *= fInvDet;
+  kInv[13] *= fInvDet;
+  kInv[14] *= fInvDet;
   kInv[15] *= fInvDet;
   return kInv;
 }
@@ -377,22 +380,23 @@ c3dl.inverseMatrix = function (mat) {
  @returns {float} The matrix determinant of 'mat' or null if 
  'mat' is invalid.
  */
-c3dl.matrixDeterminant = function (mat) {
-    var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
-    var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
-    var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
-    var fA3 = mat[1] * mat[6] - mat[2] * mat[5];
-    var fA4 = mat[1] * mat[7] - mat[3] * mat[5];
-    var fA5 = mat[2] * mat[7] - mat[3] * mat[6];
-    var fB0 = mat[8] * mat[13] - mat[9] * mat[12];
-    var fB1 = mat[8] * mat[14] - mat[10] * mat[12];
-    var fB2 = mat[8] * mat[15] - mat[11] * mat[12];
-    var fB3 = mat[9] * mat[14] - mat[10] * mat[13];
-    var fB4 = mat[9] * mat[15] - mat[11] * mat[13];
-    var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
-    // Construct the Determinant
-    var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
-    return fDet;
+c3dl.matrixDeterminant = function (mat)
+{
+  var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
+  var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
+  var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
+  var fA3 = mat[1] * mat[6] - mat[2] * mat[5];
+  var fA4 = mat[1] * mat[7] - mat[3] * mat[5];
+  var fA5 = mat[2] * mat[7] - mat[3] * mat[6];
+  var fB0 = mat[8] * mat[13] - mat[9] * mat[12];
+  var fB1 = mat[8] * mat[14] - mat[10] * mat[12];
+  var fB2 = mat[8] * mat[15] - mat[11] * mat[12];
+  var fB3 = mat[9] * mat[14] - mat[10] * mat[13];
+  var fB4 = mat[9] * mat[15] - mat[11] * mat[13];
+  var fB5 = mat[10] * mat[15] - mat[11] * mat[14];
+  // Construct the Determinant
+  var fDet = fA0 * fB5 - fA1 * fB4 + fA2 * fB3 + fA3 * fB2 - fA4 * fB1 + fA5 * fB0;
+  return fDet;
 }
 
 
@@ -405,7 +409,8 @@ c3dl.matrixDeterminant = function (mat) {
  @returns {Array} the adjoint matrix of 'mat' if it was valid, otherwise
  returns null.
  */
-c3dl.matrixAdjoint = function (mat) {
+c3dl.matrixAdjoint = function (mat)
+{
   var fA0 = mat[0] * mat[5] - mat[1] * mat[4];
   var fA1 = mat[0] * mat[6] - mat[2] * mat[4];
   var fA2 = mat[0] * mat[7] - mat[3] * mat[4];
@@ -443,11 +448,14 @@ c3dl.matrixAdjoint = function (mat) {
  @returns {Array} The Matrix 'mat', with each component 
  multiplied by 'scalar'.
  */
-c3dl.multiplyMatrixByScalar = function (mat,scalar, dest) { 
-  if (dest == undefined) {
+c3dl.multiplyMatrixByScalar = function (mat,scalar, dest)
+{
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(16);
   }
-  for (var i = 0; i < 16; i++) {
+  for (var i = 0; i < 16; i++)
+  {
     dest[i] = mat[i] * scalar;
   }
   return dest;
@@ -465,12 +473,15 @@ c3dl.multiplyMatrixByScalar = function (mat,scalar, dest) {
  
  @returns {Array} The Matrix 'mat' divided by 'scalar'.
  */
-c3dl.divideMatrixByScalar = function (mat, scalar, dest) {
-  if (dest == undefined) {
+c3dl.divideMatrixByScalar = function (mat, scalar, dest)
+{
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(16);
   }
   // Multiply each variable
-  for (var i = 0; i < 16; i++) {
+  for (var i = 0; i < 16; i++)
+  {
     dest[i] = mat[i] / scalar;
   }
   return dest;
@@ -484,7 +495,8 @@ c3dl.divideMatrixByScalar = function (mat, scalar, dest) {
  
  @returns {Array} The result of multiplying 'matOne' by 'matTwo'.
  */
-c3dl.multiplyMatrixByMatrix = function (matOne, matTwo,dest) {
+c3dl.multiplyMatrixByMatrix = function (matOne, matTwo,dest)
+{
   return M4x4.mul(matOne,matTwo,dest);
 }
 
@@ -499,7 +511,8 @@ c3dl.multiplyMatrixByMatrix = function (matOne, matTwo,dest) {
  */
 c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
 {
-  if (dest == undefined) {
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(3);
   }
   // since we don't need to multiply the translation part, we leave it out.
@@ -532,10 +545,12 @@ c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
  @returns {Array} The vector 'vec' multiplied by matrix 'mat' if both
  arguments were valid, otherwise returns null.
  */
-c3dl.multiplyMatrixByVector = function (mat, vec, dest) { 
+c3dl.multiplyMatrixByVector = function (mat, vec, dest)
+{
   var len = vec.length;
   var w = (len == 3 ? 1 : vec[3]);
-  if (dest == undefined) {
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(len);
   }
   var a = mat[0] * vec[0] + mat[4] * vec[1] + mat[8] * vec[2] + mat[12] * w;
@@ -547,7 +562,8 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest) {
   dest[2] = c;
   // make sure they passed us a 4 component vector before trying to write to that
   // element.
-  if (len === 4) {
+  if (len === 4)
+  {
     dest[3] = d;
   }
   return dest;
@@ -563,11 +579,14 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest) {
  @returns {Array} A Matrix which is the addition of 'matOne' and
  'matTwo'.
  */
-c3dl.addMatrices = function (matOne, matTwo) {
-  if (dest == undefined) {
+c3dl.addMatrices = function (matOne, matTwo)
+{
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(16);
   }
-  for (var i = 0; i < 16; i++) {
+  for (var i = 0; i < 16; i++)
+  {
     // Add each value of the matrix to its counterpart
     dest[i] = matOne[i] + matTwo[i];
   }
@@ -587,22 +606,28 @@ c3dl.addMatrices = function (matOne, matTwo) {
  
  @returns {Array} A matrix which is 'matTwo' subtracted from 'matOne'.
  */
-c3dl.subtractMatrices = function (matOne, matTwo) {
-  if (dest == undefined) {
+c3dl.subtractMatrices = function (matOne, matTwo)
+{
+  if (dest == undefined)
+  {
     dest = new C3DL_FLOAT_ARRAY(16);
   }
-  for (var i = 0; i < 16; i++) {
+  for (var i = 0; i < 16; i++)
+  {
     // Add each value of the matrix to its counterpart
     dest[i] = matOne[i] - matTwo[i];
   }
   return dest;
 }
 
-c3dl.copyMatrix = function (srcMat, dest) {
-  if (dest == undefined) {
+c3dl.copyMatrix = function (srcMat, dest)
+{
+  if (dest == undefined)
+  {
     return M4x4.clone(srcMat);
   }
-  else {
+  else
+  {
     dest[0] = srcMat[0];
     dest[1] = srcMat[1];
     dest[2] = srcMat[2];
@@ -621,7 +646,8 @@ c3dl.copyMatrix = function (srcMat, dest) {
     dest[15] = srcMat[15];
   }
 }
-c3dl.emptyMatrix = function (srcMat) {
+c3dl.emptyMatrix = function (srcMat)
+{
   srcMat[0] = 0;
   srcMat[1] = 0;
   srcMat[2] = 0;

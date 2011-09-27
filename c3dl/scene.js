@@ -370,21 +370,23 @@ c3dl.Scene = function ()
       // for now we need to make an instance, this needs to be changed.
       this.pick = new c3dl.Picking(this);
 
-      if(undefined == pickingEvent) {
-  pickingEvent = "mousedown";
+      if(undefined == pickingEvent)
+      {
+        pickingEvent = "mousedown";
       }
 
-      switch(pickingEvent) {
-  case "mousedown":
-  case "mouseup":
-  case "click":
-    // set the picking handler
-    this.pickingHandler = pickingHandler;
+      switch(pickingEvent)
+      {
+        case "mousedown":
+        case "mouseup":
+        case "click":
+          // set the picking handler
+          this.pickingHandler = pickingHandler;
           canvasTag.addEventListener(pickingEvent, this.pick.pickingReaction, false);
-    break;
-  default:
-    c3dl.debug.logWarning("scene's setPickingCallback() was passed an invalid event");
-    break;
+        break;
+        default:
+          c3dl.debug.logWarning("scene's setPickingCallback() was passed an invalid event");
+        break;
       }
     }
     else
@@ -818,20 +820,25 @@ c3dl.Scene = function ()
    
    @returns {boolean} true if the canvas was resized; false if not.
    */
-  this.setSize = function(height, width) {
-    if(canvasTag != null && glCanvas3D != null) {
-      if(height >= 0 && width >= 0) {
-  canvasTag.height = height;
-  canvasTag.width = width;
-  glCanvas3D.viewport(0, 0, width, height);
-  return true;
+  this.setSize = function(height, width)
+  {
+    if(canvasTag != null && glCanvas3D != null)
+    {
+      if(height >= 0 && width >= 0)
+      {
+        canvasTag.height = height;
+        canvasTag.width = width;
+        glCanvas3D.viewport(0, 0, width, height);
+        return true;
       }
-      else {
-  c3dl.debug.logError('Scene::setSize(): height and width cannot be negative.');
-  return false;
+      else
+      {
+        c3dl.debug.logError('Scene::setSize(): height and width cannot be negative.');
+        return false;
       }
     }
-    else {
+    else
+    {
       c3dl.debug.logError('Scene::setSize(): No canvas found.');
       return false;
     }
@@ -890,8 +897,10 @@ c3dl.Scene = function ()
     
     @param {int} The index of the light to remove
   */
-  this.removeLightFromScene=function(index) {
-    if(index >= 0 && index < c3dl.MAX_LIGHTS && lightList[index] != null) {
+  this.removeLightFromScene=function(index)
+  {
+    if(index >= 0 && index < c3dl.MAX_LIGHTS && lightList[index] != null)
+    {
       // place a 'hole' in the array. This can later be populated with another light.
       // don't delete the light, leave it up to the gc, otherwise
       // the light seems to stay on and can't be removed.    
@@ -959,13 +968,13 @@ c3dl.Scene = function ()
 
     switch (type)
     {
-    case c3dl.LINE:
-    case c3dl.POINT:
-    case c3dl.PARTICLE_SYSTEM:
-    case c3dl.MODEL:
-    case c3dl.SHAPE:
-      objList.push(obj);
-      return true;
+      case c3dl.LINE:
+      case c3dl.POINT:
+      case c3dl.PARTICLE_SYSTEM:
+      case c3dl.MODEL:
+      case c3dl.SHAPE:
+        objList.push(obj);
+        return true;
     }
     c3dl.debug.logWarning("Scene::addObjectToScene() called with an invalid argument.");
     return false;
@@ -1033,16 +1042,19 @@ c3dl.Scene = function ()
       }
       return;
     }
-    if (pauseUpdate) {
+    if (pauseUpdate)
+    {
       lastTimeTaken = Date.now();
     }
-    if (!pauseUpdate) {
+    if (!pauseUpdate)
+    {
       // update the camera and objects
       camera.update(Date.now() - lastTimeTaken);
       thisScn.updateObjects(Date.now() - lastTimeTaken);
       lastTimeTaken = Date.now();
     }
-    if (!pauseRender) {
+    if (!pauseRender)
+    {
       // The user may have added a texture to the scene in 
       // which case, the renderer needs to create them.
       if (textureQueue.length > 0)
@@ -1084,7 +1096,8 @@ c3dl.Scene = function ()
     numFramesSinceSceneStart++;
   }
 
-  this.refresh = function() {
+  this.refresh = function()
+  {
     thisScn.render();
     requestAnimFrame(thisScn.refresh);
   }
@@ -1142,29 +1155,35 @@ c3dl.Scene = function ()
       // positions/coords are controlled by the user in the
       // update callback they write.
    
-      switch (objList[i].getObjectType()) {
+      switch (objList[i].getObjectType())
+      {
         case c3dl.PARTICLE_SYSTEM:
           objList[i].update(timeElapsed);
-          break;
+        break;
         case c3dl.MODEL:
         case c3dl.SHAPE:
           objList[i].update(timeElapsed);
           //Collision
-          if (collision) {
-            for (var j = i, len2 = objList.length; j < len2; j++) {
-              if (objList[j].getObjectType() == c3dl.MODEL && i !== j) {
-                if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType)) {
+          if (collision)
+          {
+            for (var j = i, len2 = objList.length; j < len2; j++)
+            {
+              if (objList[j].getObjectType() == c3dl.MODEL && i !== j)
+              {
+                if(collisionDetection.checkObjectCollision(objList[i],objList[j],timeElapsed, collisionType))
+                {
                   collisionList.push(objList[i]);
                   collisionList.push(objList[j]);
                 }
               }
             }
           }
-          break;
+        break;
       }
     }
     // update the SkyModel
-    if (skyModel) {
+    if (skyModel)
+    {
       skyModel.update(timeElapsed);
       // move skymodel so the camera is at its center.
       // Let the user scale it and rotate it if they wish.
@@ -1247,43 +1266,56 @@ c3dl.Scene = function ()
         frustumCulling.init(c3dl.mat1);
         var boundingVolume = objList[i].getBoundingVolume();
         //Culling using spheres
-        if (culling === "BoundingSphere") {
-          if (frustumCulling.sphereInFrustum(boundingVolume)) {    
+        if (culling === "BoundingSphere")
+        {
+          if (frustumCulling.sphereInFrustum(boundingVolume))
+          {
             objList[i].setInsideFrustum(true);
             objList[i].render(glCanvas3D, this);
           }
-          else {
+          else
+          {
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "AABB") {
-          if (frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins)) {  
+        if (culling === "AABB")
+        {
+          if (frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins))
+          {
             objList[i].setInsideFrustum(true);
             objList[i].render(glCanvas3D, this);
           }
-          else {
+          else
+          {
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "OBB") {
-          if (frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {  
+        if (culling === "OBB")
+        {
+          if (frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts))
+          {
             objList[i].setInsideFrustum(true);
             objList[i].render(glCanvas3D, this);
           }
-          else {
+          else
+          {
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "All") {
-          if (frustumCulling.sphereInFrustum(boundingVolume) && frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins) && frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts)) {    
+        if (culling === "All")
+        {
+          if (frustumCulling.sphereInFrustum(boundingVolume) && frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins) && frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts))
+          {
             objList[i].setInsideFrustum(true);
             objList[i].render(glCanvas3D, this);
           }
-          else {
+          else
+          {
             objList[i].setInsideFrustum(false);
           }
         }
-        else {
+        else
+        {
           objList[i].render(glCanvas3D, this);
         }
       }
@@ -1359,40 +1391,51 @@ c3dl.Scene = function ()
   /**
    Flags the main loop for exit.
    */
-  this.stopScene = function () {
+  this.stopScene = function ()
+  {
     // This flags the main loop to exit gracefully
     exitRender = true;
   }
-  this.unpauseSceneRender = function () {
+  this.unpauseSceneRender = function ()
+  {
     pauseRender = false;
   }
-  this.pauseSceneRender = function () {
+  this.pauseSceneRender = function ()
+  {
     pauseRender = true;
   }
-  this.unpauseSceneUpdate = function () {
+  this.unpauseSceneUpdate = function ()
+  {
     pauseUpdate = false;
   }
-  this.pauseSceneUpdate = function () {
+  this.pauseSceneUpdate = function ()
+  {
     pauseUpdate = true;
   }
-  this.unpauseScene = function () {
+  this.unpauseScene = function ()
+  {
     pauseRender = false;
     pauseUpdate = false;
   }
-  this.pauseScene = function () {
+  this.pauseScene = function ()
+  {
     pauseRender = true;
     pauseUpdate = true;
   }
-  this.getCollision = function () {
+  this.getCollision = function ()
+  {
     return collisionList;
   }
-  this.setCollision = function (truefalse) {
+  this.setCollision = function (truefalse)
+  {
     collision = truefalse;
   }
-  this.setCollisionType = function (type) {
+  this.setCollisionType = function (type)
+  {
     collisionType = type;
   }
-  this.setCulling = function (type) {
+  this.setCulling = function (type)
+  {
     culling = type;
   }
   /**

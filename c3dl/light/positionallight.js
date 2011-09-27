@@ -11,7 +11,8 @@
  @see c3dl.Light
  @augments c3dl.Light
  */
-c3dl.PositionalLight = c3dl.inherit(c3dl.Light, function () {
+c3dl.PositionalLight = c3dl.inherit(c3dl.Light, function ()
+{
   c3dl._superc(this);
   this.position = c3dl.makeVector(0, 0, 0);
 

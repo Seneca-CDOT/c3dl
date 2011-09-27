@@ -7,7 +7,8 @@
  @class WebGL context.
  @augments c3dl.Renderer
  */
-c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
+c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
+{
   c3dl._superc(this);
   var glCanvas3D = null; // GL Context; 
   this.texManager = null;
@@ -624,7 +625,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
       // create VBO and set the data
       this.pointSphereRenderSetup();
     }
-    else {
+    else
+    {
       var sphereMatrix = c3dl.makeIdentityMatrix();
       c3dl.matrixMode(c3dl.PROJECTION);
       var projMatrix = c3dl.peekMatrix();
@@ -1085,7 +1087,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
   this.setVertexAttribArray = function (shader, varName, size, vbo, scene, shaderName)
   {
     var attribLoc = scene.curContextCache.attributes[shaderName+varName];
-    if(attribLoc ==undefined) {
+    if(attribLoc ==undefined)
+    {
       attribLoc = glCanvas3D.getAttribLocation(shader, varName);
       scene.curContextCache.attributes[shaderName+varName] = attribLoc;
     }
@@ -1123,7 +1126,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
   this.setUniformMatrix = function (programObjectID, varName, matrix, scene, programObjectName)
   {
     var varLocation = scene.curContextCache.locations[programObjectName+varName];
-    if(!varLocation) {
+    if(!varLocation)
+    {
       varLocation = glCanvas3D.getUniformLocation(programObjectID, varName);
       scene.curContextCache.locations[programObjectName+varName] = varLocation;
     }
@@ -1162,7 +1166,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
   this.setUniformf = function (shader, varName, value, scene, shaderName)
   {
     var varLocation = scene.curContextCache.locations[shaderName+varName];
-    if(!varLocation) {
+    if(!varLocation)
+    {
       varLocation = glCanvas3D.getUniformLocation(shader, varName);
       scene.curContextCache.flag = 0;
       scene.curContextCache.locations[shaderName+varName] = varLocation;
@@ -1217,7 +1222,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function () {
   this.setUniformi = function (programObjectID, varName, value, scene, programObjectName)
   {
    var varLocation = scene.curContextCache.locations[programObjectName+varName];
-    if(!varLocation) {
+    if(!varLocation)
+    {
       varLocation = glCanvas3D.getUniformLocation(programObjectID, varName);
       scene.curContextCache.locations[programObjectName+varName] = varLocation;
     }

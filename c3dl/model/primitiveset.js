@@ -57,7 +57,8 @@ c3dl.PrimitiveSet = function ()
   {
     this.vertices = [];
     this.lineList = [];
-    for (var i = 0; i < vertices.length; i++) { 
+    for (var i = 0; i < vertices.length; i++)
+    {
       var xyz = [];
       xyz[0]= parseFloat(vertices[i][0]);
       xyz[1] = parseFloat(vertices[i][1]);
@@ -67,7 +68,8 @@ c3dl.PrimitiveSet = function ()
       this.vertices.push(xyz[2]);
     }
     this.type = type;
-    for (var i = 0; i < faces.length; i+=2) {
+    for (var i = 0; i < faces.length; i+=2)
+    {
       var line = new c3dl.Line();
       var start = faces[i][0];
       var end = faces[i+1][0];
@@ -133,7 +135,8 @@ c3dl.PrimitiveSet = function ()
 
     // can have its own material.    
     copy.material = this.material ? this.material.getCopy() : null;
-    if (this.boundingVolume){
+    if (this.boundingVolume)
+    {
       copy.boundingVolume = this.boundingVolume.getCopy();
     }
     return copy;
@@ -227,8 +230,10 @@ c3dl.PrimitiveSet = function ()
   }
   this.updateTextureByName = function (oldTexturePath,newTexturePath)
   {
-    if (this.texture) {
-      if (this.texture === oldTexturePath){
+    if (this.texture)
+    {
+      if (this.texture === oldTexturePath)
+      {
         this.texture = newTexturePath;
       }
     }

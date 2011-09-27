@@ -7,7 +7,8 @@
  @class c3dl.Geometry is a container for the primitiveSets of a 
  geometric object.
  */
-c3dl.Geometry = function () {
+c3dl.Geometry = function ()
+{
   // a geometry is composed of different collation elements (sets of primitives)
   // collation elements are <triangles>, <polylist>, <polygon>, etc.
   this.primitiveSets = [];
@@ -23,7 +24,8 @@ c3dl.Geometry = function () {
    
    Used by the model loader
    */
-  this.addPrimitiveSet = function (primitiveSet) {
+  this.addPrimitiveSet = function (primitiveSet)
+  {
     this.primitiveSets.push(primitiveSet);
   }
 
@@ -32,9 +34,11 @@ c3dl.Geometry = function () {
    
    Used by the ModelManager
    */
-  this.clone = function (other) {
+  this.clone = function (other)
+  {
     // 
-    for (var i = 0, len = other.primitiveSets.length; i < len; i++) {
+    for (var i = 0, len = other.primitiveSets.length; i < len; i++)
+    {
       this.primitiveSets.push(other.primitiveSets[i].getCopy());
     }
   }
@@ -44,7 +48,8 @@ c3dl.Geometry = function () {
    
    Used by the ModelManager
    */
-  this.getCopy = function () {
+  this.getCopy = function ()
+  {
     var geometry = new c3dl.Geometry();
     geometry.clone(this);
     return geometry;
@@ -56,7 +61,8 @@ c3dl.Geometry = function () {
    
    @param {c3dl.Effect} The effect of this geometry.
    */
-  this.getEffect = function () {
+  this.getEffect = function ()
+  {
     return this.effect;
   }
 
@@ -65,7 +71,8 @@ c3dl.Geometry = function () {
    
    @returns {Array} The primitive sets for this geometry.
    */
-  this.getPrimitiveSets = function () {
+  this.getPrimitiveSets = function ()
+  {
     return this.primitiveSets;
   }
 
@@ -78,14 +85,18 @@ c3dl.Geometry = function () {
    @param {Array} rayOrigin
    @param {Array} rayDir
    */
-  this.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
-      if (this.getPrimitiveSets()[i].getType() !== "lines") {
+  this.rayIntersectsEnclosures = function (rayOrigin, rayDir)
+  {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
+      if (this.getPrimitiveSets()[i].getType() !== "lines")
+      {
         var bv = this.primitiveSets[i].getBoundingVolume();
         var pos = bv.getPosition();
         var radius = bv.getRadius();
         if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, pos, radius) && c3dl.rayAABBIntersect(rayOrigin, rayDir, bv.aabb.maxMins) && 
-        c3dl.rayOBBIntersect(rayOrigin, rayDir, bv.obb.boxVerts, bv.getAxis())) {
+        c3dl.rayOBBIntersect(rayOrigin, rayDir, bv.obb.boxVerts, bv.getAxis()))
+        {
           return true;
         }
       }
@@ -101,7 +112,8 @@ c3dl.Geometry = function () {
    @param {Array} rayOrigin
    @param {Array} rayDir
    */
-  this.rayIntersectsTriangles = function (rayOrigin, rayDir) {
+  this.rayIntersectsTriangles = function (rayOrigin, rayDir)
+  {
     var mat = c3dl.inverseMatrix(c3dl.peekMatrix());
     var rayorigin = c3dl.multiplyMatrixByVector(mat, rayOrigin);
     var raydir = c3dl.normalizeVector(c3dl.multiplyMatrixByDirection(mat, rayDir));
@@ -111,12 +123,15 @@ c3dl.Geometry = function () {
     var vert2 = new C3DL_FLOAT_ARRAY(3);
     var vert3 = new C3DL_FLOAT_ARRAY(3);
 
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
-      if (this.getPrimitiveSets()[i].getType() !== "lines") {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
+      if (this.getPrimitiveSets()[i].getType() !== "lines")
+      {
         var vertices = this.primitiveSets[i].getVertices();
 
         // Iterate over each face of the object and test it against the ray.
-        for (var j = 0, len2 = vertices.length; j < len2; j += 9) {
+        for (var j = 0, len2 = vertices.length; j < len2; j += 9)
+        {
           // 3 points of a triangle with the object's position offset
           vert1[0] = vertices[j];
           vert1[1] = vertices[j + 1]
@@ -130,7 +145,8 @@ c3dl.Geometry = function () {
           vert3[1] = vertices[j + 7];
           vert3[2] = vertices[j + 8];
 
-          if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3)) {
+          if (c3dl.rayIntersectsTriangle(rayorigin, raydir, vert1, vert2, vert3))
+          {
             return true;
           }
         }
@@ -144,24 +160,31 @@ c3dl.Geometry = function () {
    
    Called automatically
    */
-  this.render = function (glCanvas3D, scene) {
-    if (glCanvas3D == null) {
+  this.render = function (glCanvas3D, scene)
+  {
+    if (glCanvas3D == null)
+    {
       c3dl.debug.logWarning('Geometry::render() called with a null glCanvas3D');
       return false;
     }
-    if (this.getPrimitiveSets()[0].getType() === "lines") {
+    if (this.getPrimitiveSets()[0].getType() === "lines")
+    {
       //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines(), scene);
     }
-    else {
+    else
+    {
       // The first time this is rendered, setup VBOs.
-      if (this.firstTimeRender == true) {
+      if (this.firstTimeRender == true)
+      {
         // iterate over the primitive sets and setup their VBOs
-        for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+        for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+        {
           this.primitiveSets[i].setupVBO(glCanvas3D);
         }
         this.firstTimeRender = false;
       }
-      for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+      for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+      {
         scene.getRenderer().texManager.updateTexture(this.primitiveSets[i].texture);
       }
       
@@ -169,11 +192,14 @@ c3dl.Geometry = function () {
     }
   }
   
-  this.renderBoundingVolumes = function (scene) {
+  this.renderBoundingVolumes = function (scene)
+  {
     // tell all the collation elements/ primitive sets to render their bounding spheres.
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
       var bv = this.primitiveSets[i].getBoundingVolume();
-      if (bv) {
+      if (bv)
+      {
         bv.renderAabb(scene);
         bv.renderObb(scene);
         bv.renderSphere(scene);
@@ -190,7 +216,8 @@ c3dl.Geometry = function () {
    
    @param {c3dl.Effect} effect
    */
-  this.setEffect = function (effect) {
+  this.setEffect = function (effect)
+  {
     this.effect = effect;
   }
 
@@ -199,8 +226,10 @@ c3dl.Geometry = function () {
    
    @param {c3dl.Material} material
    */
-  this.setMaterial = function (material) {
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+  this.setMaterial = function (material)
+  {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
       this.primitiveSets[i].setMaterial(material);
     }
   }
@@ -211,8 +240,10 @@ c3dl.Geometry = function () {
    
    @param {} texture
    */
-  this.setTexture = function (texture) {
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+  this.setTexture = function (texture)
+  {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
       this.primitiveSets[i].setTexture(texture);
     }
   }
@@ -234,14 +265,17 @@ c3dl.Geometry = function () {
    
    Called automatically
    */
-  this.update = function (timeStep, scaleVec) {
-    for (var i = 0, len = this.primitiveSets.length; i < len; i++) {
+  this.update = function (timeStep, scaleVec)
+  {
+    for (var i = 0, len = this.primitiveSets.length; i < len; i++)
+    {
       var bv = this.primitiveSets[i].getBoundingVolume();
       var trans = c3dl.peekMatrix();
       c3dl.matrixMode(c3dl.PROJECTION);
       var rot = c3dl.peekMatrix();
       c3dl.matrixMode(c3dl.MODELVIEW);
-      if (bv) {
+      if (bv)
+      {
         bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
       }
     }

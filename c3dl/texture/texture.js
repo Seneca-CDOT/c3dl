@@ -104,7 +104,8 @@ c3dl.Texture = function ()
     // the user from calling this method more than once.
     if (source != null && glCanvas3D != null && this.getIsSetup() == false)
     {
-      if (sourceCanvas == null) {
+      if (sourceCanvas == null)
+      {
         textureImage = new Image();
         textureImage.src = source;
 
@@ -112,21 +113,26 @@ c3dl.Texture = function ()
         // the name variable.
         textureImage.relativePath = source;
       }
-      else {
-        if (sourceCanvas instanceof HTMLCanvasElement || sourceCanvas instanceof HTMLVideoElement || sourceCanvas instanceof HTMLImageElement) {
+      else
+      {
+        if (sourceCanvas instanceof HTMLCanvasElement || sourceCanvas instanceof HTMLVideoElement || sourceCanvas instanceof HTMLImageElement)
+        {
           //if height or width is unknown set height and width to predefined value of 1024 by 1024
-          if ( sourceCanvas.width < 1 || sourceCanvas.height  < 1) {
+          if ( sourceCanvas.width < 1 || sourceCanvas.height  < 1)
+          {
             tCanvas.width = 1024;
             tCanvas.height = 1024;
           }
-          else {
+          else
+          {
             tCanvas.width = c3dl.roundUpToNextPowerOfTwo(sourceCanvas.width);
             tCanvas.height = c3dl.roundUpToNextPowerOfTwo(sourceCanvas.height);
           }
           sourcecan = sourceCanvas;
           textureImage = tCanvas;
         }
-        else {
+        else
+        {
           textureImage = document.getElementById(sourceCanvas);
         }
         textureImage.relativePath = sourceCanvas;
@@ -180,12 +186,15 @@ c3dl.Texture = function ()
       /*
         Wrapper for old texImage2D specification
       */
-      textureImage.texImage2DWrapper = function(){
+      textureImage.texImage2DWrapper = function()
+      {
         try
         {
           // new way
           this.glCanvas3D.texImage2D(glCanvas3D.TEXTURE_2D, 0, glCanvas3D.RGBA, glCanvas3D.RGBA, glCanvas3D.UNSIGNED_BYTE, this);
-        }catch(ex){
+        }
+        catch(ex)
+        {
           c3dl.debug.logWarning(textureImage.src + " can not be loaded.  This texture will appear black.");
         }
       }
@@ -234,15 +243,19 @@ c3dl.Texture = function ()
     // if the image could be setup, this variable was set to
     return returnCode;
   }
-  this.update = function () {
-    if (sourcecan instanceof HTMLImageElement) {
-      if (sourcecan.src && sourcecan.src != tCanvas.oldSrc && sourcecan.complete) {
+  this.update = function ()
+  {
+    if (sourcecan instanceof HTMLImageElement)
+    {
+      if (sourcecan.src && sourcecan.src != tCanvas.oldSrc && sourcecan.complete)
+      {
         tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
         textureImage.onload();
         tCanvas.oldSrc = sourcecan.src;
       }
     }
-    else {
+    else
+    {
       tCtx.drawImage(sourcecan, 0, 0, tCanvas.width, tCanvas.height);
       textureImage.onload();
     }

@@ -26,8 +26,10 @@ c3dl.init = function ()
   // if the user does not want to parse any models,
   // we don't put anything in the queue and go right ahead and 
   // call the main methods.  
-  if (c3dl.ModelManager.values.length == 0 || c3dl.PreLoader.loaded) {
-    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++) {
+  if (c3dl.ModelManager.values.length == 0 || c3dl.PreLoader.loaded)
+  {
+    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
+    {
         // Each element is an object which holds a function 
         // and a tag.  They were both placed in a wrapper
         // object so we can stick to using arrays for simplicity.
@@ -76,24 +78,29 @@ c3dl.addMainCallBack = function (func, tagName)
 
 // This will make sure the c3dl.init() funciton is called once the web page
 // is done loading.
-if (document.addEventListener) { 
+if (document.addEventListener)
+{
   document.addEventListener("DOMContentLoaded", c3dl.init, false);
 }
 
-c3dl.PreLoader = {
+c3dl.PreLoader =
+{
   progress: 0,
   loaded: false,
-  checkProgress: function () {
+  checkProgress: function ()
+  {
     c3dl.PreLoader.progress = 0;
     var counter = 0;
     c3dl.PreLoader.loaded = true;
-    for (var i = 0; i < c3dl.ModelManager.values.length; i++) {
+    for (var i = 0; i < c3dl.ModelManager.values.length; i++)
+    {
       c3dl.PreLoader.progress+=c3dl.ModelManager.values[i].progress;
       if (!c3dl.ModelManager.values[i].loaded) {c3dl.PreLoader.loaded = false};
     }
     c3dl.PreLoader.progress = c3dl.PreLoader.progress/c3dl.ModelManager.values.length;
     c3dl.PreLoader.callBack()
-    if (c3dl.PreLoader.loaded) { 
+    if (c3dl.PreLoader.loaded)
+    {
       c3dl.init();
     }
   },

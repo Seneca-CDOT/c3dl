@@ -16,7 +16,8 @@
  
  @augments c3dl.Primitive
  */
-c3dl.Model = c3dl.inherit(c3dl.Primitive, function () {
+c3dl.Model = c3dl.inherit(c3dl.Primitive, function ()
+{
   c3dl._superc(this);
   this.boundingVolume = new c3dl.BoundingVolume();
   this.renderObb = false;
@@ -36,7 +37,8 @@ c3dl.Model = c3dl.inherit(c3dl.Primitive, function () {
  
  @returns {String}
  */
-c3dl.Model.prototype.getPath = function () {
+c3dl.Model.prototype.getPath = function ()
+{
   return this.path;
 }
 
@@ -45,7 +47,8 @@ c3dl.Model.prototype.getPath = function () {
  
  @returns 
  */
-c3dl.Model.prototype.getAngularVel = function () {
+c3dl.Model.prototype.getAngularVel = function ()
+{
   return this.sceneGraph.getAngularVel();
 }
 
@@ -54,7 +57,8 @@ c3dl.Model.prototype.getAngularVel = function () {
  
  @returns
  */
-c3dl.Model.prototype.getLinearVel = function () {
+c3dl.Model.prototype.getLinearVel = function ()
+{
   return this.sceneGraph.getLinearVel();
 }
 
@@ -63,7 +67,8 @@ c3dl.Model.prototype.getLinearVel = function () {
  
  @returns {Array}
  */
-c3dl.Model.prototype.getPosition = function () {
+c3dl.Model.prototype.getPosition = function ()
+{
     return this.sceneGraph.getPosition();
 }
 
@@ -72,7 +77,8 @@ c3dl.Model.prototype.getPosition = function () {
  
  @param {Array} vec
  */
-c3dl.Model.prototype.setAngularVel = function (vec) {
+c3dl.Model.prototype.setAngularVel = function (vec)
+{
     this.sceneGraph.setAngularVel(vec);
 }
 
@@ -81,7 +87,8 @@ c3dl.Model.prototype.setAngularVel = function (vec) {
  
  @return {Array}
  */
-c3dl.Model.prototype.getUp = function () {
+c3dl.Model.prototype.getUp = function ()
+{
   return this.sceneGraph.getUp();
 }
 
@@ -90,7 +97,8 @@ c3dl.Model.prototype.getUp = function () {
  
  @return {Array}
  */
-c3dl.Model.prototype.getLeft = function () {
+c3dl.Model.prototype.getLeft = function ()
+{
   return this.sceneGraph.getLeft();
 }
 
@@ -99,7 +107,8 @@ c3dl.Model.prototype.getLeft = function () {
  
  @returns {Array} 
  */
-c3dl.Model.prototype.getDirection = function () {
+c3dl.Model.prototype.getDirection = function ()
+{
   return this.sceneGraph.getDirection();
 }
 
@@ -111,7 +120,8 @@ c3dl.Model.prototype.getDirection = function () {
  
  @returns {bool} true if the object can be picked, false otherwise.
  */
-c3dl.Model.prototype.getPickable = function () {
+c3dl.Model.prototype.getPickable = function ()
+{
   return this.sceneGraph.getPickable();
 }
 
@@ -122,7 +132,8 @@ c3dl.Model.prototype.getPickable = function () {
  @param {bool} isPickable true if the object should be included in pikcing tests,
  false otherwise.
  */
-c3dl.Model.prototype.setPickable = function (isPickable) {
+c3dl.Model.prototype.setPickable = function (isPickable)
+{
   this.sceneGraph.setPickable(isPickable);
 }
 
@@ -131,7 +142,8 @@ c3dl.Model.prototype.setPickable = function (isPickable) {
  
  @param {Array} vec
  */
-c3dl.Model.prototype.setLinearVel = function (vec) {
+c3dl.Model.prototype.setLinearVel = function (vec)
+{
   this.sceneGraph.setLinearVel(vec);
 }
 
@@ -146,7 +158,8 @@ c3dl.Model.prototype.setLinearVel = function (vec) {
  
  @param {string} path path of the model file.
  */
-c3dl.Model.prototype.init = function (modelpath) {
+c3dl.Model.prototype.init = function (modelpath)
+{
   this.path = modelpath;
   // if the file is already in the manager, just get a copy of it now,
   // otherwise put it in queue.
@@ -155,12 +168,15 @@ c3dl.Model.prototype.init = function (modelpath) {
   // the files they specified will be created and initialized.  Either it will 
   // be the first time (they won't exist in the manager) or they want a new 
   // object, in which case a copy must be created.
-  if (c3dl.ModelManager.getIndex(this.path) == -1) {
+  if (c3dl.ModelManager.getIndex(this.path) == -1)
+  {
     c3dl.ModelManager.loadFile(modelpath);
   }
-  else if (c3dl.ModelManager.isFileLoaded(this.path)) {
+  else if (c3dl.ModelManager.isFileLoaded(this.path))
+  {
     var sg = c3dl.ModelManager.getSceneGraphCopy(this.path);
-    for (var i=0; i < sg.length; i++) {
+    for (var i=0; i < sg.length; i++)
+    {
       this.sceneGraph.addChild(sg[i]);
     }
     this.ready = true;
@@ -182,9 +198,11 @@ c3dl.Model.prototype.init = function (modelpath) {
  @param {float} timeStep
  */
 /*
-c3dl.Model.prototype.update = function (timeStep) {
+c3dl.Model.prototype.update = function (timeStep)
+{
   // keep checking to see if the file is done being loaded.
-  if (this.isReady()) {
+  if (this.isReady())
+{
     //ModelView stack will be used for trasform mat
     c3dl.pushMatrix();
     c3dl.loadIdentity();
@@ -203,19 +221,24 @@ c3dl.Model.prototype.update = function (timeStep) {
     var scaleVec = this.boundingVolume.scaleVec;
     this.boundingVolume.set(pos,rotateMat,scaleVec);
   }
-  else {
+  else
+{
     c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
-    if (c3dl.ModelManager.isFileLoaded(this.path)) {
+    if (c3dl.ModelManager.isFileLoaded(this.path))
+{
       // get a copy of the scenegraph so we can modify it.
       this.sceneGraph = c3dl.ModelManager.getSceneGraphCopy(this.path);
     }
   }
 }
 */
-c3dl.Model.prototype.update = function (timeStep) {
+c3dl.Model.prototype.update = function (timeStep)
+{
   // keep checking to see if the file is done being loaded.
-  if (this.isReady()) {
-    if (!this.isStatic() || (this.isStatic() && this.isDirty())) {
+  if (this.isReady())
+  {
+    if (!this.isStatic() || (this.isStatic() && this.isDirty()))
+    {
       scaleVec=[1,1,1];
       //ModelView stack will be used for trasform mat
       c3dl.pushMatrix();
@@ -226,10 +249,13 @@ c3dl.Model.prototype.update = function (timeStep) {
       c3dl.loadIdentity();
       c3dl.matrixMode(c3dl.MODELVIEW);
       var currNode = this.sceneGraph;
-      while(currNode) {
-        if(currNode.children && currNode.children.length) {
+      while(currNode)
+      {
+        if(currNode.children && currNode.children.length)
+        {
           var flag = true;
-          if (!currNode.pushed) {
+          if (!currNode.pushed)
+          {
             c3dl.multiplyVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
             c3dl.multiplyVector(currNode.linVel, timeStep, c3dl.vec1);
             c3dl.addVectors(currNode.pos, c3dl.vec1, currNode.pos);
@@ -244,20 +270,24 @@ c3dl.Model.prototype.update = function (timeStep) {
             c3dl.matrixMode(c3dl.MODELVIEW);
             currNode.pushed = true;
           }
-          for (var i = 0, len = currNode.children.length; i < len; i++) {
-            if(!currNode.children[i].updated) {
+          for (var i = 0, len = currNode.children.length; i < len; i++)
+          {
+            if(!currNode.children[i].updated)
+            {
               currNode = currNode.children[i];
               i = len;
               flag = false;
             }
           }
-          if (flag) {
+          if (flag)
+          {
             c3dl.popMatrix();
             c3dl.matrixMode(c3dl.PROJECTION);
             c3dl.popMatrix();
             c3dl.matrixMode(c3dl.MODELVIEW);
             c3dl.divideVectorByVector(scaleVec, currNode.scaleVec, scaleVec);
-            for (var i = 0, len = currNode.children.length; i < len; i++) {
+            for (var i = 0, len = currNode.children.length; i < len; i++)
+            {
               currNode.children[i].updated =null;
             }
             currNode.updated =true;
@@ -265,15 +295,19 @@ c3dl.Model.prototype.update = function (timeStep) {
             currNode = currNode.parent;
           }
         }
-        else{
-          if (currNode.primitiveSets) {
-            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+        else
+        {
+          if (currNode.primitiveSets)
+          {
+            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++)
+            {
               var bv = currNode.primitiveSets[i].getBoundingVolume();
               var trans = c3dl.peekMatrix();
               c3dl.matrixMode(c3dl.PROJECTION);
               var rot = c3dl.peekMatrix();
               c3dl.matrixMode(c3dl.MODELVIEW);
-              if (bv) {
+              if (bv)
+              {
                 bv.set(new C3DL_FLOAT_ARRAY([trans[12], trans[13], trans[14]]),rot,scaleVec);
               }
             }
@@ -288,7 +322,8 @@ c3dl.Model.prototype.update = function (timeStep) {
       c3dl.popMatrix();
       c3dl.popMatrix();
       c3dl.matrixMode(c3dl.MODELVIEW);
-      if (this.isStatic()) {
+      if (this.isStatic())
+      {
         this.setDirty(false);
       }
       var pos = this.sceneGraph.pos;
@@ -297,9 +332,11 @@ c3dl.Model.prototype.update = function (timeStep) {
       this.boundingVolume.set(pos,rotateMat,scaleVec);
     }
   }
-  if (!this.isReady() && c3dl.ModelManager.isFileLoaded(this.path)) {
+  if (!this.isReady() && c3dl.ModelManager.isFileLoaded(this.path))
+  {
     var sg = c3dl.ModelManager.getSceneGraphCopy(this.path);
-    for (var i=0; i < sg.length; i++) {
+    for (var i=0; i < sg.length; i++)
+    {
       this.sceneGraph.addChild(sg[i]);
     }
     c3dl.pushMatrix();
@@ -309,19 +346,25 @@ c3dl.Model.prototype.update = function (timeStep) {
     c3dl.popMatrix();
     
     this.ready =true;     
-    if (this.cmdQueue[0]) {
-      for (var i = 0; i <= this.cmdQueue.length; i++){
+    if (this.cmdQueue[0])
+    {
+      for (var i = 0; i <= this.cmdQueue.length; i++)
+      {
         var parameters = this.parameterList.pop();
-        if (!parameters) {
-         this[this.cmdQueue.pop()]();
+        if (!parameters)
+        {
+          this[this.cmdQueue.pop()]();
         }
-        else if (parameters.length == 2) {
+        else if (parameters.length == 2)
+        {
           this[this.cmdQueue.pop()](parameters[0],parameters[1]);
         }
-        else if (parameters.length == 3) {
+        else if (parameters.length == 3)
+        {
           this[this.cmdQueue.pop()](parameters[0],parameters[1], parameters[2]);
         }
-        else {
+        else
+        {
           this[this.cmdQueue.pop()](parameters[0]);
         }
       }
@@ -331,7 +374,8 @@ c3dl.Model.prototype.update = function (timeStep) {
 /**
  @private
  */
-c3dl.Model.prototype.setSceneGraph = function (sg) {
+c3dl.Model.prototype.setSceneGraph = function (sg)
+{
   this.sceneGraph = sg;
 }
 
@@ -347,49 +391,64 @@ c3dl.Model.prototype.setSceneGraph = function (sg) {
  @param {Scene} scene
  */
  /*
-c3dl.Model.prototype.render = function (glCanvas3D, scene) {
-  if (this.sceneGraph && this.isVisible()) {
+c3dl.Model.prototype.render = function (glCanvas3D, scene)
+{
+  if (this.sceneGraph && this.isVisible())
+{
     // tell the root to render. The render() calls
     // will propogate down the graph.
     this.sceneGraph.render(glCanvas3D, scene);
-    if (scene.getBoundingVolumeVisibility()) {
+    if (scene.getBoundingVolumeVisibility())
+{
       this.sceneGraph.renderBoundingVolumes(scene);
     }
-    if (this.renderObb) {
+    if (this.renderObb)
+{
       this.boundingVolume.renderObb(scene);
     }
-    if (this.renderAabb) {
+    if (this.renderAabb)
+{
       this.boundingVolume.renderAabb(scene);
     }
-    if (this.renderBoundingSphere) {
+    if (this.renderBoundingSphere)
+{
       this.boundingVolume.renderSphere(scene);
     }
   }
 }
 */
-c3dl.Model.prototype.render = function (glCanvas3D, scene) {
-  if (this.isReady() && this.isVisible()) {
+c3dl.Model.prototype.render = function (glCanvas3D, scene)
+{
+  if (this.isReady() && this.isVisible())
+  {
     // tell the root to render. The render() calls
     // will propogate down the graph.
     var currNode = this.sceneGraph;
-    while(currNode) {
-      if(currNode.children && currNode.children.length) {
+    while(currNode)
+    {
+      if(currNode.children && currNode.children.length)
+      {
         var flag = true;
-        if (!currNode.rpushed) {
+        if (!currNode.rpushed)
+        {
           c3dl.pushMatrix();
           c3dl.multMatrix(currNode.getTransform());
           currNode.rpushed = true;
         }
-        for (var i = 0, len = currNode.children.length; i < len; i++) {
-          if(!currNode.children[i].rupdated) {
+        for (var i = 0, len = currNode.children.length; i < len; i++)
+        {
+          if(!currNode.children[i].rupdated)
+          {
             currNode = currNode.children[i];
             i = len;
             flag = false;
           }
         }
-        if (flag) {
+        if (flag)
+        {
           c3dl.popMatrix();
-          for (var i = 0, len = currNode.children.length; i < len; i++) {
+          for (var i = 0, len = currNode.children.length; i < len; i++)
+          {
             currNode.children[i].rupdated =null;
           }
           currNode.rupdated =true;
@@ -397,21 +456,28 @@ c3dl.Model.prototype.render = function (glCanvas3D, scene) {
           currNode = currNode.parent;
         }
       }
-      else{
-        if (currNode.primitiveSets) {
-          if (currNode.getPrimitiveSets()[0].getType() === "lines") {
+      else
+      {
+        if (currNode.primitiveSets)
+        {
+          if (currNode.getPrimitiveSets()[0].getType() === "lines")
+          {
             //scene.getRenderer().renderLines(this.getPrimitiveSets()[0].getLines(), scene);
           }
-          else {
+          else
+          {
             // The first time this is rendered, setup VBOs.
-            if (currNode.firstTimeRender == true) {
+            if (currNode.firstTimeRender == true)
+            {
               // iterate over the primitive sets and setup their VBOs
-              for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+              for (var i = 0, len = currNode.primitiveSets.length; i < len; i++)
+              {
                 currNode.primitiveSets[i].setupVBO(glCanvas3D);
               }
               currNode.firstTimeRender = false;
             }
-            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++) {
+            for (var i = 0, len = currNode.primitiveSets.length; i < len; i++)
+            {
               scene.getRenderer().texManager.updateTexture(currNode.primitiveSets[i].texture);
             }
             scene.getRenderer().renderGeometry(currNode, scene);
@@ -422,16 +488,20 @@ c3dl.Model.prototype.render = function (glCanvas3D, scene) {
       }
     }
     c3dl.popMatrix();
-    if (scene.getBoundingVolumeVisibility()) {
+    if (scene.getBoundingVolumeVisibility())
+    {
       this.sceneGraph.renderBoundingVolumes(scene);
     }
-    if (this.renderObb) {
+    if (this.renderObb)
+    {
       this.boundingVolume.renderObb(scene);
     }
-    if (this.renderAabb) {
+    if (this.renderAabb)
+    {
       this.boundingVolume.renderAabb(scene);
     }
-    if (this.renderBoundingSphere) {
+    if (this.renderBoundingSphere)
+    {
       this.boundingVolume.renderSphere(scene);
     }
   }
@@ -442,9 +512,11 @@ c3dl.Model.prototype.render = function (glCanvas3D, scene) {
  
  @param {Array} scaleVec 
  */
-c3dl.Model.prototype.scale = function (scaleVec) {
+c3dl.Model.prototype.scale = function (scaleVec)
+{
   this.sceneGraph.scale(scaleVec);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.scale(scaleVec);
   }
   this.setDirty(true);
@@ -456,9 +528,11 @@ c3dl.Model.prototype.scale = function (scaleVec) {
  
  @param {Array} trans
  */
-c3dl.Model.prototype.translate = function (trans) {
+c3dl.Model.prototype.translate = function (trans)
+{
   this.sceneGraph.translate(trans);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.setPosition(this.sceneGraph.pos);
   }
   this.setDirty(true);
@@ -469,9 +543,11 @@ c3dl.Model.prototype.translate = function (trans) {
  
  @param {Array} pos 
  */
-c3dl.Model.prototype.setPosition = function (pos) {
+c3dl.Model.prototype.setPosition = function (pos)
+{
   this.sceneGraph.setPosition(pos);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.setPosition(pos);
   }
   this.setDirty(true); 
@@ -482,7 +558,8 @@ c3dl.Model.prototype.setPosition = function (pos) {
  
  @returns {c3dl.SceneNode} Root node of the Model model's scenegraph.
  */
-c3dl.Model.prototype.getSceneGraph = function () {
+c3dl.Model.prototype.getSceneGraph = function ()
+{
   return this.sceneGraph;
 }
 
@@ -492,11 +569,14 @@ c3dl.Model.prototype.getSceneGraph = function () {
  
  @param {string} texturePath Path of the texture.
  */
-c3dl.Model.prototype.setTexture = function (texturePath) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setTexture = function (texturePath)
+{
+  if (this.isReady())
+  {
     this.sceneGraph.setTexture(texturePath);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setTexture");
     this.parameterList.push([texturePath]);
   }
@@ -508,35 +588,44 @@ Set the texture of a model from an old path to a new path specified by the user
 */
 c3dl.Model.prototype.updateTextureByName = function (oldTexturePath,newTexturePath)
 {
-  if (this.isReady())  {
+  if (this.isReady())
+  {
     var modelPath = this.path.split("/");
     modelPath.pop();
     var addModelPath = "";
-    for (var i = 0; i < modelPath.length;i++){
+    for (var i = 0; i < modelPath.length;i++)
+    {
       addModelPath += modelPath[i] + "/";
     }
-    if (typeof newTexturePath !== "string") {
+    if (typeof newTexturePath !== "string")
+    {
       this.sceneGraph.updateTextureByName(addModelPath+oldTexturePath,newTexturePath);
     }
-    else {
+    else
+    {
       this.sceneGraph.updateTextureByName(addModelPath+oldTexturePath,addModelPath+newTexturePath);
     }
   }
-  else {
+  else
+  {
     
     this.cmdQueue.push("setMaterial");
     this.parameterList.push([oldTexturePath, newTexturePath]);
   }
 }
 
-c3dl.Model.prototype.getTextures = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getTextures = function ()
+{
+  if (this.isReady())
+  {
     return this.sceneGraph.getTextures();
   }
 }
 
-c3dl.Model.prototype.getPrimitiveSets = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getPrimitiveSets = function ()
+{
+  if (this.isReady())
+  {
     return this.sceneGraph.getPrimitiveSets();
   }
 }
@@ -547,11 +636,14 @@ c3dl.Model.prototype.getPrimitiveSets = function () {
  
  @param {c3dl.Material} material
  */
-c3dl.Model.prototype.setMaterial = function (material) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setMaterial = function (material)
+{
+  if (this.isReady())
+  {
     this.sceneGraph.setMaterial(material);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setMaterial");
     this.parameterList.push([material]);
   }
@@ -567,12 +659,15 @@ c3dl.Model.prototype.setMaterial = function (material) {
  
  @param {c3dl.Effect} effect
  */
-c3dl.Model.prototype.setEffect = function (effect) {
+c3dl.Model.prototype.setEffect = function (effect)
+{
   // add type checking?
-  if (this.isReady()) {
+  if (this.isReady())
+  {
     this.sceneGraph.setEffect(effect);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setEffect");
     this.parameterList.push([effect]);
   }
@@ -583,9 +678,11 @@ c3dl.Model.prototype.setEffect = function (effect) {
  
  @param {float} angle in radians.
  */
-c3dl.Model.prototype.rotateOnAxis = function (axisVec, angle) {
+c3dl.Model.prototype.rotateOnAxis = function (axisVec, angle)
+{
   this.sceneGraph.rotateOnAxis(axisVec, angle);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.rotateOnAxis(axisVec, angle);
   }
   this.setDirty(true);
@@ -597,9 +694,11 @@ c3dl.Model.prototype.rotateOnAxis = function (axisVec, angle) {
  
  @param {float} angle in radians.
  */
-c3dl.Model.prototype.yaw = function (angle) {
+c3dl.Model.prototype.yaw = function (angle)
+{
   this.sceneGraph.yaw(angle);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[1], angle);
   }
   this.setDirty(true);
@@ -610,10 +709,12 @@ c3dl.Model.prototype.yaw = function (angle) {
  
  @param {float} angle in radians.
  */
-c3dl.Model.prototype.pitch = function (angle) {
+c3dl.Model.prototype.pitch = function (angle)
+{
   this.sceneGraph.pitch(angle);
-  if (this.isReady()) { 
-    this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[0], angle);
+  if (this.isReady())
+  {
+   this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[0], angle);
   }
   this.setDirty(true);
 }
@@ -621,7 +722,8 @@ c3dl.Model.prototype.pitch = function (angle) {
 /**
  @private
  */
-c3dl.Model.prototype.isReady = function () {
+c3dl.Model.prototype.isReady = function ()
+{
   return this.ready;
 }
 
@@ -630,9 +732,11 @@ c3dl.Model.prototype.isReady = function () {
  
  @param {float} angle in radians.
  */
-c3dl.Model.prototype.roll = function (angle) {
+c3dl.Model.prototype.roll = function (angle)
+{
   this.sceneGraph.roll(angle);
-  if (this.isReady()) { 
+  if (this.isReady())
+  {
     this.boundingVolume.rotateOnAxis(this.boundingVolume.axis[2], angle);
   }
   this.setDirty(true);
@@ -641,21 +745,25 @@ c3dl.Model.prototype.roll = function (angle) {
 /**
  @private
  */
-c3dl.Model.prototype.getCopy = function () {
+c3dl.Model.prototype.getCopy = function ()
+{
   var myModel = new c3dl.Model();
   myModel.clone(this);
   return myModel;
 }
 
-c3dl.Model.prototype.getTransform = function () {
-  if (this.sceneGraph) {
+c3dl.Model.prototype.getTransform = function ()
+{
+  if (this.sceneGraph)
+  {
     return this.sceneGraph.getTransform();
   }
 }
 /**
  @private
  */
-c3dl.Model.prototype.clone = function (other) {
+c3dl.Model.prototype.clone = function (other)
+{
   c3dl._super(this, arguments, "clone");
   this.ready = other.ready;
   this.path = other.path;
@@ -675,21 +783,26 @@ c3dl.Model.prototype.clone = function (other) {
  @returns {bool} true if the ray intersects with one of the geometry nodes
  in the scenegraph.
  */
-c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir) {
+c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
+{
   var result;
   if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getRadius()) && 
   c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) &&
-  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis())) {
+  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis()))
+  {
     result = this.sceneGraph.rayIntersectsEnclosures(rayOrigin, rayDir);
   }
-  else {
+  else
+  {
     result = false;
   }
   return result;
 }
 
-c3dl.Model.prototype.getObjectType = function () {
-  //switch(this.path.substr(this.path.lastIndexOf("."))) {
+c3dl.Model.prototype.getObjectType = function ()
+{
+  //switch(this.path.substr(this.path.lastIndexOf(".")))
+  //{
     //case "dae":
       return c3dl.MODEL;
     //break;
@@ -705,7 +818,8 @@ c3dl.Model.prototype.getObjectType = function () {
  
  @returns {bool} true if the ray intersects with any triangle in the object.
  */
-c3dl.Model.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
+c3dl.Model.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
+{
   // Use the matrix stack, but clear it out first
   c3dl.pushMatrix();
   c3dl.loadIdentity();
@@ -716,105 +830,134 @@ c3dl.Model.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir) {
   c3dl.popMatrix();
   return result;
 }
-c3dl.Model.prototype.getBoundingVolumes = function () {
+c3dl.Model.prototype.getBoundingVolumes = function ()
+{
   return this.sceneGraph.getBoundingVolumes();
 }
 
-c3dl.Model.prototype.getHeight = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getHeight = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getHeight();
   }
 }
-c3dl.Model.prototype.getWidth = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getWidth = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getWidth();
   }
 }
-c3dl.Model.prototype.getLength = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getLength = function ()
+{
+  if (this.isReady())
+  {
     return this.boundingVolume.getLength();
   }
 }
-c3dl.Model.prototype.getSize = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.getSize = function ()
+{
+  if (this.isReady())
+  {
     return [this.boundingVolume.getLength(),this.boundingVolume.getWidth(),this.boundingVolume.getHeight()];
   }
 }
 
-c3dl.Model.prototype.setHeight = function (height) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setHeight = function (height)
+{
+  if (this.isReady())
+  {
     height = parseFloat(height);
     var curheight = this.boundingVolume.getHeight();
     var scaleVec = [];
-    if (curheight > height) {
+    if (curheight > height)
+    {
       scaleVec = [1, (1 / (curheight / height)), 1];
     }
-    else if (curheight < height) {
+    else if (curheight < height)
+    {
       scaleVec = [1, (height / curheight), 1];
     }
-    else {
+    else
+    {
       scaleVec= [1, 1, 1];
     }
     this.sceneGraph.scale(scaleVec);
     this.boundingVolume.scale(scaleVec);
     this.setDirty(true);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setHeight");
     this.parameterList.push([height]);
   }
 }
 
-c3dl.Model.prototype.setLength = function (length) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setLength = function (length)
+{
+  if (this.isReady())
+  {
     length = parseFloat(length);
     var curlength = this.boundingVolume.getLength();
     var scaleVec = [];
-    if (curlength > length) {
+    if (curlength > length)
+    {
       scaleVec = [(1 / (curlength / length)), 1, 1];
     }
-    else if (curlength < length) {
+    else if (curlength < length)
+    {
       scaleVec = [(length / curlength), 1, 1];
     }
-    else {
+    else
+    {
       scaleVec = [1, 1, 1];
     }
     this.sceneGraph.scale(scaleVec);
     this.boundingVolume.scale(scaleVec);
     this.setDirty(true);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setLength");
     this.parameterList.push([length]);
   }
 }
 
-c3dl.Model.prototype.setWidth = function (width) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setWidth = function (width)
+{
+  if (this.isReady())
+  {
     width = parseFloat(width);
     var curwidth = this.boundingVolume.getWidth();
     var scaleVec = [];
-    if (curwidth > width) {
+    if (curwidth > width)
+    {
       scaleVec = [1, 1, (1 / (curwidth / width))];
     }
-    else if (curwidth < width) {
+    else if (curwidth < width)
+    {
       scaleVec = [1, 1, (width / curwidth)];
     }
-    else {
+    else
+    {
       scaleVec = [1, 1, 1];
     }
     this.sceneGraph.scale(scaleVec);
     this.boundingVolume.scale(scaleVec);
     this.setDirty(true);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setWidth");
     this.parameterList.push([width]);
   }
 }
 
-c3dl.Model.prototype.setSize = function (length, width, height) {
-  if (this.isReady()) {
+c3dl.Model.prototype.setSize = function (length, width, height)
+{
+  if (this.isReady())
+  {
     length = parseFloat(length);
     width = parseFloat(width);
     height = parseFloat(height);
@@ -823,31 +966,40 @@ c3dl.Model.prototype.setSize = function (length, width, height) {
     var curheight = this.boundingVolume.getHeight();
     var scaleVec = [];
     var vecL, vecW, vecH;
-    if (curlength > length) {
+    if (curlength > length)
+    {
       vecL = (1 / (curlength / length));
     }
-    else if (curlength < length) {
+    else if (curlength < length)
+    {
       vecL = length / curlength;
     }
-    else {
+    else
+    {
       vecL = 1;
     }
-    if (curheight > height) {
+    if (curheight > height)
+    {
       vecH = (1 / (curheight / height));
     }
-    else if (curheight < height) {
+    else if (curheight < height)
+    {
       vecH = (height / curheight);
     }
-    else {
+    else
+    {
       vecH = 1;
     }
-    if (curwidth > width) {
+    if (curwidth > width)
+    {
       vecW = (1 / (curwidth / width));
     }
-    else if (curwidth < width) {
+    else if (curwidth < width)
+    {
       vecW = (width / curwidth);
     }
-    else {
+    else
+    {
       vecW = 1;
     }
     scaleVec = [vecL, vecH, vecW];
@@ -855,26 +1007,33 @@ c3dl.Model.prototype.setSize = function (length, width, height) {
     this.boundingVolume.scale(scaleVec);
     this.setDirty(true);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("setSize");
     this.parameterList.push([length, width, height]);
   }
 }
 
-c3dl.Model.prototype.setRenderObb = function (renderObb) {
+c3dl.Model.prototype.setRenderObb = function (renderObb)
+{
   this.renderObb = renderObb;
 }
-c3dl.Model.prototype.setRenderAabb = function (renderAabb) {
+c3dl.Model.prototype.setRenderAabb = function (renderAabb)
+{
   this.renderAabb = renderAabb;
 }
-c3dl.Model.prototype.setRenderBoundingSphere = function (renderBoundingSphere) {
+c3dl.Model.prototype.setRenderBoundingSphere = function (renderBoundingSphere)
+{
   this.renderBoundingSphere = renderBoundingSphere;
 }
-c3dl.Model.prototype.getBoundingVolume = function () {
+c3dl.Model.prototype.getBoundingVolume = function ()
+{
   return this.boundingVolume;
 }
-c3dl.Model.prototype.centerObject = function () {
-  if (this.isReady()) {
+c3dl.Model.prototype.centerObject = function ()
+{
+  if (this.isReady())
+  {
     c3dl.pushMatrix();
     c3dl.loadIdentity();
     this.sceneGraph.center(this.boundingVolume.centerPosition);
@@ -882,12 +1041,14 @@ c3dl.Model.prototype.centerObject = function () {
     c3dl.popMatrix();
     this.setDirty(true);
   }
-  else {
+  else
+  {
     this.cmdQueue.push("centerObject");
     this.parameterList.push([]);
   }
 }
 
-c3dl.Model.prototype.getLoadedProgress = function () {
+c3dl.Model.prototype.getLoadedProgress = function ()
+{
   return c3dl.ModelManager.loadProgress(this.path);
 }

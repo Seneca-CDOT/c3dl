@@ -42,12 +42,14 @@ c3dl.ModelManager.deleteFile = function (filePath)
 {
   //get the index associated with that file
   var index = c3dl.ModelManager.getIndex(filePath);
-  if(index != -1) {//if it exists
+  if(index != -1) //if it exists
+  {
     //remove it from both arrays
     c3dl.ModelManager.values.splice(index,1);
     c3dl.ModelManager.keys.splice(index,1);
   }
-  else {//if it does not exist, warn the user they are trying to delete a file that does not exist.
+  else //if it does not exist, warn the user they are trying to delete a file that does not exist.
+  {
     c3dl.debug.logWarning('Attempting to delete non-existant file ' + filePath + '.');
   }
 }
@@ -67,7 +69,8 @@ c3dl.ModelManager.getSceneGraphCopy = function (filePath)
     // get a copy of the scenegraph
     var sg = [];
     
-    for (var i=0; i < c3dl.ModelManager.values[index].children.length; i++) {
+    for (var i=0; i < c3dl.ModelManager.values[index].children.length; i++)
+    {
       sg.push(c3dl.ModelManager.values[index].children[i].getCopy());
     }
 
@@ -88,7 +91,8 @@ c3dl.ModelManager.isFileLoaded = function (filePath)
   return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].loaded;
 }
 
-c3dl.ModelManager.loadProgress = function (filePath) {
+c3dl.ModelManager.loadProgress = function (filePath)
+{
     return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].progress;
 }
 

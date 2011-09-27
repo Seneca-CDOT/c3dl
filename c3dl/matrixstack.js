@@ -8,7 +8,8 @@ c3dl.ModelView = [];
 c3dl.Projection = [];
 var matrixList = [];
 //created as a buffer. Creating float arrays on every call is to low.
-for (var i = 0; i < 1000; i++) {
+for (var i = 0; i < 1000; i++)
+{
   matrixList[i] = c3dl.makeMatrix();
 }
 matrixListPos = 0;

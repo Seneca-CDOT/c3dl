@@ -158,8 +158,8 @@ c3dl.quatToAxisAngle = function (axisVec, angleScalar)
 
     // Set the Vector
     axisVec[0] = quat[1] * invLength; 
-  axisVec[1] = quat[2] * invLength; 
-  axisVec[3] = quat[3] * invLength;
+    axisVec[1] = quat[2] * invLength; 
+    axisVec[3] = quat[3] * invLength;
   }
   else
   {
@@ -294,10 +294,11 @@ c3dl.quatLength = function (quat)
 c3dl.addQuats = function (quatOne, quatTwo)
 {
   var quat = c3dl.makeQuat();
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 4; i++)
+  {
     quat[i] = quatOne[i] + quatTwo[i];
   }
-return quat;
+  return quat;
 }
 
 
@@ -312,7 +313,8 @@ return quat;
 c3dl.subtractQuats = function (quatOne, quatTwo)
 {
   var quat = c3dl.makeQuat();
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 4; i++)
+  {
     quat[i] = quatOne[i] - quatTwo[i];
   }
   return quat;
@@ -330,7 +332,8 @@ c3dl.subtractQuats = function (quatOne, quatTwo)
 c3dl.multiplyQuatByScalar = function (quatOne, scalar)
 {
   var quat = c3dl.makeQuat();
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 4; i++)
+  {
     quat[i] = quatOne[i] * scalar; //!! Mark: is this supposed to be a multiply?
   }
   return quat;
@@ -407,7 +410,8 @@ c3dl.inverseQuat = function (quat)
 {
   var invQuat = c3dl.makeQuat();
   var norm = 0.0;
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 4; i++)
+  {
     norm += quat[i] * quat[i];
   }
   if (norm > 0.0)

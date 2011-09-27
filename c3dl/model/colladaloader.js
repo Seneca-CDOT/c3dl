@@ -69,7 +69,8 @@ c3dl.ColladaLoader = function ()
       }
     }
     
-    xmlhttp.onprogress = function (e){
+    xmlhttp.onprogress = function (e)
+{
       this.parent.rootNode.progress = (e.position / e.totalSize)*100;
       c3dl.PreLoader.checkProgress();
     }
@@ -710,7 +711,8 @@ c3dl.ColladaLoader = function ()
         }
         
         rawFaces = new C3DL_FLOAT_ARRAY(faces.length);
-        for(var i = 0; i < faces.length; i++){
+        for(var i = 0; i < faces.length; i++)
+        {
           rawFaces[i] = faces[i];
         }
       }
@@ -935,16 +937,18 @@ c3dl.ColladaLoader = function ()
       // each primitive collation element can have a material name. this name matches to the
       // <instance_material>'s symbol attribute value.          
       collationElement.tempMaterial = collations[currColl].getAttribute("material");
-      if (collations[currColl].nodeName !== "lines") {
+      if (collations[currColl].nodeName !== "lines")
+      {
         collationElement.init(
           this.expandFaces(faces, verticesArray, this.vertexOffset, vertexStride), 
           this.expandFaces(faces, normalsArray, this.normalOffset, normalsStride), 
           this.expandFaces(faces, texCoordsArray, this.texCoordOffset, 2)
         );
-    }
-    else {
-      collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
-    }
+      }
+      else
+      {
+        collationElement.initLine(verticesArray, faces , collations[currColl].nodeName);
+      }
       geometry.addPrimitiveSet(collationElement);
     } // end iterating over collations
 
@@ -1336,7 +1340,8 @@ c3dl.ColladaLoader = function ()
         // this is done for each component, for textures, we have 2 components.
         // for normals, we have 3.
         
-        if (array){
+        if (array)
+        {
           coord = array[coordIndex][currComp];
         }
         // insert that value into the 1d array.

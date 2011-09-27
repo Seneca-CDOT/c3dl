@@ -43,8 +43,10 @@ var c3dl =
    */
   extend: function (baseObj, extObj)
   {
-    for (var i in extObj){
-      if (extObj[i] != null && extObj[i] != undefined){
+    for (var i in extObj)
+    {
+      if (extObj[i] != null && extObj[i] != undefined)
+      {
         baseObj[i] = extObj[i];
       }
     }
@@ -100,7 +102,8 @@ var c3dl =
     var tmpparent = o.__parent;
     // Temporarily change our parent to be our parent's parent to
     // avoid infinite recursion.
-    if (o.__parent.prototype.__parent){
+    if (o.__parent.prototype.__parent)
+    {
       o.__parent = o.__parent.prototype.__parent;
     }
     tmpparent.prototype.constructor.apply(o);

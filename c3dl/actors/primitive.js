@@ -6,7 +6,8 @@
 /*
  @class
 */
-c3dl.Primitive = c3dl.inherit(c3dl.Actor, function () {
+c3dl.Primitive = c3dl.inherit(c3dl.Actor, function ()
+{
   c3dl._superc(this);
 
   // Member Variables
@@ -28,7 +29,8 @@ c3dl.Primitive = c3dl.inherit(c3dl.Actor, function () {
  
  @returns {bool} true if the object can be picked, false otherwise.
  */
-c3dl.Primitive.prototype.getPickable = function () {
+c3dl.Primitive.prototype.getPickable = function ()
+{
   return this.isPickable;
 }
 
@@ -37,16 +39,20 @@ c3dl.Primitive.prototype.getPickable = function () {
  
  @returns {boolean} true if the object is rendered.
  */
-c3dl.Primitive.prototype.isVisible = function () {
+c3dl.Primitive.prototype.isVisible = function ()
+{
   return this.visible;
 }
-c3dl.Primitive.prototype.isInsideFrustum = function () {
+c3dl.Primitive.prototype.isInsideFrustum = function ()
+{
   return this.insideFrustum;
 }
-c3dl.Primitive.prototype.isStatic = function () {
+c3dl.Primitive.prototype.isStatic = function ()
+{
   return this.staticObject;
 }
-c3dl.Primitive.prototype.isDirty = function () {
+c3dl.Primitive.prototype.isDirty = function ()
+{
   return this.dirtyFlag;
 }
 // -------------------------------------------------------
@@ -57,16 +63,20 @@ c3dl.Primitive.prototype.isDirty = function () {
  @param {boolean} show Either a true or false value which will 
  show or hide the object when rendering.
  */
-c3dl.Primitive.prototype.setVisible = function (show) {
+c3dl.Primitive.prototype.setVisible = function (show)
+{
   this.visible = show;
 }
-c3dl.Primitive.prototype.setInsideFrustum = function (inside) {
+c3dl.Primitive.prototype.setInsideFrustum = function (inside)
+{
   this.insideFrustum = inside;
 }
-c3dl.Primitive.prototype.setStatic = function (staticObject) {
+c3dl.Primitive.prototype.setStatic = function (staticObject)
+{
   this.staticObject = staticObject;
 }
-c3dl.Primitive.prototype.setDirty = function (dirty) {
+c3dl.Primitive.prototype.setDirty = function (dirty)
+{
   this.dirtyFlag = dirty;
 }
 /*
@@ -76,14 +86,16 @@ c3dl.Primitive.prototype.setDirty = function (dirty) {
   @param {bool} isPickable true if the object should be included in pikcing tests,
   false otherwise.
 */
-c3dl.Primitive.prototype.setPickable = function (isPickable) {
+c3dl.Primitive.prototype.setPickable = function (isPickable)
+{
   this.isPickable = isPickable;
 }
 
 /*
   @private
 */
-c3dl.Primitive.prototype.getCopy = function () {
+c3dl.Primitive.prototype.getCopy = function ()
+{
   var primitive = new c3dl.Primitive();
   primitive.clone(this);
   return primitive;
@@ -92,7 +104,8 @@ c3dl.Primitive.prototype.getCopy = function () {
 /**
  @private
  */
-c3dl.Primitive.prototype.clone = function (other) {
+c3dl.Primitive.prototype.clone = function (other)
+{
   c3dl._super(this, arguments, "clone");
 
   this.visible = other.visible;
@@ -105,5 +118,6 @@ c3dl.Primitive.prototype.clone = function (other) {
 /**
  @private
  */
-c3dl.Primitive.prototype.render = function (glCanvas3D, scene) {
+c3dl.Primitive.prototype.render = function (glCanvas3D, scene)
+{
 }

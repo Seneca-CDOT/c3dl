@@ -1,13 +1,16 @@
 
-c3dl.OBB = function () {
+c3dl.OBB = function ()
+{
   this.originalBoxVerts = [];
   this.boxVerts = [];
   this.lineList =[];
-  for (var i = 0; i <12; i++) {
+  for (var i = 0; i <12; i++)
+  {
     this.lineList[i] = new c3dl.Line();
     this.lineList[i].setWidth(2);
   }  
-  this.init = function (maxMins) {
+  this.init = function (maxMins)
+  {
     //F top left 
     this.originalBoxVerts[0] = c3dl.makeVector(maxMins[1], maxMins[3], maxMins[5]);
     this.boxVerts[0] = c3dl.makeVector(maxMins[1], maxMins[3], maxMins[5]);
@@ -34,14 +37,17 @@ c3dl.OBB = function () {
     this.boxVerts[7] = c3dl.makeVector(maxMins[0], maxMins[2], maxMins[4]);
   }
   
-  this.set = function (transform) {
-    for (var i = 0; i < 8; i++) {
+  this.set = function (transform)
+  {
+    for (var i = 0; i < 8; i++)
+    {
       c3dl.multiplyMatrixByVector(transform, this.originalBoxVerts[i],this.boxVerts[i]);
     } 
   }
 
   //draw a box using lines
-  this.render = function(scene) {
+  this.render = function(scene)
+  {
     //front of box
     //top left to top right
     this.lineList[0].setCoordinates(this.boxVerts[0],this.boxVerts[2]);
@@ -74,15 +80,18 @@ c3dl.OBB = function () {
     scene.getRenderer().renderLines(this.lineList, scene);
   }
   
-  this.getCopy = function () {
+  this.getCopy = function ()
+  {
     var copy = new c3dl.OBB();
-    for (var i = 0; i <8; i++) {
+    for (var i = 0; i <8; i++)
+    {
       copy.originalBoxVerts[i] = c3dl.copyVector(this.originalBoxVerts[i]);
       copy.boxVerts[i] = c3dl.copyVector(this.boxVerts[i]);
     }
     return copy;
   }
-  this.center = function (centerPosition) {
+  this.center = function (centerPosition)
+  {
     //F top left 
     this.originalBoxVerts[0] = c3dl.makeVector(this.originalBoxVerts[0][0] - centerPosition[0] , this.originalBoxVerts[0][1] - centerPosition[1] , this.originalBoxVerts[0][2] - centerPosition[2]);
     //B top left 
@@ -101,7 +110,8 @@ c3dl.OBB = function () {
     this.originalBoxVerts[7] = c3dl.makeVector(this.originalBoxVerts[7][0]  - centerPosition[0], this.originalBoxVerts[7][1] - centerPosition[1] , this.originalBoxVerts[7][2] - centerPosition[2]);
   }
   
-  this.getCorners = function () {  
+  this.getCorners = function ()
+  {
     return [
             [this.boxVerts[0][0].toFixed(2), this.boxVerts[0][2].toFixed(2)], 
             [this.boxVerts[2][0].toFixed(2), this.boxVerts[2][2].toFixed(2)],
@@ -110,6 +120,3 @@ c3dl.OBB = function () {
            ];
   }
 }
-
-
-

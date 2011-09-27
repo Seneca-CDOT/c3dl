@@ -51,7 +51,8 @@ c3dl.sepia_callback = function (renderingObj, scene)
 
     // NORMAL
     var normalAttribLoc = scene.curContextCache.attributes["sepia"+coll+"Normal"];
-    if (normalAttribLoc == undefined) {
+    if (normalAttribLoc == undefined)
+    {
       normalAttribLoc = gl.getAttribLocation(progObjID, "Normal");
       scene.curContextCache.attributes["sepia"+coll+"Normal"] = normalAttribLoc;
     }
@@ -75,7 +76,8 @@ c3dl.sepia_callback = function (renderingObj, scene)
     var usingTexture = false;
 
     var texAttribLoc = scene.curContextCache.attributes["sepia"+coll+"Texture"];
-    if (texAttribLoc == undefined) {
+    if (texAttribLoc == undefined)
+    {
       texAttribLoc = gl.getAttribLocation(progObjID, "Texture");
       scene.curContextCache.attributes["sepia"+coll+"Texture"] = texAttribLoc;
     }

@@ -56,7 +56,8 @@ c3dl.greyscale_callback = function (renderingObj, scene)
 
     // NORMAL
     var normalAttribLoc = scene.curContextCache.attributes["greyscale"+coll+"Normal"];
-    if (normalAttribLoc == undefined) {
+    if (normalAttribLoc == undefined)
+    {
       normalAttribLoc = gl.getAttribLocation(progObjID, "Normal");
       scene.curContextCache.attributes["greyscale"+coll+"Normal"] = normalAttribLoc;
     }
@@ -80,7 +81,8 @@ c3dl.greyscale_callback = function (renderingObj, scene)
     var usingTexture = false;
 
     var texAttribLoc = scene.curContextCache.attributes["greyscale"+coll+"Texture"];
-    if (texAttribLoc == undefined) {
+    if (texAttribLoc == undefined)
+    {
       texAttribLoc = gl.getAttribLocation(progObjID, "Texture");
       scene.curContextCache.attributes["greyscale"+coll+"Texture"] = texAttribLoc;
     }

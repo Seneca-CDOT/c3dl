@@ -15,7 +15,8 @@
  @augments c3dl.Light
  @augments c3dl.PositionalLight  
  */
-c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function () {
+c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function ()
+{
   c3dl._superc(this);
   // this will be multiplied by 2 within our shader. 180 is the default OpenGL 
   // value for cutoff.  So we are starting off which a Positional light 

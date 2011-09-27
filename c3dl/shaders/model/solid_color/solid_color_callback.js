@@ -38,7 +38,8 @@ c3dl.solid_color_callback = function (renderingObj, scene)
     // This is  a kludge for Safari and Chrome since they want these attributes
     ////////////////////////////
     var normalAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Normal"];
-    if (normalAttribLoc == undefined) {
+    if (normalAttribLoc == undefined)
+    {
       normalAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Normal");
       scene.curContextCache.attributes["solidcolor"+coll+"Normal"] = normalAttribLoc;
     }
@@ -47,7 +48,8 @@ c3dl.solid_color_callback = function (renderingObj, scene)
       renderer.setVertexAttribArray(progObjID, "Normal", 3, currColl.getVBONormals(), scene, "solidcolor"+coll);
     }
     var texAttribLoc = scene.curContextCache.attributes["solidcolor"+coll+"Texture"];
-    if (texAttribLoc == undefined) {
+    if (texAttribLoc == undefined)
+    {
       texAttribLoc = glCanvas3D.getAttribLocation(progObjID, "Texture");
       scene.curContextCache.attributes["solidcolor"+coll+"Texture"] = texAttribLoc;
     }

@@ -151,10 +151,12 @@ c3dl.Camera.prototype.setFarClippingPlane = function (fcp)
 {
   if (fcp > 0)
   {
-    if(fcp >= this.nearClippingPlane) {
+    if(fcp >= this.nearClippingPlane)
+    {
       this.farClippingPlane = fcp;
     }
-    else {
+    else
+    {
       this.farClippingPlane = this.nearClippingPlane;
     }
   }
@@ -184,10 +186,12 @@ c3dl.Camera.prototype.setNearClippingPlane = function (ncp)
 {
   if (ncp > 0)
   {
-    if(ncp <= this.farClippingPlane) {
+    if(ncp <= this.farClippingPlane)
+    {
       this.nearClippingPlane = ncp;
     }
-    else {
+    else
+    {
       this.nearClippingPlane = this.farClippingPlane;
     }
   }

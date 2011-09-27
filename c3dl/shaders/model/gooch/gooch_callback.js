@@ -61,7 +61,8 @@ c3dl.gooch_callback = function (renderingObj, scene)
       // This is  a kludge for Safari and Chrome since they want these attributes
       ////////////////////////////
       var normalAttribLoc = scene.curContextCache.attributes["outlinegooch"+primSet+"Normal"];
-      if(normalAttribLoc ==undefined ) {
+      if(normalAttribLoc ==undefined )
+      {
         normalAttribLoc = gl.getAttribLocation(outlineProgID, "Normal");
         scene.curContextCache.attributes["outlinegooch"+primSet+"Normal"] = normalAttribLoc;
       }
@@ -71,7 +72,8 @@ c3dl.gooch_callback = function (renderingObj, scene)
         renderer.setVertexAttribArray(outlineProgID, "Normal", 3, currColl.getVBONormals(), scene, "outlinegooch"+primSet);
       }
       var texAttribLoc = scene.curContextCache.attributes["outlinegooch"+primSet+"Texture"];
-      if(texAttribLoc ==undefined ) {
+      if(texAttribLoc ==undefined )
+      {
         texAttribLoc = gl.getAttribLocation(outlineProgID, "Texture");
         scene.curContextCache.attributes["outlinegooch"+primSet+"Texture"] = texAttribLoc;
       }
@@ -112,7 +114,8 @@ c3dl.gooch_callback = function (renderingObj, scene)
     var currColl = geometry.getPrimitiveSets()[coll];
 
     var dummyAttribLoc = scene.curContextCache.attributes["gooch"+coll+"dummyAttrib"];
-    if(dummyAttribLoc ==undefined ) {
+    if(dummyAttribLoc ==undefined )
+    {
       dummyAttribLoc = gl.getAttribLocation(programObjID, "dummyAttrib");
       scene.curContextCache.attributes["gooch"+coll+"dummyAttrib"] = dummyAttribLoc;
     }
@@ -123,7 +126,8 @@ c3dl.gooch_callback = function (renderingObj, scene)
     }
 
     var normalAttribLoc = scene.curContextCache.attributes["gooch"+coll+"Normal"];
-    if(normalAttribLoc ==undefined ) {
+    if(normalAttribLoc ==undefined )
+    {
       normalAttribLoc = gl.getAttribLocation(programObjID, "Normal");
       scene.curContextCache.attributes["gooch"+coll+"Normal"] = normalAttribLoc;
     }
