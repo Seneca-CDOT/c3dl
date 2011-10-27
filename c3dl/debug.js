@@ -90,7 +90,7 @@ c3dl.debug =
    @author Jeremy Giberson
    This gem will wrap any function call with an inspector that will log parameters and return values.
    
-   param {String} functionName function calls you want to inspect
+   param {String} functionName - Function calls you want to inspect
    param {Object} object
    */
   inspect: function (functionName, object)
@@ -100,10 +100,8 @@ c3dl.debug =
     object.functionName = function ()
     {
       // log args
-      // c3dl.debug.log (arguments);
       var r = f.call(args);
       // log r
-      // c3dl.debug.log (r);
       return r;
     }
   },
@@ -111,7 +109,7 @@ c3dl.debug =
   /**
    Set the visibility of the logs.
    
-   @param {boolean} isVisible true if the logs should be displayed, false if the logs should not
+   @param {boolean} isVisible - true if the logs should be displayed, false if the logs should not
    be displayed.
    */
   setVisible: function (isVisible)
@@ -124,9 +122,9 @@ c3dl.debug =
    If the user has firebug, the warning will
    be placed in the console.  The warning will also appear on the HTML page itself.
    
-   @param {String} str The string which will be displayed on the HTML page.
-   @param {String} type The type of log, either 'Info', 'Warning' or 'Error'.
-   @param {String} colour A string which contains an HTML colour encoded 
+   @param {String} str - The string which will be displayed on the HTML page.
+   @param {String} type - The type of log, either 'Info', 'Warning' or 'Error'.
+   @param {String} colour - A string which contains an HTML colour encoded 
    value, such as '#FF6666', 'yellow', etc.
    */
   doLog: function (str, type, color)
@@ -192,7 +190,7 @@ c3dl.debug =
    @private
    Provide some sort of information the user should know about.
    
-   @param {String} infoMsg the message containing some information which may be useful
+   @param {String} infoMsg - The message containing some information which may be useful
    to the user.
    */
   logInfo: function (infoMsg)
@@ -206,7 +204,7 @@ c3dl.debug =
    but whatever caused the warning should be fixed. One example of a warning is trying to
    add an object to a scene which is not a valid object.
    
-   @param {String} warningMsg the message containing information about the warning.
+   @param {String} warningMsg - The message containing information about the warning.
    */
   logWarning: function (warningMsg)
   {
@@ -219,7 +217,7 @@ c3dl.debug =
    access an array with an out of bounds index or trying to enable an unsupported capability.
    The script may still be able to run even after an exception has occured.
    
-   @param {String} exceptionMsg the message containing information about the exception.
+   @param {String} exceptionMsg - The message containing information about the exception.
    */
   logException: function (exceptionMsg)
   {
@@ -232,7 +230,7 @@ c3dl.debug =
    An example of an error is the renderer failing to initialize because of an invalid value 
    passed to the renderer's initialize method.
    
-   @param {String} errorMsg A string which indicates why the script failed to run.
+   @param {String} errorMsg - A string which indicates why the script failed to run.
    */
   logError: function (errorMsg)
   {

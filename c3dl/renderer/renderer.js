@@ -24,6 +24,9 @@ c3dl.Renderer = function ()
   this.contextHeight = 0;
 
   /**
+   Check whether lighting is enabled or not
+   
+   @returns {boolean} True if lighting is enabled, false otherwise.
    */
   this.getLighting = function ()
   {
@@ -75,7 +78,7 @@ c3dl.Renderer = function ()
    @private
    Set the color the canvas will be cleared to each frame.
    
-   @param {Array} clearColor Array of 4 values in the order [r,g,b,a] which must
+   @param {Array} clearColor - Array of 4 values in the order [r,g,b,a] which must
    be in the range [0.0 - 1.0].
    */
   this.setClearColor = function (clearColor)
@@ -86,7 +89,7 @@ c3dl.Renderer = function ()
   /**
    Set how objects will be rendered, either filled in or using wireframe.
    
-   @param {c3dl.FILL | c3dl.WIRE_FRAME} mode
+   @param {c3dl.FILL | c3dl.WIRE_FRAME} mode - A constant value representing how objects will be rendered.
    */
   this.setFillMode = function (mode)
   {
@@ -101,6 +104,9 @@ c3dl.Renderer = function ()
   }
 
   /**
+   Enable/disable lighting.
+   
+   @param {boolean} isOn - true to enable lighting, false to disable it.
    */
   this.setLighting = function (isOn)
   {
@@ -108,6 +114,9 @@ c3dl.Renderer = function ()
   }
 
   /**
+   Get the width of the rendering context
+   
+   @returns {int} The width (in pixels) of the rendering context
    */
   this.getContextWidth = function ()
   {
@@ -115,6 +124,9 @@ c3dl.Renderer = function ()
   }
 
   /**
+   Get the height of the rendering context
+   
+   @returns {int} The height (in pixels) of the rendering context
    */
   this.getContextHeight = function ()
   {

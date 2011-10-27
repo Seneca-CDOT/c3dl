@@ -16,6 +16,9 @@ c3dl.ProgramObject = function ()
   this.rendererID = -1;
 
   /**
+   Get a unique ID for this program object
+   
+   @returns {int} A unique id for this shader
    */
   this.getProgramID = function ()
   {
@@ -23,7 +26,9 @@ c3dl.ProgramObject = function ()
   }
 
   /**
+   Get the id of the renderer using this shader
    
+   @returns {int} The id of the renderer using this shader
    */
   this.getRendererID = function ()
   {
@@ -34,7 +39,7 @@ c3dl.ProgramObject = function ()
    @private  
    Get a string representation of this object. 
    
-   @param {null|String} delimiter A string which will separate values. Typically will be 
+   @param {null|String} delimiter - A string which will separate values. Typically will be 
    ","  ,  "\n" or "&lt;br /&gt;". If none is specified, "," will be used.
    
    @returns {String} A string representation of this object.

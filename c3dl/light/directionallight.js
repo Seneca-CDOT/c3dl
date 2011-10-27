@@ -45,7 +45,7 @@ c3dl.DirectionalLight = c3dl.inherit(c3dl.Light, function ()
    Set the direction of this light. The 'dir' argument will be scaled to
    a unit vector before being assigned if not already unit length.
    
-   @param {Array} dir Will be scaled to a unit vector before being assigned
+   @param {Array} dir - Will be scaled to a unit vector before being assigned
    if not already unit length.
    */
   this.setDirection = function (dir)

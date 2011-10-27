@@ -89,9 +89,9 @@ c3dl.Texture = function ()
    Once the Texture has been setup, do not allow the user to set it up 
    again.
    
-   @param glCanvas3D
-   @param {string} source
-   @param sourceCanvas
+   @param {context} glCanvas3D - The graphics rendering context
+   @param {string} source - The path to the texture.
+   @param sourceCanvas - The canvas element the texture should be available in.
    
    @return {boolean} true if the Texture could be set up, false 
    if the texture was already setup or if setup failed.
@@ -154,6 +154,8 @@ c3dl.Texture = function ()
 
       /**
         @private
+        
+        Bind a unique ID to the texture
       */
       textureImage.setupWebGL = function ()
       {
@@ -243,6 +245,11 @@ c3dl.Texture = function ()
     // if the image could be setup, this variable was set to
     return returnCode;
   }
+  
+  /**
+   Draw the texture.
+   Called automatically.
+  */
   this.update = function ()
   {
     if (sourcecan instanceof HTMLImageElement)

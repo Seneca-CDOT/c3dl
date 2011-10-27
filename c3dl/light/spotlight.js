@@ -74,7 +74,7 @@ c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function ()
    If the angle between the direction of the light and direction of spotlight
    to the vertex being lit is less than the cutoff, the vertex will be lit.
    
-   @param {float} cutoff Measured in degrees. Must either be equal 
+   @param {float} cutoff - Measured in degrees. Must either be equal 
    to 180 or range between 0 and 90.
    */
   this.setCutoff = function (cutoff)
@@ -89,7 +89,7 @@ c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function ()
    Set the direction of the spotlight. The 'dir' argument will be scaled to
    a unit vector before being assigned if not already unit length.
    
-   @param {Array} dir Direction the spotlight is pointing. Will be scaled 
+   @param {Array} dir - Direction the spotlight is pointing. Will be scaled 
    to a unit vector before being assigned if not already unit length.
    */
   this.setDirection = function (dir)
@@ -101,7 +101,7 @@ c3dl.SpotLight = c3dl.inherit(c3dl.PositionalLight, function ()
    Set the intensity distribution of the light within the cone the spotlight
    creates. Higher exponent values will result in a more focused light.
    
-   @param {float} exponent Must range from 0 to 128 inclusive.
+   @param {float} exponent - Must range from 0 to 128 inclusive.
    */
   this.setExponent = function (exponent)
   {

@@ -5,7 +5,7 @@ Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 
 /**
  @namespace values within this namespace are guarantted not be be changed
- by the library. The const part of the values such as c3dl.FAR_CLIPPING_PLANE
+ by the library. The const part of the values such as c3dl.DEFAULT_FAR_CLIPPING_PLANE
  indicate the library never changes the value and neither should the user.
  */
 

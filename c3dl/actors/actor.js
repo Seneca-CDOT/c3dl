@@ -126,7 +126,12 @@ c3dl.Actor.prototype.getTransform = function ()
   return c3dl.multiplyMatrixByMatrix(c3dl.mat1, c3dl.mat2, this.transMat); 
 }
 
-
+/**
+ Get the matrix that describes this object's direction vectors
+ left, up and dir.  
+ 
+ @return {Array}
+ */
 c3dl.Actor.prototype.getRotateMat = function ()
 { 
   this.rotMat[0] = this.left[0];
@@ -172,6 +177,7 @@ c3dl.Actor.prototype.setTransform = function (mat)
 }
 
 /**
+ Reset the transformation of this actor to default values
  */
 c3dl.Actor.prototype.resetTransform = function ()
 {
@@ -250,7 +256,6 @@ c3dl.Actor.prototype.setForward = function (newVec)
  
  @param {Array} newVec
  */
- 
 c3dl.Actor.prototype.setUpVector = function (newVec)
 {
   this.up[0] = newVec[0];
@@ -318,7 +323,6 @@ c3dl.Actor.prototype.rotateOnAxis = function (axisVec, angle)
   rotateOnAxisMat = c3dl.quatToMatrix(rotateOnAxisQuat);
 
   // Apply changes to the remaining vectors
-  //
   c3dl.multiplyMatrixByVector(rotateOnAxisMat, this.dir, this.dir);
   c3dl.normalizeVector(this.dir);
 
@@ -382,6 +386,10 @@ c3dl.Actor.prototype.update = function (timeStep)
 
 /**
  @private
+ 
+ Obtain a copy of this actor
+ 
+ @return {actor} A copy of this actor
  */
 c3dl.Actor.prototype.getCopy = function ()
 {
@@ -392,6 +400,9 @@ c3dl.Actor.prototype.getCopy = function ()
 
 
 /**
+ Determine what type of object this is
+ 
+ @return {CONST} A constant value interpreted by the library to represent a model
  */
 c3dl.Actor.getObjectType = function ()
 {
@@ -400,6 +411,10 @@ c3dl.Actor.getObjectType = function ()
 
 /**
  @private
+ 
+ Create a duplicate copy of this actor.
+ 
+ @return {actor} The duplicate copy of this actor
  */
 c3dl.Actor.prototype.clone = function (other)
 {

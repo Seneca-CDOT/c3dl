@@ -16,7 +16,7 @@
  has the correct amount of components, is the right type and has 
  the correct types.
  
- @param {Array} vecArr The vector to check.
+ @param {Array} vecArr - The vector to check.
  
  @return {boolean} True if the 'vecArr' is valid, false otherwise.
  */
@@ -46,7 +46,7 @@ c3dl.isValidVector = function (vecArr)
 /**
  Copy the Vector 'srcVec' and return it.
  
- @param {Array} srcVec The vector to copy.
+ @param {Array} srcVec - The vector to copy.
  
  @returns {Array} A copy of the 'srcVec' vector.
  */
@@ -67,8 +67,8 @@ c3dl.copyVector = function (srcVec, dest)
 /**
  Copy the components of srcVec Vector to destVec Vector.
  
- @param {Array} srcVec The source Vector to copy from.
- @param {Array} destVec The destination Vector to copy to.
+ @param {Array} srcVec - The source Vector to copy from.
+ @param {Array} destVec - The destination Vector to copy to.
  */
 c3dl.copyVectorContents = function (srcVec, destVec)
 {
@@ -88,9 +88,9 @@ c3dl.addVectorComponent = function (srcVec, newComponent)
  Create a 3D Vector from the given 'newX', 'newY' 
  and 'newZ' arguments.
  
- @param {float} newX The x value.
- @param {float} newY The y value.
- @param {float} newZ The z value.
+ @param {float} newX - The x value.
+ @param {float} newY - The y value.
+ @param {float} newZ - The z value.
  
  @returns {Array} A 3D Vector with the components specified by the
  three arguments.
@@ -104,7 +104,7 @@ c3dl.makeVector = function (newX, newY, newZ)
  Normalize the given Vector. A normalized Vector points in the same direction
  as the original, yet has a length of 1.
  
- @param {Array} vec The Vector to normalize.
+ @param {Array} vec - The Vector to normalize.
  
  @returns {Array} The normalized Vector if the argument is a Vector 
  object, otherwise returns nulls.
@@ -141,8 +141,8 @@ c3dl.normalizeVector = function (vec)
 /**
  Get the dot product of two vectors.
  
- @param {Array} vecOne The first vector.
- @param {Array} vecTwo The second vector.
+ @param {Array} vecOne - The first vector.
+ @param {Array} vecTwo - The second vector.
  
  @returns {float} The dot product of the two specified Vectors. If 
  one of the Vectors was invalid, returns null.
@@ -155,8 +155,8 @@ c3dl.vectorDotProduct = function (vecOne, vecTwo, dest)
 /**
  Get the result of projecting vector 'vecOne' onto 'vecTwo'.
  
- @param {Array} vecOne
- @param {Array} vecTwo
+ @param {Array} vecOne - The vector to project onto 'vecTwo'
+ @param {Array} vecTwo - The vector to project 'vecOne' on to.
  
  @returns {Array} result of projecting vector 'vecOne' onto 'vecTwo'.
  */
@@ -176,8 +176,8 @@ c3dl.vectorProject = function (vecOne, vecTwo)
  Get the cross product of two Vectors.  The cross product is a Vector which
  is perpendicular to both the first and second vector.
  
- @param {Array} vecOne The first vector.
- @param {Array} vecTwo The second vector.
+ @param {Array} vecOne - The first vector.
+ @param {Array} vecTwo - The second vector.
  
  @returns {Array} The cross product of 'vecOne' and 'vecTwo'.
  */
@@ -189,7 +189,7 @@ c3dl.vectorCrossProduct = function (vecOne, vecTwo, dest)
 /**
  Get the length of the vector 'vec'.
  
- @param {Array} vec The vector for which the length is needed.
+ @param {Array} vec - The vector for which the length is needed.
  
  @return {float} The length of the vector 'vec'.
  */
@@ -201,7 +201,7 @@ c3dl.vectorLength = function (vec)
 /**  
  Get the squared length of the vector 'vec'.
  
- @param {Array} vec The vector for which the squared length is required.
+ @param {Array} vec - The vector for which the squared length is required.
  
  @returns {float} The 'length' of each component of 'vec' added together.
  */
@@ -214,9 +214,9 @@ c3dl.vectorLengthSq = function (vec)
  Add two Vectors together and place the result in dest and 
  return it.
  
- @param {Array} vecOne The first Vector.
- @param {Array} vecTwo The second Vector.
- @param {Array} [dest] A vector which will hold the result.
+ @param {Array} vecOne - The first Vector.
+ @param {Array} vecTwo - The second Vector.
+ @param {Array} [dest] - A vector which will hold the result.
  
  @returns {Array} The resultant Vector if both were valid 
  Vectors, otherwise returns null.
@@ -229,9 +229,9 @@ c3dl.addVectors = function (vecOne, vecTwo, dest)
 /**
  Subtract vector 'vecTwo' from vector 'vecOne'.
  
- @param {Array} vecOne The Vector to subtract from.
- @param {Array} vecTwo The Vector which is used to subtract.
- @param {Array} [dest] The Vector which will contains the resultant.
+ @param {Array} vecOne - The Vector to subtract from.
+ @param {Array} vecTwo - The Vector which is used to subtract.
+ @param {Array} [dest] - The Vector which will contains the resultant.
  
  @returns {Array} The resultant Vector, which is the first vector 
  minus the second. If one of the vector were not valid, returns null.
@@ -248,9 +248,9 @@ c3dl.subtractVectors = function (vecOne, vecTwo, dest)
  geometrically longer or shorter.  If the scalar value is negative, 
  the result will point in the opposite direction of 'vec'.
  
- @param {Array} vec The vector to scale.
- @param {float} scalar The amount to scale the vector.
- @param {Array} [dest] A vector which will hold
+ @param {Array} vec - The vector to scale.
+ @param {float} scalar - The amount to scale the vector.
+ @param {Array} [dest] - A vector which will hold
  the result if provided.
  
  @returns {Array} A vector 'vec' which has been scaled by 'scalar' or
@@ -264,9 +264,9 @@ c3dl.multiplyVector = function (vec, scalar, dest)
 /**
  Divide each component of 'vec' and store into dest and return it.
  
- @param {Array} vec The vector to divide.
- @param {float} scalar The amount to scale 'vec'.
- @param {Array} [dest] A vector which will hold
+ @param {Array} vec - The vector to divide.
+ @param {float} scalar - The amount to scale 'vec'.
+ @param {Array} [dest] - A vector which will hold
  the result if provided.
  
  @returns {Array} A vector 'vec' which has been divided by 'scalar' or
@@ -291,9 +291,9 @@ c3dl.divideVector = function (vec, scalar, dest)
  product operation.  Instead, each corresponding component of each of 
  the vectors are multiplied together
  
- @param {Array} vecOne Vector one.
- @param {Array} vecTwo Vector two.
- @param {Array} [dest] The destination will contain the result of 
+ @param {Array} vecOne - Vector one.
+ @param {Array} vecTwo - Vector two.
+ @param {Array} [dest] - The destination will contain the result of 
  the operation.
  
  @returns {Array} A Vector which is the result of multiplying each 
@@ -311,6 +311,17 @@ c3dl.multiplyVectorByVector = function (vecOne, vecTwo, dest)
   dest[2] = vecOne[2] * vecTwo[2];
   return dest;
 }
+
+/**
+ Divide a vector by another vector.  Each component of 'vecOne'
+ will be divided by the corresponding component of 'vecTwo'.
+ 
+ @param {Array} vecOne - The vector to divide.
+ @param {Array} vecTwo - The vector to divide by.
+ @param {Array} [dest] - The vector to store the result of the division.
+ 
+ @returns {Array} The result of dividing 'vecOne' by 'vecTwo'.
+*/
 c3dl.divideVectorByVector = function (vecOne, vecTwo, dest)
 {
   if (dest == undefined)
@@ -327,8 +338,8 @@ c3dl.divideVectorByVector = function (vecOne, vecTwo, dest)
  Compare two vectors for equality. Two Vectors are said to be equal 
  if all their components are equal.
  
- @param {Array} vecOne Vector one.
- @param {Array} vectwo Vector two.
+ @param {Array} vecOne - Vector one.
+ @param {Array} vectwo - Vector two.
  
  @return {boolean} True if both vectors are equal, null otherwise.
  */
@@ -344,7 +355,7 @@ c3dl.isVectorEqual = function (vecOne, vecTwo)
  considered zero.  'Close enough' is considered true if the components
  lie between the -TOLERANCE and +TOLERANCE constant.
  
- @param {Array} vec The Vector to check.
+ @param {Array} vec - The Vector to check.
  
  @return {boolean} True if the vector is considered a zero vector, false otherwise.
  */
@@ -358,8 +369,8 @@ c3dl.isVectorZero = function (vec)
 /**
  Get the angle (in degrees) between two vectors.
  
- @param {Array} vecOne The first vector.
- @param {Array} vecTwo The second vector.
+ @param {Array} vecOne - The first vector.
+ @param {Array} vecTwo - The second vector.
  
  @return {float} The angle in degrees between the two vectors.
  */

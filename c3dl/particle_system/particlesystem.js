@@ -107,7 +107,7 @@ c3dl.ParticleSystem = function ()
    particles are emitted.  If there are no particles available to emit,
    none are emitted.
    
-   @param numToEmit
+   @param {int} numToEmit - The number of particles to emit per second
    */
   this.emit = function (numToEmit)
   {
@@ -147,7 +147,7 @@ c3dl.ParticleSystem = function ()
    @private
    Emit a particle at index 'index'.
    
-   @param index
+   @param {int} index - The index to use to hold the new particle
    */
   this.emitParticle = function (index)
   {
@@ -186,7 +186,7 @@ c3dl.ParticleSystem = function ()
    Initialize the subsystem.  This must be called before the particle 
    system is actually used.
    
-   @param {integer} numParticles
+   @param {integer} numParticles - the total number of particles allowed
    */
   this.init = function (numParticles)
   {
@@ -225,7 +225,7 @@ c3dl.ParticleSystem = function ()
    @private
    is the subsystem ready to render?
    
-   @return true if the subsystem is ready to render.
+   @returns {boolean} true if the subsystem is ready to render.
    */
   this.isReady = function ()
   {
@@ -235,7 +235,7 @@ c3dl.ParticleSystem = function ()
   /**
    Get the total amount of particles in the system, including dead ones.
    
-   return {int}
+   returns {int} The maximum number of particles allowed in this system
    */
   this.getNumParticles = function ()
   {
@@ -246,6 +246,8 @@ c3dl.ParticleSystem = function ()
    Get the particle at index i.
    
    @param {int} i the index of the particle to get.
+   
+   @returns {c3dl.Particle} The particle at the specified index
    */
   this.getParticle = function (i)
   {
@@ -257,6 +259,9 @@ c3dl.ParticleSystem = function ()
 
   /**
    @private
+   Get the standard vertices for all particles in this system
+   
+   @returns {Array} The corner vertices for the particles
    */
   this.getVertices = function ()
   {
@@ -265,6 +270,9 @@ c3dl.ParticleSystem = function ()
 
   /**
    @private
+   Get the standard texture coordinates for all particles in this system
+   
+   @returns {Array} The texture coordinates common to all particles in this system
    */
   this.getTexCoords = function ()
   {
@@ -275,7 +283,7 @@ c3dl.ParticleSystem = function ()
    @private
    Removed the particle at index 'index' from being update and rendered.
    
-   @param 
+   @param {int} index - The indedx of the particle to deactivate.
    */
   this.killParticle = function (index)
   {
@@ -289,7 +297,7 @@ c3dl.ParticleSystem = function ()
   /**
    Set the amount of particles to emit per second. To stop emission, pass in zero.
    
-   @param particlesPerSecond
+   @param {int} particlesPerSecond - The number of particles to be emitted per second.
    */
   this.setEmitRate = function (particlesPerSecond)
   {
@@ -307,7 +315,9 @@ c3dl.ParticleSystem = function ()
 
   /**
    @private
-   testing funciton
+   Move this particle system relative to its current position.
+   
+   @param {Array} vec - The amount to translate by, in each axis.
    */
   this.translate = function (vec)
   {
@@ -317,9 +327,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
-   Set the position of the particle system.
+   Set the absolute position of the particle system.
    
-   @param {Array} 
+   @param {Array}  vec - The new position for this system.
    */
   this.setPosition = function (vec)
   {
@@ -332,6 +342,8 @@ c3dl.ParticleSystem = function ()
   /**
    Get the acceleration of all the particles.  This is usually 
    gravity, but does not have to be.
+   
+   @returns {Array} The acceleration common to all particles in this system.
    */
   this.getAcceleration = function ()
   {
@@ -340,6 +352,8 @@ c3dl.ParticleSystem = function ()
 
   /**
    Get blend equation
+   
+   @returns {int} A constnt value representing the blend equation
    */
   this.getBlendEquation = function ()
   {
@@ -349,7 +363,7 @@ c3dl.ParticleSystem = function ()
   /**
    get the desination blend factor.
    
-   @return {int} the destination blend factor.
+   @returns {int} the destination blend factor.
    */
   this.getDstBlend = function ()
   {
@@ -362,7 +376,7 @@ c3dl.ParticleSystem = function ()
    maximum value each component can be assigned. components
    range from 0 to 1.
    
-   @returns {Array}
+   @returns {Array} The maximum values for R,G and B
    */
   this.getMaxColor = function ()
   {
@@ -371,7 +385,8 @@ c3dl.ParticleSystem = function ()
 
   /**
    Get the minimum color range.
-   @returns {Array}
+   
+   @returns {Array} The minimum values for R,G and B
    */
   this.getMinColor = function ()
   {
@@ -381,7 +396,7 @@ c3dl.ParticleSystem = function ()
   /**
    Get the maximum number of seconds for which any particle can live.
    
-   @return the maximum number of seconds for which any particle 
+   @returns {float} the maximum number of seconds for which any particle 
    can live.
    */
   this.getMaxLifetime = function ()
@@ -392,7 +407,7 @@ c3dl.ParticleSystem = function ()
   /**
    Get the minimum amount of seconds for which any particle can live.
    
-   @return the minimum amount of seconds for which any particle can live.
+   @returns {float} the minimum amount of seconds for which any particle can live.
    */
   this.getMinLifetime = function ()
   {
@@ -400,6 +415,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Get the minimum velocity for particles in this system
+   
+   @returns {Array} The minimum possible velocity for all particles.
    */
   this.getMinVelocity = function ()
   {
@@ -410,7 +428,7 @@ c3dl.ParticleSystem = function ()
    Get the maximum values for each xyz component any particle can 
    be assigned when emitted.
    
-   @return {Array} the maximum values for each xyz component any particle can 
+   @returns {Array} The maximum values for each xyz component any particle can 
    be assigned when emitted.
    */
   this.getMaxVelocity = function ()
@@ -442,14 +460,14 @@ c3dl.ParticleSystem = function ()
    Set the acceleration of this subsystem. This is commonly gravity, but can be
    any valid vector.
    
-   @param {Array} acceleration
+   @param {Array} acceleration - The acceleration to be applied to every particle
    */
   this.setAcceleration = function (acceleration)
   {
     this.acceleration[0] = acceleration[0];
-  this.acceleration[1] = acceleration[1];
-  this.acceleration[2] = acceleration[2];
-  this.acceleration[3] = acceleration[3];
+    this.acceleration[1] = acceleration[1];
+    this.acceleration[2] = acceleration[2];
+    this.acceleration[3] = acceleration[3];
   }
 
   /**
@@ -466,24 +484,24 @@ c3dl.ParticleSystem = function ()
    c3dl.ONE_MINUS_DST_COLOR or
    c3dl.SRC_ALPHA_SATURATE
    
-   @param {int} dstBlend
+   @param {int} dstBlend - The destination blend factor
    */
   this.setDstBlend = function (dstBlend)
   {
     switch (dstBlend)
     {
-    case c3dl.ZERO:
-    case c3dl.ONE:
-    case c3dl.SRC_COLOR:
-    case c3dl.ONE_MINUS_SRC_COLOR:
-    case c3dl.SRC_ALPHA:
-    case c3dl.ONE_MINUS_SRC_ALPHA:
-    case c3dl.DST_ALPHA:
-    case c3dl.ONE_MINUS_DST_ALPHA:
-    case c3dl.DST_COLOR:
-    case c3dl.ONE_MINUS_DST_COLOR:
-    case c3dl.SRC_ALPHA_SATURATE:
-      this.dstBlend = dstBlend;
+      case c3dl.ZERO:
+      case c3dl.ONE:
+      case c3dl.SRC_COLOR:
+      case c3dl.ONE_MINUS_SRC_COLOR:
+      case c3dl.SRC_ALPHA:
+      case c3dl.ONE_MINUS_SRC_ALPHA:
+      case c3dl.DST_ALPHA:
+      case c3dl.ONE_MINUS_DST_ALPHA:
+      case c3dl.DST_COLOR:
+      case c3dl.ONE_MINUS_DST_COLOR:
+      case c3dl.SRC_ALPHA_SATURATE:
+        this.dstBlend = dstBlend;
       break;
     }
   }
@@ -499,16 +517,16 @@ c3dl.ParticleSystem = function ()
     if (c3dl.isValidColor(maxColor))
     {
       this.maxColor[0] = maxColor[0];
-    this.maxColor[1] = maxColor[1];
-    this.maxColor[2] = maxColor[2];
-    this.maxColor[3] = maxColor[3];
+      this.maxColor[1] = maxColor[1];
+      this.maxColor[2] = maxColor[2];
+      this.maxColor[3] = maxColor[3];
     }
   }
 
   /**
    Set the minimum color values each particle can be.
    
-   @param {Array} minParticleColor the minimum Color values each particle 
+   @param {Array} minParticleColor - The minimum Color values each particle 
    can be.
    */
   this.setMinColor = function (minColor)
@@ -516,9 +534,9 @@ c3dl.ParticleSystem = function ()
     if (c3dl.isValidColor(minColor))
     {
       this.minColor[0] = minColor[0];
-    this.minColor[1] = minColor[1];
-    this.minColor[2] = minColor[2];
-    this.minColor[3] = minColor[3];
+      this.minColor[1] = minColor[1];
+      this.minColor[2] = minColor[2];
+      this.minColor[3] = minColor[3];
     }
   }
 
@@ -526,7 +544,7 @@ c3dl.ParticleSystem = function ()
    Set the maximum number of seconds for which any particle can live.
    Value must be greater than zero.
    
-   @param {float} maxLifetime
+   @param {float} maxLifetime - The maximum lifespan of any particle.
    */
   this.setMaxLifetime = function (maxLifetime)
   {
@@ -540,7 +558,7 @@ c3dl.ParticleSystem = function ()
    Set the minimum amount of seconds for which particles will live.
    Value must be greater than zero.
    
-   @param minParticleLifetime the minimum amount of seconds for 
+   @param {flaot} minLifetime - The minimum amount of seconds for 
    which the particles can live.
    */
   this.setMinLifetime = function (minLifetime)
@@ -552,7 +570,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Set the maximum possible size for particles in this subsystem.
    
+   @param {float} maxSize - The maximum size for any particle
    */
   this.setMaxSize = function (maxSize)
   {
@@ -563,7 +583,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Set the minimum possible size for particles in this subsystem.
    
+   @param {float} minSize - The minimum size for any particle
    */
   this.setMinSize = function (minSize)
   {
@@ -576,28 +598,31 @@ c3dl.ParticleSystem = function ()
   /**
    Set the minimum velocity of all the particles.
    
-   @param {Array} minVelocity the minimum velocity of all the particles.
+   @param {Array} minVelocity - The minimum velocity of all the particles.
    */
   this.setMinVelocity = function (minVelocity)
   {
     this.minVelocity[0] = minVelocity[0];
-  this.minVelocity[1] = minVelocity[1];
-  this.minVelocity[2] = minVelocity[2];
+    this.minVelocity[1] = minVelocity[1];
+    this.minVelocity[2] = minVelocity[2];
   }
 
   /**
    Set the maximum velocity of all the particles.
    
-   @param {Array} maxVelocity the maximum velocity of all the particles.
+   @param {Array} maxVelocity - The maximum velocity of all the particles.
    */
   this.setMaxVelocity = function (maxVelocity)
   {
     this.maxVelocity[0] = maxVelocity[0];
-  this.maxVelocity[1] = maxVelocity[1];
-  this.maxVelocity[2] = maxVelocity[2];
+    this.maxVelocity[1] = maxVelocity[1];
+    this.maxVelocity[2] = maxVelocity[2];
   }
 
   /**
+   Set the maximum angular velocity of all the particles.
+   
+   @param {Array} maxAngVel - The maximum angular velocity of all the particles.
    */
   this.setMaxAngularVelocity = function (maxAngVel)
   {
@@ -605,6 +630,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Set the minimum angular velocity of all the particles.
+   
+   @param {Array} minAngVel - The minimum angular velocity of all the particles.
    */
   this.setMinAngularVelocity = function (minAngVel)
   {
@@ -614,16 +642,16 @@ c3dl.ParticleSystem = function ()
   /**
    (src * srcBlend) Eq (dst * dstBlend)
    
-   @param {int} blenEq
+   @param {int} blenEq - A constant velue representing the blend equation to use 
    */
   this.setBlendEquation = function (blendEq)
   {
     switch (blendEq)
     {
-    case c3dl.FUNC_ADD:
-    case c3dl.FUNC_SUBTRACT:
-    case c3dl.FUNC_REVERSE_SUBTRACT:
-      this.blendEq = blendEq;
+      case c3dl.FUNC_ADD:
+      case c3dl.FUNC_SUBTRACT:
+      case c3dl.FUNC_REVERSE_SUBTRACT:
+        this.blendEq = blendEq;
       break;
     }
   }
@@ -643,24 +671,24 @@ c3dl.ParticleSystem = function ()
    c3dl.ONE_MINUS_DST_COLOR or
    c3dl.SRC_ALPHA_SATURATE
    
-   @param {int} srcBlend
+   @param {int} srcBlend - The source blending factor
    */
   this.setSrcBlend = function (srcBlend)
   {
     switch (srcBlend)
     {
-    case c3dl.ZERO:
-    case c3dl.ONE:
-    case c3dl.SRC_COLOR:
-    case c3dl.ONE_MINUS_SRC_COLOR:
-    case c3dl.SRC_ALPHA:
-    case c3dl.ONE_MINUS_SRC_ALPHA:
-    case c3dl.DST_ALPHA:
-    case c3dl.ONE_MINUS_DST_ALPHA:
-    case c3dl.DST_COLOR:
-    case c3dl.ONE_MINUS_DST_COLOR:
-    case c3dl.SRC_ALPHA_SATURATE:
-      this.srcBlend = srcBlend;
+      case c3dl.ZERO:
+      case c3dl.ONE:
+      case c3dl.SRC_COLOR:
+      case c3dl.ONE_MINUS_SRC_COLOR:
+      case c3dl.SRC_ALPHA:
+      case c3dl.ONE_MINUS_SRC_ALPHA:
+      case c3dl.DST_ALPHA:
+      case c3dl.ONE_MINUS_DST_ALPHA:
+      case c3dl.DST_COLOR:
+      case c3dl.ONE_MINUS_DST_COLOR:
+      case c3dl.SRC_ALPHA_SATURATE:
+        this.srcBlend = srcBlend;
       break;
     }
   }
@@ -669,7 +697,7 @@ c3dl.ParticleSystem = function ()
   /**
    Set the texure of the particles.
    
-   @param {String} textureName
+   @param {String} textureName - The texture to use for the particles
    */
   this.setTexture = function (textureName)
   {
@@ -682,7 +710,7 @@ c3dl.ParticleSystem = function ()
    calculate how many particles to emit if the emit rate has been
    set.
    
-   @param {float} timeStep
+   @param {float} timeStep - The amount of time elapsed since the last update.
    */
   this.update = function (timeStep)
   {
@@ -785,12 +813,20 @@ c3dl.ParticleSystem = function ()
     }
   }
 
+  /**
+   Get the buffer containing the texture coordinates
+   
+   @returns {} The buffer containing the texture coordinates common to all particles in this system
+  */
   this.getVBOTexCoords = function ()
   {
     return this.VBOTexCoords;
   }
 
   /**
+   Get the buffer containing the vertex coordinates
+   
+   @returns {} The buffer containing the vertex coordinates common to all particles in this system
    */
   this.getVBOVertices = function ()
   {
@@ -798,6 +834,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Get the buffer containing the colours
+   
+   @returns {} The buffer containing the colours common to all particles in this system.
    */
   this.getVBOColors = function ()
   {
@@ -808,8 +847,8 @@ c3dl.ParticleSystem = function ()
    @private
    prepare to render the particles. This includes turning off lighting, enabling blending, etc.
    
-   @param glCanvas3D
-   @param {Scene} scene
+   @param {context} glCanvas3D - The graphics rendering context
+   @param {Scene} scene - The scene currently being rendered
    */
   this.preRender = function (glCanvas3D, scene)
   {
@@ -868,8 +907,8 @@ c3dl.ParticleSystem = function ()
    @private
    Re-enable the depth testing, lighting, etc.
    
-   @param glCanvas3D
-   @param {Scene} scene
+   @param {context} glCanvas3D - The graphics rendering context
+   @param {Scene} scene - The scene currently being rendered
    */
   this.postRender = function (glCanvas3D, scene)
   {
@@ -882,8 +921,8 @@ c3dl.ParticleSystem = function ()
    @private
    Draw all the particles which are alive.
    
-   @param glCanvas3D
-   @param {Scene} scene
+   @param {context} glCanvas3D - The graphics rendering context
+   @param {Scene} scene - The scene currently being rendered
    */
   this.render = function (glCanvas3D, scene)
   {
@@ -898,6 +937,9 @@ c3dl.ParticleSystem = function ()
   }
 
   /**
+   Get the type of this object
+   
+   @returns {int} A constant value representing a particle system
    */
   this.getObjectType = function ()
   {
@@ -907,6 +949,11 @@ c3dl.ParticleSystem = function ()
 
   /**
    @private
+   Recalculate the billboarding for the particles, but only if the camera is in
+   a different orienation than it was the last time this was calculated.
+   
+   @param {context} glCanvas3D - The graphics rendering context
+   @param {Scene} scene - The scene currently being rendered
    */
   this.recalculateBillboard = function (glCanvas3D, scene)
   {

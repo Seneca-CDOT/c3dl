@@ -29,7 +29,6 @@ c3dl.EffectTemplate = function ()
   this.renderingCB = null;
 
   //
-  //
   this.programObjects = [];
 
 
@@ -38,7 +37,7 @@ c3dl.EffectTemplate = function ()
    set and all parameters have been created. Once the EffectTemplate has been initialized,
    neither the shaders, callback or parameters can be changed.
    
-   @returns {bool} true if the EffectTemplate was initialized, false otherwise.
+   @returns {boolean} true if the EffectTemplate was initialized, false otherwise.
    */
   this.init = function ()
   {
@@ -65,7 +64,7 @@ c3dl.EffectTemplate = function ()
    the variable holding the material string code should be added before the light
    string code since the light code depends on material code.
    
-   @param {String} fragmentShader
+   @param {String} fragmentShader - The shader program to be used for fragments.
    */
   this.addFragmentShader = function (fragmentShader)
   {
@@ -86,9 +85,9 @@ c3dl.EffectTemplate = function ()
    Add a parameter which and instance effect can modify. Parameters should be simple, built-in
    types such as Boolean, Number, Array etc. They should not be Objects created with {}.
    
-   @param {String} paramName 
-   @param paramType Constructor used to create the object such as Boolean, Number, Array, etc.
-   @param paramDefaultValue The default value to be used if the user
+   @param {String} paramName - The name of the parameter to add.
+   @param {} paramType - Constructor used to create the object such as Boolean, Number, Array, etc.
+   @param {} paramDefaultValue - The default value to be used if the user
    does not specify any value. If null, user will have to specify a value, 
    otherwise the object with this effect will not be rendered.
    */
@@ -136,7 +135,7 @@ c3dl.EffectTemplate = function ()
    the variable holding the material string code should be added before the light
    string code since the light code depends on material code.
    
-   @param {String} vertexShader
+   @param {String} vertexShader - The shader program to be used for vertices.
    */
   this.addVertexShader = function (vertexShader)
   {
@@ -231,7 +230,7 @@ c3dl.EffectTemplate = function ()
    
    @see c3dl.RenderingObject.
    
-   @param {Function} func
+   @param {Function} func - The function to be called on each render.
    */
   this.setRenderingCallback = function (func)
   {
@@ -278,7 +277,7 @@ c3dl.EffectTemplate = function ()
   /**
    @private
    
-   @param {c3dl.ProgramObject} programObject
+   @param {c3dl.ProgramObject} programObject - The combined shader program.
    */
   this.addProgramObject = function (programObject)
   {
@@ -288,7 +287,7 @@ c3dl.EffectTemplate = function ()
   /**
    Get a string representation of this object.
    
-   @param {String} [delimiter=","]  A string which will separate values.
+   @param {String} [delimiter=","]  - A string which will separate values.
    */
   this.toString = function (delimiter)
   {

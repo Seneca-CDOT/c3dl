@@ -19,8 +19,8 @@ c3dl.ColladaLoader = function ()
    Opens the DAE file, reads the vertex, normal and uv data and stores 
    all the data in 'expanded' form into members.
    
-   @param {String} relativePath
-   @param {c3dl.SceneNode} rootNode
+   @param {String} relativePath - The path to the .dae file, relative to the html file the canvas element is in
+   @param {c3dl.SceneNode} rootNode - The root of the Scene graph
    */
   this.load = function (relativePath, rootNode)
   {
@@ -70,7 +70,7 @@ c3dl.ColladaLoader = function ()
     }
     
     xmlhttp.onprogress = function (e)
-{
+    {
       this.parent.rootNode.progress = (e.position / e.totalSize)*100;
       c3dl.PreLoader.checkProgress();
     }
@@ -86,9 +86,9 @@ c3dl.ColladaLoader = function ()
    we use a recursive function to parse each one.
    
    // clarify nodes in sg nodes in _DOM_
-   @param {xmlDocument} xmlObject The DAE DOM.
-   @param {} node The node element to parse. the DOM
-   @param {c3dl.SceneNode} sgNode The SceneGraph node, not part of the XML DOM.
+   @param {xmlDocument} xmlObject - The DAE DOM.
+   @param {} node - The node element to parse. the DOM
+   @param {c3dl.SceneNode} sgNode - The SceneGraph node, not part of the XML DOM.
    */
   this.parseNodeRecursive = function (xmlObject, node, sgNode)
   {
@@ -292,10 +292,11 @@ c3dl.ColladaLoader = function ()
    common profile can have either constant, lambert, phong or blinn child elements
    which are mutually exclusive.
    
-   @returns {object Element}
-   
-   @param {Array} choiceTagNames Array of strings which contain the tags of
+   @param {Array} parentTag - The parent element
+   @param {Array} choiceTagNames - Array of strings which contain the tags of
    choices an element can have.
+   
+   @returns {object Element}
    */
   this.getChoice = function (parentTag, choiceTagNames)
   {
@@ -321,7 +322,7 @@ c3dl.ColladaLoader = function ()
    This function is not called directly, it is called once the xml is 
    finished downloading.
    
-   @param {xmlDocument} xmlObject
+   @param {xmlDocument} xmlObject - The XML object to parse
    */
   this.parse = function (xmlObject)
   {
@@ -459,8 +460,8 @@ c3dl.ColladaLoader = function ()
   /**
    @private
    
-   @param {XMLDocument} xmlObject
-   @param {String} target
+   @param {XMLDocument} xmlObject - The XML object to read data from
+   @param {String} target - The name of the material to instantiate
    */
   this.instantiateMaterial = function (xmlObject, target)
   {
@@ -587,9 +588,11 @@ c3dl.ColladaLoader = function ()
    there may be several <geometries> which described the chairs,
    seats, body, etc.
    
-   @param {XMLDocument} xmlObject
-   @param url
-   @param instanceGeometryElement
+   @param {XMLDocument} xmlObject - The XML object to read data from
+   @param {String} url - The URL of the geomety element to create an instance of
+   @param {} instanceGeometryElement - The geometry element to crate an instance of
+   
+   @returns {c3dl.Geometry} The newly created instance
    */
   this.instantiateGeometry = function (xmlObject, url, instanceGeometryElement)
   {
@@ -1000,10 +1003,13 @@ c3dl.ColladaLoader = function ()
 
   /**
    @private
-   @param {XMLDocument} xmlObject
-   @param {String} url
    
-   @returns {c3dl.SceneNode}
+   Create a scene node from a particular element within the .dae file
+   
+   @param {XMLDocument} xmlObject - The XML object extracted from the .dae file
+   @param {String} url - The URL of the node to create
+   
+   @returns {c3dl.SceneNode} the newly created scene node
    */
   this.instantiateNode = function (xmlObject, url)
   {
@@ -1049,11 +1055,11 @@ c3dl.ColladaLoader = function ()
    we have to group them together so indexing will work 
    properly.
    
-   @param {Array} rawScalarValues
-   @param {int} numComponentsPerElement
-   @param {int} stride
+   @param {Array} rawScalarValues - The unmodified list of data from the .dae file
+   @param {int} numComponentsPerElement - The number of values used to represent each face (usually 3, occasionaly 4)
+   @param {int} stride - The number of values to step over between elements (Should be the same as numComponentsPerElement)
    
-   @returns {Array}
+   @returns {Array} - A 2-dimensional array with each 1st degree element representing one face.
    */
   this.groupScalarsIntoArray = function (rawScalarValues, numComponentsPerElement, stride)
   {
@@ -1082,9 +1088,14 @@ c3dl.ColladaLoader = function ()
   /**
    @private
    
-   @param {} collation
-   @param {int} numInputs
-   @param {Array} rawFaces
+   This function iterates through a list of vertices, organized as triangles or
+   polygons, and re-organizes them to be triangles only.
+   
+   @param {} collation - A collation element from the XML file
+   @param {int} numInputs - The number of items currently in the collation element
+   @param {Array} rawFaces - The unaltered data retrieved from the .dae file
+   
+   @returns {Array} The vertices reorganized as a triangle list.
    */
   this.splitPolylist = function (collation, numInputs, rawFaces)
   {
@@ -1189,12 +1200,15 @@ c3dl.ColladaLoader = function ()
 
   /**
    @private
-   @param {XMLDocument} xmlObject
-   @param {String} libraryName
-   @param {String} elementName
-   @param {String} elementAttributeId
    
-   @returns
+   Search for an element inside a Library within the XML data.
+   
+   @param {XMLDocument} xmlObject - The XML data extracted from the dae file
+   @param {String} libraryName - The library to search in
+   @param {String} elementName - The name of the elements to search in
+   @param {String} elementAttributeId - The id of the element to search for
+   
+   @returns {} The element matching those search parameters, or null if none do.
    */
   this.findElementInLibrary = function (xmlObject, libraryName, elementName, elementAttributeId)
   {
@@ -1223,12 +1237,15 @@ c3dl.ColladaLoader = function ()
 
   /**
    @private
-   @param {} xmlObject  
-   @param {String} nodeName
-   @param {String} attributeKey
-   @param {String} attributeValue
    
-   @return 
+   Retrieve raw data from a node in the XML file.
+   
+   @param {} xmlObject - The XML object extracted from the .dae file.
+   @param {String} nodeName - The name of the node to extract data from.
+   @param {String} attributeKey - The key of the particular attribute to retrieve the data from
+   @param {String} attributeValue - The value of that key (used to identify a unique set of values).
+   
+   @returns {Object} An object containing the raw data (in an attribute called values) and the stride used to recognize separate pieces of data.
    */
   this.getData = function (xmlObject, nodeName, attributeKey, attributeValue)
   {
@@ -1256,7 +1273,7 @@ c3dl.ColladaLoader = function ()
 
   /**
    @private
-   @param {Array} faces A 2D array which has indices.  Each index points
+   @param {Array} faces - A 2D array which has indices.  Each index points
    to a set of vertex, normal or texture coordinates.
    
    <pre>
@@ -1271,14 +1288,14 @@ c3dl.ColladaLoader = function ()
    // third value is uv index.
    </pre>
    
-   @param {Array} array The array to expand. For a cube, the array of vertices
+   @param {Array} array - The array to expand. For a cube, the array of vertices
    can look like:
    
    <pre>
    [1.00000,1.00000,-1.00000] , [1.00000,-1.00000,-1.00000] , [-1.00000,-1.00000,-1.00000] 
    </pre>
    
-   @param offset Refers to the component we are interested in within an array
+   @param {int} offset - Refers to the component we are interested in within an array
    in the faces array.  Since the faces array has indices for verts, normals and texcoords,
    using a different index gets us a index which is a 0 based index into a list of 
    coordinates.
@@ -1289,7 +1306,10 @@ c3dl.ColladaLoader = function ()
    ^         ^         ^
    </pre>
    
-   @param {int} numComponentsToExpand
+   @param {int} numComponentsToExpand - The number of components held within each
+   element of the faces array.
+   
+   @returns {Array} The multidimensional array expanded out into a single dimensional array.
    */
   this.expandFaces = function (faces, array, offset, numComponentsToExpand)
   {
@@ -1356,8 +1376,10 @@ c3dl.ColladaLoader = function ()
    
    get data from blinn, phong, lambert node
    
-   @param {}
-   @param {String} str
+   @param {} node - The node to extract data from
+   @param {String} str - The name of the data to retrieve
+   
+   @returns {Array} The values extracted from this node.
    */
   this.getColor = function (node, str)
   {
@@ -1411,7 +1433,7 @@ c3dl.ColladaLoader = function ()
    We can't just read the node value contents because it is broken up into 4096 byte chunks. So 
    we use this function to merge all the chunks together.
    
-   @param {String} childNodes
+   @param {Array} childNodes - The child nodes to merge into one dataset
    
    @returns
    */
@@ -1450,7 +1472,7 @@ c3dl.ColladaLoader = function ()
    @param {Object Element} searchNode - the element to search.
    @param {String} nodeName - the node to search for.
    
-   @returns 
+   @returns {} The matching node, or null if none match.
    */
   this.getFirstChildByNodeName = function (searchNode, nodeName)
   {
@@ -1471,14 +1493,15 @@ c3dl.ColladaLoader = function ()
 /**
  @private  
  
- static method of collada loader. 
+ static method of collada loader. Search for a node matching a particular name,
+ that has an attribute with a specified value.
  
- @param {} xmlObject
- @param {String} nodeName
- @param {String} attributeKey
- @param {String} attributeValue
+ @param {} xmlObject - The XML data extracted from the .dae file
+ @param {String} nodeName - The name of the node to look for
+ @param {String} attributeKey - The name of the attribute to attempt to match
+ @param {String} attributeValue - The value to match.
  
- @returns 
+ @returns {} The matched node, or null if no matching node was found.
  */
 c3dl.ColladaLoader.getNodeWithAttribute = function (xmlObject, nodeName, attributeKey, attributeValue)
 {
@@ -1549,8 +1572,8 @@ c3dl.ColladaLoader.getChildNodesByNodeName = function (searchNode, nodeName)
  used when we need to convert <translate>0.0 0.0 0.0</translate> into float
  values.
  
- @param {String} numbers A string which contains numbers such as "1.0 0.0 1.0 0.0       0.0 1.0 ..." note the spaces.
- @param {String} delimeter A string which is being used to separate the numbers.
+ @param {String} numbers - A string which contains numbers such as "1.0 0.0 1.0 0.0       0.0 1.0 ..." note the spaces.
+ @param {String} delimeter - A string which is being used to separate the numbers.
  */
 c3dl.ColladaLoader.stringsToFloats = function (numbers, delimeter)
 {

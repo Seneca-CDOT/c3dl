@@ -24,7 +24,7 @@ c3dl.RenderingObject = function ()
    set the uniform variables, set rendering states and render the 
    geometry.
    
-   @returns the rendering context.
+   @returns {Context} the rendering context.
    */
   this.getContext = function ()
   {

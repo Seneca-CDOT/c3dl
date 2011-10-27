@@ -58,7 +58,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    of the context in the rendering callback function in effects to make 
    that texture active.
    
-   @parma {String} path Texture path
+   @parma {String} path - The path of the texture to add to the renderer
    */
   this.addTexture = function (path)
   {
@@ -88,7 +88,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    be found or the renderer has not yet been initialized, -1 will be 
    returned.
    
-   @param {String} texturePath
+   @param {String} texturePath - The path of the texture to retrieve the id of.
    
    @returns {int} The ID of the texture, or -1 if the renderer has not 
    yet been initialized or if the texture was not found.
@@ -134,10 +134,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    This program object can be installed as the current rendering state 
    by using gl.useProgram().
    
-   @param {Array|String} vertexShaderSource The source code for the vertex shader.
-   @param {Array|String} fragmentShaderSource The source code for the fragment shader.
+   @param {Array|String} vertexShaderSource - The source code for the vertex shader.
+   @param {Array|String} fragmentShaderSource - The source code for the fragment shader.
    
-   @return {c3dl.ProgramObject} ProgramObject or null .
+   @returns {c3dl.ProgramObject} ProgramObject or null .
    */
   this.createProgram = function (vertexShader, fragmentShader)
   {
@@ -218,8 +218,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
   /**
    @private
    Clear the color and depth buffers.
+   Called automatically.
    
-   Scene is responsible for calling this.
    */
   this.clearBuffers = function ()
   {
@@ -228,7 +228,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
 
   /**
    @private
-   Swap the front and back buffers. Scene is responsible for calling this.
+   Swap the front and back buffers.
+   Called automatically.
    */
   this.swapBuffers = function ()
   {
@@ -237,7 +238,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
 
   /**
    @private
-   this is documented in the renderer class
+   Set the colour the canvas will be cleared to each frame.
+   
+   @param {Array} bgColor - Array of 4 values in the order [r,g,b,a] which must
+   be in the range [0.0 - 1.0].
    */
   this.setClearColor = function (bgColor)
   {
@@ -271,7 +275,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Set the shader values to zero so the light no longer affects the scene.
    
-   @param {int} lightID The light to clear must range from 0 to one less than c3dl.MAX_LIGHTS.
+   @param {int} lightID - The light to clear must range from 0 to one less than c3dl.MAX_LIGHTS.
    */
   this.clearLight = function (lightID, scene)
   {
@@ -302,8 +306,10 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
 
   /**
    @private
+   Update the ambient lighting in the scene.
    
-   @param {Array} ambientLight Array of lights
+   @param {Array} ambientLight - Array of lights
+   @param {Scene} scene - The scene currently being rendered
    */
   this.updateAmbientLight = function (ambientLight, scene)
   {
@@ -331,7 +337,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Update the light states in the shader with lightList.
    
-   @param {Array} lightList Array of lights
+   @param {Array} lightList - Array of lights
+   @param {Scene} scene - The scene currently being rendered
    */
   this.updateLights = function (lightList, scene)
   {
@@ -419,8 +426,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
     }
   }
 
-/*
-
+  /**
+   Set up a bounding sphere for rendering.
   */
   this.pointSphereRenderSetup = function ()
   {
@@ -442,7 +449,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    
    Create a Renderer.
    
-   @param cvs
+   @param {} cvs - The canvas tag
    
    @returns {boolean} True if the context could be created, 
    otherwise false.
@@ -481,8 +488,9 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    
    Compiles and link the shaders.
    
-   @param {int} width of the canvas in pixels.
-   @param {int} height of the canvas in pixels.
+   @param {int} width - The width of the canvas in pixels.
+   @param {int} height - The height of the canvas in pixels.
+   @param {Scene} scene - The scene currently being rendered
    */
   this.init = function (width, height,scene)
   {
@@ -612,7 +620,9 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Render the bounding sphere
    
-   @param {c3dl.BoundingSphere} boundingSphere
+   @param {c3dl.BoundingSphere} boundingSphere - The bounding sphere to render
+   @param {Array} viewMatrix - The view matrix of the current camera
+   @param {Scene} scene - The scene currently being rendered
    */
   this.renderBoundingSphere = function (boundingSphere,viewMatrix, scene)
   {
@@ -653,7 +663,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Render a geometry
    
-   @param {c3dl.Geometry} obj
+   @param {c3dl.Geometry} obj - The geometry to be rendered
+   @param {Scene} scene - The scene currently being rendered
    */
   this.renderGeometry = function (obj, scene)
   {
@@ -797,6 +808,13 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
       c3dl.std_callback(renderingObj, scene);
     }
   }
+  
+  /**
+   Render a shape.
+   
+   @param {} obj - The shape to be rendered
+   @param {Scene} scene - The scene currently being rendered
+   */
   this.renderShape = function (obj, scene)
   {
       var renderingObj =
@@ -837,7 +855,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private  
    Render a particle system.
    
-   @param {c3dl.ParticleSystem} psys
+   @param {c3dl.ParticleSystem} psys - The particle system to be rendered
+   @param {Scene} scene - The scene currently being rendered
    */
   this.renderParticleSystem = function (psys, scene)
   {
@@ -910,7 +929,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Render a set of lines.
    
-   @param {Array} lines
+   @param {Array} lines - The lines to render
+   @param {Scene} scene - The scene currently being rendered
    */
   this.renderLines = function (lines, scene)
   {
@@ -976,11 +996,13 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
 
   /**
    @private
-   @param {Array} pointPositions
-   @param {Array} pointColors
-   @param {Array} attenuation
-   @param {int} mode
-   @param {float} size
+   Render a group of points
+   
+   @param {Array} pointPositions - The positions of the points
+   @param {Array} pointColors - The colours of the points
+   @param {Array} attenuation - The attenuation factors for these points
+   @param {int} mode - The point mode
+   @param {float} size - the sizes of the points
    */
   this.renderPoints = function (pointPositions, pointColors, attenuation, mode, size, scene)
   {
@@ -1078,11 +1100,14 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
 
   /**
    @private
+   Set an attribute of a shader
    
-   @param {int} shader
-   @param {String} varName
-   @param {int} size
-   @param vbo
+   @param {int} shader - Unique id representing a shader
+   @param {String} varName - the name of the attribute to set
+   @param {int} size - The number of elements necessary for each vertex
+   @param {} vbo - The buffer currently holding data
+   @param {Scene} scene - The scene currently being rendered
+   @param {String} shadername - The name of the shader program using this array
    */
   this.setVertexAttribArray = function (shader, varName, size, vbo, scene, shaderName)
   {
@@ -1119,9 +1144,11 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    If the variable could not be found for any other reason, an error is 
    displayed.
    
-   @param {int} programObjectID The shader where the variable resides.
-   @param {String} varName The name of the matrix variable.
-   @param {Array} matrix 16 element matrix.
+   @param {int} programObjectID - The shader where the variable resides.
+   @param {String} varName - The name of the matrix variable.
+   @param {Array} matrix - 16 element matrix.
+   @param {Scene} scene - The scene currently being rendered
+   @param {String} programObjectname - The name of the shader program this matrix should exist in.
    */
   this.setUniformMatrix = function (programObjectID, varName, matrix, scene, programObjectName)
   {
@@ -1159,9 +1186,11 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    If the variable could not be found for any other reason, an error is 
    displayed.
    
-   @param {int} programObjectID The shader where the variable resides.
-   @param {String} varName The name of the variable.
-   @param {float|Array} value The value to assign the variable.
+   @param {int} programObjectID - The shader where the variable resides.
+   @param {String} varName - The name of the variable.
+   @param {float|Array} value - The value to assign the variable.
+   @param {Scene} scene - The scene currently being rendered
+   @param {String} shaderName - The name of the shader this variable should exist in.
    */
   this.setUniformf = function (shader, varName, value, scene, shaderName)
   {
@@ -1218,6 +1247,8 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @param {int} programObjectID The shader where the variable resides.
    @param {String} varName The name of the variable.
    @param {int|Array} value The value to assign the variable.
+   @param {Scene} scene - The scene currently being rendered
+   @param {String} programObjectname - The name of the shader program this variable should exist in
    */
   this.setUniformi = function (programObjectID, varName, value, scene, programObjectName)
   {
@@ -1257,7 +1288,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    @private
    Enable an WebGL server-side capability.
    
-   @param {int} capability
+   @param {int} capability - The capability to enable
    */
   this.enable = function (capability)
   {
@@ -1290,7 +1321,7 @@ c3dl.WebGL = c3dl.inherit(c3dl.Renderer, function ()
    supported and the state is change, the script could be prevented 
    from running.
    
-   @param {int} capability WebGL capability
+   @param {int} capability - WebGL capability to disable
    */
   this.disable = function (capability)
   {

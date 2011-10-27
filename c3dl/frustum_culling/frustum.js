@@ -1,3 +1,13 @@
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
+
+
+/**
+ @class c3dl.Frustrum is the area visible to a camera.  Bounded by planes representing the viewable area.
+ An object that is not within a camera's frustrum will not be rendered.
+ */
 c3dl.Frustum = function ()
 {
   this.frustumPlane = [];
@@ -6,6 +16,12 @@ c3dl.Frustum = function ()
    this.frustumPlane[i] = new c3dl.Plane_Frustrum();
   }
   
+  /**
+   Set the intial bounds of the visible area.
+   Called Automatically.
+   
+   @param {Array} frustrumMatrix - The planes representing the boundaries of the frustrum.
+   */
   this.init = function(frustumMatrix)
   {
     //right
@@ -43,6 +59,14 @@ c3dl.Frustum = function ()
       this.frustumPlane[j].normalize();
     }  
   }
+  
+  /**
+   Determines if an object's boundingSphere is inside the frustrum.
+
+   @param {BoundigngSphere} boundingSphere - The sphere to check for being inside the frustrum.
+
+   @returns {boolean} True if the passed sphere is inside the frustrum, false otherwise.
+  */
   this.sphereInFrustum = function(boundingSphere)
   {
     for(var i = 0; i < 6; i++)
@@ -58,6 +82,13 @@ c3dl.Frustum = function ()
     return true;
   } 
   
+  /**
+   Determines if an object's bounding box is inside the frustrum.
+
+   @param {OBB} boxVerts - The bounding box to check for being inside the frustrum.
+
+   @returns {boolean} True if the passed box is inside the frustrum, false otherwise.
+  */
   this.obbInfrustum= function(boxVerts)
   {
     for(var i = 0; i < 6; i++)
@@ -78,6 +109,13 @@ c3dl.Frustum = function ()
     return true;  
   }
   
+  /**
+   Determines if an object's axis-aligned bounding box is inside the frustrum.
+
+   @param {AABB} MaxMins - the bounding box to check for being inside the frustrum.
+
+   @returns {boolean} True if the passed box is inside the frustrum, false otherwise.
+  */
   this.aabbInfrustum= function(MaxMins)
   {
     var vmin=[], vmax=[]; 

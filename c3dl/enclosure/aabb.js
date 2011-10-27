@@ -1,15 +1,23 @@
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
 
+
+/**
+ @class c3dl.AABB is an Axis-Aligned Bounding Box for use with various objects
+ */
 c3dl.AABB = function ()
 {
-  this.lineList =[];
+  this.lineList =[];//Array of the lines that make up the box
   for (var i = 0; i <12; i++)
   {
     this.lineList[i] = new c3dl.Line();
     this.lineList[i].setWidth(2);
   }  
-  this.maxMins= [];
-  this.originalBoxVerts = [];
-  this.boxVerts = [];
+  this.maxMins= [];//Array that stores the maximum and minimum values on the x,y and z axes.
+  this.originalBoxVerts = [];//initial vertices of this box
+  this.boxVerts = [];//the current vertices of this box
   //x
   this.length = 0;
   //y
@@ -52,6 +60,11 @@ c3dl.AABB = function ()
     this.boxVerts[7] = c3dl.makeVector(maxMins[0], maxMins[2], maxMins[4]);
   }
   
+  /**
+   Modify this box to use a new set of vertices.
+   
+   @param {Array} boxVertsIn - An array of the vertices you wish to set this box to have
+  */
   this.set = function (boxVertsIn)
   {
     var lengthVerts= new C3DL_FLOAT_ARRAY(8), widthVerts=new C3DL_FLOAT_ARRAY(8), heightVerts=new C3DL_FLOAT_ARRAY(8);
@@ -106,7 +119,11 @@ c3dl.AABB = function ()
     this.width = this.maxMins[4]-this.maxMins[5];
   }
   
-  //draw a box using lines
+  /**
+   Draw a box using the vertices currently stored in this object (called automatically)
+   
+   @param {Scene} scene - The scene in which to draw this box
+  */
   this.render = function(scene)
   {
     //front of box
@@ -141,6 +158,13 @@ c3dl.AABB = function ()
     scene.getRenderer().renderLines(this.lineList, scene);
   }
   
+/**
+ @private
+ 
+ Obtain a copy of this Axis-Aligned Bounding Box
+ 
+ @returns {AABB} A copy of this box
+*/
   this.getCopy = function ()
   {
     var copy = new c3dl.AABB();
@@ -158,6 +182,11 @@ c3dl.AABB = function ()
     return copy;
   }
   
+/**
+ Center this box around a chosen point in space.
+ 
+ @param {Array} centerPosition - The point to center the box around.
+ **/
   this.center = function (centerPosition)
   {
     //F top left 
@@ -177,6 +206,12 @@ c3dl.AABB = function ()
     //B bottom right  
     this.originalBoxVerts[7] =c3dl.makeVector(this.originalBoxVerts[7][0]  - centerPosition[0], this.originalBoxVerts[7][1] - centerPosition[1] , this.originalBoxVerts[7][2] - centerPosition[2]);
   }
+
+/**
+ Retrieve the corner vertices of this box.
+ 
+ @returns {Array} An array containing the vertices that represent the corners of this box.
+ */
   this.getCorners = function ()
   {
     return [
@@ -186,17 +221,32 @@ c3dl.AABB = function ()
             [this.boxVerts[1][0].toFixed(2), this.boxVerts[1][2].toFixed(2)]
            ];
   }
-  
+
+/**
+ Retrieve the length (distance along the x axis) of this box
+
+ @returns {Float} This length of this box.
+ */
   this.getLength = function()
   {
     return this.maxMins[0]-this.maxMins[1];
   }
-  
+
+/**
+ Retrieve the length (distance along the y axis) of this box
+
+ @returns {Float} This Height of this box.
+ */
   this.getHeight = function()
   {
     return this.maxMins[2]-this.maxMins[3];
   }
-  
+
+/**
+ Retrieve the length (distance along the z axis) of this box
+
+ @returns {Float} This Width of this box.
+ */
   this.getWidth = function()
   {
     return this.maxMins[4]-this.maxMins[5];

@@ -1,14 +1,29 @@
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
 
+
+/**
+ @class c3dl.OBB is an Object Bounding Box for use with various objects
+ */
 c3dl.OBB = function ()
 {
-  this.originalBoxVerts = [];
-  this.boxVerts = [];
-  this.lineList =[];
+  this.originalBoxVerts = [];//The original corner vertices of this box
+  this.boxVerts = [];//The current corner vertices of this box
+  this.lineList =[];//The lines connecting the corners of this box
   for (var i = 0; i <12; i++)
   {
     this.lineList[i] = new c3dl.Line();
     this.lineList[i].setWidth(2);
-  }  
+  }
+
+  /**
+   Set the initial values of this box based on an array of vertices passed in.
+   Called automatically.
+   
+   @param {Array} maxMins - The maximum and minimum values on the x,y and z axes.
+  */
   this.init = function (maxMins)
   {
     //F top left 
@@ -37,6 +52,12 @@ c3dl.OBB = function ()
     this.boxVerts[7] = c3dl.makeVector(maxMins[0], maxMins[2], maxMins[4]);
   }
   
+  /**
+   Replace the current properties of this bounding box with new ones.
+   Called automatically.
+   
+   @param {Array} transform - The new transformatinon matrix for this box to use.
+   */
   this.set = function (transform)
   {
     for (var i = 0; i < 8; i++)
@@ -45,7 +66,12 @@ c3dl.OBB = function ()
     } 
   }
 
-  //draw a box using lines
+  /**
+   Draw a box in the scene using the lines between the corners of this box.
+   Called automatically.
+   
+   @param {Scene} scene - The scene in which to draw the box.
+  */
   this.render = function(scene)
   {
     //front of box
@@ -80,6 +106,12 @@ c3dl.OBB = function ()
     scene.getRenderer().renderLines(this.lineList, scene);
   }
   
+  /**
+   @private
+   Retrieve a duplicate of this box.
+
+   @returns {OBB} A duplicate copy of this object.
+  */
   this.getCopy = function ()
   {
     var copy = new c3dl.OBB();
@@ -90,6 +122,13 @@ c3dl.OBB = function ()
     }
     return copy;
   }
+
+  /**
+   Center this box around a specified position.
+   Called automatically.
+   
+   @param {Array} centerPosition - The point in 3D space to center on.
+  */
   this.center = function (centerPosition)
   {
     //F top left 
@@ -110,6 +149,11 @@ c3dl.OBB = function ()
     this.originalBoxVerts[7] = c3dl.makeVector(this.originalBoxVerts[7][0]  - centerPosition[0], this.originalBoxVerts[7][1] - centerPosition[1] , this.originalBoxVerts[7][2] - centerPosition[2]);
   }
   
+  /**
+   Retrieve the corner vertices of this box.
+   
+   @returns {Array} An eight element array containing the corner vertices of this box.
+  */
   this.getCorners = function ()
   {
     return [

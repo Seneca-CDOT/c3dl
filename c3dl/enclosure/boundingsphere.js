@@ -43,7 +43,7 @@ c3dl.BoundingSphere = function ()
    the vertices of the object. This is O(n) since we need to find the longest
    vector as to adjust the sphere's radius.
    
-   @param {Array} vertices The vertices of the visible object.  Since the array
+   @param {Array} vertices - The vertices of the visible object.  Since the array
    is 1-dimensional, the values could look similar to:<br />
    [-0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, .... ]<br />
    in which case values at 0,1 and 2 are x,y,z coordinates.
@@ -83,19 +83,37 @@ c3dl.BoundingSphere = function ()
     this.radius = c3dl.vectorLength(this.longestVector);
   }
 
+
+ /**
+  Change the radius when scaling the object this bounding sphere is attached to.  Called automatically.
+  
+  @param {Array} scaleVec - The three vectors used to scale the object, to be re-used by the sphere.
+  */
   this.set = function (scaleVec)
   {
     c3dl.multiplyVectorByVector(scaleVec, this.originalLV, this.longestVector)
     this.radius = c3dl.vectorLength(this.longestVector);
   }
+  
   /**
    @private
+   
+   Obtain the current radius of this sphere.
+   
+   @returns {Int} The current radius of this sphere.
    */
   this.getRadius = function ()
   {
     return this.radius;
   }
   
+  /**
+  @private
+ 
+  Obtain a copy of this bounding sphere
+ 
+  @returns {BoundingSphere} A copy of this sphere
+  */
   this.getCopy = function ()
   {
     var copy = new c3dl.BoundingSphere();

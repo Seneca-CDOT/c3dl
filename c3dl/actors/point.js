@@ -39,7 +39,7 @@ c3dl.Point = function ()
   /**
    Set the name of this point. The default name set is empty.
    
-   @param {String} name The name to assign this point.
+   @param {String} name - The name to assign this point.
    */
   this.setName = function (name)
   {
@@ -59,7 +59,7 @@ c3dl.Point = function ()
   /**
    Set the position of point.
    
-   @param {Array} pos Array of 3 values in the order [x,y,z] which defines the 
+   @param {Array} pos - Array of 3 values in the order [x,y,z] which defines the 
    new coordinate for this point.
    */
   this.setPosition = function (pos)
@@ -79,7 +79,7 @@ c3dl.Point = function ()
   /**
    Get the color of this point.
    
-   @returns {Array} Three floating point values in the order RGB.
+   @returns {Array} Three - floating point values in the order RGB.
    */
   this.getColor = function ()
   {
@@ -89,7 +89,7 @@ c3dl.Point = function ()
   /**
    Set the color of this point.
    
-   @param {Array} color An array of 3 values in the order RGB. Each component 
+   @param {Array} color - An array of 3 values in the order RGB. Each component 
    ranges from 0.0 to 1.0.
    */
   this.setColor = function (color)
@@ -109,7 +109,7 @@ c3dl.Point = function ()
   /**
    Get the visibility of the point.
    
-   @returns {bool} visible true if the point should be rendered, otherwise false.
+   @returns {boolean} visible - true if the point should be rendered, otherwise false.
    */
   this.isVisible = function ()
   {
@@ -119,7 +119,7 @@ c3dl.Point = function ()
   /**
    Set the visibility of this point.
    
-   @param {bool} visible true if the point should be visible, otherwise false.
+   @param {boolean} visible - true if the point should be visible, otherwise false.
    */
   this.setVisible = function (visible)
   {
@@ -127,7 +127,10 @@ c3dl.Point = function ()
   }
 
   /**
-   */
+   Determine what type of object this is
+ 
+   @return {CONST} A constant value interpreted by the library to represent a point
+  */
   this.getObjectType = function ()
   {
     return c3dl.POINT;

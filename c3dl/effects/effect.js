@@ -60,7 +60,7 @@ c3dl.Effect = function ()
    Call this after the Effect has been created. Once the Effect has been
    created and initialized, its parameters can be set.
    
-   @param {c3dl.EffectTemplate} effectTemplate
+   @param {c3dl.EffectTemplate} effectTemplate - The particular effect type (e.g., greyscale, gooch) that this Effect is an instance of.
    */
   this.init = function (effectTemplate)
   {
@@ -99,7 +99,7 @@ c3dl.Effect = function ()
   /**
    Get the value of the parameter 'paramName'.
    
-   @param {String} paramName
+   @param {String} paramName - The name of the parameter that you wish to retrieve the value of.
    
    @returns the value of 'paramName' or null if parameter does not exist or 
    has not been set.
@@ -126,8 +126,8 @@ c3dl.Effect = function ()
   /**
    Set the value of the parameter 'paramName' to 'paramvalue'.
    
-   @param {String} paramName Name of the parameter to set.
-   @param {} paramValue The value to set the parameter.
+   @param {String} paramName - Name of the parameter to set.
+   @param {} paramValue - The value to set the parameter.
    
    If the value does not match the parameter's type, a warning will 
    be displayed and the parameter will not be set.

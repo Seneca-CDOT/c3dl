@@ -30,7 +30,7 @@ c3dl.Particle = function ()
    @private
    Get the age of this particle in seconds.
    
-   @returns {float}
+   @returns {float} How many seconds this particle has been alive for.
    */
   this.getAge = function ()
   {
@@ -38,7 +38,10 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private  
+   @private
+   Get the position of this particle in 3d space.
+   
+   @returns {Array} This particle's position
    */
   this.getPosition = function ()
   {
@@ -46,7 +49,10 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private  
+   @private
+   Get this particle's current velocity
+   
+   @returns {Array} This particle's current velocity
    */
   this.getVelocity = function ()
   {
@@ -57,7 +63,7 @@ c3dl.Particle = function ()
    @private
    Get how long this particle is set to live for.
    
-   @returns {float}
+   @returns {float} The maximum lifetime of this particle, in seconds
    */
   this.getLifetime = function ()
   {
@@ -68,7 +74,7 @@ c3dl.Particle = function ()
    @private  
    Get the color of this particle.
    
-   @returns {Array}
+   @returns {Array} The RGB values of this particle
    */
   this.getColor = function ()
   {
@@ -77,6 +83,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Get the size of this particle
+   
+   @returns {float} The current size of this particle
    */
   this.getSize = function ()
   {
@@ -84,6 +93,9 @@ c3dl.Particle = function ()
   }
 
   /**
+   Set the size of this particle
+   
+   @param {float} s - The desired size of this particle
    */
   this.setSize = function (s)
   {
@@ -91,7 +103,10 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private  
+   @private
+   Determine whether this particle is currently active
+   
+   @returns {boolean} True if this particle is currently active, false otherwise.
    */
   this.isAlive = function ()
   {
@@ -100,6 +115,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Get the transformation matrix for this particle
+   
+   @returns {Array} This particles transformation matrix
    */
   this.getTransform = function ()
   {
@@ -108,6 +126,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Get the vertices that make up the corners of this particle's quad.
+   
+   @returns {Array} The vertices of this particle's corners.
    */
   this.getVertices = function ()
   {
@@ -115,7 +136,10 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private  
+   @private
+   Manually change the age of this particle
+   
+   @param {float} The new age for this particle
    */
   this.setAge = function (age)
   {
@@ -127,6 +151,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Set the colour of this particle
+   
+   @param {Array} c - The RGBa values for this particle.
    */
   this.setColor = function (c)
   {
@@ -138,6 +165,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Set the velocity of this particle.
+   
+   @param {Array} velocity - The velocity of this particle in three dimensions.
    */
   this.setVelocity = function (velocity)
   {
@@ -148,6 +178,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Set the position of this particle in 3d space
+   
+   @param {Array} position - The absolute coordinates for this particle
    */
   this.setPosition = function (position)
   {
@@ -158,6 +191,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Set the maximum lifespan for this particle
+   
+   @param {float} The lifespan of this particle (in seconds)
    */
   this.setLifetime = function (lifetime)
   {
@@ -168,7 +204,10 @@ c3dl.Particle = function ()
   }
 
   /**
-   @private  
+   @private
+   Set whether this particle is currently active or not.
+   
+   @param {boolean} alive - True if this particle should be alive, false otherwise.
    */
   this.setAlive = function (alive)
   {
@@ -177,6 +216,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Move this particle in 3d space
+   
+   @param {Array} trans - The amount to move, relative to the current position
    */
   this.translate = function (trans)
   {
@@ -189,7 +231,7 @@ c3dl.Particle = function ()
    @private  
    Update the position of the particle.
    
-   @param timeStep
+   @param {float} timeStep - The amount of time elapsed since the last update
    */
   this.update = function (timeStep)
   {
@@ -197,6 +239,9 @@ c3dl.Particle = function ()
 
   /**
    @private
+   Draw this object in the scene
+   
+   @param {context} glCanvas3D - The graphics rendering context
    */
   this.render = function (glCanvas3D)
   {

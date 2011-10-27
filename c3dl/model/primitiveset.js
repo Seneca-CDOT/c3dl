@@ -37,10 +37,12 @@ c3dl.PrimitiveSet = function ()
 
   /**
    @private
+   Set the initial values for this primitiveSet
    
-   @param {Array} vertices
-   @param {Array} normals
-   @param {Array} texCoords
+   @param {Array} vertices - The vertex coordinates that make up this primitive set
+   @param {Array} normals - The normal at each vertex
+   @param {Array} texCoords - The texture coordinates at each vertex
+   @param {int} type - A constant value representing what type of primitiveSet this is.
    */
   this.init = function (vertices, normals, texCoords,type)
   {
@@ -53,6 +55,14 @@ c3dl.PrimitiveSet = function ()
     // adjust its radius to completely enclose the object. 
     this.boundingVolume.init(this.vertices);  
   }
+  
+  /**
+   Set initial values for this primitiveset using vertices and faces.
+   
+   @param {Array} vertices - The vertex coordinates that make up this primitive set
+   @param {Array} faces - The faces that make up this primitive.  Will be deconstructed to make lines.
+   @param {int} type - A constant value representing what type of primitiveSet this is.
+  */
   this.initLine = function (vertices, faces, type)
   {
     this.vertices = [];
@@ -78,9 +88,13 @@ c3dl.PrimitiveSet = function ()
       this.lineList.push(line);
     }
   }
+  
   /**
    @private
+   Create the vertex buffer objects.
+   Called automatically.
    
+   @param {context} glCanvas3D - The graphics rendering context
    */
   this.setupVBO = function (glCanvas3D)
   {
@@ -95,16 +109,31 @@ c3dl.PrimitiveSet = function ()
     glCanvas3D.bufferData(glCanvas3D.ARRAY_BUFFER, this.texCoords, glCanvas3D.STATIC_DRAW);
   }
 
+  /**
+   Get the buffer containing the vertices from this primitiveSet.
+   
+   @returns {} The buffer containing this primitiveSet's vertices
+  */
   this.getVBOVertices = function ()
   {
     return this.buffers.vertices;
   }
 
+  /**
+   Get the buffer containing the normals from this primitiveSet.
+   
+   @returns {} The buffer containing this primitiveSet's normals
+  */
   this.getVBONormals = function ()
   {
     return this.buffers.normals;
   }
 
+  /**
+   Get the buffer containing the texture coordinates from this primitiveSet.
+   
+   @returns {} The buffer containing this primitiveSet's texture coordinates
+  */
   this.getVBOTexCoords = function ()
   {
     return this.buffers.texCoords;
@@ -117,7 +146,7 @@ c3dl.PrimitiveSet = function ()
    of the material and texture, but shallow copies of the vertices, normals and
    texCoords.
    
-   @returns {c3dl.PrimitiveSet}
+   @returns {c3dl.PrimitiveSet} A duplicate copy of this primitiveSet
    */
   this.getCopy = function ()
   {
@@ -132,7 +161,6 @@ c3dl.PrimitiveSet = function ()
     copy.type = this.type;
     copy.fillType = this.fillType;
     // get a deep copy of the material since every model's primitive set
-
     // can have its own material.    
     copy.material = this.material ? this.material.getCopy() : null;
     if (this.boundingVolume)
@@ -197,20 +225,22 @@ c3dl.PrimitiveSet = function ()
 
   /**
    @private
+   Get the bounding volume of this primitiveSet
    
-   @returns {c3dl.BoundingSphere}  the updated bounding sphere object.
+   @returns {c3dl.BoundingVolume}  the updated bounding volume object.
    */
   this.getBoundingVolume = function ()
   {
     return this.boundingVolume;
   }
+  
   /**
    @private
    Set the material of this primitive set. The material can't be directly
    set by the user, but is set by the library when the .DAE file is being
    loaded.
    
-   @param {c3dl.Material}
+   @param {c3dl.Material} material - The material for this primitive set to use
    */
   this.setMaterial = function (material)
   {
@@ -222,12 +252,19 @@ c3dl.PrimitiveSet = function ()
    Set the texture of this primitive set. The texture can't be directly
    set, but is set when the .DAE file is being loaded.
    
-   @param {String} texture Path of the texture.
+   @param {String} texture - Path of the texture.
    */
   this.setTexture = function (texture)
   {
     this.texture = texture;
   }
+  
+  /**
+   Change the texture applied to this primitiveSet.
+   
+   @param {String} oldTexturePath - The path to the texture currently in use
+   @param {String} TexturePath - The path to the new texture to apply instead.
+  */
   this.updateTextureByName = function (oldTexturePath,newTexturePath)
   {
     if (this.texture)
@@ -238,10 +275,22 @@ c3dl.PrimitiveSet = function ()
       }
     }
   }
+  
+  /**
+   Get the lines used in this primitiveSet.
+   
+   @returns {Array} This primitiveSet's lines.
+  */
   this.getLines = function ()
   {
     return this.lineList;
   }
+  
+  /**
+   Retrieve the type of this PrmitiveSet
+   
+   @returns {int} A constant value representing what type of primitiveSet this is.
+  */
   this.getType = function ()
   {
     return this.type;

@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2008 Seneca College
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
-  Author: Patrick Lam & Andor Salga
+  Author: Patrick Lam, Andor Salga, Matt Sonnilion & Peter Callaghan
 */
 
 /**
@@ -18,7 +18,7 @@ c3dl.Picking = function (scene)
    Returns an array of 2 elements. The mouse button clicked and an array of object 
    index number in the current scene in sorted order (closet to farthest).
    
-   @param {} event
+   @param {} event - The mouse event that caused this function to be called
    
    @returns {Array} The mouse button clicked and the array of object index number.
    */
@@ -234,13 +234,10 @@ c3dl.Picking = function (scene)
   /**
    @private
    
-   @param {HTMLCanvasElement} cvs;
-   @param {int} btnUsed The button clicked
-   @param {Array} objList Array of renferences of objects
-   @param {Array} pointLists Array of references of pointsLists which had at least one of their
-   points picked.
-   @param {Array} points Array of 
-   
+   @param {HTMLCanvasElement} cvs - The html canvas element the picking occured on.
+   @param {int} btnUsed - The button clicked
+   @param {Array} objList - Array of renferences of objects
+
    @returns {c3dl.PickingResult} a pickingresult with added variables and overridden methods.
    */
 
@@ -274,16 +271,16 @@ c3dl.Picking = function (scene)
    Is the 2D point pointCoords within the squre located at squareCoords with
    a width and height of pointPixelSize
    
-   @param pointCoords {Array} Two components [x,y] which defines the 
+   @param {Array} pointCoords - Two components [x,y] which defines the 
    point which will be tested to see if is lies within the square.
    
-   @param squareCoords {Array} Two components [x,y] which defines the 
+   @param {Array} squareCoords - Two components [x,y] which defines the 
    center of the square.
    
-   @param squareSize {float} The number of pixels from the center of
+   @param {float} squareSize - The number of pixels from the center of
    the square to each edge.
    
-   @returns {bool} true if the point is within the square, false otherwise.
+   @returns {boolean} true if the point is within the square, false otherwise.
    */
 
   function isPointInSquare(pointCoords, squareCoords, squareSize)
@@ -305,13 +302,13 @@ c3dl.Picking = function (scene)
    this of isPointInSquare can be called. However, if the diamater get larger, we have to
    reject clicking on the circles 'corners' as valid 'hits'.
    
-   @param {Array} pointCoords
+   @param {Array} pointCoords - The coordinates of the picked point
    
-   @param {Array} circleCoords
+   @param {Array} circleCoords - The coordinates of the center of the picking circle
    
-   @param {Array} circleDiameter
+   @param {Array} circleDiameter - The diameter of the picking circle
    
-   @return {bool} true if the point is within the cirlce, otherwise false.
+   @return {boolean} true if the point is within the cirlce, otherwise false.
    */
 
   function isPointInCircle(pointCoords, circleCoords, circleDiameter)
@@ -329,6 +326,8 @@ c3dl.Picking = function (scene)
    Get the coordinates where the user clicked on the canvas.
    
    Screen space is left handed with 0,0 at the top left of the canvas.
+   
+   @param {Event} event - The mouse event that triggered this picking action
    
    @returns {Array} Array of 2 integers, x and y coordinates where the user clicked
    on the canvas.
@@ -358,10 +357,10 @@ c3dl.Picking = function (scene)
  create more overhead than a bubble sort.  If less than 10 objects need to be sorted, the speed of 
  this function should not be an issue.
  
- @param {c3dl.Scene} scene Scene is needed because we have an array of indices, not actual objects. Since
+ @param {c3dl.Scene} scene - Scene is needed because we have an array of indices, not actual objects. Since
  scene has the actual list, we can query it with getObj(i) to get the actual object, then its position.
- @param {Array} pickedObjects An array of indices of objects which have passed a bounds test or triangle test.
- @param {c3dl.FreeCamera} camera The camera used in the scene.
+ @param {Array} pickedObjects - An array of indices of objects which have passed a bounds test or triangle test.
+ @param {c3dl.FreeCamera} camera - The camera used in the scene.
  
  @private
  */
@@ -412,10 +411,10 @@ c3dl.sortObjectsFromCam = function (scene, camera, pickedObjects)
  This could be because the 'pixel point' associated with the cursor is not at the
  very tip of the cursor where it is expected it to be.  This occurs on osx.
  
- @param {Array} rayInitialPoint The initial point of the ray in world space.
- @param {Array} rayDir A normalized vector which has the ray's direction.
- @param {Array} spherePos position of the sphere.
- @param {float} sphereRadius radius of the sphere.
+ @param {Array} rayInitialPoint - The initial point of the ray in world space.
+ @param {Array} rayDir - A normalized vector which has the ray's direction.
+ @param {Array} spherePos - position of the sphere.
+ @param {float} sphereRadius - radius of the sphere.
  
  @returns {boolean} true if the given ray intersects the boundingsphere, otherwise false.
  */
@@ -475,11 +474,11 @@ c3dl.rayIntersectsSphere = function (rayInitialPoint, rayD, spherePos, sphereRad
  Test if a ray defined by point 'orig' and direction 'dir' intersects with
  triangle defined by vertices vert0, vert1 and vert2.
  
- @param {Array} orig The ray's origin, which is a vector of 3 values.
- @param {Array} dir The ray's direction, a vector of 3 values.
- @param {Array} vert0 Vertex 0 of the triangle, going counter-clockwise.
- @param {Array} vert1 Vertex1 of the triangle
- @param {Array} vert2 Vertex2 of the triangle
+ @param {Array} orig - The ray's origin, which is a vector of 3 values.
+ @param {Array} dir - The ray's direction, a vector of 3 values.
+ @param {Array} vert0 - Vertex 0 of the triangle, going counter-clockwise.
+ @param {Array} vert1 - Vertex1 of the triangle
+ @param {Array} vert2 - Vertex2 of the triangle
  
  @returns {boolean} true if ray intersects with triangle, false otherwise.
  
@@ -599,6 +598,19 @@ c3dl.rayIntersectsTriangle = function (orig, dir, vert0, vert1, vert2)
   }
 }
 
+/**
+ Test if a ray defined by point 'orig' and direction 'dir' intersects with
+ the axis-aligned bounding box defined by 'maxMins'.
+ 
+ @param {Array} orig - The ray's origin, which is a vector of 3 values.
+ @param {Array} dir - The ray's direction, a vector of 3 values.
+ @param {Array} maxMins - A six element array containing the maximum and minimum values on the x,y and z axes
+   (in that order) of the bounding box.
+
+ @returns {boolean} true if ray intersects with triangle, false otherwise.
+ 
+ @private
+ */
 c3dl.rayAABBIntersect = function (orig, dir, maxMins)
 {
   var tmin, tmax, tymin, tymax, tzmin, tzmax;
@@ -662,6 +674,19 @@ c3dl.rayAABBIntersect = function (orig, dir, maxMins)
   return true;
 }
 
+/**
+ Test if a ray defined by point 'orig' and direction 'dir' intersects with
+ the bounding box defined by 'boxVerts' and 'axis'.
+ 
+ @param {Array} orig - The ray's origin, which is a vector of 3 values.
+ @param {Array} dir - The ray's direction, a vector of 3 values.
+ @param {Array} boxVerts - A six element array containing the bounding box's maximum and minimum values on the global x,y and z axes
+ @param {Array} axis - The direction vectors (left,up, dir) of the bounding box
+
+ @returns {boolean} true if ray intersects with triangle, false otherwise.
+ 
+ @private
+ */
 c3dl.rayOBBIntersect = function (orig, dir, boxVerts, axis)
 {
   maxMins = [];

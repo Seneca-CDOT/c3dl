@@ -3,6 +3,13 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
+
+/**
+ @class c3dl.Cube A primitive cuboid model designed to allow people to easily add simple
+ models to scenes without requiring model files.
+ 
+ @augments c3dl.Shape
+*/
 c3dl.Cube = c3dl.inherit(c3dl.Shape, function (length, width, height)
 {
   c3dl._superc(this);
@@ -43,6 +50,13 @@ c3dl.Cube = c3dl.inherit(c3dl.Shape, function (length, width, height)
   }
 });
 
+/**
+ Set initial values required of the cuboid.
+ 
+ @param {float} length - The length (z axis) of the cuboid.
+ @param {float} width - The width (x axis) of the cuboid.
+ @param {float} height - The height (y axis) of the cuboid.
+*/
 c3dl.Cube.prototype.init = function (length, width, height)
 {
   length = parseFloat(length);
@@ -94,12 +108,23 @@ c3dl.Cube.prototype.init = function (length, width, height)
   this.boundingVolume.set(this.shape.pos,this.shape.getRotateMat(),this.shape.scaleVec);
 }
 
+/**
+ Get a duplicate copy of this Shape.
+ 
+ @returns {c3dl.Cube} A duplicate copy of this Cube
+*/
 c3dl.Cube.prototype.getCopy = function ()
 {
   var Shape = new c3dl.Cube();
   Shape.clone(this);
   return Shape;
 }
+
+/**
+ Copy data from another Cube into this one.
+ 
+ @param {c3dl.Cube} other - The cube to copy into this one.
+*/
 c3dl.Cube.prototype.clone = function (other)
 {
   c3dl._super(this, arguments, "clone");

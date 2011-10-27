@@ -103,7 +103,7 @@ c3dl.Material = function ()
    glow-in-the-dark objects,
    any objects which should not appear black in absence of lights
    
-   @param {Array} color Three float values in the range 0 - 1 in the order RGB.
+   @param {Array} color - Three float values in the range 0 - 1 in the order RGB.
    */
   this.setEmission = function (color)
   {
@@ -118,7 +118,7 @@ c3dl.Material = function ()
   /**
    Set how much ambient light this material reflects.
    
-   @param {Array} color Three float values in the range 0 - 1 in the order RGB.
+   @param {Array} color - float values in the range 0 - 1 in the order RGB.
    */
   this.setAmbient = function (color)
   {
@@ -133,7 +133,7 @@ c3dl.Material = function ()
   /**
    Set how much diffuse light this material reflects.
    
-   @param {Array} color Three float values in the range 0 - 1 in the order RGB.
+   @param {Array} color - Three float values in the range 0 - 1 in the order RGB.
    */
   this.setDiffuse = function (color)
   {
@@ -148,7 +148,7 @@ c3dl.Material = function ()
   /**
    Set how much specular light this material reflects.
    
-   @param {Array} color Three float values in the range 0 - 1 in the order RGB.
+   @param {Array} color - Three float values in the range 0 - 1 in the order RGB.
    */
   this.setSpecular = function (color)
   {
@@ -163,11 +163,11 @@ c3dl.Material = function ()
   /**
    Set how shiny this material is.
    
-   @param {float} shine
+   @param {float} shine - A value for the shininess of this material
    */
   this.setShininess = function (shine)
   {
-    // allow negatives? what is the maximum?
+    // what is the maximum?
     this.shininess = shine;
   }
 
@@ -176,7 +176,7 @@ c3dl.Material = function ()
    
    The default name for materials is "unnamed".
    
-   @param {String} name New name of the material.
+   @param {String} name - New name of the material.
    */
   this.setName = function (name)
   {
@@ -200,8 +200,11 @@ c3dl.Material = function ()
 
   /**
    @private
+   Check if the passed value is a valid colour.
    
-   @param color
+   @param {Array} color - The value to check
+   
+   @returns {boolean} True if the passed value is a colour (3 element array), false otherwise
    */
   this.assertColor = function (color)
   {

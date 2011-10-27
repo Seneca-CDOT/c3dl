@@ -57,7 +57,7 @@ c3dl.PositionalLight = c3dl.inherit(c3dl.Light, function ()
    Q = quadratic attenuation, 2nd element<br />
    D = distance between light and vertex.<br />
    
-   @param {Array} attenuation
+   @param {Array} attenuation - The attenuation factors for this light.
    */
   this.setAttenuation = function (attenuation)
   {
@@ -69,7 +69,7 @@ c3dl.PositionalLight = c3dl.inherit(c3dl.Light, function ()
   /**
    Set the position of this light.
    
-   @param {Array} Position of the light relative to world space.
+   @param {Array} vec - Position of the light relative to world space.
    */
   this.setPosition = function (vec)
   {

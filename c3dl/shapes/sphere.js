@@ -3,6 +3,12 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
+/**
+ @class c3dl.Sphere A primitive sphere model designed to allow people to easily add simple
+ models to scenes without requiring model files.
+ 
+ @augments c3dl.Shape
+*/
 c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDetailV)
 {
   c3dl._superc(this);
@@ -126,6 +132,11 @@ c3dl.Sphere = c3dl.inherit(c3dl.Shape, function (radius, sphereDetailU, sphereDe
   }
 });
 
+/**
+ Set initial values required of the sphere.
+ 
+ @param {float} radius - The radius of the sphere.
+*/
 c3dl.Sphere.prototype.init = function (radius)
 {
   radius = parseFloat(radius);
@@ -149,7 +160,13 @@ c3dl.Sphere.prototype.init = function (radius)
   this.boundingVolume.set(this.shape.pos,this.shape.getRotateMat(),this.shape.scaleVec);
 }
 
+/**
+ Set the level of detail of the sphere.  Higher detail will be more spherical, but will
+ take more resources to draw.
  
+ @param {float} ures - The number of 'sides' to the circle horizontally
+ @param {float} vres - The number of 'sides' to the circle vertically
+*/
 c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres)
 {
   var i;
@@ -207,12 +224,23 @@ c3dl.Sphere.prototype.sphereDetail = function sphereDetail(ures, vres)
   this.sphereDetailV = vres;
 };
 
+/**
+ Get a duplicate copy of this Shape.
+ 
+ @returns {c3dl.Sphere} A duplicate copy of this Sphere
+*/
 c3dl.Sphere.prototype.getCopy = function ()
 {
   var Shape = new c3dl.Sphere();
   Shape.clone(this);
   return Shape;
 }
+
+/**
+ Copy data from another Sphere into this one.
+ 
+ @param {c3dl.Sphere} other - The sphere to copy into this one.
+*/
 c3dl.Sphere.prototype.clone = function (other)
 {
   c3dl._super(this, arguments, "clone");

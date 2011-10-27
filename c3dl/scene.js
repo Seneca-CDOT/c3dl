@@ -91,52 +91,11 @@ c3dl.Scene = function ()
   //cache attributes and location
   this.curContextCache = { attributes: {}, locations: {} };
   // -------------------------------------------------------
-  /**
-   Add a texture to this scene to be used used for assigning to a model,
-   particle system etc. 
-   
-   If the renderer was not set for the scene, the texture will be queued and
-   will begin to load once the renderer is set
-   
-   @param {String} path
-   */
-/*  this.addTexture = function(path)
-  {
-    // check path parameter
-    if(path)
-    {
-      if(renderer && renderer.getGLContext())
-      {
-        renderer.addTexture(path);
-      }
-      else
-      {
-        textureQueue.push(path);
-      }
-    }
-    else
-    {
-      c3dl.debug.logWarning("Invalid parameter, '" + path + "' was passed to Scene's addTexture()");
-    }
-  }*/
 
   /**
+   Get the scene's values for point attentuation
    
-   */
-/*  this.getTextureID = function(path)
-  {
-    if(renderer)
-    {
-      return renderer.getTextureID(path);
-    }
-    else
-    {
-      return -1;
-    }
-  }*/
-
-  /**
-   @returns {Array} 
+   @returns {Array} This scene's point attenuation values
    */
   this.getPointAttenuation = function ()
   {
@@ -152,6 +111,8 @@ c3dl.Scene = function ()
    change each time a canvas with a different aspect ratio is rendered.
    
    We have to provide a accessor to the projection matrix at the scene level.
+   
+   @returns {Array} This scene's current projection matrix
    */
   this.getProjectionMatrix = function ()
   {
@@ -173,7 +134,7 @@ c3dl.Scene = function ()
   /**
    Get the camera of the scene.
    
-   @returns {Camera} The camera of the scene.
+   @returns {c3dl.Camera} The camera of the scene.
    */
   this.getCamera = function ()
   {
@@ -193,7 +154,7 @@ c3dl.Scene = function ()
   /**
    Get the context.
    
-   @returns {Context}
+   @returns {Context} The scene's rendering context
    */
   this.getGL = function ()
   {
@@ -203,6 +164,8 @@ c3dl.Scene = function ()
   /**
    Get the amount of frames rendered since the start of the scene.
    @private
+   
+   @returns {int} The total number of frames rendered
    */
   this.getTotalFrameCount = function ()
   {
@@ -222,6 +185,8 @@ c3dl.Scene = function ()
 
   /**
    Get the scene's Renderer
+   
+   @returns {} The scene's Renderer
    */
   this.getRenderer = function ()
   {
@@ -231,7 +196,7 @@ c3dl.Scene = function ()
   /**
    Get the Scene.
    
-   @returns {c3dl.Scene}
+   @returns {c3dl.Scene} The current scene
    */
   this.getScene = function ()
   {
@@ -261,7 +226,7 @@ c3dl.Scene = function ()
   /**
    Get a reference of a particular object in the scene.
    
-   @param indxNum The index number of the object.
+   @param {int} indxNum - The index number of the wanted object.
    
    @return the reference to the object at index number indxNum or null 
    if indxNum was out of bounds.
@@ -289,7 +254,7 @@ c3dl.Scene = function ()
   /**
    Get the type of test which will run when a user clicks on the canvas.
    
-   @returns c3dl.PICK_PRECISION_BOUNDING_VOLUME or c3dl.PICK_PRECISION_TRIANGLE.
+   @returns {int} c3dl.PICK_PRECISION_BOUNDING_VOLUME or c3dl.PICK_PRECISION_TRIANGLE.
    */
   this.getPickingPrecision = function ()
   {
@@ -300,7 +265,7 @@ c3dl.Scene = function ()
   /**
    @private
    
-   @param {boolean} visible true if the bounding volumes should be drawn, otherwise
+   @param {boolean} visible - true if the bounding volumes should be drawn, otherwise
    set to false.
    */
   this.setBoundingVolumeVisibility = function (visible)
@@ -314,8 +279,8 @@ c3dl.Scene = function ()
    TODO: add keyPress event callback as windows and osx versions of firefox
    handle keyboard events differently.
    
-   @param {function} keyUpCB The callback function for the up key.    
-   @param {function} keyDownCD The callback function for the down key.
+   @param {function} keyUpCB - The callback function for the up key.    
+   @param {function} keyDownCD - The callback function for the down key.
    */
   this.setKeyboardCallback = function (keyUpCB, keyDownCB)
   {
@@ -332,10 +297,10 @@ c3dl.Scene = function ()
    a button is pressed, released or the mousewheel is scrolled.  The
    scene will call these functions when the events occur.
    
-   @param {function} mouseUpCB
-   @param {function} mouseDownCB
-   @param {function} mouseMoveCB
-   @param {function} mouseScrollCB
+   @param {function} mouseUpCB - The function to call when a mouse button in released
+   @param {function} mouseDownCB - The function to call when a mouse button is pressed down
+   @param {function} mouseMoveCB - The function to call when the mouse is moved
+   @param {function} mouseScrollCB - The function to call when the mouse wheel is scrolled
    */
   this.setMouseCallback = function (mouseUpCB, mouseDownCB, mouseMoveCB, mouseScrollCB)
   {
@@ -359,8 +324,8 @@ c3dl.Scene = function ()
    Tell the scene what function to call when a user clicks on the canvas.  Currently,
    'clicking' is limited to mousedown, mouseup and click.
    
-   @param {function} pickingHandler The function to call when the user clicks on the canvas.
-   @param {String} pickingEvent The name of the event to react to. Currently limited to
+   @param {function} pickingHandler - The function to call when the user clicks on the canvas.
+   @param {String} pickingEvent - The name of the event to react to. Currently limited to
    mouseup, mousedown, click.  If nothing is given, this defaults to mousedown.
    */
   this.setPickingCallback = function (pickingHandler,pickingEvent)
@@ -410,7 +375,7 @@ c3dl.Scene = function ()
   /**
    Set how the points attenuate for this scene.
    
-   @param {Array} attn with three values.<br />
+   @param {Array} attn - with three values.<br />
    first contains constant attenuation<br />
    second contains linear attenuation<br />
    third contains quadratic attenuation<br />
@@ -443,7 +408,7 @@ c3dl.Scene = function ()
    To change point size when rendering points as circles,
    or using the built-in points, use setPointAttenuation.
    
-   @param {float} size Must be greater than zero.
+   @param {float} size - Must be greater than zero.
    */
   this.setPointSize = function (size)
   {
@@ -463,7 +428,7 @@ c3dl.Scene = function ()
    restricted to a Cube.  Whatever model that is appropirate should 
    be used.
    
-   @param {c3dl.Model} sky A Model which will maintain the same distance 
+   @param {c3dl.Model} sky - A Model which will maintain the same distance 
    from the Scene's camera.
    */
   this.setSkyModel = function (sky)
@@ -481,7 +446,7 @@ c3dl.Scene = function ()
   /**
    Set the function to call everytime the scene is updated.
    
-   @param {function} updateCB The function to call everytime the
+   @param {function} updateCB - The function to call everytime the
    scene is updated.
    */
   this.setUpdateCallback = function (updateCB)
@@ -498,7 +463,7 @@ c3dl.Scene = function ()
   /**
    Set the renderer used to render the scene.
    
-   @param {c3dl.WebGL} renderType
+   @param {c3dl.WebGL} renderType - The renderer to use
    */
   this.setRenderer = function (renderType)
   {
@@ -510,7 +475,9 @@ c3dl.Scene = function ()
   }
 
   /**
-   @param {String} canvasTagID The id of the canvas, which is
+   Set the canvas tag this scene will draw into.
+   
+   @param {String} canvasTagID - The id of the canvas, which is
    a property of the canvas tag in the html file.
    */
   this.setCanvasTag = function (canvasTagID)
@@ -525,6 +492,8 @@ c3dl.Scene = function ()
 
   /**
    Return the canvas
+   
+   @returns {} The canvas tag this scene is associated with
    */
   this.getCanvas = function ()
   {
@@ -534,7 +503,7 @@ c3dl.Scene = function ()
   /**
    Set the Scene's camera.
    
-   @param {c3dl.FreeCamera} cam The camera.
+   @param {c3dl.FreeCamera} cam - The camera to use.
    */
   this.setCamera = function (cam)
   {
@@ -556,7 +525,7 @@ c3dl.Scene = function ()
    ray generated by the click.  If the triangles constant is passed in, both the ray/bounding volume test 
    will run along with a ray/triangle test for each object which can be picked.
    
-   @param {c3dl.PICK_PRECISION_BOUNDING_VOLUME | c3dl.PICK_PRECISION_TRIANGLE} precision The precision test to use when the user clicks the canvas.
+   @param {c3dl.PICK_PRECISION_BOUNDING_VOLUME | c3dl.PICK_PRECISION_TRIANGLE} precision - The precision test to use when the user clicks the canvas.
    */
   this.setPickingPrecision = function (precision)
   {
@@ -571,6 +540,11 @@ c3dl.Scene = function ()
    @private
    This one just calls addTextToModel()
    //!! need dest as a parameter, probably in pixels, where to put the text
+   
+   @param {String} text - The text to add.
+   @param {String} fontStyle - The font to use
+   @param {String} fontColour - colour of the text
+   @param {String} backgroundColour - The background colour behind the text
    */
   this.addFloatingText = function (text, fontStyle, fontColour, backgroundColour)
   {
@@ -583,6 +557,12 @@ c3dl.Scene = function ()
    @private
    Create a 2D canvas, render the text into it, and use that as a texture for model.
    If model is null, create a rectangle and stick the text onto it.
+   
+   @param {c3dl.Model} model - The model to apply the text to
+   @param {String} text - The text to add.
+   @param {String} fontStyle - The font to use
+   @param {String} fontColour - colour of the text
+   @param {String} backgroundColour - The background colour behind the text
    */
   this.addTextToModel = function (model, text, fontStyle, fontColour, backgroundColour)
   {
@@ -672,7 +652,6 @@ c3dl.Scene = function ()
       ctx.mozDrawText(text);
 
       box.setTextureFromCanvas2D(textureCanvas.id);
-      //textureManager.addTextureFromCanvas2D(textureCanvas.id);
     }
     else c3dl.debug.logWarning("addFloatingText(): call to create2Dcanvas() failed");
     return box;
@@ -682,6 +661,9 @@ c3dl.Scene = function ()
    @private
    Create a 2D canvas for drawing text and other stuff. Keep a 
    reference to it.
+   
+   @param {int} width - The width of the canvas
+   @param {int} height - The height of the canvas
    
    @return {CanvasTag}
    */
@@ -722,7 +704,7 @@ c3dl.Scene = function ()
    c3dl.POINT_MODE_POINT will render the points using WebGL's built-in 2D billboarded point primitives
    c3dl.POINT_MODE_SPHERE will render points using sphere objects.
    
-   @param {c3dl.POINT_MODE_POINT | c3dl.POINT_MODE_SPHERE} mode 
+   @param {c3dl.POINT_MODE_POINT | c3dl.POINT_MODE_SPHERE} mode - The rendering mode for points
    */
   this.setPointRenderingMode = function (mode)
   {
@@ -762,7 +744,7 @@ c3dl.Scene = function ()
   /**
    Set the ambient light of the scene.
    
-   @param {Array} light An array of 3 floating point values 
+   @param {Array} light - An array of 3 floating point values 
    ranging from 0 to 1.
    */
   this.setAmbientLight = function (light)
@@ -815,8 +797,8 @@ c3dl.Scene = function ()
   /**
    Attempts to resize the canvas to the passed height and width.
    
-   @param {int} height The desired height of the canvas (must be >= 0)
-   @param {int} width The desired width of the canvas (must be >= 0)
+   @param {int} height - The desired height of the canvas (must be >= 0)
+   @param {int} width - The desired width of the canvas (must be >= 0)
    
    @returns {boolean} true if the canvas was resized; false if not.
    */
@@ -848,7 +830,7 @@ c3dl.Scene = function ()
    Get a reference to a light from the list in the scene. This is an O(n) 
    operation.
    
-   @param {String} lightName the name of the light.
+   @param {String} lightName - The name of the light.
    
    @returns a reference to a light object or null if it was not found.
    */
@@ -870,7 +852,7 @@ c3dl.Scene = function ()
    Adds a light to a scene if the maximum number of lights in the scene
    has not been exceeded.
    
-   @param {c3dl.PositionalLight|c3dl.DirectionalLight|c3dl.SpotLight} light the light to add.
+   @param {c3dl.PositionalLight|c3dl.DirectionalLight|c3dl.SpotLight} light - The light to add.
    
    @returns {boolean} true if the light could be added, otherwise returns false.
    */
@@ -895,7 +877,7 @@ c3dl.Scene = function ()
   /**
     Remove a light from the scene by its index in the scene's list of lights.
     
-    @param {int} The index of the light to remove
+    @param {int} index - The index of the light to remove
   */
   this.removeLightFromScene=function(index)
   {
@@ -917,7 +899,7 @@ c3dl.Scene = function ()
    Remove a light from the scene. The first light found matching the name 
    light or object light will be removed.
    
-   @param {String || c3dl.Light } light the name of the light or the c3dl object light
+   @param {String || c3dl.Light } light - The name of the light or the c3dl object light
    */
   this.removeLight = function (light)
   {
@@ -958,7 +940,7 @@ c3dl.Scene = function ()
   /**
    Add the object 'obj' to the scene.
    
-   @param {c3dl.Primitive|c3dl.ParticleSystem|c3dl.Point|c3dl.Line} obj A reference to an object.
+   @param {c3dl.Primitive|c3dl.ParticleSystem|c3dl.Point|c3dl.Line} obj - A reference to an object to add to the scene.
    
    @return {boolean} True if the object was added to the scene, false otherwise.
    */
@@ -983,7 +965,7 @@ c3dl.Scene = function ()
   /**
    Remove an object from the scene. This is an O(n) operation.
    
-   @param {c3dl.Primitive|c3dl.ParticleSystem|c3dl.Point|c3dl.Line} obj The object to remove from the scene.
+   @param {c3dl.Primitive|c3dl.ParticleSystem|c3dl.Point|c3dl.Line} obj - The object to remove from the scene.
    
    @return {boolean} true if the object was found and removed from the scene or
    false if the argument 'obj' was not found.
@@ -1016,6 +998,8 @@ c3dl.Scene = function ()
 /**
    @private
    Render Loop
+   
+   Called automatically
    */
   this.render = function ()
   {
@@ -1096,6 +1080,10 @@ c3dl.Scene = function ()
     numFramesSinceSceneStart++;
   }
 
+  /**
+   Calls requestAnimFrame for the rendering loop.
+   Called automatically.
+  */
   this.refresh = function()
   {
     thisScn.render();
@@ -1136,7 +1124,7 @@ c3dl.Scene = function ()
    @private
    Updates all objects based on time.
    
-   @param {float} timeElapsed
+   @param {float} timeElapsed - The amount of time elapsed since the last update
    
    @returns {boolean} True if something updated.
    */
@@ -1396,48 +1384,97 @@ c3dl.Scene = function ()
     // This flags the main loop to exit gracefully
     exitRender = true;
   }
+  
+  /**
+   Set the scene rendering again
+  */
   this.unpauseSceneRender = function ()
   {
     pauseRender = false;
   }
+  
+  /**
+   Temporarily suspend the scene from rendering, but not from updating
+  */
   this.pauseSceneRender = function ()
   {
     pauseRender = true;
   }
+  
+  /**
+   Set tehe scene updating again
+  */
   this.unpauseSceneUpdate = function ()
   {
     pauseUpdate = false;
   }
+  
+  /**
+   temporarily suspend the scene from updating
+  */
   this.pauseSceneUpdate = function ()
   {
     pauseUpdate = true;
   }
+  
+  /**
+   Set the scene running again.  Unpauses rendering and updating.
+  */
   this.unpauseScene = function ()
   {
     pauseRender = false;
     pauseUpdate = false;
   }
+  
+  /**
+   Temporarily suspend the scene.  Pauses rendering and updating.
+  */
   this.pauseScene = function ()
   {
     pauseRender = true;
     pauseUpdate = true;
   }
+  
+  /**
+   Obtain the list of objects colliding in the scene.
+   
+   @returns {Array} The list of objects currently colliding
+  */
   this.getCollision = function ()
   {
     return collisionList;
   }
+  
+  /**
+   Set whether or not to check for collision
+   
+   @param {boolean} truefalse - True to check for collision, false to ignore it scene wide.
+  */
   this.setCollision = function (truefalse)
   {
     collision = truefalse;
   }
+  
+  /**
+   Set the type of collision to check for (Collada : The entire model | Geometry : The geometries within the model)
+   
+   @param {String} type - The type of collision to check for.
+  */
   this.setCollisionType = function (type)
   {
     collisionType = type;
   }
+  
+  /**
+   Set the type of check for culling (BoundingSphere | AABB | OBB | All)
+   
+   @param {string} type - The type of culling to check
+  */
   this.setCulling = function (type)
   {
     culling = type;
   }
+  
   /**
    @private
    Loads images before they are actually used.  If a Model is created 
@@ -1450,7 +1487,7 @@ c3dl.Scene = function ()
    
    <p><b>This must be called after Scene's init()</b></p>
    
-   @param {string[]} imagePaths An array of paths of the images 
+   @param {string[]} imagePaths - An array of paths of the images 
    relative to the html file which holds the main script.
    */
   this.preloadImages = function (imagePaths)

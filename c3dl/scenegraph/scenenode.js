@@ -31,6 +31,9 @@ c3dl.SceneNode.prototype.getCopy = function ()
 
 /**
  @private
+ Copy the values from another scene node into this one
+ 
+ @param {c3dl.SceneNode} other - the Scenenode to copy into this one
  */
 c3dl.SceneNode.prototype.clone = function (other)
 {
@@ -48,7 +51,7 @@ c3dl.SceneNode.prototype.clone = function (other)
  
  Add a child to this node
  
- @param child
+ @param {} child - The child to add to this node.
  */
 c3dl.SceneNode.prototype.addChild = function (child)
 {
@@ -63,7 +66,9 @@ c3dl.SceneNode.prototype.addChild = function (child)
  
  Ask every child node if they are named 'nodeName'.
  
- @param nodeName
+ @param {string} nodeName - The name to search for
+ 
+ @returns {} reference to the scene node named 'nodeName' or null.
  */
 c3dl.SceneNode.prototype.findNode = function (nodeName)
 {
@@ -104,7 +109,8 @@ c3dl.SceneNode.prototype.findNode = function (nodeName)
  
  Update animations, etc.
  
- @param {float} timeStep
+ @param {float} timeStep - The amount of time elapsed since the last update
+ @param {Array} scaleVec - A scaling array to apply, if necessary
  */
 c3dl.SceneNode.prototype.update = function (timeStep, scaleVec)
 {
@@ -141,6 +147,9 @@ c3dl.SceneNode.prototype.update = function (timeStep, scaleVec)
  When scene nodes are rendered, they first push on their matrix 
  onto the stack, and render their children.  By doing this, all 
  children will be rendered relative to their parent which is this node.
+
+ @param {context} glCanvas3D - The graphics rendering context
+ @param {Scene} scene - The scene currently being rendered
  */
 c3dl.SceneNode.prototype.render = function (glCanvas3D, scene)
 {
@@ -154,6 +163,12 @@ c3dl.SceneNode.prototype.render = function (glCanvas3D, scene)
 
   c3dl.popMatrix();
 }
+
+/**
+ Render this node's bounding volumes.
+ 
+ @param {Scene} scene - The scene currently being rendered
+*/
 c3dl.SceneNode.prototype.renderBoundingVolumes = function (scene)
 {
   for (var i = 0, len = this.children.length; i < len; i++)
@@ -169,7 +184,7 @@ c3dl.SceneNode.prototype.renderBoundingVolumes = function (scene)
  This should be used when a model file has many meshes and each
  mesh uses the same texture file.
  
- @param {String} textureName
+ @param {String} textureName - The path to the texture to use
  */
 c3dl.SceneNode.prototype.setTexture = function (textureName)
 {
@@ -179,6 +194,12 @@ c3dl.SceneNode.prototype.setTexture = function (textureName)
   }
 }
 
+/**
+Set the texture of a model from an old path to a new path specified by the user
+
+ @param {string} oldtexturePath - The path of the texture to be replaced
+ @param {string} newoldtexturePath - The path of the new texture to apply
+*/
 c3dl.SceneNode.prototype.updateTextureByName = function (oldTexturePath,newTexturePath)
 {
   for (var i = 0, len = this.children.length; i < len; i++)
@@ -190,6 +211,10 @@ c3dl.SceneNode.prototype.updateTextureByName = function (oldTexturePath,newTextu
 /**
  @private
  
+ Set the material for this node to use
+ Called automatically.
+ 
+ @param {c3dl.Material} material - The material this node should use
  */
 c3dl.SceneNode.prototype.setMaterial = function (material)
 {
@@ -200,6 +225,10 @@ c3dl.SceneNode.prototype.setMaterial = function (material)
 }
 
 /**
+ Set the way this model should be rendered.
+ Called automatically.
+ 
+ @param {c3dl.Effect} effect - The effect to attach to this node
  */
 c3dl.SceneNode.prototype.setEffect = function (effect)
 {
@@ -217,10 +246,10 @@ c3dl.SceneNode.prototype.setEffect = function (effect)
  Do any of the triangles in any of the geometry child nodes of this node intersect
  with the given ray?
  
- @param {Array} rayOrigin
- @param {Array} rayDir
+ @param {Array} rayOrigin - The ray's origin in world space
+ @param {Array} rayDir - A normalized direction vector
  
- @returns {bool} true if any child geometry node has intersected the ray.
+ @returns {boolean} true if any child geometry node has intersected the ray.
  */
 c3dl.SceneNode.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
 {
@@ -249,10 +278,10 @@ c3dl.SceneNode.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
  
  Do any of the geometry child nodes of this node intersect with the given ray?
  
- @param {Array} rayOrigin
- @param {Array} rayDir
+ @param {Array} rayOrigin - The ray's origin in world space
+ @param {Array} rayDir - A normalized direction vector
  
- @returns {bool} true if any child geometry node has intersected the ray.
+ @returns {boolean} true if any child geometry node has intersected the ray.
  */
 c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
 {
@@ -272,6 +301,11 @@ c3dl.SceneNode.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
   return passed;
 }
 
+/**
+ Get the bounding volumes for this node (and its children).
+ 
+ @return {Array} The bounding volumes for this node and its children.
+*/
 c3dl.SceneNode.prototype.getBoundingVolumes = function ()
 {
   var boundingVolumes = [];
@@ -295,6 +329,13 @@ c3dl.SceneNode.prototype.getBoundingVolumes = function ()
   return boundingVolumes;
 }
 
+/**
+ Get the vertices that make up this node and its children.
+ 
+ @param {boolean} first - true if this is the root node of the object, false otherwise.
+ 
+ @returns {Array} The array of all vertices that make up this node.
+*/
 c3dl.SceneNode.prototype.getAllVerts = function (first)
 {
   var allverts = [];
@@ -332,6 +373,12 @@ c3dl.SceneNode.prototype.getAllVerts = function (first)
   return allverts;
 }
 
+/**
+ Re-center this node and all its children.
+ Called automatically.
+ 
+ @param {Array} realposition - The position to center on.
+*/
 c3dl.SceneNode.prototype.center = function (realposition)
 {
   var temp = new c3dl.SceneNode();
@@ -346,6 +393,11 @@ c3dl.SceneNode.prototype.center = function (realposition)
   temp.setTransform(c3dl.makePoseMatrix([1, 0, 0], [0, 1, 0], [0, 0, 1], [-realposition[0], -realposition[1], -realposition[2]]));
 }
 
+/**
+ Get the list of textures used by this node and its children.
+ 
+ @returns {Array} The paths of the textures used by this node and its children.
+*/
 c3dl.SceneNode.prototype.getTextures = function ()
 {
   var textures = [];
@@ -370,6 +422,11 @@ c3dl.SceneNode.prototype.getTextures = function ()
   return textures;
 }
 
+/**
+ Get the primitivesets that are children of this node.
+ 
+ @returns {Array} - The primitive sets that are children of this node.
+*/
 c3dl.SceneNode.prototype.getPrimitiveSets = function ()
 {
   var primitiveSets = [];

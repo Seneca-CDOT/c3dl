@@ -123,7 +123,7 @@ c3dl.Light = function ()
   /**
    Turn the light on or off.
    
-   @param {boolean} isOn true to turn the light on, false to turn it off.
+   @param {boolean} isOn - true to turn the light on, false to turn it off.
    */
   this.setOn = function (isOn)
   {
@@ -136,7 +136,7 @@ c3dl.Light = function ()
    The scene can later be queried for the light by this name so the light can be 
    updated or removed.  The default name is "unnamed".
    
-   @param {String} name The new name of the light.
+   @param {String} name - The new name of the light.
    */
   this.setName = function (name)
   {
@@ -158,7 +158,7 @@ c3dl.Light = function ()
    ambient light, object will tend to appear flat, therefore set the diffuse color
    component to give 'shape' to objects.
    
-   @param {Array} color Array of three values in the order RGB.
+   @param {Array} color - Array of three values in the order RGB.
    */
   this.setAmbient = function (color)
   {
@@ -177,7 +177,7 @@ c3dl.Light = function ()
    the light's effect. If you were at the position of the light looking at the object,
    you would see the object light and likely its contour would be less lit.    
    
-   @param {Array} color Array of three values in the order RGB.
+   @param {Array} color - Array of three values in the order RGB.
    */
   this.setDiffuse = function (color)
   {
@@ -195,7 +195,7 @@ c3dl.Light = function ()
    position into account, but also the viewer’s position. The highlights tend to
    'follow' where the camera is looking.
    
-   @param {Array} color Array of three values in the order RGB.
+   @param {Array} color - Array of three values in the order RGB.
    */
   this.setSpecular = function (color)
   {

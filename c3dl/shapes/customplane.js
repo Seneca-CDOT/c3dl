@@ -3,6 +3,12 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
+/**
+ @class c3dl.CustomPlane A primitive planar model designed to allow people to easily add simple
+ plane-like to scenes without requiring model files.
+ 
+ @augments c3dl.Shape
+*/
 c3dl.CustomPlane = c3dl.inherit(c3dl.Shape, function (vertArry)
 {
   c3dl._superc(this);
@@ -51,6 +57,13 @@ c3dl.CustomPlane = c3dl.inherit(c3dl.Shape, function (vertArry)
   }
 });
 
+/**
+ Check if a selection of vertices follow the standard clockwise rotation.
+ 
+ @param {Array} verts - The vertices to check.
+ 
+ @returns {boolean} True if the vertices are listed in clockwise order, false otherwise.
+*/
 c3dl.CustomPlane.prototype.isClockWise = function (verts)
 {
   var i,j,k;
@@ -85,12 +98,23 @@ c3dl.CustomPlane.prototype.isClockWise = function (verts)
   return true;
 }
 
+/**
+ Get a duplicate copy of this Shape.
+ 
+ @returns {c3dl.CustomShape} A duplicate copy of this CustomShape
+*/
 c3dl.CustomPlane.prototype.getCopy = function ()
 {
   var Shape = new c3dl.CustomPlane();
   Shape.clone(this);
   return Shape;
 }
+
+/**
+ Copy data from another CustomPlane into this one.
+ 
+ @param {c3dl.CustomPlane} other - The custom plane to copy into this one.
+*/
 c3dl.CustomPlane.prototype.clone = function (other)
 {
   c3dl._super(this, arguments, "clone");

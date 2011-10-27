@@ -1,14 +1,22 @@
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+*/
 
+
+/**
+ @class c3dl.BoundingVolume is a composite of other bounding objects.
+ */
 c3dl.BoundingVolume = function ()
 {
   this.boundingSphere = new c3dl.BoundingSphere();
   this.aabb = new c3dl.AABB();
   this.obb = new c3dl.OBB();
-  //x
+  //size on x axis
   this.length = 0;
-  //y
+  //size on y axis
   this.height = 0;
-  //z
+  //size on z axis
   this.width = 0;
   this.maxMins= [];
   this.centerPosition = [];
@@ -21,6 +29,12 @@ c3dl.BoundingVolume = function ()
   this.scaleVec = [1,1,1];
   this.vertices = null;
   this.transMat = new C3DL_FLOAT_ARRAY(16);
+  
+  /**
+   Initialize the various properties of the boudning volume using an array of vertices.  Called Automatically.
+   
+   @param {Array} vertices - An array of vertices representing the object this volume must contain.
+   */
   this.init = function (vertices)
   {
     this.vertices = new C3DL_FLOAT_ARRAY(vertices);
@@ -55,6 +69,12 @@ c3dl.BoundingVolume = function ()
     this.originalWidth = this.width = this.maxMins[4]-this.maxMins[5];
   }
   
+  /**
+   Move the bounding volume to a new position (no animation).
+   Called automatically when moving the object it contains.
+
+   @param {Array} position - The new position in 3D space.
+   */
   this.setPosition = function (position)
   {
     this.position[0] = position[0];
@@ -64,6 +84,12 @@ c3dl.BoundingVolume = function ()
     this.aabb.set(this.obb.boxVerts); 
   }
   
+  /**
+   Scale the bounding volume up or down based on how the object it is associated with scales
+   Called automatically when scaling the object it contains.
+
+   @param {Array} scaleVec - The three values representing how to scale the object on each axis (x,y,z)
+   */
   this.scale = function (scaleVec)
   {
     this.length = this.length * scaleVec[0];
@@ -77,6 +103,13 @@ c3dl.BoundingVolume = function ()
     this.aabb.set(this.obb.boxVerts); 
   }
   
+  /**
+   Rotate this object by a specific amount (angle) around an axis (axisVec).
+   No animation, called automatically when rotating the object this volume is associated with.
+   
+   @param {Array} axisVec - The axis around which to rotate.
+   @param {Int} angle - The angle to rotate through.  Expessed in radians.
+   */
   this.rotateOnAxis = function (axisVec, angle)
   {
     var rotateOnAxisQuat = c3dl.makeQuat(0, 0, 0, 0);
@@ -93,6 +126,15 @@ c3dl.BoundingVolume = function ()
     this.obb.set(this.getTransform()); 
     this.aabb.set(this.obb.boxVerts); 
   }
+  
+  /**
+   Replace the current properties of the bounding volume with new ones.
+   Called automatically.
+   
+   @param {Array} pos - The new position in 3D space
+   @param {Array} rotateMat - The new rotation matrix
+   @param {Array} scaleVec - The new scale of the volume
+   */
   this.set = function (pos, rotateMat, scaleVec)
   {
     this.position[0] = pos[0];
@@ -122,34 +164,82 @@ c3dl.BoundingVolume = function ()
     this.obb.set(this.getTransform()); 
     this.aabb.set(this.obb.boxVerts);
   }
+  
+  /**
+   Obtain the current height (y axis) of this volume
+   
+   @returns {Float} The current height of this volume
+  */
   this.getHeight = function ()
   {
     return this.height;
   }
+  
+  /**
+   Obtain the current length (z axis) of this volume
+   
+   @returns {Float} The current length of this volume
+  */
   this.getLength = function ()
   {
     return this.length;
   }
+  
+  /**
+   Obtain the current width (x axis) of this volume
+   
+   @returns {Float} The current width of this volume
+  */
   this.getWidth = function ()
   {
     return this.width;
   }
+  
+  /**
+   Obtain the current radius of this volume
+   
+   @returns {Float} The current radius of this volume
+  */
   this.getRadius = function ()
   {
     return this.boundingSphere.radius;
   }
+  
+  /**
+   Get the current orthoganal direction vectors (left, up and forward) of this volume
+   
+   @returns {Array} The current orthoganal direction vectors of this volume
+  */
   this.getAxis = function ()
   {
     return this.axis;
   }
+  
+  /**
+   Get the maximum distance from the centre of this object to its edge in each axis.
+   
+   @returns {Array} A three element array consisting of half the length, height and width of the bounding volume.
+  */
   this.getSizeInAxis= function ()
   {
     return [this.length/2, this.height/2,this.width/2];
   }
+  
+  /**
+   Retrieve the maximum and minimum values on each axis for verticies in the object this volume is associated with.
+
+   @returns {Array} A six element array containing the maximum and minimum values on the x,y and z axes (in that order).
+   */
   this.getMaxMins= function ()
   {
     return this.maxMins;
   }
+  
+  /**
+   Retrieve the tranformation matrix for this volume.
+   
+   @returns {Array} The transformation matrix for this bounding volume.
+   */
   this.getTransform = function ()
   {
     c3dl.mat1[0] = this.axis[0][0];
@@ -171,6 +261,12 @@ c3dl.BoundingVolume = function ()
     c3dl.setMatrix(c3dl.mat2, this.scaleVec[0], 0, 0, 0, 0, this.scaleVec[1], 0, 0, 0, 0, this.scaleVec[2], 0, 0, 0, 0, 1);
     return c3dl.multiplyMatrixByMatrix(c3dl.mat1, c3dl.mat2, this.transMat); 
   }
+  
+  /**
+   Retrieve this bounding volumes current position.
+   
+   @returns {Array} This bounding volume's current position.
+  */
   this.getPosition = function ()
   {
     if (this.centered)
@@ -183,6 +279,12 @@ c3dl.BoundingVolume = function ()
     }  
   }
   
+  /**
+   @private
+   Retrieve a duplicate of this volume.
+   
+   @returns {BoundingVolume} A duplicate copy of this object.
+  */
   this.getCopy = function ()
   {
     var copy = new c3dl.BoundingVolume();
@@ -211,6 +313,11 @@ c3dl.BoundingVolume = function ()
     copy.centered = this.centered;
     return copy;
   }
+  
+  /**
+   Re-center the object bounding box and axis aligned bounding box around the center of this volume.
+   Called automatically.
+   */
   this.center = function ()
   {
     this.centered = true;
@@ -218,14 +325,34 @@ c3dl.BoundingVolume = function ()
     this.aabb.center(this.centerPosition);
   }
   
+  /**
+   Cause the bounding sphere associated with this object ot be rendered.
+   Called automatically.
+   
+   @param {Scene} scene - The scene currently being drawn.
+  */
   this.renderSphere = function (scene)
   {
     scene.getRenderer().renderBoundingSphere(this,scene.getCamera().getViewMatrix(), scene);
   }
+  
+  /**
+   Cause the object boundigng box associated with this object ot be rendered.
+   Called automatically.
+   
+   @param {Scene} scene - The scene currently being drawn.
+  */
   this.renderObb = function (scene)
   {
     this.obb.render(scene);
   }
+  
+  /**
+   Cause the axis aligned bounding box associated with this object ot be rendered.
+   Called automatically.
+   
+   @param {Scene} scene - The scene currently being drawn.
+  */
   this.renderAabb= function (scene)
   {
     this.aabb.render(scene);

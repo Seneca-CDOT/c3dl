@@ -28,7 +28,7 @@ c3dl.Projection.push(c3dl.makeIdentityMatrix());
 /**
  Change the matrix mode to either model view or projection.
  
- @param {c3dl.PROJECTION | c3dl.MODELVIEW} mode
+ @param {c3dl.PROJECTION | c3dl.MODELVIEW} mode - Which matrix stack to work with
  */
 c3dl.matrixMode = function (mode)
 {
@@ -60,7 +60,7 @@ c3dl.pushMatrix = function ()
  Replace the top matrix with a specified matrix. If paramter is
  not provided, an identity matrix will replace the top matrix.
  
- @param {Array} [matrix] The matrix which will replace the 
+ @param {Array} [matrix] - The matrix which will replace the 
  element at the top of the stack. If omitted, it will replace the
  top element with an identity matrix.
  */
@@ -108,7 +108,7 @@ c3dl.popMatrix = function ()
  Post multiply the matrix at the top of the stack with the 
  parameter 'matrix' and replace the top element with the product.
  
- @param {Array} matrix The matrix which will be post multiplied 
+ @param {Array} matrix - The matrix which will be post multiplied 
  with the top matrix.
  */
 c3dl.multMatrix = function (matrix)
@@ -144,9 +144,9 @@ c3dl.getMatrixStackHeight = function ()
  Create a translate matrix and call C3DL.multMatrix() passing in the
  translate matrix.
  
- @param {float} translateX The translation for the x component.
- @param {float} translateY The translation for the y component.
- @param {float} translateZ The translation for the z component.
+ @param {float} translateX - The translation for the x component.
+ @param {float} translateY - The translation for the y component.
+ @param {float} translateZ - The translation for the z component.
  */
 c3dl.translate = function (translateX, translateY, translateZ)
 {
@@ -174,9 +174,9 @@ c3dl.rotate = function (angle, rotationX, rotationY, rotationZ)
  Create a scale matrix from the parameters provided and call multMatrix()
  with this matrix.
  
- @param {float} scaleX Scaling factor for the x component.
- @param {float} scaleY Scaling factor for the y component.
- @param {float} scaleZ Scaling factor for the z component. 
+ @param {float} scaleX - Scaling factor for the x component.
+ @param {float} scaleY - Scaling factor for the y component.
+ @param {float} scaleZ - Scaling factor for the z component. 
  */
 c3dl.scale = function (scaleX, scaleY, scaleZ)
 {

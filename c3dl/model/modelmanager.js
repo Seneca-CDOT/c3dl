@@ -22,6 +22,8 @@ c3dl.ModelManager.values = [];
  Load a model file at 'filePath'. This method will check if
  the model is already loaded, thus preventing the file being
  loaded twice.
+ 
+ @param {String} filePath - The path of the model to load, relative to the html page containing the canvas element.
  */
 c3dl.ModelManager.loadFile = function (filePath)
 {
@@ -38,6 +40,11 @@ c3dl.ModelManager.loadFile = function (filePath)
   c3dl.ModelManager.values.push(rootNode);
 }
 
+/**
+ Remove a model from the managers list.
+ 
+ @param {String} filePath - The path of the model to remove.
+*/
 c3dl.ModelManager.deleteFile = function (filePath)
 {
   //get the index associated with that file
@@ -58,7 +65,7 @@ c3dl.ModelManager.deleteFile = function (filePath)
  @private
  Make a copy of the sceneGraph
  
- @param {String} filePath
+ @param {String} filePath - The path of the model who's scenegraph to copy.
  */
 c3dl.ModelManager.getSceneGraphCopy = function (filePath)
 {
@@ -82,7 +89,7 @@ c3dl.ModelManager.getSceneGraphCopy = function (filePath)
  @private
  Has the file already been loaded?
  
- @param filePath {string}
+ @param filePath {string} - The path of the file to check for.
  
  @return true if the file has already been loaded, otherwise false.
  */
@@ -91,6 +98,13 @@ c3dl.ModelManager.isFileLoaded = function (filePath)
   return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].loaded;
 }
 
+/**
+ Check how close a particular model is to being loaded.
+ 
+ @param {String} filePath - The path of the file to check.
+ 
+ @returns {int} A value between 0 and 100 corresponding to what percent of the file is loaded.
+*/
 c3dl.ModelManager.loadProgress = function (filePath)
 {
     return c3dl.ModelManager.values[c3dl.ModelManager.getIndex(filePath)].progress;
@@ -101,6 +115,10 @@ c3dl.ModelManager.loadProgress = function (filePath)
  Get the 0-based index of the filePath.  If we have
  that index, we can reference the values array since
  they are parallel.
+ 
+ @param {String} filePath - The path of the file to get the index of.
+ 
+ @returns {int} Te index of that file within the manager's arrays, or -1 if it is not present. 
  */
 c3dl.ModelManager.getIndex = function (filePath)
 {

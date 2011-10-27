@@ -35,7 +35,7 @@ c3dl.Model = c3dl.inherit(c3dl.Primitive, function ()
  Get the path of the file loaded. This is set when init() 
  is called.
  
- @returns {String}
+ @returns {String} The path to the file this model was loaded from
  */
 c3dl.Model.prototype.getPath = function ()
 {
@@ -45,7 +45,7 @@ c3dl.Model.prototype.getPath = function ()
 /**
  Get the angular velocity of the scenegraph's root node.
  
- @returns 
+ @returns {float} The angular velocity applied to this Model
  */
 c3dl.Model.prototype.getAngularVel = function ()
 {
@@ -55,7 +55,7 @@ c3dl.Model.prototype.getAngularVel = function ()
 /**
  Get the linear velocity of the scenegraph's root node.
  
- @returns
+ @returns {Array} The linear velocity applied to this model
  */
 c3dl.Model.prototype.getLinearVel = function ()
 {
@@ -65,7 +65,7 @@ c3dl.Model.prototype.getLinearVel = function ()
 /**
  Get the position of the scene graph's root.
  
- @returns {Array}
+ @returns {Array} The position of this model in 3D space
  */
 c3dl.Model.prototype.getPosition = function ()
 {
@@ -75,7 +75,7 @@ c3dl.Model.prototype.getPosition = function ()
 /**
  Set the angular velocity of the scenegraph's root node.
  
- @param {Array} vec
+ @param {Array} vec - The angular velocity to apply to this model
  */
 c3dl.Model.prototype.setAngularVel = function (vec)
 {
@@ -85,7 +85,7 @@ c3dl.Model.prototype.setAngularVel = function (vec)
 /**
  Get the up vector of the scenegraph's root node.
  
- @return {Array}
+ @return {Array} The direction this model considers to be 'up'.
  */
 c3dl.Model.prototype.getUp = function ()
 {
@@ -95,7 +95,7 @@ c3dl.Model.prototype.getUp = function ()
 /**
  Get the left vector of the scenegraph's root node.
  
- @return {Array}
+ @return {Array} The direction this model considers to be 'left'
  */
 c3dl.Model.prototype.getLeft = function ()
 {
@@ -105,7 +105,7 @@ c3dl.Model.prototype.getLeft = function ()
 /**
  Get the direction vector of the scenegraph's root node.
  
- @returns {Array} 
+ @returns {Array}  The direction this model considers to be 'forward'.
  */
 c3dl.Model.prototype.getDirection = function ()
 {
@@ -118,7 +118,7 @@ c3dl.Model.prototype.getDirection = function ()
  object cannot be picked, it will not tested against the ray which is generated
  then the user clicks the canvas, thus increasing performance.
  
- @returns {bool} true if the object can be picked, false otherwise.
+ @returns {boolean} true if the object can be picked, false otherwise.
  */
 c3dl.Model.prototype.getPickable = function ()
 {
@@ -129,7 +129,7 @@ c3dl.Model.prototype.getPickable = function ()
  Set whether this object should be included in picking tests.  By omitting
  objects which should not be interacted with, it can increase performance.
  
- @param {bool} isPickable true if the object should be included in pikcing tests,
+ @param {boolean} isPickable - true if the object should be included in picking tests,
  false otherwise.
  */
 c3dl.Model.prototype.setPickable = function (isPickable)
@@ -140,7 +140,7 @@ c3dl.Model.prototype.setPickable = function (isPickable)
 /**
  Set the linear velocity of the scenegraph's root node.
  
- @param {Array} vec
+ @param {Array} vec - The linear velocity to set on this object.
  */
 c3dl.Model.prototype.setLinearVel = function (vec)
 {
@@ -156,7 +156,7 @@ c3dl.Model.prototype.setLinearVel = function (vec)
  References exsist within this object which will point to the vertex arrays
  in the manager object.
  
- @param {string} path path of the model file.
+ @param {string} modelpath - path of the model file.
  */
 c3dl.Model.prototype.init = function (modelpath)
 {
@@ -195,43 +195,8 @@ c3dl.Model.prototype.init = function (modelpath)
  
  Update animations for linear velocity and angular velocity.
  
- @param {float} timeStep
+ @param {float} timeStep - The amount of time elapsed since the last update.
  */
-/*
-c3dl.Model.prototype.update = function (timeStep)
-{
-  // keep checking to see if the file is done being loaded.
-  if (this.isReady())
-{
-    //ModelView stack will be used for trasform mat
-    c3dl.pushMatrix();
-    c3dl.loadIdentity();
-     //ModelView stack will be used for rotation mat
-    c3dl.matrixMode(c3dl.PROJECTION);
-    c3dl.pushMatrix();
-    c3dl.loadIdentity();
-    c3dl.matrixMode(c3dl.MODELVIEW);
-    this.sceneGraph.update(timeStep, this.scaleVec);
-    c3dl.popMatrix();
-    c3dl.matrixMode(c3dl.PROJECTION);
-    c3dl.popMatrix();
-    c3dl.matrixMode(c3dl.MODELVIEW);
-    var pos = this.sceneGraph.getPosition();
-    var rotateMat = this.sceneGraph.getRotateMat();
-    var scaleVec = this.boundingVolume.scaleVec;
-    this.boundingVolume.set(pos,rotateMat,scaleVec);
-  }
-  else
-{
-    c3dl.debug.logError('You must call addModel("' + this.path + '"); before canvasMain.');
-    if (c3dl.ModelManager.isFileLoaded(this.path))
-{
-      // get a copy of the scenegraph so we can modify it.
-      this.sceneGraph = c3dl.ModelManager.getSceneGraphCopy(this.path);
-    }
-  }
-}
-*/
 c3dl.Model.prototype.update = function (timeStep)
 {
   // keep checking to see if the file is done being loaded.
@@ -371,8 +336,13 @@ c3dl.Model.prototype.update = function (timeStep)
     }
   }
 }
+
 /**
  @private
+ Specify the scene graph for this object to use.
+ Called automatically.
+ 
+ @param {c3dl.SceneNode} sg - The scenegraph this object is part of.
  */
 c3dl.Model.prototype.setSceneGraph = function (sg)
 {
@@ -387,36 +357,9 @@ c3dl.Model.prototype.setSceneGraph = function (sg)
  
  Render the model.
  
- @param {context} glCanvas3D
- @param {Scene} scene
+ @param {context} glCanvas3D - The graphics rendering context
+ @param {Scene} scene - The scene currently being rendered
  */
- /*
-c3dl.Model.prototype.render = function (glCanvas3D, scene)
-{
-  if (this.sceneGraph && this.isVisible())
-{
-    // tell the root to render. The render() calls
-    // will propogate down the graph.
-    this.sceneGraph.render(glCanvas3D, scene);
-    if (scene.getBoundingVolumeVisibility())
-{
-      this.sceneGraph.renderBoundingVolumes(scene);
-    }
-    if (this.renderObb)
-{
-      this.boundingVolume.renderObb(scene);
-    }
-    if (this.renderAabb)
-{
-      this.boundingVolume.renderAabb(scene);
-    }
-    if (this.renderBoundingSphere)
-{
-      this.boundingVolume.renderSphere(scene);
-    }
-  }
-}
-*/
 c3dl.Model.prototype.render = function (glCanvas3D, scene)
 {
   if (this.isReady() && this.isVisible())
@@ -508,9 +451,9 @@ c3dl.Model.prototype.render = function (glCanvas3D, scene)
 } 
 
 /**
- Scale the the scenegraph's root node.
+ Scale the scenegraph's root node.
  
- @param {Array} scaleVec 
+ @param {Array} scaleVec - The value to scale by on each axis
  */
 c3dl.Model.prototype.scale = function (scaleVec)
 {
@@ -526,7 +469,7 @@ c3dl.Model.prototype.scale = function (scaleVec)
  Translate the entire model. This will tell the root of the
  Model scenegraph to translate by 'trans'.
  
- @param {Array} trans
+ @param {Array} trans - The value to translate on each axis
  */
 c3dl.Model.prototype.translate = function (trans)
 {
@@ -541,7 +484,7 @@ c3dl.Model.prototype.translate = function (trans)
 /**
  Place the object to a new location relative to the world origin.
  
- @param {Array} pos 
+ @param {Array} pos - The absolute position to move the object to
  */
 c3dl.Model.prototype.setPosition = function (pos)
 {
@@ -567,7 +510,7 @@ c3dl.Model.prototype.getSceneGraph = function ()
  Set the texture of all the geometry sections (primitive collation elements 
  or primitiveSets) to this texture.
  
- @param {string} texturePath Path of the texture.
+ @param {string} texturePath - Path of the texture.
  */
 c3dl.Model.prototype.setTexture = function (texturePath)
 {
@@ -584,7 +527,8 @@ c3dl.Model.prototype.setTexture = function (texturePath)
 /**
 Set the texture of a model from an old path to a new path specified by the user
 
- @param {string, string} oldtexturePath and newoldtexturePath
+ @param {string} oldtexturePath - The path of the texture to be replaced
+ @param {string} newoldtexturePath - The path of the new texture to apply
 */
 c3dl.Model.prototype.updateTextureByName = function (oldTexturePath,newTexturePath)
 {
@@ -614,6 +558,11 @@ c3dl.Model.prototype.updateTextureByName = function (oldTexturePath,newTexturePa
   }
 }
 
+/**
+ Get the textures currently applied to this object.
+ 
+ @returns {Array} The paths to all textures being used by this model.
+*/
 c3dl.Model.prototype.getTextures = function ()
 {
   if (this.isReady())
@@ -622,6 +571,11 @@ c3dl.Model.prototype.getTextures = function ()
   }
 }
 
+/**
+ Get the primitiveSets that make up this Model
+ 
+ @returns {Array} The primitiveSets that make up this model.
+*/
 c3dl.Model.prototype.getPrimitiveSets = function ()
 {
   if (this.isReady())
@@ -629,12 +583,13 @@ c3dl.Model.prototype.getPrimitiveSets = function ()
     return this.sceneGraph.getPrimitiveSets();
   }
 }
+
 /**
  Sets the material of all the geometry sections (primitive collation elements 
  or primitiveSets) to this material. Thus, the entire model will be
  rendered using this material.
  
- @param {c3dl.Material} material
+ @param {c3dl.Material} material - The material to attach to this model.
  */
 c3dl.Model.prototype.setMaterial = function (material)
 {
@@ -657,7 +612,7 @@ c3dl.Model.prototype.setMaterial = function (material)
  effects such as c3dl.effects.GOOCH, c3dl.effects.CARTOON, etc.
  are created.
  
- @param {c3dl.Effect} effect
+ @param {c3dl.Effect} effect - The effect to attach to this model
  */
 c3dl.Model.prototype.setEffect = function (effect)
 {
@@ -674,9 +629,10 @@ c3dl.Model.prototype.setEffect = function (effect)
 }
 
 /**
- Rotate around the up vector by a hard amount.
+ Rotate around an arbitrary axis by a hard amount.
  
- @param {float} angle in radians.
+ @param {Array} axisVec - The axis to rotate around.
+ @param {float} angle - in radians.
  */
 c3dl.Model.prototype.rotateOnAxis = function (axisVec, angle)
 {
@@ -690,9 +646,9 @@ c3dl.Model.prototype.rotateOnAxis = function (axisVec, angle)
 
 
 /**
- Rotate around the up vector by a hard amount.
+ Rotate around this object's up vector by a hard amount.
  
- @param {float} angle in radians.
+ @param {float} angle - in radians.
  */
 c3dl.Model.prototype.yaw = function (angle)
 {
@@ -705,9 +661,9 @@ c3dl.Model.prototype.yaw = function (angle)
 }
 
 /**
- Rotate around the side vector by a hard amount.
+ Rotate around this object's side vector by a hard amount.
  
- @param {float} angle in radians.
+ @param {float} angle - in radians.
  */
 c3dl.Model.prototype.pitch = function (angle)
 {
@@ -721,6 +677,9 @@ c3dl.Model.prototype.pitch = function (angle)
 
 /**
  @private
+ Check if this object has finished loading (and is ready to be drawn) or not.
+ 
+ @returns {boolean} true if this object is ready, false otherwise.
  */
 c3dl.Model.prototype.isReady = function ()
 {
@@ -728,9 +687,9 @@ c3dl.Model.prototype.isReady = function ()
 }
 
 /**
- Rotate around the direction vector by a hard amount.
+ Rotate around this model's direction vector by a hard amount.
  
- @param {float} angle in radians.
+ @param {float} angle - in radians.
  */
 c3dl.Model.prototype.roll = function (angle)
 {
@@ -744,6 +703,9 @@ c3dl.Model.prototype.roll = function (angle)
 
 /**
  @private
+ Get a duplicate of this model.
+ 
+ @returns {c3dl.Model} A duplicate of this Model.
  */
 c3dl.Model.prototype.getCopy = function ()
 {
@@ -752,6 +714,12 @@ c3dl.Model.prototype.getCopy = function ()
   return myModel;
 }
 
+/**
+ Get the transformation matrix of this model.
+ Called automatically.
+ 
+ @returns {Array} The array that represents this model's transformation.
+*/
 c3dl.Model.prototype.getTransform = function ()
 {
   if (this.sceneGraph)
@@ -759,8 +727,12 @@ c3dl.Model.prototype.getTransform = function ()
     return this.sceneGraph.getTransform();
   }
 }
+
 /**
  @private
+ Make this object a duplicate of another model.
+ 
+ @param {c3dl.Model} other - The model for this one to duplicate
  */
 c3dl.Model.prototype.clone = function (other)
 {
@@ -777,10 +749,10 @@ c3dl.Model.prototype.clone = function (other)
  test the ray against all the geometry nodes in the scenegraph and
  return true as soon as it finds an intersection.
  
- @param {Array} rayOrigin The ray's origin in view space.
- @param {Array} rayDir The ray's direction in view space.
+ @param {Array} rayOrigin - The ray's origin in view space.
+ @param {Array} rayDir - The ray's direction in view space.
  
- @returns {bool} true if the ray intersects with one of the geometry nodes
+ @returns {boolean} true if the ray intersects with one of the geometry nodes
  in the scenegraph.
  */
 c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
@@ -799,6 +771,11 @@ c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
   return result;
 }
 
+/**
+ Determine the type of object this is.
+ 
+ @returns {} A constant value representing c3dl.Model.
+*/
 c3dl.Model.prototype.getObjectType = function ()
 {
   //switch(this.path.substr(this.path.lastIndexOf(".")))
@@ -813,10 +790,10 @@ c3dl.Model.prototype.getObjectType = function ()
  @private
  Does the given ray intersect with any of the triangles in this object?
  
- @param {Array} rayOrigin ray's origin in world space.
- @param {Array} rayDir A normalized direction vector.
+ @param {Array} rayOrigin - ray's origin in world space.
+ @param {Array} rayDir - A normalized direction vector.
  
- @returns {bool} true if the ray intersects with any triangle in the object.
+ @returns {boolean} true if the ray intersects with any triangle in the object.
  */
 c3dl.Model.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
 {
@@ -830,11 +807,22 @@ c3dl.Model.prototype.rayIntersectsTriangles = function (rayOrigin, rayDir)
   c3dl.popMatrix();
   return result;
 }
+
+/**
+ Get the bounding volumes for this model.
+ 
+ @returns {c3dl.BoundingVolume} The bounding volumes attached to this model.
+*/
 c3dl.Model.prototype.getBoundingVolumes = function ()
 {
   return this.sceneGraph.getBoundingVolumes();
 }
 
+/**
+ Get the height (y-axis) of this model.
+ 
+ @returns {int} The height of this model.
+*/
 c3dl.Model.prototype.getHeight = function ()
 {
   if (this.isReady())
@@ -842,6 +830,13 @@ c3dl.Model.prototype.getHeight = function ()
     return this.boundingVolume.getHeight();
   }
 }
+
+
+/**
+ Get the width (x-axis) of this model.
+ 
+ @returns {int} The width of this model.
+*/
 c3dl.Model.prototype.getWidth = function ()
 {
   if (this.isReady())
@@ -849,6 +844,12 @@ c3dl.Model.prototype.getWidth = function ()
     return this.boundingVolume.getWidth();
   }
 }
+
+/**
+ Get the length (z-axis) of this model.
+ 
+ @returns {int} The length of this model.
+*/
 c3dl.Model.prototype.getLength = function ()
 {
   if (this.isReady())
@@ -856,6 +857,12 @@ c3dl.Model.prototype.getLength = function ()
     return this.boundingVolume.getLength();
   }
 }
+
+/**
+ Get the size of this model in all three axes.
+ 
+ @returns {Array} The size of this model in all three axes.
+*/
 c3dl.Model.prototype.getSize = function ()
 {
   if (this.isReady())
@@ -864,6 +871,11 @@ c3dl.Model.prototype.getSize = function ()
   }
 }
 
+/**
+ Scale this model to be a specific height, while leaving the other dimensions untouched.
+ 
+ @param {int} height - The desired height of this model
+*/
 c3dl.Model.prototype.setHeight = function (height)
 {
   if (this.isReady())
@@ -894,6 +906,11 @@ c3dl.Model.prototype.setHeight = function (height)
   }
 }
 
+/**
+ Scale this model to be a specific length, while leaving the other dimensions untouched.
+ 
+ @param {int} length - The desired length of this model
+*/
 c3dl.Model.prototype.setLength = function (length)
 {
   if (this.isReady())
@@ -924,6 +941,11 @@ c3dl.Model.prototype.setLength = function (length)
   }
 }
 
+/**
+ Scale this model to be a specific width, while leaving the other dimensions untouched.
+ 
+ @param {int} width - The desired width of this model
+*/
 c3dl.Model.prototype.setWidth = function (width)
 {
   if (this.isReady())
@@ -954,6 +976,13 @@ c3dl.Model.prototype.setWidth = function (width)
   }
 }
 
+/**
+ Scale this model to be a specific size, in all three axes.
+ 
+ @param {int} length - The desired length of this model
+ @param {int} width - The desired width of this model
+ @param {int} height - The desired height of this model
+*/
 c3dl.Model.prototype.setSize = function (length, width, height)
 {
   if (this.isReady())
@@ -1014,22 +1043,49 @@ c3dl.Model.prototype.setSize = function (length, width, height)
   }
 }
 
+/**
+ Set whether or not to render this model's bounding box.
+ 
+ @param {boolean} renderObb - whether to render the obb or not.
+*/
 c3dl.Model.prototype.setRenderObb = function (renderObb)
 {
   this.renderObb = renderObb;
 }
+
+/**
+ Set whether or not to render this model's axis aligned bounding box.
+ 
+ @param {boolean} renderAabb - whether to render the axis aligned bounding box or not.
+*/
 c3dl.Model.prototype.setRenderAabb = function (renderAabb)
 {
   this.renderAabb = renderAabb;
 }
+
+/**
+ Set whether or not to render this model's bounding sphere.
+ 
+ @param {boolean} renderBoundingSphere - whether to render the bounding sphere or not.
+*/
 c3dl.Model.prototype.setRenderBoundingSphere = function (renderBoundingSphere)
 {
   this.renderBoundingSphere = renderBoundingSphere;
 }
+
+/**
+ Get this model's bounding volume.
+ 
+ @returns {c3dl.BoundingVolume} This model's bounding volumes.
+*/
 c3dl.Model.prototype.getBoundingVolume = function ()
 {
   return this.boundingVolume;
 }
+
+/**
+ Re-center this object on its original position.
+*/
 c3dl.Model.prototype.centerObject = function ()
 {
   if (this.isReady())
@@ -1048,6 +1104,11 @@ c3dl.Model.prototype.centerObject = function ()
   }
 }
 
+/**
+ Determine how close this object is to being loaded.
+ 
+ @returns {int} A value between 0 and 100 representing what percent of this model is loaded. 
+*/
 c3dl.Model.prototype.getLoadedProgress = function ()
 {
   return c3dl.ModelManager.loadProgress(this.path);

@@ -30,6 +30,8 @@ c3dl.Camera = function ()
  Create the projection matrix.
  
  Places the view matrix at the bottom of the matrix stack.
+ 
+ @param {Float} aspectRatio - The apsect ratio (width/height) for this camera to use.
  */
 c3dl.Camera.prototype.applyToWorld = function (aspectRatio)
 {
@@ -115,6 +117,10 @@ c3dl.Camera.prototype.getPosition = function ()
 
 /**
  @private
+ 
+ Retrieve the projection matrix
+ 
+ @returns {Array} A copy of the camera's projection matrix
  */
 c3dl.Camera.prototype.getProjectionMatrix = function ()
 {
@@ -123,6 +129,10 @@ c3dl.Camera.prototype.getProjectionMatrix = function ()
 
 /**
  @private
+ 
+ Retrieve the view matrix
+ 
+ @returns {Array} A copy of the camera's view matrix
  */
 c3dl.Camera.prototype.getViewMatrix = function ()
 {
@@ -145,7 +155,7 @@ c3dl.Camera.prototype.getUp = function ()
  can create depth buffer precision problems such as z-fighting. see
  http://www.opengl.org/resources/faq/technical/depthbuffer.htm for more information.
  
- @param {float} fcp Must be larger than 0.
+ @param {float} fcp Must be larger than 0 and larger than or equal to the near clipping plane.
  */
 c3dl.Camera.prototype.setFarClippingPlane = function (fcp)
 {
@@ -180,7 +190,7 @@ c3dl.Camera.prototype.setFieldOfView = function (fov)
 /**
  The near clipping plane must be set to a positive value.
  
- @param {float} ncp Must be larger than 0.
+ @param {float} ncp Must be larger than 0 and less than or equal to the far clipping plane.
  */
 c3dl.Camera.prototype.setNearClippingPlane = function (ncp)
 {
@@ -200,7 +210,7 @@ c3dl.Camera.prototype.setNearClippingPlane = function (ncp)
 /**
  Get a string representation of this camera.
  
- @param {String} [delimiter=","]  A string used to separate the member
+ @param {String} [delimiter=","] - A string used to separate the member
  variables of the object.
  
  @returns {String} a string representation of this class.
@@ -228,7 +238,7 @@ c3dl.Camera.prototype.toString = function (delimiter)
  
  Update Animation of the camera.
  
- @param {float} timeStep 
+ @param {float} timeStep - The amount of time elapsed since the last update.
  */
 c3dl.Camera.prototype.update = function (timeStep)
 {

@@ -22,7 +22,7 @@ c3dl.TextureManager = function (gl)
    @private
    Add a texture to be used in the script.
    
-   @param {String} relativePath The relative path of the Texture from 
+   @param {String} relativePath - The relative path of the Texture from 
    the index.html file.
    */
   this.addTexture = function (relativePath)
@@ -41,7 +41,10 @@ c3dl.TextureManager = function (gl)
   }
 
   /**
-   @private  
+   @private
+   Use a canvas element as a texture.
+   
+   @param {} sourceCanvas - The canvas tag to use as a texture.
    */
   this.addTextureFromCanvas2D = function (sourceCanvas)
   {
@@ -61,7 +64,7 @@ c3dl.TextureManager = function (gl)
    @private  
    Has the Texture already been added?
    
-   @param {String} relativePath The relative path of the Texture from 
+   @param {String} relativePath - The relative path of the Texture from 
    the index.html file.
    
    @returns {boolean} True if the texture has already been added, false
@@ -94,10 +97,10 @@ c3dl.TextureManager = function (gl)
    
    Get the ID of a Texture, referenced by 'relativePath'.
    
-   @param {String} relativePath The relative path of the Texture from 
+   @param {String} relativePath - The relative path of the Texture from 
    the index.html file.
    
-   @returns {int} The ID of the Texture, reutrns -1 if the Texture 
+   @returns {int} The ID of the Texture, returns -1 if the Texture 
    hasn't been added.
    */
   this.getID = function (relativePath)
@@ -114,6 +117,18 @@ c3dl.TextureManager = function (gl)
     }
     return id;
   }
+  
+  /**
+   @private
+   
+   Get the ID number of a Texture, referenced by 'relativePath'.
+   
+   @param {String} relativePath - The relative path of the Texture from 
+   the index.html file.
+   
+   @returns {int} The ID number of the Texture, returns -1 if the Texture 
+   hasn't been added.
+   */
   this.getIDNumber = function (relativePath)
   {
     var id = -1;
@@ -132,7 +147,7 @@ c3dl.TextureManager = function (gl)
    Get a string representation of this class. Will display all the WebGL 
    texture IDs along with the associated texture path.
    
-   @param {null|String} delimiter A string which will separate values. Typically will be 
+   @param {null|String} delimiter - A string which will separate values. Typically will be 
    ","  ,  "\n" or "&lt;br /&gt;". If none is specified, "," will be used.
    
    @returns {String} A string representation of this object.
@@ -161,6 +176,12 @@ c3dl.TextureManager = function (gl)
     }
     return str;
   }
+  
+  /**
+   Cause a textrue to re-draw.
+   
+   @param {String} path - The path to the texture to draw.
+  */
   this.updateTexture= function(path)
   {
     if (typeof(path) != "string")

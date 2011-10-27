@@ -29,10 +29,10 @@ c3dl.Line = function ()
   /**
    Set the begin and end coordinates.
    
-   @param {Array} beginCoord Array of 3 values in the order [x,y,z], where 
+   @param {Array} beginCoord - Array of 3 values in the order [x,y,z], where 
    the line segment begins.
    
-   @param {Array} endCoord Array of 3 values in the order [x,y,z], where 
+   @param {Array} endCoord - Array of 3 values in the order [x,y,z], where 
    the line segment ends.
    */
   this.setCoordinates = function (beginCoord, endCoord)
@@ -61,10 +61,10 @@ c3dl.Line = function ()
    end coordinate of the line. The rendered pixels in between transition from one color to 
    the other.
    
-   @param {Array} beginColor An array of 3 values in the order [r,g,b]. Each component must 
+   @param {Array} beginColor - An array of 3 values in the order [r,g,b]. Each component must 
    range from 0.0 to 1.0.
    
-   @param {Array} endColor An array of 3 values in the order [r,g,b]. Each component must 
+   @param {Array} endColor - An array of 3 values in the order [r,g,b]. Each component must 
    range from 0.0 to 1.0.
    */
   this.setColors = function (beginColor, endColor)
@@ -88,7 +88,7 @@ c3dl.Line = function ()
   /**
    Set the line's visibility.
    
-   @param {bool} visible true if the line should be rendered.
+   @param {boolean} visible - true if the line should be rendered.
    */
   this.setVisible = function (visible)
   {
@@ -98,7 +98,7 @@ c3dl.Line = function ()
   /**
    Get the visibility of the line.
    
-   @returns {bool} true if the line is rendered, otherwise false.
+   @returns {boolean} true - if the line is rendered, otherwise false.
    */
   this.isVisible = function ()
   {
@@ -111,7 +111,7 @@ c3dl.Line = function ()
    maximum supported line width, call Renderer's getMaxLineWidth() once the scene and renderer
    have been initialized.
    
-   @param {float} width Specified in pixels. Must be at least 1. Will be rounded to 
+   @param {float} width - Specified in pixels. Must be at least 1. Will be rounded to 
    the nearest integer.
    */
   this.setWidth = function (width)
@@ -157,8 +157,12 @@ c3dl.Line = function ()
     return new C3DL_FLOAT_ARRAY([this.colors[0], this.colors[1], this.colors[2], this.colors[3], this.colors[4], this.colors[5]]);
   }
 
-  /**
-   */
+
+/**
+ Determine what type of object this is
+ 
+ @return {CONST} A constant value interpreted by the library to represent a line segment
+ */
   this.getObjectType = function ()
   {
     return c3dl.LINE;

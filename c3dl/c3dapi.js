@@ -20,7 +20,7 @@ var head = document.getElementsByTagName("head")[0];
 /**
  @private
  
- @param {String} path Path of the resource to include.
+ @param {String} path - Path of the resource to include.
  
  Create a function to keep subsequent lines shorter.
 */
@@ -174,6 +174,7 @@ c3dl_require('interaction/pickingresult.js');
 
 //Function to call the various versions of requestAnimationFrame
 //To be updated when this is properly standardized.
+// Called automatically.
 window.requestAnimFrame = (function(callback)
 {
       return  window.requestAnimationFrame       || 

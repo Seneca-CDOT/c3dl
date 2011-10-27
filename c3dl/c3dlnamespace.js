@@ -27,6 +27,9 @@ var c3dl =
   /**
    @private
    Bind func's this property to obj
+   
+   @param {function} func - The function to bind to an object
+   @param {Object} bindObj - The object that is having a function added to it.
    */
   bind: function (func, bindObj)
   {
@@ -40,6 +43,9 @@ var c3dl =
    @private
    Extend one object with properties/methods from another.
    note: extend is meant for adding functionality to instanced objects
+   
+   @param {Object} baseObj - The object to be extended
+   @param {Object} extObj - The object who's properties you are adding to the baseObj.
    */
   extend: function (baseObj, extObj)
   {
@@ -55,6 +61,8 @@ var c3dl =
 
   /**
    @private
+   
+   Generate a unique id base on the current time.
    */
   guid: function ()
   {
@@ -65,6 +73,9 @@ var c3dl =
    @private
    Inherit one object class with properties/methods from another 
    note: inherit is meant for classic inheritance patterns
+   
+   @param {Object} parentObject - The base class.
+   @param {Object} child - The derived  class.
    */
   inherit: function (parentObject, child)
   {
@@ -108,5 +119,5 @@ var c3dl =
     }
     tmpparent.prototype.constructor.apply(o);
     delete o.__parent;
-  },
+  }
 };

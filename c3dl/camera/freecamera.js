@@ -40,9 +40,9 @@ c3dl.FreeCamera.prototype.getLinearVel = function ()
 
 
 /**
- Rotate around the Side Vector by a hard amount (No Animation).
+ Rotate around the Left Vector by a hard amount (No Animation).
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to pitch by, in radians.
  */
 c3dl.FreeCamera.prototype.pitch = function (angle)
 {
@@ -53,7 +53,7 @@ c3dl.FreeCamera.prototype.pitch = function (angle)
 /**
  Rotate around the Dir Vector by a hard amount (No Animation).
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to roll by, in radians.
  */
 c3dl.FreeCamera.prototype.roll = function (angle)
 {
@@ -64,8 +64,8 @@ c3dl.FreeCamera.prototype.roll = function (angle)
 /**
  Rotate camera on an Axis which is centered on the position of the camera.
  
- @param {Array} axisVec
- @param {float} angle in radians.
+ @param {Array} axisVec - The axis to rotate around.
+ @param {float} angle - The angle to rotate by, in radians.
  */
 c3dl.FreeCamera.prototype.rotateOnAxis = function (axisVec, angle)
 {
@@ -91,7 +91,7 @@ c3dl.FreeCamera.prototype.rotateOnAxis = function (axisVec, angle)
  Set a new Angular Veclocity that will be added to the rotation on 
  every update.
  
- @param {Array} newVec
+ @param {Array} newVec - The vector representing this camera's desired angular velocity.
  */
 c3dl.FreeCamera.prototype.setAngularVel = function (newVec)
 {
@@ -105,8 +105,8 @@ c3dl.FreeCamera.prototype.setAngularVel = function (newVec)
  Set a new linear velocity that will be added to the position 
  on every update.
  
- @param {Array} newVec A vector which contains the direction 
- and speed of the camera.
+ @param {Array} newVec - A vector which contains the desired
+ direction and speed of the camera.
  */
 c3dl.FreeCamera.prototype.setLinearVel = function (newVec)
 {
@@ -120,7 +120,7 @@ c3dl.FreeCamera.prototype.setLinearVel = function (newVec)
  Set the point in space where the camera will look at 
  (No Animation).
  
- @param {Array} newVec The new point the camera will 
+ @param {Array} newVec - The new point the camera will 
  look at.
  */
 c3dl.FreeCamera.prototype.setLookAtPoint = function (newVec)
@@ -150,7 +150,7 @@ c3dl.FreeCamera.prototype.setLookAtPoint = function (newVec)
 /**
  Set the new location of the camera.
  
- @param {Array} newVec An absolute value of where to 
+ @param {Array} newVec - An absolute value of where to 
  place the camera.
  */
 c3dl.FreeCamera.prototype.setPosition = function (newVec)
@@ -164,7 +164,7 @@ c3dl.FreeCamera.prototype.setPosition = function (newVec)
 /**
  Set the orientation of Up (No Animation).
  
- @param {Array} newVec
+ @param {Array} newVec - This camera's desired 'up'.
  */
 c3dl.FreeCamera.prototype.setUpVector = function (newVec)
 {
@@ -177,7 +177,7 @@ c3dl.FreeCamera.prototype.setUpVector = function (newVec)
 /**
  Get a string representation of this camera.
  
- @param {null|String} delimiter A string which will separate values. Typically will be 
+ @param {null|String} delimiter - A string which will separate values. Typically will be 
  ","  ,  "\n" or "&lt;br /&gt;". If none is specified, "," will be used.
  
  @returns {String} a string representation of this camera.
@@ -206,7 +206,7 @@ c3dl.FreeCamera.prototype.toString = function (delimiter)
  
  Update Animation of the camera.
  
- @param {float} timeStep 
+ @param {float} timeStep - The amount of time elapsed since the last update.
  */
 c3dl.FreeCamera.prototype.update = function (timeStep)
 {
@@ -238,7 +238,7 @@ c3dl.FreeCamera.prototype.update = function (timeStep)
 /**
  Rotate around the Up Vector by a hard amount (No Animation).
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to rotate through, in radians.
  */
 c3dl.FreeCamera.prototype.yaw = function (angle)
 {

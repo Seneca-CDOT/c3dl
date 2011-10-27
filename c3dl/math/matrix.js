@@ -36,7 +36,7 @@
  Is the Matrix 'mat' is valid?  That is, does it contain 16
  values and are all the values numbers?
  
- @param {Array} mat The matrix to check.
+ @param {Array} mat - The matrix to check.
  
  @returns {boolean} True if the object 'mat' is a matrix, 
  false otherwise.
@@ -110,7 +110,7 @@ c3dl.makeZeroMatrix = function ()
  
  e[r][c], e01 = row 0, column 1
  
- @param {Array} mat The matrix to set
+ @param {Array} mat - The matrix to set
  @param {float} e00 Column 0, Row 0
  @param {float} e01 
  @param {float} e02 
@@ -195,8 +195,8 @@ c3dl.makeMatrix = function (e00, e01, e02, e03, e10, e11, e12, e13, e20, e21, e2
  less than TOLERANCE. This tolerance is simply a small number used 
  as a buffer due to floating point inaccuracies.
  
- @param {Array} matrix1 The first matrix.
- @param {Array} matrix2 The second matrix.
+ @param {Array} matrix1 - The first matrix.
+ @param {Array} matrix2 - The second matrix.
  
  @return {boolean} True if matrices are equal, false otherwise.
  */
@@ -219,6 +219,13 @@ c3dl.matricesEqual = function (matrix1, matrix2)
 
 
 /**
+ Create a pose matrix (A position, with direction (left, up and forward) vectors) from four vectors.
+ vecLeft, vecUp and vecFrwd should be orthoganal.
+ 
+ @param {Array} vecLeft - The 'left' direction for this matrix. 
+ @param {Array} vecUp - The 'up' direction for this matrix.
+ @param {Array} vecFrwd - The 'forward' direction for this matrix.
+ @param {Array} vecPos - A position in 3D space.
  */
 c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
 {
@@ -281,7 +288,7 @@ c3dl.makePoseMatrix = function (vecLeft, vecUp, vecFrwd, vecPos)
  +-            -+
  </pre>
  
- @param {Array} mat Matrix to transpose.
+ @param {Array} mat - Matrix to transpose.
  
  @returns {Array} The transposed matrix if the passed in matrix 
  was valid, otherwise returns null.
@@ -301,7 +308,7 @@ c3dl.transposeMatrix = function (mat, dest)
  the matrix has a determinant not equal to zero as this function
  does that anyway.
  
- @param {Array} mat The Matrix for which the inverse is
+ @param {Array} mat - The Matrix for which the inverse is
  required.
  
  @returns {Array} The inverse of matrix 'mat' if it has one
@@ -374,7 +381,7 @@ c3dl.inverseMatrix = function (mat)
 /**
  Get the matrix determinant of 'mat'.
  
- @param {Array} mat The matrix for which the determinant 
+ @param {Array} mat - The matrix for which the determinant 
  is required.
  
  @returns {float} The matrix determinant of 'mat' or null if 
@@ -404,7 +411,7 @@ c3dl.matrixDeterminant = function (mat)
 /**
  Get the adjoint matrix of matrix 'mat'.
  
- @param {Array} mat The matrix which the adjoint is required.
+ @param {Array} mat - The matrix which the adjoint is required.
  
  @returns {Array} the adjoint matrix of 'mat' if it was valid, otherwise
  returns null.
@@ -441,8 +448,8 @@ c3dl.matrixAdjoint = function (mat)
  Multiply a given Matrix 'mat' with a scalar value.  This will result
  in a matrix which has each component in 'mat' multiplied with 'scalar'.
  
- @param {Array} mat The matrix to "scale".
- @param {float} scalar The value which will be multiplied by each 
+ @param {Array} mat - The matrix to "scale".
+ @param {float} scalar - The value which will be multiplied by each 
  component of 'mat'.
  
  @returns {Array} The Matrix 'mat', with each component 
@@ -467,8 +474,8 @@ c3dl.multiplyMatrixByScalar = function (mat,scalar, dest)
  Divide a Matrix 'mat' by a scalar value. This will divide each 
  component of the matrix 'mat' by 'scalar' and reutrn the value.
  
- @param {Array} mat The matrix which will be divided.
- @param {float} scalar The value which the matrix components 
+ @param {Array} mat - The matrix which will be divided.
+ @param {float} scalar - The value which the matrix components 
  will be divided by.
  
  @returns {Array} The Matrix 'mat' divided by 'scalar'.
@@ -490,9 +497,8 @@ c3dl.divideMatrixByScalar = function (mat, scalar, dest)
 /**
  Multiply matrix 'matOne' by 'matTwo'.
  
- @param {Array} matOne
- @param {Array} matTwo
- 
+ @param {Array} matOne - The first matrix to multiply
+ @param {Array}  - The matrix to multiply with. 
  @returns {Array} The result of multiplying 'matOne' by 'matTwo'.
  */
 c3dl.multiplyMatrixByMatrix = function (matOne, matTwo,dest)
@@ -503,11 +509,11 @@ c3dl.multiplyMatrixByMatrix = function (matOne, matTwo,dest)
 /**
  Multiply a matrix by a direction vector
  
- @param {Array} mat
- @param {Array} vec
- @param {Array} dest
+ @param {Array} mat - The Matrix to multiply
+ @param {Array} vec - The vector to multiply
+ @param {Array} dest - The vector that will hold the result of the multiplication
  
- @returns {Array} vector
+ @returns {Array} The result of the multiplication
  */
 c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
 {
@@ -534,13 +540,13 @@ c3dl.multiplyMatrixByDirection = function (mat, vec, dest)
  If 'vec' is an array of 3 values, the last component, w will be assumed to be 1. If 'vec'
  is an array of 4 values, dest must also be an array of 4 values.
  
- @param {Array} mat The matrix, an array of 16 values.
+ @param {Array} mat - The matrix, an array of 16 values.
  
- @param {Array} vec Array of 3 or 4 values. If last component, W is not present, W=1 will
+ @param {Array} vec - Array of 3 or 4 values. If last component, W is not present, W=1 will
  be assumed. Also, if the Array has 3 elements, the return value will be 3 elements. If the
  array has 4 elements, the return value will have 4 elements.
  
- @param {Array} dest Optional return by reference.
+ @param {Array} dest - Optional return by reference.
  
  @returns {Array} The vector 'vec' multiplied by matrix 'mat' if both
  arguments were valid, otherwise returns null.
@@ -573,8 +579,8 @@ c3dl.multiplyMatrixByVector = function (mat, vec, dest)
  Add two matrices.  This will result in a matrix in which each 
  corresponding component  of each matrix are added together.
  
- @param {Array} matOne The first matrix.
- @param {Array} matTwo The second matrix.
+ @param {Array} matOne - The first matrix.
+ @param {Array} matTwo - The second matrix.
  
  @returns {Array} A Matrix which is the addition of 'matOne' and
  'matTwo'.
@@ -599,9 +605,9 @@ c3dl.addMatrices = function (matOne, matTwo)
  matrix in which each component of 'matTwo' is subtracted from
  Matrix 'matOne.
  
- @param {Array} matOne The matrix which is being 
+ @param {Array} matOne - The matrix which is being 
  subtracted from.
- @param {Array} matTwo The matrix which is matOne is being 
+ @param {Array} matTwo - The matrix which is matOne is being 
  subtracted from.
  
  @returns {Array} A matrix which is 'matTwo' subtracted from 'matOne'.
@@ -620,6 +626,14 @@ c3dl.subtractMatrices = function (matOne, matTwo)
   return dest;
 }
 
+/**
+ Copy data from one matrix to another.
+ 
+ @param {Array} srcMat - The matrix to copy data from
+ @param {Array} dest - The matrix to copy data into
+ 
+ @returns {Array} A matrix holding the copied data.
+*/
 c3dl.copyMatrix = function (srcMat, dest)
 {
   if (dest == undefined)
@@ -646,6 +660,12 @@ c3dl.copyMatrix = function (srcMat, dest)
     dest[15] = srcMat[15];
   }
 }
+
+/**
+ Set all values in a matrix to 0.
+ 
+ @param {Array} srcMat - The matrix to be set to all 0s.
+*/
 c3dl.emptyMatrix = function (srcMat)
 {
   srcMat[0] = 0;

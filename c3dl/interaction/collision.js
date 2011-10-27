@@ -1,21 +1,43 @@
+
+/*
+  Copyright (c) 2008 Seneca College
+  Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
+  Author: Matt Sonnilion
+*/
+
+/**
+ A collection of functions dealing with collision
+ 
+ */
 c3dl.CollisionDetection = function ()
 {
+  
+  /**
+  Check for collision between two objects.
+  
+  @param {c3dl.Primitive} obj1 - One of the to objects to check for collision (with obj2)
+  @param {c3dl.Primitive} obj2 - The other object to check for collision (with obj1)
+  @param {Int} timeElapsed - The amount of time over which to check collision
+  @param {String} collisionType - The type of collision to check
+  
+  @returns {boolean} True if the objects collided during the elapsed time, false otherwise.
+  */
   this.checkObjectCollision= function(obj1, obj2,timeElapsed, collisionType)
   {
     this.obj1 = obj1;
     this.obj2 = obj2;
     var bv1= obj1.getBoundingVolume();
     var bv2= obj2.getBoundingVolume();
-    var collision = this.sphereCollision(bv1,bv2);
+    var collision = this.sphereCollision(bv1,bv2);//check collision on bounding spheres
     if (collision)
     {
-     collision = this.aabbaabbCollision(bv1.aabb,bv2.aabb);
+     collision = this.aabbaabbCollision(bv1.aabb,bv2.aabb);//check collision on axis aligned bounding boxes
     }
     if (collision)
     {
-      collision = this.obbobbCollision(bv1,bv2);
+      collision = this.obbobbCollision(bv1,bv2);//check collision on object bounding boxes
     }
-    if (collision && collisionType == "Geometry")
+    if (collision && collisionType == "Geometry")//if geometry checking is specified (by passing it in through the collisionType param) check for geometry collision
     {
       var obj1bvs = obj1.getBoundingVolumes();
       var obj2bvs = obj2.getBoundingVolumes();
@@ -41,6 +63,16 @@ c3dl.CollisionDetection = function ()
     }
     return collision;
   }
+  
+  /**
+   Check for collision (overlap) between the bounding spheres of two objects.
+   
+   @param {c3dl.Primitive} obj1 - The first object to check
+   @param {c3dl.Primitive} obj2 - The other object to check
+   @param {Int} timeElapsed - The amount of time to predict movement over.
+   
+   @returns {boolean} True if the spheres will overlap (collide) during that time, false otherwise.
+  */
   this.sphereCollision = function(obj1, obj2,timeElapsed)
   {
     //relative motion of sphere1 with respect to sphere0
@@ -74,6 +106,15 @@ c3dl.CollisionDetection = function ()
         return true;
     }
   }
+  
+  /**
+  Check for collision between the axis-aligned bounding-boxes of two objects.
+   
+   @param {c3dl.Primitive} objA - One of the objects to compare for collision
+   @param {c3dl.Primitive} objB - The other object to compare for collision
+   
+   @returns {boolean} True if the boxes overlap, false otherwise.
+  */
   this.aabbaabbCollision = function (objA, objB)
   {
     if (objA.maxMins[0]  < objB.maxMins[1] || objA.maxMins[1]  > objB.maxMins[0])
@@ -91,6 +132,14 @@ c3dl.CollisionDetection = function ()
     return true;
   }
   
+  /**
+  Check for collision between the bounding boxes of two objects
+
+   @param {c3dl.Primitive} objA - One of the objects to compare for collision
+   @param {c3dl.Primitive} objB - The other object to compare for collision
+   
+   @returns {boolean} True if the boxes overlap, false otherwise.
+  */
   this.obbobbCollision = function (objA, objB)
   {
     var aCenter = objA.getPosition();

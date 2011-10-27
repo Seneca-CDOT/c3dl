@@ -22,7 +22,8 @@ c3dl.Geometry = function ()
   /**
    @private
    
-   Used by the model loader
+   Used by the model loader.
+   Add a primitiveSet to this Geometry
    */
   this.addPrimitiveSet = function (primitiveSet)
   {
@@ -32,7 +33,10 @@ c3dl.Geometry = function ()
   /**
    @private
    
-   Used by the ModelManager
+   Used by the ModelManager.
+   Attach the primitiveSets from another Geometry to this one.
+   
+   @param {c3dl.Geometry} other - The Geometry to copy the primitiveSets from. 
    */
   this.clone = function (other)
   {
@@ -46,7 +50,11 @@ c3dl.Geometry = function ()
   /**
    @private
    
-   Used by the ModelManager
+   Used by the ModelManager.
+   Obtain a copy of this Geometry.
+   
+   @returns {c3dl.Geometry} A duplicate copy of this Geometry.
+   
    */
   this.getCopy = function ()
   {
@@ -59,7 +67,7 @@ c3dl.Geometry = function ()
    @private
    Get the effect of this geometry.
    
-   @param {c3dl.Effect} The effect of this geometry.
+   @returns {c3dl.Effect} The effect of this geometry.
    */
   this.getEffect = function ()
   {
@@ -82,8 +90,10 @@ c3dl.Geometry = function ()
    Does the given ray intersect with any of the geometry's primitive set's
    bounding spheres?
    
-   @param {Array} rayOrigin
-   @param {Array} rayDir
+   @param {Array} rayOrigin - The originating point of the ray
+   @param {Array} rayDir - The direction vector for the ray
+   
+   @returns {boolean} True if the ray intersects this Geometry's OBB, false otherwise.
    */
   this.rayIntersectsEnclosures = function (rayOrigin, rayDir)
   {
@@ -109,8 +119,10 @@ c3dl.Geometry = function ()
    
    Does the mesh in this geometry node intersect with the ray?
    
-   @param {Array} rayOrigin
-   @param {Array} rayDir
+   @param {Array} rayOrigin - The originating point of the ray
+   @param {Array} rayDir - The ray's direction vector
+   
+   @returns {boolean} True if the ray intersects any of this Geometry's triangles, false otherwise.
    */
   this.rayIntersectsTriangles = function (rayOrigin, rayDir)
   {
@@ -158,7 +170,11 @@ c3dl.Geometry = function ()
   /**
    @private
    
-   Called automatically
+   Draw this Geometry within the scene.
+   Called automatically.
+   
+   @param {Context} glCanvas3D - The graphics rendering context.
+   @param {Scene} scene - The scene currently being rendered.
    */
   this.render = function (glCanvas3D, scene)
   {
@@ -192,6 +208,12 @@ c3dl.Geometry = function ()
     }
   }
   
+  
+  /**
+   Render the bounding volumes for this Geometry.
+   
+   @param {Scene} scene - The scene currently being rendered.
+  */
   this.renderBoundingVolumes = function (scene)
   {
     // tell all the collation elements/ primitive sets to render their bounding spheres.
@@ -214,7 +236,7 @@ c3dl.Geometry = function ()
    but those cannot be set directly. All primitive sets under this 
    geometric object will be rendered the same.
    
-   @param {c3dl.Effect} effect
+   @param {c3dl.Effect} effect - the effect to use on this Geometry
    */
   this.setEffect = function (effect)
   {
@@ -223,8 +245,9 @@ c3dl.Geometry = function ()
 
   /**
    @private
+   Set a material for this Geometry to use.
    
-   @param {c3dl.Material} material
+   @param {c3dl.Material} material - The material to attach to this object
    */
   this.setMaterial = function (material)
   {
@@ -237,8 +260,9 @@ c3dl.Geometry = function ()
 
   /**
    @private
+   Set this Geometry's texture.
    
-   @param {} texture
+   @param {} texture - The textrue object for this Geometry to use.
    */
   this.setTexture = function (texture)
   {
@@ -249,8 +273,10 @@ c3dl.Geometry = function ()
   }
     /**
    @private
+   Change the texture being used by this Geometry.
    
-   @param {} oldTexturePath,newTexturePath
+   @param {String} oldTexturePath - The path to the texture currently in use
+   @param {String} newTexturePath - The path to the texture to use
    */
   this.updateTextureByName = function (oldTexturePath,newTexturePath)
   {
@@ -262,8 +288,11 @@ c3dl.Geometry = function ()
 
   /**
    @private
+   Apply any changes to this Geometry, prior to rendering it.
+   Called automatically.
    
-   Called automatically
+   @param {int} timestep - The amount of time elapsed since the last update
+   @param {Array} scaleVec - Scaling to apply to this object.
    */
   this.update = function (timeStep, scaleVec)
   {

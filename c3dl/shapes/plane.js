@@ -3,6 +3,12 @@
   Licenced under the MIT License (http://www.c3dl.org/index.php/mit-license/)
 */
 
+/**
+ @class c3dl.Plane A primitive planar model designed to allow people to easily add simple
+ models to scenes without requiring model files.
+ 
+ @augments c3dl.Shape
+*/
 c3dl.Plane = c3dl.inherit(c3dl.Shape, function (length, width)
 {
   c3dl._superc(this);
@@ -21,6 +27,12 @@ c3dl.Plane = c3dl.inherit(c3dl.Shape, function (length, width)
   }
 });
 
+/**
+ Set initial values required of the plane.
+ 
+ @param {float} length - The length (z axis) of the plane.
+ @param {float} width - The width (x axis) of the plane.
+*/
 c3dl.Plane.prototype.init = function (length, width)
 {
   length = parseFloat(length);
@@ -58,12 +70,23 @@ c3dl.Plane.prototype.init = function (length, width)
   this.boundingVolume.set(this.shape.pos,this.shape.getRotateMat(),this.shape.scaleVec);
 }
 
+/**
+ Get a duplicate copy of this Shape.
+ 
+ @returns {c3dl.Plane} A duplicate copy of this plane.
+*/
 c3dl.Plane.prototype.getCopy = function ()
 {
   var Shape = new c3dl.Plane();
   Shape.clone(this);
   return Shape;
 }
+
+/**
+ Copy data from another Plane into this one.
+ 
+ @param {c3dl.Plane} other - The plane to copy into this one.
+*/
 c3dl.Plane.prototype.clone = function (other)
 {
   c3dl._super(this, arguments, "clone");

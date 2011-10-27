@@ -94,7 +94,8 @@ c3dl.OrbitCamera.prototype.getOrbitPoint = function ()
  the camera is positioned. The camera will not move if attempted to move
  closer than the closest allowed distance.
  
- @param {float} distance Must be greater than 0.
+ @param {float} distance - The amount the camera should move closer to
+ its orbit point by.  Must be greater than 0.
  */
 c3dl.OrbitCamera.prototype.goCloser = function (distance)
 {
@@ -124,7 +125,8 @@ c3dl.OrbitCamera.prototype.goCloser = function (distance)
  the camera is positioned. The camera will not move if attempted to move
  farther than the farthest distance.
  
- @param {float} distance Must be greater than 0.
+ @param {float} distance - The amount by which the camera should move away
+ from its orbit point.  Must be greater than 0.
  */
 c3dl.OrbitCamera.prototype.goFarther = function (distance)
 {
@@ -152,7 +154,7 @@ c3dl.OrbitCamera.prototype.goFarther = function (distance)
  orbit point and its position will rotate about the axis parallel to
  its own 'left' axis and intersecting with the orbit point.
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to pitch by, in radians.
  */
 c3dl.OrbitCamera.prototype.pitch = function (angle)
 {
@@ -164,7 +166,7 @@ c3dl.OrbitCamera.prototype.pitch = function (angle)
  orbit point and it will rotate about the axis pointing
  directly towards the orbit point.
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to roll by, in radians.
  */
 c3dl.OrbitCamera.prototype.roll = function (angle)
 {
@@ -176,8 +178,8 @@ c3dl.OrbitCamera.prototype.roll = function (angle)
  orbit point and its position will rotate about the axis parallel to
  the passed axis that intersects with the orbit point.
  
- @param {Array} axis to rotate around
- @param {float} angle in radians.
+ @param {Array} axis - The axis to rotate around.
+ @param {float} angle - The angle to rotate by, in radians.
  */
 c3dl.OrbitCamera.prototype.rotateOnAxis = function (axis,angle)
 {
@@ -202,7 +204,6 @@ c3dl.OrbitCamera.prototype.rotateOnAxis = function (axis,angle)
 
   else
   {
-    //
     var camPosOrbit = c3dl.subtractVectors(this.pos, this.orbitPoint);
 
     // Create a rotation matrix based on location and angle.
@@ -218,7 +219,6 @@ c3dl.OrbitCamera.prototype.rotateOnAxis = function (axis,angle)
     this.dir = c3dl.normalizeVector(this.dir);
 
     // update up
-    //
     this.up = c3dl.multiplyMatrixByVector(rotMat, this.up);
     this.up = c3dl.normalizeVector(this.up);
 
@@ -235,7 +235,7 @@ c3dl.OrbitCamera.prototype.rotateOnAxis = function (axis,angle)
  the orbit point, the camera will be 'backed up' to the new closest
  distance.
  
- @param {float} distance Must be greater than zero and less than or 
+ @param {float} distance - Must be greater than zero and less than or 
  equal to getFarthestDistance().
  */
 c3dl.OrbitCamera.prototype.setClosestDistance = function (distance)
@@ -265,7 +265,7 @@ c3dl.OrbitCamera.prototype.setClosestDistance = function (distance)
  Set the camera 'distance' away from the orbit point. The distance
  must be a value between the getClosestDistance() and getFarthestDistance().
  
- @param {float} distance
+ @param {float} distance - The camera's desired distance from the orbit point.
  */
 c3dl.OrbitCamera.prototype.setDistance = function (distance)
 {
@@ -286,7 +286,7 @@ c3dl.OrbitCamera.prototype.setDistance = function (distance)
  the orbit point, the camera will be pulled in to the new closest
  distance.
  
- @param {float} distance Must be less than or equal to getClosestDistance().
+ @param {float} distance - Must be less than or equal to getClosestDistance().
  */
 c3dl.OrbitCamera.prototype.setFarthestDistance = function (distance)
 {
@@ -315,7 +315,7 @@ c3dl.OrbitCamera.prototype.setFarthestDistance = function (distance)
  
  The direction will remain unchanged.
  
- @param {Array} orbitPoint The new vector the camera will orbit and look at.
+ @param {Array} orbitPoint - The new vector the camera will orbit and look at.
  */
 c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
 {
@@ -331,7 +331,7 @@ c3dl.OrbitCamera.prototype.setOrbitPoint = function (orbitPoint)
  Set the camera to a new position. The position must be between the closest
  and farthest distances.
  
- @param {Array} position The new position of the camera.
+ @param {Array} position - The new position of the camera.
  */
 c3dl.OrbitCamera.prototype.setPosition = function (position)
 {
@@ -371,7 +371,7 @@ c3dl.OrbitCamera.prototype.setPosition = function (position)
 /**
  Get a string representation of this camera.
  
- @param {String} [delimiter=","]  A string which will separate values.
+ @param {String} [delimiter=","]  - A string which will separate values.
  
  @returns {String} a string representation of this camera.
  */
@@ -398,7 +398,7 @@ c3dl.OrbitCamera.prototype.toString = function (delimiter)
  
  Update Animation of the camera.
  
- @param {float} timeStep
+ @param {float} timeStep - The time elapsed since the last update.
  */
 c3dl.OrbitCamera.prototype.update = function (timeStep)
 {
@@ -409,7 +409,7 @@ c3dl.OrbitCamera.prototype.update = function (timeStep)
  orbit point and its position will rotate about the axis parallel to
  the camera's up axis and intersecting with the orbit point.
  
- @param {float} angle in radians.
+ @param {float} angle - The angle to yaw by, in radians.
  */
 c3dl.OrbitCamera.prototype.yaw = function (angle)
 {
