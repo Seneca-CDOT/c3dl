@@ -104,7 +104,7 @@ function canvasMain(canvasName)
   scn.init();
 
   // floor
-  var cube = new c3dl.Collada();
+  var cube = new c3dl.Model();
   cube.init('cube.dae');
   cube.translate([0,-100,0]);
   cube.scale([2800,1,3000]);

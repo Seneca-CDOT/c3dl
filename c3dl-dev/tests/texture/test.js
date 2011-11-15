@@ -13,7 +13,7 @@ function canvasMain(canvasName){
   scn.init(canvasName);
   if(renderer.isReady() ) {
     image.init("models/cube.dae");
-    image.roll(-Math.PI/2);
+    image.roll(-Math.PI/4);
     image.setPosition([-2.5, 0.0, 0.0]);
     image.setTexture(document.getElementById('webimage'));
     scn.addObjectToScene(image); 

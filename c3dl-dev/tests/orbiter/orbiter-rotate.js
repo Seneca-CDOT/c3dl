@@ -199,7 +199,7 @@ function camUpdate(event)
 {
   if(keysPressed[PITCH])
   {
-    cam.rotateOnAxis(cam.getLeft(),deltaY * SENSITIVITY);
+    cam.rotateOnAxis(cam.getLeft(),event.detail * SENSITIVITY);
   }
 
   // z is for zoom
