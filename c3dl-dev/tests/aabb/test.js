@@ -1,9 +1,7 @@
-c3dl.addMainCallBack(yview, "yview");
-c3dl.addMainCallBack(xview, "xview");
-c3dl.addMainCallBack(zview, "zview");
 var teapot1,teapot2,teapot3;
 var scn,scn2,scn3;
 var cam1,cam2,cam3;
+
 function yview(canvasName){
   scn = new c3dl.Scene();
   scn.setCanvasTag(canvasName);
@@ -26,6 +24,7 @@ function yview(canvasName){
     scn.startScene();
   }
 }
+
 function xview(canvasName){
   scn2 = new c3dl.Scene();
   scn2.setCanvasTag(canvasName);
@@ -48,6 +47,7 @@ function xview(canvasName){
     scn2.startScene();
   }
 }
+
 function zview(canvasName){
   scn3 = new c3dl.Scene();
   scn3.setCanvasTag(canvasName);
@@ -70,6 +70,7 @@ function zview(canvasName){
     scn3.startScene();
   }
 }
+
 function camy() {
   cam1.setPosition(new Array(0.0, 100.0, 1.0));
   cam1.setLookAtPoint(new Array(0.0, 0.0, 0.0));
@@ -78,6 +79,7 @@ function camy() {
   cam3.setPosition(new Array(0.0, 100.0, 1.0));
   cam3.setLookAtPoint(new Array(0.0, 0.0, 0.0));
 }
+
 function camx() {
   cam1.setPosition(new Array(-100.0, 0.0, 0.0));
   cam1.setLookAtPoint(new Array(0.0, 0.0, 0.0));
@@ -86,6 +88,7 @@ function camx() {
   cam3.setPosition(new Array(-100.0, 0.0, 0.0));
   cam3.setLookAtPoint(new Array(0.0, 0.0, 0.0));
 }
+
 function toggle() {
   if (teapot1.renderObb) {
     teapot1.setRenderObb(false);
@@ -98,3 +101,7 @@ function toggle() {
     teapot3.setRenderObb(true);
   }
 }
+
+c3dl.addMainCallBack(yview, "yview");
+c3dl.addMainCallBack(xview, "xview");
+c3dl.addMainCallBack(zview, "zview");

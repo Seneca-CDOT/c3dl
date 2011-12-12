@@ -114,7 +114,7 @@ c3dl.Primitive.prototype.setStatic = function (staticObject)
  Set the 'dirty' state.
  
  @param {boolean} dirty - Either a true or false value which will 
- be used to determine whether or not to call update on the primitive
+ be used to determine whether or not to call update on a static primitive
  before rendering.
  */
 c3dl.Primitive.prototype.setDirty = function (dirty)

@@ -14,7 +14,7 @@ c3dl.addModel("models/firehall.dae");
 c3dl.addMainCallBack(firehall, "firehall");
 
 c3dl.addModel("models/duck.dae");
-c3dl.addMainCallBack(duck, "duck");
+
 
 c3dl.addModel("models/old_cottage.dae");
 c3dl.addMainCallBack(old_cottage, "old_cottage");
@@ -26,10 +26,10 @@ c3dl.addModel("models/fly_plane_polylist.dae");
 c3dl.addMainCallBack(fly_plane_polylist, "fly_plane_polylist");
 
 c3dl.addModel("models/move_widget.dae");
-c3dl.addMainCallBack(move_widget, "move_widget");
+
 
 c3dl.addModel("models/parallelogram.dae");
-c3dl.addMainCallBack(parallelogram, "maxobject");
+
 
 function gun(canvasName)
 {
@@ -368,3 +368,8 @@ function parallelogram(canvasName){
   scn.setCamera(cam);
   scn.startScene();
 }
+
+
+c3dl.addMainCallBack(duck, "duck");
+c3dl.addMainCallBack(move_widget, "move_widget");
+c3dl.addMainCallBack(parallelogram, "maxobject");

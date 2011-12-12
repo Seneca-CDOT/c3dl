@@ -761,7 +761,7 @@ c3dl.Scene = function ()
    
    @returns {boolean} true if the renderer was initialized, otherwise false.
    */
-  this.init = function ()
+  this.init = function (canvasTagID)
   {
     if (renderer != null && canvasTag != null)
     {
@@ -1266,7 +1266,7 @@ c3dl.Scene = function ()
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "AABB")
+        else if (culling === "AABB")
         {
           if (frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins))
           {
@@ -1278,7 +1278,7 @@ c3dl.Scene = function ()
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "OBB")
+        else if (culling === "OBB")
         {
           if (frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts))
           {
@@ -1290,7 +1290,7 @@ c3dl.Scene = function ()
             objList[i].setInsideFrustum(false);
           }
         }
-        if (culling === "All")
+        else if (culling === "All")
         {
           if (frustumCulling.sphereInFrustum(boundingVolume) && frustumCulling.aabbInfrustum(boundingVolume.aabb.maxMins) && frustumCulling.obbInfrustum(boundingVolume.obb.boxVerts))
           {
