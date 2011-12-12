@@ -28,15 +28,18 @@ c3dl.init = function ()
   // call the main methods.  
   if (c3dl.ModelManager.values.length == 0 || c3dl.PreLoader.loaded)
   {
-    for (var i = 0, len = c3dl.mainCallBacks.length; i < len; i++)
+    //For some reason domContentLoaded (which calls this) gets called twice,
+    //so this will remove functions from the array as it calls them.
+    while(c3dl.mainCallBacks.length > 0)
     {
-        // Each element is an object which holds a function 
-        // and a tag.  They were both placed in a wrapper
-        // object so we can stick to using arrays for simplicity.
-        var func = c3dl.mainCallBacks[i].f;
-        var tag = c3dl.mainCallBacks[i].t;
-        func(tag);
-    }
+      // Each element is an object which holds a function 
+      // and a tag.  They were both placed in a wrapper
+      // object so we can stick to using arrays for simplicity.
+      var elem = c3dl.mainCallBacks.shift();
+      var func = elem.f;
+      var tag = elem.t;
+      func(tag);
+   }
   }
 }
 
