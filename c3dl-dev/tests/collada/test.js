@@ -1,31 +1,3 @@
-//c3dl.addModel("models/gun.dae");
-
-
-//c3dl.addModel("models/teapot.dae");
-
-//c3dl.addModel("models/gingerbread_house.dae");
-
-
-//c3dl.addModel("models/swiss_army_usb.dae");
-
-
-//c3dl.addModel("models/firehall.dae");
-
-
-//c3dl.addModel("models/duck.dae");
-
-
-//c3dl.addModel("models/old_cottage.dae");
-
-
-//c3dl.addModel("models/transform_test.dae");
-
-
-//c3dl.addModel("models/fly_plane_polylist.dae");
-
-
-//c3dl.addModel("models/move_widget.dae");
-
 
 function gun(canvasName)
 {
