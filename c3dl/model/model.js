@@ -759,8 +759,8 @@ c3dl.Model.prototype.rayIntersectsEnclosures = function (rayOrigin, rayDir)
 {
   var result;
   if (c3dl.rayIntersectsSphere(rayOrigin, rayDir, this.boundingVolume.getPosition(), this.boundingVolume.getRadius()) && 
-  c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) &&
-  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis()))
+  c3dl.rayAABBIntersect(rayOrigin, rayDir, this.boundingVolume.aabb.maxMins) /*&&
+  c3dl.rayOBBIntersect(rayOrigin, rayDir, this.boundingVolume.obb.boxVerts, this.boundingVolume.getAxis())*/)
   {
     result = this.sceneGraph.rayIntersectsEnclosures(rayOrigin, rayDir);
   }

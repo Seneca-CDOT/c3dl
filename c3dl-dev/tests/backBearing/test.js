@@ -99,11 +99,6 @@ function handler(result)
         {
           obj.setAngularVel([0.0003,0.0008,0]);
         }
-        if(i == 0) {
-              /*var cam = scn.getCamera();
-              cam.setPosition([0,10,0]);
-              cam.setLookAtPoint(drawPoint.getPosition());*/
-        }
       }
     }
   }
