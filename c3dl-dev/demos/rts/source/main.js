@@ -13,7 +13,7 @@ const HOUSE_PATH        = "models/house/house.dae";
 const LUMBER_YARD_PATH  = "models/lumber_yard/lumber_yard.dae";
 const PERSON_PATH       = "models/person/person.dae";
 const PLANE_PATH        = "models/plane/plane.dae";
-const SPHERE_PATH       = "models/skysphere.dae"
+const SPHERE_PATH       = "models/skysphere.dae";
 
 c3dl.addModel(BANK_PATH);
 c3dl.addModel(BARRACKS_PATH);
