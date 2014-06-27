@@ -16,6 +16,7 @@ var parts = scripts[scripts.length - 1].src.split("/");
 parts.pop();
 var basePath = parts.join("/");
 var head = document.getElementsByTagName("head")[0];
+basePath += "/";
 
 /**
  @private
@@ -26,11 +27,13 @@ var head = document.getElementsByTagName("head")[0];
 */
 c3dl_require = function (path)
 {
-  document.write('<' + 'script');
-  document.write(' language="javascript"');
-  document.write(' type="text/javascript"');
-  document.write(' src="' + basePath + "/" + path + '">');
-  document.write('</' + 'script' + '>');
+  var s = window.document.createElement('script');
+  s.type = 'text/javascript';
+  s.onload = function(){
+      window.document.head.removeChild(s);
+  };
+  s.src = basePath + path;
+  window.document.head.appendChild(s);
 }
 
 //Some classes depend on others, so the order of the following lines should not be
